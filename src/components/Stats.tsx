@@ -316,7 +316,7 @@ export const StatDps: Component<{
 function formatSecondsToTime(seconds: number) {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
-  const s = seconds % 60;
+  const s = Math.round(seconds % 60);
   return `${h > 0 ? `${h}:` : ""}${h && m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`;
 }
 
@@ -324,9 +324,9 @@ export const StatCosts: Component<{ costs: Item["costs"] }> = (props) => (
   <div>
     <div class={statLabelCSSClass}>Costs</div>
     <div class="flex items-center gap-4 mt-1">
-      {["time", "food", "wood", "gold", "stone"].map(
+      {["time", "food", "wood", "gold", "stone", "popcap"].map(
         (type) =>
-          props.costs[type] > 0 && (
+          (type == "popcap" ? props.costs[type] > 1 : props.costs[type] > 0) && (
             <div class="flex items-center gap-1">
               <div class="text-white">{type == "time" ? formatSecondsToTime(props.costs[type]) : props.costs[type]}</div>
               <img src={RESOURCES[type]} class="h-4 object-contain w-5" />
