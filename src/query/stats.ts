@@ -2,7 +2,7 @@ import { firstBy } from "thenby";
 import { ITEMS, SUPPORTED_MODIFIER_PROPERTIES } from "../config";
 import { technologyModifiers } from "../data/technologies";
 import { civAbbr, civConfig, Modifier, Technology, UnifiedItem, Unit } from "../types/data";
-import { Stat, StatPart, StatProperty } from "../types/stats";
+import { CalculatedStats, Stat, StatPart, StatProperty } from "../types/stats";
 import { fetchItem } from "./fetch";
 import { getItemTechnologies, mapCivsArgument } from "./utils";
 
@@ -43,6 +43,7 @@ function mergeVariationsToStats(variations: Unit[]) {
       const stats: Partial<Record<StatProperty, number>> = {
         hitpoints: variation.hitpoints,
         moveSpeed: variation.movement.speed,
+        lineOfSight: variation.sight.line / 4.5,
       };
 
       const bonus: Modifier[] = [];
@@ -102,7 +103,7 @@ export function round(number: number, decimals: number) {
   return Math.round(number * Math.pow(10, decimals)) / Math.pow(10, decimals);
 }
 
-export function calculateStatParts(stat: Stat, maxAge: number, { decimals }: { decimals: number } = { decimals: 0 }) {
+export function calculateStatParts(stat: Stat, maxAge: number, { decimals }: { decimals: number } = { decimals: 0 }): CalculatedStats {
   if (!stat) return { total: 0, base: 0, upgrades: 0, technologies: 0, bonus: 0, parts: [] };
   const parts = stat.parts.sort((a, b) => a[2] - b[2]).map(([v, i, a, ...r]) => [a > maxAge ? 0 : round(v, decimals), i, a, ...r] as StatPart<number>);
 

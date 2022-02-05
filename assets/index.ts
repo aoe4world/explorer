@@ -11,12 +11,8 @@ import food from "./resources/food.png";
 import gold from "./resources/gold.png";
 import stone from "./resources/stone.png";
 import wood from "./resources/wood.png";
+import time from "./resources/time.png";
 
 export const FLAGS = { ab, ch, de, en, fr, hr, mo, ru };
 
-export const RESOURCES = {
-  food,
-  gold,
-  stone,
-  wood,
-};
+export const RESOURCES = { food, gold, stone, wood, time };

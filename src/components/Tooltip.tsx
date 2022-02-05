@@ -7,13 +7,13 @@ export const Tooltip: Component<{ attachTo: HTMLElement }> = (props) => {
   const delay = 50;
 
   onMount(() => {
-    props.attachTo.addEventListener("mouseenter", () => setHover(true));
-    props.attachTo.addEventListener("mouseleave", () => setHover(false));
+    props.attachTo?.addEventListener("mouseenter", () => setHover(true));
+    props.attachTo?.addEventListener("mouseleave", () => setHover(false));
   });
 
   onCleanup(() => {
-    props.attachTo.removeEventListener("mouseenter", () => setHover(true));
-    props.attachTo.removeEventListener("mouseleave", () => setHover(false));
+    props.attachTo?.removeEventListener("mouseenter", () => setHover(true));
+    props.attachTo?.removeEventListener("mouseleave", () => setHover(false));
   });
 
   function positionTooltip(el) {

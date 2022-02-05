@@ -4,8 +4,9 @@ import { CivFlag } from "../../components/CivFlag";
 import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getItems } from "../../query/fetch";
-import { mainIntroduction } from "../../styles";
-import { UnifiedItem, Unit } from "../../types/data";
+import { splitUnitsIntoGroups } from "../../query/utils";
+import { mainIntroductionCSSClass } from "../../styles";
+import { GroupedUnits, UnifiedItem, Unit } from "../../types/data";
 
 export type CivInfo = {
   name: string;
@@ -14,8 +15,6 @@ export type CivInfo = {
   backdrop?: string;
   overview: { title: string; description?: string; list?: string[] }[];
 };
-
-type SplitUnit = Record<"infantry" | "cavalry" | "siege" | "ships" | "workers", UnifiedItem<Unit>[]>;
 
 export const CivDetailRoute = () => {
   const pending = useIsRouting();
@@ -31,21 +30,7 @@ export const CivDetailRoute = () => {
     (civ) => getItems(ITEMS.UNITS, civ.abbr)
   );
 
-  const grouped = createMemo(() => {
-    return units()?.reduce(
-      (acc, unit) => {
-        if (unit.classes.some((c) => c.toLowerCase().includes("worker"))) acc.workers.push(unit);
-        else if (unit.classes.some((c) => c.toLowerCase().includes("infantry"))) acc.infantry.push(unit);
-        else if (unit.classes.some((c) => c.toLowerCase().includes("cavalry"))) acc.cavalry.push(unit);
-        else if (unit.classes.some((c) => c.toLowerCase().includes("siege"))) acc.siege.push(unit);
-        else if (unit.classes.some((c) => c.toLowerCase().includes("ship"))) acc.ships.push(unit);
-        else acc.workers.push(unit);
-
-        return acc;
-      },
-      { workers: [], infantry: [], cavalry: [], siege: [], ships: [] } as SplitUnit
-    );
-  });
+  const grouped = createMemo(() => splitUnitsIntoGroups(units()));
 
   return (
     <>
@@ -61,7 +46,7 @@ export const CivDetailRoute = () => {
               <h1 class="text-3xl font-bold ">{civ()?.name}</h1>
             </div>
           </div>
-          <p class={mainIntroduction}>{civ()?.description}</p>
+          <p class={mainIntroductionCSSClass}>{civ()?.description}</p>
         </div>
 
         <h2 class="text-lg text-white/40 font-bold  mb-3">Jump to</h2>
@@ -100,18 +85,35 @@ export const CivDetailRoute = () => {
             </For>
           </div>
         </div>
-        <h2 class="text-2xl font-bold text-white mt-16 mb-4">Units</h2>
 
-        <div class="grid grid-cols-[repeat(auto-fit,_minmax(17rem,_1fr))] gap-7">
-          <Suspense>
-            <Show when={units.loading}>
-              <div class="bg-item-unit/5  h-36 rounded-2xl "></div>
-              <div class="bg-item-unit/5  h-36 rounded-2xl "></div>
-              <div class="bg-item-unit/5  h-36 rounded-2xl "></div>
-            </Show>
-            <For each={units()}>{(unit) => <UnitCard unit={unit} civ={civConfig()} baseHref="."></UnitCard>}</For>
-          </Suspense>
-        </div>
+        <Show
+          when={grouped()}
+          fallback={
+            <>
+              <h2 class="text-2xl font-bold text-white/20 mt-20 mb-4 pl-2">Loading...</h2>
+              <div class="grid grid-cols-[repeat(auto-fit,_minmax(17rem,_1fr))] gap-7">
+                <div class="bg-item-unit/5  h-36 rounded-2xl "></div>
+                <div class="bg-item-unit/5  h-36 rounded-2xl "></div>
+                <div class="bg-item-unit/5  h-36 rounded-2xl "></div>
+              </div>
+            </>
+          }
+        >
+          <For each={Object.entries(grouped())}>
+            {([k, v]) =>
+              v?.length ? (
+                <div>
+                  <h2 class="text-2xl font-bold text-white mt-20 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
+                  <div class="grid grid-cols-[repeat(auto-fit,_minmax(17rem,_1fr))] gap-7">
+                    <For each={v}>{(unit) => <UnitCard unit={unit} civ={civConfig()} baseHref="."></UnitCard>}</For>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )
+            }
+          </For>
+        </Show>
       </div>
       <div
         class="absolute top-28 w-screen h-screen opacity-20 saturate-0	-z-10 bg-right-top bg-contain bg-no-repeat transition-all duration-400"

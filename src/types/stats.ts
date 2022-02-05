@@ -14,6 +14,7 @@ export type StatProperty =
   | "moveSpeed"
   | "minRange"
   | "maxRange"
+  | "lineOfSight"
   | "fireAttack";
 
 export type Stat = {
@@ -35,3 +36,5 @@ export type StatPart<T extends number | Modifier> = [
 export function isModifier(value: StatPart<number | Modifier>[0]): value is Modifier {
   return typeof value != "number";
 }
+
+export type CalculatedStats = { total: number; base: number; upgrades: number; technologies: number; bonus: number; parts: StatPart<number>[] };

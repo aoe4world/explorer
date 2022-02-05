@@ -1,6 +1,6 @@
 import { CIVILIZATIONS, ITEMS } from "../config";
 import { technologyModifiers } from "../data/technologies";
-import { civAbbr, civConfig, Technology, UnifiedItem, Unit } from "../types/data";
+import { civAbbr, civConfig, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
 import { fetchItem, fetchItems } from "./fetch";
 
 /** Map any of civAbbr | civConfig | civConfig[] | civAbbr[] to a single array */
@@ -44,11 +44,12 @@ export function sortUnifiedUnitsByVariation(units: UnifiedItem<Unit>[], keys: (k
 }
 
 /** Query the technologies that apply to an item and merge them with all technology modifiers */
-export async function getItemTechnologies(item: string | UnifiedItem, civ?: civAbbr | civConfig, includeAllCivsUnitSpecificTech = false) {
-  const [technologies, unifiedItem] = await Promise.all([
-    fetchItems(ITEMS.TECHNOLOGIES),
-    typeof item == "string" ? fetchItem(ITEMS.UNITS, item) : item,
-  ]);
+export async function getItemTechnologies(
+  item: string | UnifiedItem,
+  civ?: civAbbr | civConfig,
+  includeAllCivsUnitSpecificTech = false
+): Promise<UnifiedItem<Technology>[]> {
+  const [technologies, unifiedItem] = await Promise.all([fetchItems(ITEMS.TECHNOLOGIES), typeof item == "string" ? fetchItem(ITEMS.UNITS, item) : item]);
   const simplifiedClasses = unifiedItem.classes.flatMap((c) => c.split(" ").map((c) => c.toLowerCase()));
   return technologies.reduce((acc, t) => {
     // Todo, reduce over item.variations instead and read 'effects'. Filter by civ
@@ -74,4 +75,20 @@ export async function getItemTechnologies(item: string | UnifiedItem, civ?: civA
 
     return acc;
   }, [] as UnifiedItem<Technology>[]);
+}
+
+export function splitUnitsIntoGroups(units: UnifiedItem<Unit>[]) {
+  return units?.reduce(
+    (acc, unit) => {
+      if (unit.classes.some((c) => c.toLowerCase().includes("worker"))) acc.workers.push(unit);
+      else if (unit.classes.some((c) => c.toLowerCase().includes("infantry"))) acc.infantry.push(unit);
+      else if (unit.classes.some((c) => c.toLowerCase().includes("cavalry"))) acc.cavalry.push(unit);
+      else if (unit.classes.some((c) => c.toLowerCase().includes("siege"))) acc.siege.push(unit);
+      else if (unit.classes.some((c) => c.toLowerCase().includes("ship"))) acc.ships.push(unit);
+      else acc.workers.push(unit);
+
+      return acc;
+    },
+    { workers: [], infantry: [], cavalry: [], siege: [], ships: [] } as GroupedUnits
+  );
 }

@@ -1,11 +1,13 @@
 import { Component, createEffect, createSignal, Index, on, Show } from "solid-js";
-import { CIVILIZATIONS } from "../config";
-import { calculateStatParts } from "../query/stats";
-import { Stat, StatPart } from "../types/stats";
+import { RESOURCES } from "../../assets";
+import { CIVILIZATIONS, PRETTY_AGE_MAP } from "../config";
+import { calculateStatParts, round } from "../query/stats";
+import { statLabelCSSClass, tooltipCSSClass } from "../styles";
+import { Item } from "../types/data";
+import { CalculatedStats, Stat, StatPart } from "../types/stats";
+import { Icon } from "./Icon";
 import { globalAgeFilter, globalCivFilter } from "./Toolbar";
 import { Tooltip } from "./Tooltip";
-
-const prettyAgeMap = ["", "Age I", "Age II", "Age III", "Age IV"];
 
 export const StatBar: Component<{
   label: string;
@@ -31,46 +33,55 @@ export const StatBar: Component<{
   return (
     <Show when={parts().length > 0 || props.displayAlways}>
       <div>
-        <div class="mb-2 flex flex-row">
-          <span class="text-white text-[14px] flex-auto" ref={totalEl}>
-            <Show when={props.icon}>
-              <i class={`fas fa-${props.icon}  mr-2`}></i>
-            </Show>
+        <div class="mb-2 flex flex-row items-center">
+          <span class="text-white text-[14px] flex-auto flex items-center" ref={totalEl}>
+            {props.icon && <Icon icon={props.icon} class="mr-1.5 text-[12px]" />}
             {values().base}
-            {values().total > values().base && <span class="text-white/60"> / {values().total}</span>}
-            {values().bonus && <span class="text-white/40"> + {values().bonus}</span>}
+            {values().total > values().base && (
+              <span class="text-white/60 ml-3">
+                <Icon icon="arrow-up-right" class="text-xs mr-0.5" /> {values().total}
+              </span>
+            )}
+            {values().bonus && (
+              <span class="text-white/40 ml-2">
+                {" "}
+                <Icon icon="plus" class="text-xs" /> {values().bonus}
+              </span>
+            )}
           </span>
-          <Tooltip attachTo={totalEl}>
-            <div class="bg-gray-600 p-4 -mt-2 drop-shadow-lg">
-              Base <span class="float-right ml-4">{values().base}</span>
-              <br />
-              {values().upgrades && (
-                <>
-                  Upgrades
-                  <span class="text-item-unit-light float-right ml-4"> + {values().upgrades}</span>
-                  <br />
-                </>
-              )}
-              {values().technologies && (
-                <>
-                  Technologies
-                  <span class="text-item-tech-light float-right ml-4"> + {values().technologies}</span>
-                  <br />
-                </>
-              )}
-              <hr class="my-3" />
-              Total <span class="float-right ml-4">{values().total}</span>
-              {values().bonus && (
-                <div class="opacity-50">
-                  Bonus <span class="float-right ml-4">+ {values().bonus}</span>
-                </div>
-              )}
-            </div>
-          </Tooltip>
-          <span class="text-white/50 uppercase text-[10px] font-bold tracking-widest"> {props.label}</span>
+          <span class={statLabelCSSClass}> {props.label}</span>
         </div>
-
-        <div class="h-2 bg-black/30 flex flex-row relative">
+        <Tooltip attachTo={totalEl}>
+          <div class={tooltipCSSClass}>
+            Base <span class="float-right ml-4">{values().base}</span>
+            <br />
+            {values().upgrades && (
+              <>
+                <Icon icon="arrow-up-right" class="text-sm mr-1" />
+                Upgrades
+                <span class="text-item-unit-light float-right ml-4"> + {values().upgrades}</span>
+                <br />
+              </>
+            )}
+            {values().technologies && (
+              <>
+                <Icon icon="arrow-up-right" class="text-sm mr-1" />
+                Technologies
+                <span class="text-item-tech-light float-right ml-4"> + {values().technologies}</span>
+                <br />
+              </>
+            )}
+            <hr class="my-3" />
+            Total <span class="float-right ml-4">{values().total}</span>
+            {values().bonus && (
+              <div class="opacity-50">
+                <Icon icon="plus" class="text-xs mr-1" />
+                Bonus <span class="float-right ml-4">+ {values().bonus}</span>
+              </div>
+            )}
+          </div>
+        </Tooltip>
+        <div class="h-3.5 md:h-2 bg-gray-50/10 flex flex-row relative">
           <Index each={parts()}>
             {(part, i) => {
               const [value, id, age, variation, type, label] = part();
@@ -80,7 +91,7 @@ export const StatBar: Component<{
               let className = isBase
                 ? "bg-bar-base" + (value < props.max * 0.75 ? " shrink-0" : "")
                 : type == "bonus"
-                ? "bg-white/20 shrink"
+                ? "bg-white/20 !text-white shrink"
                 : type == "upgrade" ?? variation.type == "unit"
                 ? "bg-bar-upgrade shrink-0"
                 : variation.unique
@@ -91,9 +102,9 @@ export const StatBar: Component<{
               const hide = () => part()[0] <= 0;
               return (
                 <div
-                  class="h-full "
+                  class="h-full hover:bg-white"
                   ref={partEl}
-                  className={className + " hover:bg-white"}
+                  className={className}
                   style={{
                     width: hide() ? "0" : `max(5px, calc(${(part()[0] / props.max) * 100}% - 2px))`,
                     "margin-right": hide() ? "0" : "2px",
@@ -102,12 +113,12 @@ export const StatBar: Component<{
                   }}
                 >
                   <Tooltip attachTo={partEl}>
-                    <div class="bg-gray-600 p-4 max-w-sm">
-                      <div class="text-lg mb-2">
-                        <span class="bg-white text-black font-bold rounded-sm px-2 py-1">
+                    <div class={tooltipCSSClass}>
+                      <div class="text-lg mb-4">
+                        <span class="bg-white text-black font-bold rounded-sm px-3 py-1" className={className}>
                           {!isBase && "+"} {value ?? 0}
                         </span>
-                        <span class="float-right ml-4 opacity-50">{prettyAgeMap[age]}</span>
+                        <span class="float-right ml-4 opacity-50">{PRETTY_AGE_MAP[age]}</span>
                       </div>
                       {label ? (
                         <p>{label}</p>
@@ -137,13 +148,14 @@ export const StatBar: Component<{
 export const StatNumber: Component<{
   label: string;
   displayAlways?: boolean;
+  helper?: string;
   unitLabel?: string;
   stat: Stat;
 }> = (props) => {
   const [parts, setParts] = createSignal<StatPart<number>[]>([]);
   const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
   createEffect(
-    on([globalAgeFilter, globalCivFilter], () => {
+    on(globalAgeFilter, () => {
       const { parts, ...rest } = calculateStatParts(props.stat, globalAgeFilter(), { decimals: 2 });
       setValues(rest);
       setParts(parts);
@@ -151,52 +163,176 @@ export const StatNumber: Component<{
   );
 
   let el;
+  let helperEl;
 
   return (
-    <div class="flex flex-col" ref={el}>
-      <span class="text-white/50 uppercase text-[10px] font-bold tracking-widest">{props.label}</span>
+    <Show when={values().base || props.displayAlways}>
+      <div class="flex flex-col">
+        <span class={statLabelCSSClass}>
+          {props.label}
+          <span ref={helperEl}>{props.helper && <Icon icon="circle-question" class="ml-2 text-white/40"></Icon>}</span>
+        </span>
+        {props.helper && (
+          <Tooltip attachTo={helperEl}>
+            <div class={tooltipCSSClass}>
+              <p>{props.helper}</p>
+            </div>
+          </Tooltip>
+        )}
 
-      <span class="text-white text-xl flex-auto">
-        {values().base}
-        {values().total != values().base && <span class="text-white/60"> / {values().total}</span>}
-        {values().bonus && <span class="text-white/40"> + {values().bonus}</span>}
-        {props.unitLabel && <span class="text-white/60 text-sm ml-1">{props.unitLabel}</span>}
-      </span>
-      <Tooltip attachTo={el}>
-        <div class="bg-gray-700 p-4 max-w-sm drop-shadow-lg rounded">
-          <Index each={parts()}>
-            {(part, i) => {
-              const [value, id, age, variation, type, label] = part();
-              return value ? (
-                <>
-                  {type == "base" ? (
-                    <div class="text-lg mb-2">
-                      Base ({prettyAgeMap[age]}) <span class="text-white/80 float-right ml-4">{value}</span>
-                    </div>
-                  ) : type == "upgrade" ? (
-                    <div>
-                      {variation.name} ({prettyAgeMap[age]})<span class="text-item-upgrade-light float-right ml-4"> + {value}</span>
-                    </div>
-                  ) : type == "technology" ? (
-                    <div>
-                      {variation.name} ({prettyAgeMap[age]})
-                      <span class="text-item-tech-light float-right ml-4">
-                        {" "}
-                        {value > 1 && "+"}
-                        {value}
-                      </span>
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                </>
-              ) : (
-                <></>
-              );
-            }}
-          </Index>
-        </div>
-      </Tooltip>
-    </div>
+        <span class="text-white text-xl flex-auto" ref={el}>
+          {values().base}
+          {values().total != values().base && (
+            <span class="text-white/60">
+              <Icon icon="arrow-up-right" class="text-sm ml-1" /> {values().total}
+            </span>
+          )}
+          {props.unitLabel && <span class="text-white/60 text-sm ml-1">{props.unitLabel}</span>}
+          {values().bonus && <span class="text-white/40 text-sm">(+ {values().bonus})</span>}
+        </span>
+        <Tooltip attachTo={el}>
+          <div class={tooltipCSSClass}>
+            <Index each={parts()}>
+              {(part, i) => {
+                const [value, id, age, variation, type, label] = part();
+                return value ? (
+                  <>
+                    {type == "base" ? (
+                      <div class="text-lg mb-2">
+                        Base ({PRETTY_AGE_MAP[age]}) <span class="text-white/80 float-right ml-4">{value}</span>
+                      </div>
+                    ) : type == "upgrade" ? (
+                      <div>
+                        {variation.name} ({PRETTY_AGE_MAP[age]})<span class="text-item-unit-light float-right ml-4"> + {value}</span>
+                      </div>
+                    ) : type == "technology" ? (
+                      <div>
+                        {variation.name} ({PRETTY_AGE_MAP[age]})
+                        <span class="text-item-tech-light float-right ml-4">
+                          {" "}
+                          {value > 1 && "+"}
+                          {value}
+                        </span>
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </>
+                ) : (
+                  <></>
+                );
+              }}
+            </Index>
+          </div>
+        </Tooltip>
+      </div>
+    </Show>
   );
 };
+
+function dps(attackDuration: number, damage: number) {
+  return attackDuration && damage ? round(damage / attackDuration, 2) : 0;
+}
+
+function calculateDpsParts(speed: CalculatedStats, attacks: CalculatedStats[]) {
+  return attacks.reduce(
+    (acc, attack) => {
+      Object.keys(acc).forEach((key) => (acc[key] += dps(speed.base, attack[key])));
+      return acc;
+    },
+    { base: 0, upgrades: 0, technologies: 0, total: 0, bonus: 0 }
+  );
+}
+
+export const StatDps: Component<{
+  label: string;
+  displayAlways?: boolean;
+  helper?: string;
+  speed: Stat;
+  attacks: Stat[];
+}> = (props) => {
+  const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
+
+  createEffect(
+    on(globalAgeFilter, () => {
+      const attackSpeed = calculateStatParts(props.speed, globalAgeFilter(), { decimals: 2 });
+      const attacks = props.attacks.map((attack) => calculateStatParts(attack, globalAgeFilter(), { decimals: 0 }));
+      setValues(calculateDpsParts(attackSpeed, attacks));
+    })
+  );
+
+  let el;
+  let helperEl;
+
+  return (
+    <Show when={values().base || props.displayAlways}>
+      <div class="flex flex-col">
+        <span class={statLabelCSSClass}>
+          {props.label}
+          <span ref={helperEl}>{props.helper && <Icon icon="circle-question" class="ml-2"></Icon>}</span>
+        </span>
+        {props.helper && (
+          <Tooltip attachTo={helperEl}>
+            <div class={tooltipCSSClass}>
+              <p>{props.helper}</p>
+            </div>
+          </Tooltip>
+        )}
+
+        <span class="text-white text-xl flex-auto" ref={el}>
+          {values().base}
+          {<span class="text-white/60 text-sm ml-1">DPS</span>}
+          {values().total != values().base && (
+            <span class="text-white/40 text-sm ml-2">
+              <Icon icon="arrow-up-right" class="text-xs" /> {values().total}
+            </span>
+          )}
+          {values().bonus && (
+            <span class="text-white/40  text-sm ml-1">
+              {" "}
+              <Icon icon="plus" class="text-xs" /> {values().bonus}
+            </span>
+          )}
+        </span>
+        <Tooltip attachTo={el}>
+          <div class={tooltipCSSClass}>
+            <div class="text-lg mb-2">
+              Base <span class="text-white/80 float-right ml-4">{values().base} dps</span>
+            </div>
+            Upgrades <span class="text-item-unit-light float-right ml-4">{values().upgrades} dps</span>
+            <br />
+            Technologies <span class="text-item-tech-light float-right ml-4">{values().technologies} dps</span>
+            <hr class="my-3" />
+            Total <span class="float-right ml-4">{values().total} dps</span>
+            <br />
+            Bonus <span class="text-item-bonus-light float-right ml-4">{values().bonus} dps</span>
+          </div>
+        </Tooltip>
+      </div>
+    </Show>
+  );
+};
+
+function formatSecondsToTime(seconds: number) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  return `${h > 0 ? `${h}:` : ""}${h && m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`;
+}
+
+export const StatCosts: Component<{ costs: Item["costs"] }> = (props) => (
+  <div>
+    <div class={statLabelCSSClass}>Costs</div>
+    <div class="flex items-center gap-4 mt-1">
+      {["time", "food", "wood", "gold", "stone"].map(
+        (type) =>
+          props.costs[type] > 0 && (
+            <div class="flex items-center gap-1">
+              <div class="text-white">{type == "time" ? formatSecondsToTime(props.costs[type]) : props.costs[type]}</div>
+              <img src={RESOURCES[type]} class="h-4 object-contain w-5" />
+            </div>
+          )
+      )}
+    </div>
+  </div>
+);

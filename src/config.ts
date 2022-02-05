@@ -44,3 +44,5 @@ export const SIMILAIR_UNITS = [
 
 // Rendering wrong or not fitting model, never include
 export const MUTED_UNITS = ["wynguard-army", "khaganate-units"];
+
+export const PRETTY_AGE_MAP = ["", "Age I", "Age II", "Age III", "Age IV"];
