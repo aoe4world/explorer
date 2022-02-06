@@ -28,7 +28,7 @@ export const SUPPORTED_MODIFIER_PROPERTIES: ModifyableProperty[] = [
   "attackSpeed",
 ];
 
-export const DATA_ROOT = "https://data.aoe4world.com/";
+export const DATA_ROOT = import.meta.env.DEV ? window.location.origin + "/data/" : "https://data.aoe4world.com/";
 
 export const SIMILAIR_UNITS = [
   ["archer", "longbowman"],

@@ -43,19 +43,23 @@ export async function fetchJson<T = any>(url: string, useCache = false): Promise
   if (useCache && cache.has(url)) return cache.get(url);
   if (pendingRequests.has(url)) return pendingRequests.get(url);
   const request = new Promise<T>(async (resolve, reject) => {
-    const response = await fetch(url);
-    if (response.ok) {
-      try {
-        const data = await response.json();
-        if (useCache || cache.has(url)) cache.set(url, data);
-        resolve(data);
-      } catch {
-        reject(new Error("Error parsing response format (not JSON)"));
-      } finally {
-        pendingRequests.delete(url);
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        try {
+          const data = await response.json();
+          if (useCache || cache.has(url)) cache.set(url, data);
+          resolve(data);
+        } catch {
+          reject(new Error("Error parsing response format (not JSON)"));
+        } finally {
+          pendingRequests.delete(url);
+        }
+      } else {
+        reject(new Error(`${response.status} ${response.statusText}`));
       }
-    } else {
-      reject(new Error(`${response.status} ${response.statusText}`));
+    } catch (e) {
+      reject(new Error(`Error requesting data from ${url}: ${e.message}`));
     }
   });
 

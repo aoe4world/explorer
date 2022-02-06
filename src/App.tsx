@@ -6,6 +6,7 @@ import { CivDetailRoute } from "./routes/civs/[slug]";
 import { UnitOverviewRoute } from "./routes/units/units";
 import { UnitDetailRoute } from "./routes/units/[id]";
 import { CivOverviewRoute } from "./routes/civs/civs";
+import { Icon } from "./components/Icon";
 
 const routes: RouteDefinition[] = [
   {
@@ -60,11 +61,25 @@ const App: Component = () => {
           });
           return (
             <div class="max-w-screen-lg p-4 mx-auto">
-              <div class="bg-red-500 text-white p-4">
-                <div>Something went terribly wrong `{err.toString()}`</div>
-                <button onClick={() => retry()} class="bg-white text-red-900 p-1 rounded-lg">
-                  Retry
+              <div class="bg-red-900 text-white p-4 rounded-2xl my-10">
+                <h1 class="text-2xl font-bold">
+                  <Icon icon="hexagon-exclamation" class="mr-3 mb-3" />
+                  Problem while loading page
+                </h1>
+                <p class="max-w-prose my-5">
+                  Something went terribly wrong. It's likely a bug (just like in the game) and possibly something else. If it persists, we'd really like to know
+                  so we can fix it. You can report it and include the eblow error.
+                </p>
+                <pre class="font-code font-sm text-white/70 my-5">{err.toString()}</pre>
+                <button onClick={() => retry()} class="bg-white text-red-900 py-2 px-4 font-bold rounded-lg">
+                  <Icon icon="refresh" class="mr-m" /> Retry
                 </button>
+                <a
+                  href="https://github.com/aoe4world/explorer/discussions/new?category=bugs-problems"
+                  class="inline-block  ml-3 bg-white text-red-900 py-2 px-4 font-bold rounded-lg"
+                >
+                  <Icon icon="bug" class="mr-m" /> Report bug
+                </a>
               </div>
             </div>
           );
