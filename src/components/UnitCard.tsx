@@ -27,10 +27,10 @@ export const UnitCard: Component<{ unit: UnifiedItem<Unit>; baseHref?: string; c
           </div>
           <div class="flex-auto">
             <div class="flex flex-row items-center">
-              <h2 class="text-lg font-bold flex-auto truncate">{props.unit.name}</h2>
-              <span class="text-item-unit-light/50 text-sm uppercase truncate">{PRETTY_AGE_MAP[minAge()]}</span>
+              <h2 class="text-lg font-bold flex-auto leading-tight ">{props.unit.name}</h2>
+              <span class="text-item-unit-light/50 text-sm uppercase whitespace-nowrap">{PRETTY_AGE_MAP[minAge()]}</span>
             </div>
-            <p class="text-item-unit-light text-sm leading-1">{props.unit.classes.join(", ")}</p>
+            <p class="text-item-unit-light text-sm leading-relaxed">{props.unit.classes.join(", ")}</p>
           </div>
         </div>
       </Link>

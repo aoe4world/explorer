@@ -6,6 +6,7 @@ import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getItems } from "../../query/fetch";
 import { splitUnitsIntoGroups } from "../../query/utils";
 import { mainIntroductionCSSClass } from "../../styles";
+import { itemGridCSSClass, mainIntroductionCSSClass } from "../../styles";
 import { GroupedUnits, UnifiedItem, Unit } from "../../types/data";
 
 export type CivInfo = {
@@ -91,7 +92,7 @@ export const CivDetailRoute = () => {
           fallback={
             <>
               <h2 class="text-2xl font-bold text-white/20 mt-20 mb-4 pl-2">Loading...</h2>
-              <div class="grid grid-cols-[repeat(auto-fit,_minmax(17rem,_1fr))] gap-7">
+              <div class={itemGridCSSClass}>
                 <div class="bg-item-unit/5  h-36 rounded-2xl "></div>
                 <div class="bg-item-unit/5  h-36 rounded-2xl "></div>
                 <div class="bg-item-unit/5  h-36 rounded-2xl "></div>
@@ -104,7 +105,7 @@ export const CivDetailRoute = () => {
               v?.length ? (
                 <div>
                   <h2 class="text-2xl font-bold text-white mt-20 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
-                  <div class="grid grid-cols-[repeat(auto-fit,_minmax(17rem,_1fr))] gap-7">
+                  <div class={itemGridCSSClass}>
                     <For each={v}>{(unit) => <UnitCard unit={unit} civ={civConfig()} baseHref="."></UnitCard>}</For>
                   </div>
                 </div>

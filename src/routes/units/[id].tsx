@@ -8,7 +8,7 @@ import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS, SIMILAIR_UNITS } from "../.
 import { getItem, getItems } from "../../query/fetch";
 import { getUnitStats } from "../../query/stats";
 import { filterItems, getItemTechnologies } from "../../query/utils";
-import { mainIntroductionCSSClass, mainItemTitleCSSClass } from "../../styles";
+import { itemGridCSSClass, mainIntroductionCSSClass, mainItemTitleCSSClass } from "../../styles";
 import { civAbbr, civConfig, UnifiedItem, Unit } from "../../types/data";
 import { CivInfo } from "../civs/[slug]";
 
@@ -89,7 +89,7 @@ export function UnitDetailRoute() {
               {!civConfig() && (
                 <>
                   <h3 class="text-lg text-white font-bold mb-4">Civilizations</h3>
-                  <p class="text-sm text-white/80 mb-6">
+                  <p class="text-sm text-white/80 mb-6 max-w-prose">
                     This unit is available for the below civilizations, viewing a unit for a civ shows you more detailed information, including civ specific
                     bonuses and upgrades
                   </p>
@@ -138,7 +138,7 @@ export function UnitDetailRoute() {
 
           <Show when={technologies()}>
             <h2 class="text-xl font-bold text-white mt-6 mb-4">Technologies</h2>
-            <div class="grid grid-cols-[repeat(auto-fit,_minmax(17rem,_1fr))] gap-7">
+            <div class={itemGridCSSClass}>
               <For each={technologies()}>{(tech) => <TechnologyCard item={tech}></TechnologyCard>}</For>
             </div>
           </Show>
