@@ -26,6 +26,8 @@ export const SUPPORTED_MODIFIER_PROPERTIES: ModifyableProperty[] = [
   "hitpoints",
   "moveSpeed",
   "attackSpeed",
+  "lineOfSight",
+  "maxRange",
 ];
 
 export const DATA_ROOT = import.meta.env.DEV ? window.location.origin + "/data/" : "https://data.aoe4world.com/";
@@ -40,6 +42,13 @@ export const SIMILAIR_UNITS = [
   ["streltsy", "handcannoneer"],
   ["traction-trebuchet", "trebuchet"],
   ["man-at-arms", "palace-guard"],
+  ["trade-ship", "lodya-trade-ship"],
+  ["transport-ship", "lodya-transport-ship"],
+  ["fishing-boat", "lodya-fishing-boat"],
+  ["baochuan", "carrack", "xebec"],
+  ["war-junk", "baghlah", "hulk"],
+  ["junk", "light-junk", "lodya-attack-ship", "dhow", "galley"],
+  ["demolition-ship", "lodya-demolition-ship", "explosive-junk", "explosive-dhow"],
 ];
 
 // Rendering wrong or not fitting model, never include

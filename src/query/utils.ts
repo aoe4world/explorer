@@ -59,15 +59,16 @@ export async function getItemTechnologies(
     if (!modifiers || !variations.length) return acc;
 
     const techMatchesItemId = modifiers.some((m) => m.select.id?.includes(unifiedItem.id));
-    const techMatchesItemClass = modifiers.some((m) => m.select.class?.some((cl) => cl.every((c) => simplifiedClasses.includes(c))));
+    const techMatchesItemClass = modifiers.some((m) => m.select.class?.some((cl) => cl?.every((c) => simplifiedClasses.includes(c))));
     const appliesToMultipleCivs = t.civs.length > 1;
+    const itemIsUnique = unifiedItem.civs.length === 1;
 
     if (
       filteringByCiv
         ? techMatchesItemId || techMatchesItemClass
         : // If we're not looking at techs for a specific civ & unit combo
           // we show only techs that match by id, or those that match by class and have multiple civs
-          (techMatchesItemId && includeAllCivsUnitSpecificTech) || (techMatchesItemClass && appliesToMultipleCivs)
+          (techMatchesItemId && itemIsUnique) || (techMatchesItemId && includeAllCivsUnitSpecificTech) || (techMatchesItemClass && appliesToMultipleCivs)
     ) {
       if (techMatchesItemId) acc.unshift({ ...t, variations });
       else acc.push({ ...t, variations });
@@ -80,11 +81,11 @@ export async function getItemTechnologies(
 export function splitUnitsIntoGroups(units: UnifiedItem<Unit>[]) {
   return units?.reduce(
     (acc, unit) => {
-      if (unit.classes.some((c) => c.toLowerCase().includes("worker"))) acc.workers.push(unit);
+      if (unit.classes.some((c) => c.toLowerCase().includes("ship"))) acc.ships.push(unit);
+      else if (unit.classes.some((c) => c.toLowerCase().includes("worker"))) acc.workers.push(unit);
       else if (unit.classes.some((c) => c.toLowerCase().includes("infantry"))) acc.infantry.push(unit);
       else if (unit.classes.some((c) => c.toLowerCase().includes("cavalry"))) acc.cavalry.push(unit);
       else if (unit.classes.some((c) => c.toLowerCase().includes("siege"))) acc.siege.push(unit);
-      else if (unit.classes.some((c) => c.toLowerCase().includes("ship"))) acc.ships.push(unit);
       else acc.workers.push(unit);
 
       return acc;

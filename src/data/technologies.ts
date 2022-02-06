@@ -1,13 +1,14 @@
 /** A configuration of technology ids and their modiying effects.
  * Should be moved to a script in aoe4world/data so others can use it as well
  * TODO, finish all commented technologies */
-import { Modifier } from "../../data/.scripts/lib/types/units";
+import { Modifier, ModifyableProperty } from "../../data/.scripts/lib/types/units";
 
 // Common class/id presets
 const common = {
   allMeleeUnitsExceptSiege: { class: [["melee"]] } as Modifier["select"],
-  allNonSiegeUnitsAndBuildings: { class: [["infantry"], ["cavalry"], ["structure"], ["naval"]] } as Modifier["select"],
+  allNonSiegeUnitsAndBuildings: { class: [["infantry"], ["cavalry"], ["structure"], ["ship"]] } as Modifier["select"],
   allRangedUnitsAndBuildingsExceptSiege: { class: [["ranged"]] } as Modifier["select"],
+  allMillitaryShips: { class: [["ship", "attack"], ["ship", "archer"], ["ship", "incendiary"]["warship"]] } as Modifier["select"],
 };
 
 export const technologyModifiers: Record<string, Modifier[]> = {
@@ -475,14 +476,14 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Reduce the cost of ships by -10%.
     {
       property: "woodCost",
-      select: { class: [["naval"]] },
+      select: { class: [["ship"], ["warship"]] },
       effect: "multiply",
       value: 0.9,
       type: "passive",
     },
     {
       property: "goldCost",
-      select: { class: [["naval"]] },
+      select: { class: [["ship"], ["warship"]] },
       effect: "multiply",
       value: 0.9,
       type: "passive",
@@ -737,15 +738,16 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "additional-sails": [
-  //     // Increase the movement speed of all ships by +15%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "additional-sails": [
+    // Increase the movement speed of all ships by +15%.
+    {
+      property: "moveSpeed",
+      select: { class: [["ship"], ["warship"]] },
+      effect: "multiply",
+      value: 1.15,
+      type: "passive",
+    },
+  ],
 
   "battle-hardened": [
     // Increase the health of Palace Guards by +30.
@@ -758,46 +760,52 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "chaser-cannons": [
-  //     // Increase the weapon range of Warships by +1 tiles.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "chaser-cannons": [
+    // Increase the weapon range of Warships by +1 tiles.
+    {
+      property: "maxRange",
+      select: { class: [["warship"]] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
 
-  //   explosives: [
-  //     // Increase the damage of Incendiary Ships by +40%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  explosives: [
+    // Increase the damage of Incendiary Ships by +40%.
+    {
+      property: "fireAttack",
+      select: { class: [["incendiary", "ship"]] },
+      effect: "multiply",
+      value: 1.4,
+      type: "passive",
+    },
+  ],
 
-  //   "extra-ballista": [
-  //     // Adds a swivel ballista to Attack Ships.
-  //     // Swivel ballistae can fire in any direction and deal 15 damage.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  // TODO: In reality is adding an extra weapon, not modifiying the existing one.
+  "extra-ballista": [
+    // Adds a swivel ballista to Attack Ships.
+    // Swivel ballistae can fire in any direction and deal 15 damage.
+    {
+      property: "rangedAttack",
+      select: { class: [["attack", "ship"]] },
+      effect: "change",
+      value: 15,
+      type: "passive",
+    },
+  ],
 
-  //   "extra-hammocks": [
-  //     // Junks of the Archer Ship type gain additional crew, allowing them to fire two more arrows in each volley.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  // This comes down to 200%  "Shoots 2x2 arrows (burst) per atk, arrow = 8 dmg. 1 atk = 4 arrows, 4x8 = 32 dmg."
+  "extra-hammocks": [
+    // Junks of the Archer Ship type gain additional crew, allowing them to fire two more arrows in each volley.
+    {
+      property: "rangedAttack",
+      select: { id: ["junk"] },
+      effect: "multiply",
+      value: 2,
+      type: "passive",
+    },
+  ],
 
   //   "extra-materials": [
   //     // Stone Wall Towers and Outposts repair nearby damaged Stone Walls. A single section is repaired at a time for +20 health per second.
@@ -819,15 +827,23 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   //     },
   //   ],
 
-  //   "navigator-lookout": [
-  //     // Increase the sight range of military ships by +2 and their weapon range by  +1.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "navigator-lookout": [
+    // Increase the sight range of military ships by +2 and their weapon range by  +1.
+    {
+      property: "lineOfSight",
+      select: common.allMillitaryShips,
+      effect: "change",
+      value: 2,
+      type: "passive",
+    },
+    {
+      property: "maxRange",
+      select: common.allMillitaryShips,
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
 
   //   pyrotechnics: [
   //     // Increase the range of gunpowder units by +20%.
@@ -897,15 +913,23 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "armored-hull": [
-  //     // Increase the armor of all military ships by +2.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "armored-hull": [
+    // Increase the armor of all military ships by +2.
+    {
+      property: "rangedArmor",
+      select: common.allMillitaryShips,
+      effect: "change",
+      value: 2,
+      type: "passive",
+    },
+    {
+      property: "meleeArmor",
+      select: common.allMillitaryShips,
+      effect: "change",
+      value: 2,
+      type: "passive",
+    },
+  ],
 
   biology: [
     // Increase the health of all cavalry by +20%.
@@ -1050,15 +1074,16 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   //     },
   //   ],
 
-  //   "patchwork-repairs": [
-  //     // Increase the repair rate of Fishing Ships by +100%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "patchwork-repairs": [
+    // Increase the repair rate of Fishing Ships by +100%.
+    {
+      property: "repairRate",
+      select: { id: ["fishing-boat", "lodya-fishing-boat"] },
+      effect: "multiply",
+      value: 1,
+      type: "passive",
+    },
+  ],
 
   //   piety: [
   //     // Increase the health of religious units by +40.
@@ -1220,15 +1245,23 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   //     },
   //   ],
 
-  //   "armored-caravans": [
-  //     // Grant +5 armor to Traders and Trade Ships.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "armored-caravans": [
+    // Grant +5 armor to Traders and Trade Ships.
+    {
+      property: "meleeArmor",
+      select: { id: ["trader", "trade-ship"] },
+      effect: "change",
+      value: 5,
+      type: "passive",
+    },
+    {
+      property: "rangedArmor",
+      select: { id: ["trader", "trade-ship"] },
+      effect: "change",
+      value: 5,
+      type: "passive",
+    },
+  ],
 
   "boot-camp": [
     // Increase the health of all infantry by +15%.
@@ -1467,15 +1500,17 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   //     },
   //   ],
 
-  //   piracy: [
-  //     // Gain +50 Wood and  +50 Gold when sinking an enemy ship.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  // Todo, improve
+  piracy: [
+    // Gain +50 Wood and  +50 Gold when sinking an enemy ship.
+    {
+      property: "unknown" as ModifyableProperty,
+      select: { class: [["ship"]] },
+      effect: "change",
+      value: 50,
+      type: "ability",
+    },
+  ],
 
   //   "raid-bounty": [
   //     // Increase the raid income for igniting a building to +75 Food and Gold.
@@ -1582,25 +1617,34 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "cedar-hulls": [
-  //     // Increase the health of Lodya Attack Ships by +200 and their ranged armor by  +1.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "cedar-hulls": [
+    // Increase the health of Lodya Attack Ships by +200 and their ranged armor by  +1.
+    {
+      property: "hitpoints",
+      select: { id: ["lodya-attack-ship"] },
+      effect: "change",
+      value: 200,
+      type: "passive",
+    },
+    {
+      property: "rangedArmor",
+      select: { id: ["lodya-attack-ship"] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
 
-  //   "clinker-construction": [
-  //     // Increase the health of Lodya Attack Ships by +200.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "clinker-construction": [
+    // Increase the health of Lodya Attack Ships by +200.
+    {
+      property: "hitpoints",
+      select: { id: ["lodya-attack-ship"] },
+      effect: "change",
+      value: 200,
+      type: "passive",
+    },
+  ],
 
   //   "double-time": [
   //     // Streltsy gain the Double Time ability, which increases their movement speed by +30% and speeds up their Static Deployment time by  +50% for  10 seconds.

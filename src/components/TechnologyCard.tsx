@@ -1,10 +1,11 @@
 import { Component, createMemo } from "solid-js";
-import { PRETTY_AGE_MAP } from "../config";
+import { CIVILIZATIONS, PRETTY_AGE_MAP } from "../config";
 import { UnifiedItem, Technology } from "../types/data";
 import { StatCosts } from "./Stats";
 
 export const TechnologyCard: Component<{ item: UnifiedItem<Technology> }> = (props) => {
   const minAge = createMemo(() => props.item.variations.sort((a, b) => a.age - b.age)[0].age);
+  const mostCommonCosts = createMemo(() => props.item.variations.sort((a, b) => b.civs.length - a.civs.length)[0].costs);
 
   return (
     <div class="bg-item-tech/10 text-white rounded-2xl p-4 hover:bg-tech-unit/20 transition-all flex flex-col gap-4">
@@ -22,8 +23,14 @@ export const TechnologyCard: Component<{ item: UnifiedItem<Technology> }> = (pro
 
       <div class="flex-auto">
         <p>{props.item.description}</p>
+
+        {props.item.civs.length == 1 && (
+          <p class="text-bar-uniqiue my-2">
+            <i class="fas fa-sparkles"></i> Unique to {CIVILIZATIONS[props.item.civs[0]].name}
+          </p>
+        )}
       </div>
-      <StatCosts costs={props.item.variations[0].costs} />
+      <StatCosts costs={mostCommonCosts()} />
     </div>
   );
 };

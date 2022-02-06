@@ -4,8 +4,7 @@ import { CivFlag } from "../../components/CivFlag";
 import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getItems } from "../../query/fetch";
-import { splitUnitsIntoGroups } from "../../query/utils";
-import { mainIntroductionCSSClass } from "../../styles";
+import { sortUnifiedUnitsByVariation, splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass, mainIntroductionCSSClass } from "../../styles";
 import { GroupedUnits, UnifiedItem, Unit } from "../../types/data";
 
@@ -31,7 +30,7 @@ export const CivDetailRoute = () => {
     (civ) => getItems(ITEMS.UNITS, civ.abbr)
   );
 
-  const grouped = createMemo(() => splitUnitsIntoGroups(units()));
+  const grouped = createMemo(() => units() && splitUnitsIntoGroups(sortUnifiedUnitsByVariation(units(), ["hitpoints", "age"])));
 
   return (
     <>
