@@ -10,9 +10,34 @@
   </head>
   <body class="antialiased text-white font-body bg-gray-800 p-0">
     <noscript>You need to enable JavaScript to run this app.</noscript>
-
+    <nav class="border-gray-500 border-b w-full sticky z-50 t-0">
+      <section class="py-6 px-4 lg:px-10 bg-gray-800">
+        <div class="relative justify-between items-center flex">
+          <a class="text-2xl text-white font-bold focus py-2 px-3 -ml-3 rounded-lg focus:outline-none focus:ring focus:ring-white" href="/">AoE4 World</a>
+          <ul class="hidden md:flex items-center text-white space-x-2 gap-x-5">
+            <li>
+              <a
+                class="text-white font-bold text-lg py-2 px-3 rounded-lg focus:outline-none focus:ring focus:ring-white active:ring-transparent opacity-70"
+                href="/civs"
+                >Civs</a
+              >
+            </li>
+            <li>
+              <a
+                class="text-white font-bold text-lg py-2 px-3 rounded-lg focus:outline-none focus:ring focus:ring-white active:ring-transparent opacity-70"
+                href="/units"
+                >All units</a
+              >
+            </li>
+            <li class="bg-white/5 w-20 h-4 rounded-full"></li>
+            <li class="bg-white/5 w-20 h-4 rounded-full"></li>
+          </ul>
+          <div></div>
+        </div>
+      </section>
+    </nav>
     <div id="root" tabindex="-1"></div>
 
-    <script src="/src/index.tsx" type="module"></script>
+    <script src="/src/dev.tsx" type="module"></script>
   </body>
 </html>
