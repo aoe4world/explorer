@@ -5,12 +5,12 @@ import { CivFlag } from "../../components/CivFlag";
 import { StatNumber, StatBar, StatDps, StatCosts } from "../../components/Stats";
 import { TechnologyCard } from "../../components/TechnologyCard";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS, SIMILAIR_UNITS } from "../../config";
+import { getCivData } from "../../data/civData";
 import { getItem, getItems } from "../../query/fetch";
 import { getUnitStats } from "../../query/stats";
 import { filterItems, getItemTechnologies } from "../../query/utils";
 import { itemGridCSSClass, mainIntroductionCSSClass, mainItemTitleCSSClass } from "../../styles";
 import { civAbbr, civConfig, UnifiedItem, Unit } from "../../types/data";
-import { CivInfo } from "../civs/[slug]";
 
 export function UnitDetailRoute() {
   const params = useParams();
@@ -21,7 +21,7 @@ export function UnitDetailRoute() {
 
   const [civ] = createResource(
     () => CIVILIZATION_BY_SLUG[params.slug],
-    (civ) => civ && (import(`../../data/${civ.abbr}.json`) as Promise<CivInfo>)
+    (civ) => civ && getCivData(civ.abbr)
   );
 
   const [unfilteredItem] = createResource(

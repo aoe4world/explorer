@@ -3,6 +3,7 @@ import { createMemo, createResource, For, Show, Suspense } from "solid-js";
 import { CivFlag } from "../../components/CivFlag";
 import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
+import { getCivData } from "../../data/civData";
 import { getItems } from "../../query/fetch";
 import { sortUnifiedUnitsByVariation, splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass, mainIntroductionCSSClass } from "../../styles";
@@ -22,7 +23,7 @@ export const CivDetailRoute = () => {
   const civConfig = () => CIVILIZATION_BY_SLUG[params.slug];
   const [civ] = createResource(
     () => CIVILIZATION_BY_SLUG[params.slug],
-    (civ) => import(`../../data/${civ.abbr}.json`) as Promise<CivInfo>
+    (civ) => getCivData(civ.abbr)
   );
 
   const [units] = createResource(
