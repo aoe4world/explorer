@@ -1,5 +1,5 @@
-import { Link, useNavigate, useParams } from "solid-app-router";
-import { Component, createEffect, createResource, createSignal, For, Show, useTransition } from "solid-js";
+import { Link, useLocation, useNavigate, useParams } from "solid-app-router";
+import { Component, createEffect, createResource, createSignal, For, on, Show, useTransition } from "solid-js";
 import { RESOURCES } from "../../../assets";
 import { setActivePage } from "../../App";
 import { CivFlag } from "../../components/CivFlag";
@@ -69,7 +69,17 @@ export function UnitDetailRoute() {
     }
   );
 
-  createEffect(() => unfilteredItem() && setActivePage({ title: unfilteredItem().name, description: unfilteredItem().description }));
+  createEffect(
+    on([unfilteredItem, civ], () => {
+      !unfilteredItem.loading &&
+        !civ.loading &&
+        setActivePage({
+          title: unfilteredItem()?.name + (civ()?.name ? ` — ${civ()?.name}` : ""),
+          description: unfilteredItem()?.description,
+          location: useLocation(),
+        });
+    })
+  );
 
   return (
     <>

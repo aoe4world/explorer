@@ -1,5 +1,5 @@
-import { Link, useIsRouting, useParams } from "solid-app-router";
-import { createEffect, createMemo, createResource, For, Show, Suspense } from "solid-js";
+import { Link, useIsRouting, useLocation, useParams } from "solid-app-router";
+import { createEffect, createMemo, createResource, For, on, Show, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
 import { CivFlag } from "../../components/CivFlag";
 import { UnitCard } from "../../components/UnitCard";
@@ -33,7 +33,7 @@ export const CivDetailRoute = () => {
 
   const grouped = createMemo(() => units() && splitUnitsIntoGroups(sortUnifiedItemsByVariation(units(), ["hitpoints", "age"])));
 
-  createEffect(() => civ() && setActivePage({ title: civ().name, description: civ().description }));
+  createEffect(on(civ, () => !civ.loading && setActivePage({ title: civ()?.name, description: civ()?.description, location: useLocation() })));
 
   return (
     <>
@@ -108,7 +108,7 @@ export const CivDetailRoute = () => {
                 <div>
                   <h2 class="text-2xl font-bold text-white mt-20 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
                   <div class={itemGridCSSClass}>
-                    <For each={v}>{(unit) => <UnitCard unit={unit} civ={civConfig()} baseHref="."></UnitCard>}</For>
+                    <For each={v}>{(unit) => <UnitCard unit={unit} civ={civConfig()}></UnitCard>}</For>
                   </div>
                 </div>
               ) : (

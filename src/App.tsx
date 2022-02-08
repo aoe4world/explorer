@@ -52,9 +52,12 @@ const routes: RouteDefinition[] = [
   },
 ];
 
-export const [activePage, setActivePage] = createSignal<{ title?: string; description?: string }>();
+export const [activePage, setActivePage] = createSignal<{ title?: string; description?: string; location: ReturnType<typeof useLocation> }>();
+let lastPathname: string;
 createEffect(
   on(activePage, () => {
+    if (lastPathname === activePage()?.location?.pathname) return;
+    lastPathname = activePage()?.location?.pathname;
     document.title = activePage()?.title ? activePage().title + " – Explorer – AoE4 World" : "Explorer – AoE4 World";
     if (!document.querySelector("meta[name=description]")) {
       const meta = document.createElement("meta");

@@ -1,3 +1,4 @@
+import { useLocation } from "solid-app-router";
 import { createResource, For, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
 import { BuildingCard } from "../../components/BuildingCard";
@@ -9,7 +10,7 @@ import { itemGridCSSClass } from "../../styles";
 
 export const BuildingOverviewRoute = () => {
   const [buildings] = createResource(() => fetchItems(ITEMS.BUILDINGS).then((u) => sortUnifiedItemsByVariation(u, ["hitpoints", "age"])));
-  setActivePage({ title: "Buildings" });
+  setActivePage({ title: "Buildings", location: useLocation() });
 
   return (
     <div class="max-w-screen-lg p-4 mx-auto">

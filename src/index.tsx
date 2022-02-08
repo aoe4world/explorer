@@ -1,6 +1,7 @@
 import "./index.css";
 import { render } from "solid-js/web";
 import { Router } from "solid-app-router";
+import { Path } from "solid-app-router/dist/types";
 
 import App, { activePage } from "./App";
 import { createEffect, on } from "solid-js";
@@ -8,7 +9,7 @@ interface explorerOptions {
   /** The path at which the explorer is located */
   base?: string;
   /** Callback function to be used after each navigation */
-  onNavigate?: (page: { title?: string; description?: string }) => void;
+  onNavigate?: (page: { title?: string; description?: string; location: Path }) => void;
 }
 
 export function initializeExplorer(el: HTMLElement = document.getElementById("explorer"), options: explorerOptions = {}) {
@@ -23,9 +24,12 @@ export function initializeExplorer(el: HTMLElement = document.getElementById("ex
   );
 
   if (options.onNavigate) {
+    let lastPathname: string;
     createEffect(
       on(activePage, () => {
-        options.onNavigate({ title: activePage().title, description: activePage().description });
+        if (lastPathname === activePage()?.location?.pathname) return;
+        lastPathname = activePage()?.location?.pathname;
+        options.onNavigate({ title: activePage().title, description: activePage().description, location: activePage().location });
       })
     );
   }

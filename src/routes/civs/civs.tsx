@@ -1,11 +1,11 @@
-import { Link } from "solid-app-router";
+import { Link, useLocation } from "solid-app-router";
 import { For } from "solid-js";
 import { setActivePage } from "../../App";
 import { CivFlag } from "../../components/CivFlag";
 import { CIVILIZATIONS } from "../../config";
 
 export const CivOverviewRoute = () => {
-  setActivePage({ title: "Civilizations", description: "Overview of all civilizations" });
+  setActivePage({ title: "Civilizations", description: "Overview of all civilizations", location: useLocation() });
   return (
     <div class="max-w-screen-lg p-4 mx-auto md:grid-cols-2 grid gap-6 mb-4 mt-12">
       <For each={Object.values(CIVILIZATIONS)}>
