@@ -51,6 +51,9 @@ export const SIMILAIR_UNITS = [
   ["junk", "light-junk", "lodya-attack-ship", "dhow", "galley"],
   ["demolition-ship", "lodya-demolition-ship", "explosive-junk", "explosive-dhow"],
   ["monastery", "mosque", "prayer-tent"],
+  ["hunting-cabin", "mill", "ger"],
+  ["palisade-gate", "fortified-palisade-gate"],
+  ["palisade-wall", "fortified-palisade-wall"],
 ];
 
 // Rendering wrong or not fitting model, never include

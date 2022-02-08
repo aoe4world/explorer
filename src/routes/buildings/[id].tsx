@@ -47,17 +47,17 @@ export function BuildingDetailRoute() {
     })
   );
 
-  // createEffect(async () => {
-  //   if (params.id && civConfig() && unfilteredItem()) {
-  //     let closestMatch: UnifiedItem<Unit>;
-  //     if (!unfilteredItem().civs.includes(civConfig().abbr)) {
-  //       const similair = SIMILAIR_UNITS.find((units) => units.includes(params.id));
-  //       closestMatch = similair && (await getItems(ITEMS.UNITS, civConfig().abbr)).find((i) => similair.includes(i.id));
-  //       if (closestMatch) navigate(`/civs/${params.slug}/units/${closestMatch.id}`);
-  //       else setUnmatched(true);
-  //     } else setUnmatched(false);
-  //   } else setUnmatched(false);
-  // });
+  createEffect(async () => {
+    if (params.id && civConfig() && unfilteredItem()) {
+      let closestMatch: UnifiedItem<Building>;
+      if (!unfilteredItem().civs.includes(civConfig().abbr)) {
+        const similair = SIMILAIR_UNITS.find((units) => units.includes(params.id));
+        closestMatch = similair && (await getItems(ITEMS.BUILDINGS, civConfig().abbr)).find((i) => similair.includes(i.id));
+        if (closestMatch) navigate(`/civs/${params.slug}/buildings/${closestMatch.id}`);
+        else setUnmatched(true);
+      } else setUnmatched(false);
+    } else setUnmatched(false);
+  });
 
   const [technologies] = createResource(
     () => [params.id, CIVILIZATION_BY_SLUG[params.slug]?.abbr] as [string, civConfig],
