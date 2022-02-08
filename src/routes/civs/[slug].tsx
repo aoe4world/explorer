@@ -2,6 +2,7 @@ import { Link, useIsRouting, useLocation, useParams } from "solid-app-router";
 import { createEffect, createMemo, createResource, For, on, Show, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
 import { CivFlag } from "../../components/CivFlag";
+import { ReportButton } from "../../components/ReportButton";
 import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getCivData } from "../../data/civData";
@@ -88,7 +89,9 @@ export const CivDetailRoute = () => {
             </For>
           </div>
         </div>
-
+        <div class="my-8">
+          <ReportButton />
+        </div>
         <Show
           when={grouped()}
           fallback={

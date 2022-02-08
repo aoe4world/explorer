@@ -3,6 +3,7 @@ import { Component, createEffect, createResource, createSignal, For, on, Show, u
 import { RESOURCES } from "../../../assets";
 import { setActivePage } from "../../App";
 import { CivFlag } from "../../components/CivFlag";
+import { ReportButton } from "../../components/ReportButton";
 import { StatNumber, StatBar, StatDps, StatCosts } from "../../components/Stats";
 import { TechnologyCard } from "../../components/TechnologyCard";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS, SIMILAIR_UNITS } from "../../config";
@@ -143,6 +144,10 @@ export function UnitDetailRoute() {
                   <ViewForCivs id={item()?.id} civs={item().civs} baseHref="../../" />
                 </>
               )}
+
+              <div class="my-8">
+                <ReportButton />
+              </div>
             </div>
             <div class="flex-auto flex flex-col gap-8">
               <div class=" bg-black/70 rounded-2xl p-6 ">
