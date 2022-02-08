@@ -74,13 +74,15 @@ const App: Component = () => {
 
   createEffect(() => {
     location.pathname;
-    resetFocusEl?.focus();
+    if (resetFocusEl) {
+      resetFocusEl.focus({ preventScroll: true });
+      if (resetFocusEl.getBoundingClientRect().top < 0) resetFocusEl.scrollIntoView();
+    }
   });
 
   return (
     <>
       <div ref={resetFocusEl} class="outline-none" tabindex="-1"></div>
-
       <Toolbar></Toolbar>
       <ErrorBoundary
         fallback={(err, retry) => {
@@ -99,7 +101,7 @@ const App: Component = () => {
                 </h1>
                 <p class="max-w-prose my-5">
                   Something went terribly wrong. It's likely a bug (just like in the game) and possibly something else. If it persists, we'd really like to know
-                  so we can fix it. You can report it and include the eblow error.
+                  so we can fix it. You can report it and include the below error.
                 </p>
                 <pre class="font-code font-sm text-white/70 my-5">{err.toString()}</pre>
                 <button onClick={() => retry()} class="bg-white text-red-900 py-2 px-4 font-bold rounded-lg">
@@ -118,14 +120,6 @@ const App: Component = () => {
       >
         <Routes />
       </ErrorBoundary>
-
-      <div class="max-w-screen-lg p-4 mb-5 mx-auto text-sm text-gray-300">
-        Age Of Empires 4 © Microsoft Corporation. Aoe4world Explorer was created under Microsoft's "
-        <a href="https://www.xbox.com/en-US/developers/rules" target="_blank" class="text-gray-200">
-          Game Content Usage Rules
-        </a>
-        " using assets from Age Of Empires 4, and it is not endorsed by or affiliated with Microsoft.
-      </div>
     </>
   );
 };

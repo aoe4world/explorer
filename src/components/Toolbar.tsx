@@ -23,11 +23,11 @@ export const Toolbar: Component = () => {
       <div class="max-w-screen-lg p-2 h-16 md:h-14 text-sm md:text-base md:p-3 mx-auto flex flex-row gap-2 md:gap-5">
         <div class="flex flex-row gap-2 ">
           {current().subroute ? (
-            <Link href={`civs/${current().civ}/`} class={navButtonClass}>
+            <Link href={`civs/${current().civ}/`} class={navButtonClass} noScroll={true}>
               <Icon icon="arrow-left" class="place-self-center" />
             </Link>
           ) : (
-            <Link href={`civs/`} class={navButtonClass}>
+            <Link href={`civs/`} class={navButtonClass} noScroll={true}>
               <Icon icon="grid-horizontal" class="place-self-center" />
             </Link>
           )}
@@ -38,10 +38,10 @@ export const Toolbar: Component = () => {
                 class="h-full relative w-16 rounded-md overflow-hidden border-2 shadow-inner opacity-50 hover:opacity-100  border-transparent hidden md:block transition"
                 activeClass="opacity-90 border-white"
                 aria-label={civ.name}
+                noScroll={true}
               >
                 <CivFlag abbr={civ.abbr} class="h-full w-full object-cover" />
               </NavLink>
-              // </div>
             )}
           </For>
         </div>
@@ -56,7 +56,7 @@ export const Toolbar: Component = () => {
               <div class="hidden group-hover:block group-focus-within:block rounded-md absolute bg-gray-900 w-64 mt-0 ">
                 <For each={Object.values(CIVILIZATIONS)}>
                   {(civ) => (
-                    <NavLink href={[`/civs/${civ.slug}`, current().subroute].join("/")} class="flex p-4 hover:bg-gray-700">
+                    <NavLink href={[`/civs/${civ.slug}`, current().subroute].join("/")} noScroll={true} class="flex p-4 hover:bg-gray-700">
                       <CivFlag abbr={civ.abbr} class="h-7 w-10 mr-3 rounded object-cover" /> {civ.name}
                     </NavLink>
                   )}
