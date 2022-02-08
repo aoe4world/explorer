@@ -11,9 +11,9 @@ import { getItem, getItems } from "../../query/fetch";
 import { getUnitStats } from "../../query/stats";
 import { filterItems, getItemTechnologies } from "../../query/utils";
 import { itemGridCSSClass, mainIntroductionCSSClass, mainItemTitleCSSClass } from "../../styles";
-import { civAbbr, civConfig, UnifiedItem, Unit } from "../../types/data";
+import { Building, civAbbr, civConfig, UnifiedItem, Unit } from "../../types/data";
 
-export function UnitDetailRoute() {
+export function BuildingDetailRoute() {
   const params = useParams();
   const [pending] = useTransition();
   const [unmatched, setUnmatched] = createSignal(false);
@@ -27,49 +27,39 @@ export function UnitDetailRoute() {
 
   const [unfilteredItem] = createResource(
     () => params.id,
-    (id) => getItem(ITEMS.UNITS, id)
+    (id) => getItem(ITEMS.BUILDINGS, id)
   );
 
   const [item] = createResource(
-    () => [unfilteredItem(), 4, civConfig()] as [UnifiedItem<Unit>, number, civAbbr],
+    () => [unfilteredItem(), 4, civConfig()] as [UnifiedItem<Building>, number, civAbbr],
     ([id, maxAge, civs]) => unfilteredItem() && filterItems([id], { maxAge, civs })[0]
   );
 
-  createEffect(async () => {
-    if (params.id && civConfig() && unfilteredItem()) {
-      let closestMatch: UnifiedItem<Unit>;
-      if (!unfilteredItem().civs.includes(civConfig().abbr)) {
-        const similair = SIMILAIR_UNITS.find((units) => units.includes(params.id));
-        closestMatch = similair && (await getItems(ITEMS.UNITS, civConfig().abbr)).find((i) => similair.includes(i.id));
-        if (closestMatch) navigate(`/civs/${params.slug}/units/${closestMatch.id}`);
-        else setUnmatched(true);
-      } else setUnmatched(false);
-    } else setUnmatched(false);
-  });
+  createEffect(() => unfilteredItem() && setActivePage({ title: unfilteredItem().name, description: unfilteredItem().description }));
+
+  // createEffect(async () => {
+  //   if (params.id && civConfig() && unfilteredItem()) {
+  //     let closestMatch: UnifiedItem<Unit>;
+  //     if (!unfilteredItem().civs.includes(civConfig().abbr)) {
+  //       const similair = SIMILAIR_UNITS.find((units) => units.includes(params.id));
+  //       closestMatch = similair && (await getItems(ITEMS.UNITS, civConfig().abbr)).find((i) => similair.includes(i.id));
+  //       if (closestMatch) navigate(`/civs/${params.slug}/units/${closestMatch.id}`);
+  //       else setUnmatched(true);
+  //     } else setUnmatched(false);
+  //   } else setUnmatched(false);
+  // });
 
   const [technologies] = createResource(
     () => [params.id, CIVILIZATION_BY_SLUG[params.slug]?.abbr] as [string, civConfig],
-    async ([item, civ]) => item && (await getItemTechnologies(ITEMS.UNITS, item, civ, true))
+    async ([item, civ]) => item && (await getItemTechnologies(ITEMS.BUILDINGS, item, civ, true))
     //.flatMap((x) => x.variations)
     // We're not really picking up the variations right now
   );
 
   const [stats] = createResource(
     () => ({ unit: unfilteredItem(), civ: civConfig()?.abbr }),
-    (x) => getUnitStats(ITEMS.UNITS, x.unit, x.civ)
+    (x) => getUnitStats(ITEMS.BUILDINGS, x.unit, x.civ)
   );
-
-  const [productionBuildings] = createResource(
-    () => ({ item: unfilteredItem(), civ: civConfig()?.abbr }),
-    async ({ item, civ }) => {
-      const producedBy = [...new Set(item.variations.flatMap((v) => v.producedBy))].map((p) => (p.endsWith("barrack") ? "barracks" : p));
-      const items = await Promise.all(producedBy.map((b) => getItem(ITEMS.BUILDINGS, b)));
-      if (items.length != producedBy.length) console.warn("Some buildings were not found", producedBy, items);
-      return (civ ? items.filter((i) => !!i && i.civs.includes(civ)) : items).filter(Boolean).sort((a, b) => b.civs?.length - a.civs?.length);
-    }
-  );
-
-  createEffect(() => unfilteredItem() && setActivePage({ title: unfilteredItem().name, description: unfilteredItem().description }));
 
   return (
     <>
@@ -83,11 +73,11 @@ export function UnitDetailRoute() {
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
               <div class="flex gap-4 items-center mb-4">
-                <div class="flex-none self-start rounded-md bg-item-unit h-24 w-24 p-2">
+                <div class="flex-none self-start rounded-md bg-item-building h-24 w-24 p-2">
                   <img src={item().icon} />
                 </div>
                 <div>
-                  <span class="text-item-unit-light">{item().displayClasses.join(", ")}</span>
+                  <span class="text-item-building-light">{item().displayClasses.join(", ")}</span>
                   <h2 class={mainItemTitleCSSClass}>{item()?.name}</h2>
                   {civ() && civConfig() && (
                     <Link href="../../" class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80">
@@ -99,36 +89,12 @@ export function UnitDetailRoute() {
               </div>
               <div class={mainIntroductionCSSClass}>{item()?.description}</div>
 
-              {productionBuildings()?.length && (
-                <>
-                  <h2 class="text-lg text-white font-bold mb-4">Produced at</h2>
-                  <div class="flex gap-10 flex-wrap mb-8">
-                    <For each={productionBuildings()}>
-                      {(building) => (
-                        <Link href={`../../buildings/${building.id}`} class="flex flex-row items-center mb-2 group ">
-                          <div class="flex-none  rounded bg-item-building/80 group-hover:bg-item-building/100 w-10 h-10 p-0.5 mr-2 transition">
-                            <img src={building.icon} />
-                          </div>
-                          <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{building.name}</span>
-                        </Link>
-                      )}
-                    </For>
-                  </div>
-                </>
-              )}
-
-              {/* {item().name && <Fandom query={item().name} />} */}
-
               {!civConfig() && (
                 <>
-                  <h3 class="text-lg text-white font-bold mb-4">
-                    {item()?.civs.length > 1
-                      ? `Available for ${item().civs.length == Object.keys(CIVILIZATIONS).length ? "all" : item().civs.length} civilizations`
-                      : `Exclusively available to one civialization`}
-                  </h3>
+                  <h3 class="text-lg text-white font-bold mb-4">Civilizations</h3>
                   <p class="text-sm text-white/80 mb-6 max-w-prose">
-                    This unit is available for the below civilizations. Click on a civilization to see more detailed information, including specific bonuses and
-                    upgrades.
+                    This unit is available for the below civilizations, viewing a unit for a civ shows you more detailed information, including civ specific
+                    bonuses and upgrades
                   </p>
                   <ViewForCivs id={item()?.id} civs={item().civs} baseHref="../../" />
                 </>
@@ -176,7 +142,7 @@ export function UnitDetailRoute() {
           <Show when={technologies()}>
             <h2 class="text-xl font-bold text-white mt-6 mb-4">Technologies</h2>
             <div class={itemGridCSSClass}>
-              <For each={technologies()}>{(tech) => <TechnologyCard item={tech} civ={civConfig()}></TechnologyCard>}</For>
+              <For each={technologies()}>{(tech) => <TechnologyCard item={tech}></TechnologyCard>}</For>
             </div>
           </Show>
         </Show>
@@ -222,7 +188,7 @@ const ViewForCivs: Component<{ id: string; civs: civAbbr[]; baseHref: string }> 
       <For each={props.civs}>
         {(civ) => (
           <Link
-            href={`${props.baseHref}civs/${CIVILIZATIONS[civ].slug}/units/${props.id}`}
+            href={`${props.baseHref}civs/${CIVILIZATIONS[civ].slug}/buildings/${props.id}`}
             class="flex gap-2 items-center font-bold text-base  mr-3 bg-gray-900 p-2 rounded-md hover:text-white text-gray-100 hover:bg-black"
           >
             <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {CIVILIZATIONS[civ].name}
@@ -232,21 +198,3 @@ const ViewForCivs: Component<{ id: string; civs: civAbbr[]; baseHref: string }> 
     </div>
   </>
 );
-
-// const Fandom: Component<{ query: string }> = (props) => {
-//   const [content] = createResource(async () => {
-//     const res = await fetch(
-//       `https://corsanywhere.herokuapp.com/https://ageofempires.fandom.com/wikia.php?controller=UnifiedSearchSuggestionsController&method=getSuggestions&query=${props.query}&format=json`
-//     );
-//     const results = await res.json();
-//     console.log(results);
-//     const bestMatch = Object.entries(results.ids).find(([title, id]) => title.toUpperCase().includes("IV"));
-//     return bestMatch?.[0] ?? (Object.keys(results.ids)[0] as string);
-//   });
-
-//   return (
-//     <a href={`https://ageofempires.fandom.com/wiki/${content()}`} target="_blank">
-//       View on Fandom
-//     </a>
-//   );
-// };

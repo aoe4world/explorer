@@ -1,8 +1,10 @@
 import { Link } from "solid-app-router";
+import { RouterUtils } from "solid-app-router";
 import { Component, createMemo, createResource, Show } from "solid-js";
-import { PRETTY_AGE_MAP } from "../config";
+import { ITEMS, PRETTY_AGE_MAP } from "../config";
 import { getUnitStats } from "../query/stats";
 import { civAbbr, civConfig, UnifiedItem, Unit } from "../types/data";
+import { Card, CardHeader } from "./Cards";
 import { StatBar, StatCosts, StatDps, StatNumber } from "./Stats";
 import { globalAgeFilter } from "./Toolbar";
 
@@ -11,29 +13,10 @@ function getBarSize(unit: UnifiedItem<Unit>, baseSize: number, increasedSize: nu
   return unit.classes.some((c) => increaseBarSizeForClass.includes(c)) ? increasedSize : baseSize;
 }
 
-export const UnitCard: Component<{ unit: UnifiedItem<Unit>; baseHref?: string; civ?: civConfig | civAbbr }> = (props) => {
-  const [stats] = createResource(() => getUnitStats(props.unit, props.civ));
-  const minAge = createMemo(() => props.unit.variations.sort((a, b) => a.age - b.age)[0].age);
-
+export const UnitCard: Component<{ unit: UnifiedItem<Unit>; civ?: civConfig }> = (props) => {
+  const [stats] = createResource(() => getUnitStats(ITEMS.UNITS, props.unit, props.civ));
   return (
-    <div
-      class="bg-item-unit/10 text-white rounded-2xl p-4 z-0 hover:bg-item-unit/20 transition-all flex flex-col"
-      style={{ opacity: globalAgeFilter() >= minAge() ? 1 : 0.5 }}
-    >
-      <Link href={`${props.baseHref ?? ""}/units/${props.unit.id}`} state={false} class="text-white">
-        <div class="flex gap-4 items-center mb-4">
-          <div class="flex-none self-start rounded-md bg-item-unit w-16 h-16 p-1">
-            <img src={props.unit.icon} />
-          </div>
-          <div class="flex-auto">
-            <div class="flex flex-row items-center">
-              <h2 class="text-lg font-bold flex-auto leading-tight ">{props.unit.name}</h2>
-              <span class="text-item-unit-light/50 text-sm uppercase whitespace-nowrap">{PRETTY_AGE_MAP[minAge()]}</span>
-            </div>
-            <p class="text-item-unit-light text-sm leading-relaxed">{props.unit.classes.join(", ")}</p>
-          </div>
-        </div>
-      </Link>
+    <Card item={props.unit} civ={props.civ}>
       <Show when={stats()}>
         <>
           <div class="flex flex-col gap-4 mb-8">
@@ -54,6 +37,6 @@ export const UnitCard: Component<{ unit: UnifiedItem<Unit>; baseHref?: string; c
           </div>
         </>
       </Show>
-    </div>
+    </Card>
   );
 };

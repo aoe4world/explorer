@@ -6,9 +6,12 @@ import { Modifier, ModifyableProperty } from "../../data/.scripts/lib/types/unit
 // Common class/id presets
 const common = {
   allMeleeUnitsExceptSiege: { class: [["melee"]] } as Modifier["select"],
-  allNonSiegeUnitsAndBuildings: { class: [["infantry"], ["cavalry"], ["structure"], ["ship"]] } as Modifier["select"],
+  allNonSiegeUnits: { class: [["infantry"], ["cavalry"], ["ship"]] } as Modifier["select"],
   allRangedUnitsAndBuildingsExceptSiege: { class: [["ranged"]] } as Modifier["select"],
-  allMillitaryShips: { class: [["ship", "attack"], ["ship", "archer"], ["ship", "incendiary"]["warship"]] } as Modifier["select"],
+  allMillitaryShips: { class: [["ship", "attack"], ["ship", "archer"], ["ship", "incendiary"], ["warship"]] } as Modifier["select"],
+  allKeepLikeLandmarks: { id: ["berkshire-palace", "elzbach-palace", "kremlin", "spasskaya-tower", "red-palace", "the-white-tower"] },
+  allReligiousUnits: { id: ["prelate", "monk", "scholar", "shaman", "imam", "warrior-monk"] } as Modifier["select"],
+  camelUnits: { id: ["camel-rider", "camel-archer"] } as Modifier["select"],
 };
 
 export const technologyModifiers: Record<string, Modifier[]> = {
@@ -62,7 +65,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
 
     {
       property: "rangedArmor",
-      select: common.allNonSiegeUnitsAndBuildings,
+      select: common.allNonSiegeUnits,
       effect: "change",
       value: 1,
       type: "passive",
@@ -74,7 +77,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
 
     {
       property: "rangedArmor",
-      select: common.allNonSiegeUnitsAndBuildings,
+      select: common.allNonSiegeUnits,
       effect: "change",
       value: 1,
       type: "passive",
@@ -84,7 +87,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Increase the ranged armor of all non-siege units by +1.
     {
       property: "rangedArmor",
-      select: common.allNonSiegeUnitsAndBuildings,
+      select: common.allNonSiegeUnits,
       effect: "change",
       value: 1,
       type: "passive",
@@ -96,7 +99,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
 
     {
       property: "meleeArmor",
-      select: common.allNonSiegeUnitsAndBuildings,
+      select: common.allNonSiegeUnits,
       effect: "change",
       value: 1,
       type: "passive",
@@ -108,7 +111,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
 
     {
       property: "meleeArmor",
-      select: common.allNonSiegeUnitsAndBuildings,
+      select: common.allNonSiegeUnits,
       effect: "change",
       value: 1,
       type: "passive",
@@ -119,7 +122,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Increase the melee armor of all non-siege units by +1.
     {
       property: "meleeArmor",
-      select: common.allNonSiegeUnitsAndBuildings,
+      select: common.allNonSiegeUnits,
       effect: "change",
       value: 1,
       type: "passive",
@@ -164,7 +167,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Does not affect religious units or other support units.
     {
       property: "buildTime",
-      select: { class: [["infantry"], ["cavalry"], ["siege"], ["transport"]] },
+      select: { class: [["infantry"], ["melee", "cavalry"], ["ranged", "cavalry"]["siege"], ["transport"]] },
       effect: "multiply",
       value: 0.75,
       type: "passive",
@@ -443,7 +446,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Each Farm Enclosure being worked by a Villager generates +1 Gold every  3.5 seconds.
     {
       property: "goldGatherRate",
-      select: { id: ["villager"] },
+      select: { id: ["villager", "farm"] },
       effect: "change",
       value: 0.29,
       type: "influence",
@@ -464,7 +467,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   "shattering-projectiles": [
     // Trebuchet projectiles shatter on impact, increasing their area of effect.
     {
-      property: "unknown",
+      property: "areaOfEffect",
       select: { id: ["trebuchet"] },
       effect: "change",
       value: 1,
@@ -494,7 +497,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Inspired Villagers construct +15% faster.
     {
       property: "buildTime", // Todo, branch out?
-      select: { class: [["structure"]] },
+      select: { class: [["building"]] },
       effect: "multiply",
       value: 1.15,
       type: "influence",
@@ -633,11 +636,11 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   "siege-engineering": [
     // Melee and ranged infantry can construct Siege Towers and Battering Rams in the field.
     {
-      property: "",
+      property: "unknown",
       select: { class: [["infantry"]] },
       effect: "change",
       value: 1,
-      type: "passive",
+      type: "ability",
     },
   ],
 
@@ -645,7 +648,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // All buildings gain +5 fire armor.
     {
       property: "fireArmor",
-      select: { class: [["structure"]] },
+      select: { class: [["building"]] },
       effect: "change",
       value: 5,
       type: "passive",
@@ -807,25 +810,27 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "extra-materials": [
-  //     // Stone Wall Towers and Outposts repair nearby damaged Stone Walls. A single section is repaired at a time for +20 health per second.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "extra-materials": [
+    // Stone Wall Towers and Outposts repair nearby damaged Stone Walls. A single section is repaired at a time for +20 health per second.
+    {
+      property: "healingRate",
+      select: { id: ["outpost", "stone-wall-tower"] },
+      effect: "change",
+      value: 20,
+      type: "influence",
+    },
+  ],
 
-  //   "imperial-examination": [
-  //     // Increase the maximum amount of Gold carried by Imperial Officials from +20 to undefined
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "imperial-examination": [
+    // Increase the maximum amount of Gold carried by Imperial Officials from +20 to undefined
+    {
+      property: "carryCapacity",
+      select: { id: ["imperial-official"] },
+      effect: "change",
+      value: 10,
+      type: "passive",
+    },
+  ],
 
   "navigator-lookout": [
     // Increase the sight range of military ships by +2 and their weapon range by  +1.
@@ -845,55 +850,67 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   pyrotechnics: [
-  //     // Increase the range of gunpowder units by +20%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  pyrotechnics: [
+    // Increase the range of gunpowder units by +20%.
+    {
+      property: "maxRange",
+      select: { class: [["gunpowder"]] },
+      effect: "multiply",
+      value: 1.2,
+      type: "passive",
+    },
+  ],
 
-  //   "reload-drills": [
-  //     // Reduce the reload time of Bombards by -33%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "reload-drills": [
+    // Reduce the reload time of Bombards by -33%.
+    {
+      property: "attackSpeed",
+      select: { id: ["bombard"] },
+      effect: "multiply",
+      value: 0.77,
+      type: "passive",
+    },
+  ],
 
-  //   "reusable-barrels": [
-  //     // Reduce the cost of Nest of Bees by -25%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "reusable-barrels": [
+    // Reduce the cost of Nest of Bees by -25%.
+    {
+      property: "woodCost",
+      select: { id: ["nest-of-bees"] },
+      effect: "multiply",
+      value: 0.75,
+      type: "passive",
+    },
+    {
+      property: "goldCost",
+      select: { id: ["nest-of-bees"] },
+      effect: "multiply",
+      value: 0.75,
+      type: "passive",
+    },
+  ],
 
-  //   "adjustable-crossbars": [
-  //     // Reduce the reload time of Mangonels by -25%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "adjustable-crossbars": [
+    // Reduce the reload time of Mangonels by -25%.
+    {
+      property: "attackSpeed",
+      select: { id: ["mangonel"] },
+      effect: "multiply",
+      value: 0.75,
+      type: "passive",
+    },
+  ],
 
-  //   "all-seeing-eye": [
-  //     // Increase the sight range of Scholars by +100%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "all-seeing-eye": [
+    // Increase the sight range of Scholars by +100%.
+    {
+      property: "lineOfSight",
+      select: { id: ["scholar"] },
+      effect: "multiply",
+      value: 2,
+      type: "passive",
+    },
+  ],
 
   "armored-beasts": [
     // Grant +2 armor to War Elephants and Tower War Elephants.
@@ -942,66 +959,86 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "boiling-oil": [
-  //     // Towers and Keeps gain a boiling oil attack against nearby units that deals  damage.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "boiling-oil": [
+    // Towers and Keeps gain a boiling oil attack against nearby units that deals  damage.
+    {
+      property: "unknown",
+      select: { id: ["stone-wall-tower", "keep", ...common.allKeepLikeLandmarks.id] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
 
-  //   chemistry: [
-  //     // Increase the damage of gunpowder units by +20%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  chemistry: [
+    // Increase the damage of gunpowder units by +20%.
+    {
+      property: "rangedAttack",
+      select: { class: [["gunpowder"]] },
+      effect: "multiply",
+      value: 1.2,
+      type: "passive",
+    },
+    {
+      property: "siegeAttack",
+      select: { class: [["gunpowder"]] },
+      effect: "multiply",
+      value: 1.2,
+      type: "passive",
+    },
+  ],
 
-  //   "court-architects": [
-  //     // Increase the health of all buildings by +30%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "court-architects": [
+    // Increase the health of all buildings by +30%.
+    {
+      property: "hitpoints",
+      select: { class: [["building"], ["landmark"], ["wonder"]] },
+      effect: "multiply",
+      value: 1.3,
+      type: "passive",
+    },
+  ],
 
-  //   "efficient-production": [
-  //     // Allow Scholars to garrison in military buildings, boosting production speed by +100%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "efficient-production": [
+    // Allow Scholars to garrison in military buildings, boosting production speed by +100%.
+    {
+      property: "productionSpeed",
+      select: { id: ["scholar"] },
+      effect: "multiply",
+      value: 2,
+      type: "passive",
+    },
+  ],
 
-  //   "elite-army-tactics": [
-  //     // Increase the health of all melee infantry by +20% and their damage by undefined.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "elite-army-tactics": [
+    // Increase the health of all melee infantry by +20% and their damage by undefined.
+    {
+      property: "hitpoints",
+      select: { class: [["melee"]] },
+      effect: "multiply",
+      value: 1.2,
+      type: "passive",
+    },
+    {
+      property: "meleeAttack",
+      select: { class: [["melee"]] },
+      effect: "multiply",
+      value: 1.2,
+      type: "passive",
+    },
+  ],
 
-  //   "forced-march": [
-  //     // Infantry units gain the Forced March ability.
-  //     // This ability makes them move +100% faster for  10 seconds, but they cannot attack while it is active.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "forced-march": [
+    // Infantry units gain the Forced March ability.
+    // This ability makes them move +100% faster for  10 seconds, but they cannot attack while it is active.
+    {
+      property: "moveSpeed",
+      select: { class: [["infantry"]] },
+      effect: "multiply",
+      value: 2,
+      type: "ability",
+    },
+  ],
 
   geometry: [
     // Increase the damage of Rams and Trebuchets +30%.
@@ -1014,65 +1051,88 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "greased-axles": [
-  //     // Increase the movement speed of siege engines by +20%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "greased-axles": [
+    // Increase the movement speed of siege engines by +20%.
+    {
+      property: "moveSpeed",
+      select: { class: [["siege"]] },
+      effect: "multiply",
+      value: 1.2,
+      type: "passive",
+    },
+  ],
 
-  //   "hearty-rations": [
-  //     // Increase the carrying capacity of Villagers by +5.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "hearty-rations": [
+    // Increase the carrying capacity of Villagers by +5.
+    {
+      property: "carryCapacity",
+      select: { id: ["villager"] },
+      effect: "change",
+      value: 5,
+      type: "passive",
+    },
+  ],
 
-  //   "herbal-medicine": [
-  //     // Increase the healing rate of religious units by +100%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "herbal-medicine": [
+    // Increase the healing rate of religious units by +100%.
+    {
+      property: "healingRate",
+      select: common.allReligiousUnits,
+      effect: "multiply",
+      value: 2,
+      type: "passive",
+    },
+  ],
 
-  //   "honed-blades": [
-  //     // Increase the melee damage of Men-at-Arms and Knights by +3.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "honed-blades": [
+    // Increase the melee damage of Men-at-Arms and Knights by +3.
+    {
+      property: "meleeAttack",
+      select: { id: ["man-at-arms", "knight"] },
+      effect: "change",
+      value: 3,
+      type: "passive",
+    },
+  ],
 
-  //   "incendiary-arrows": [
-  //     // Increase the damage of ranged units and buildings by +20%. Does not apply to gunpowder units.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "incendiary-arrows": [
+    // Increase the damage of ranged units and buildings by +20%. Does not apply to gunpowder units.
+    {
+      property: "rangedAttack",
+      select: {
+        class: [["ranged", "cavalry"]],
+        // Below is essentally the same a ["ranged", "infantry"] minus gunpowder units
+        id: [
+          "longbowman",
+          "zhuge-nu",
+          "archer",
+          "arbeletrier",
+          "crossbowman",
+          // And other ranged buildings
+          "town-center",
+          "keep",
+          "outpost",
+          "stone-wall-tower",
+          "barbican-of-the-sun",
+          ...common.allKeepLikeLandmarks.id,
+        ],
+      },
+      effect: "multiply",
+      value: 1.2,
+      type: "passive",
+    },
+  ],
 
-  //   "lookout-towers": [
-  //     // Increase the sight range of Outposts by 50%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "lookout-towers": [
+    // Increase the sight range of Outposts by 50%.
+    {
+      property: "lineOfSight",
+      select: { id: ["outpost"] },
+      effect: "multiply",
+      value: 1.5,
+      type: "passive",
+    },
+  ],
 
   "patchwork-repairs": [
     // Increase the repair rate of Fishing Ships by +100%.
@@ -1085,65 +1145,102 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   piety: [
-  //     // Increase the health of religious units by +40.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  piety: [
+    // Increase the health of religious units by +40.
+    {
+      property: "hitpoints",
+      select: common.allReligiousUnits,
+      effect: "multiply",
+      value: 1.4,
+      type: "passive",
+    },
+  ],
 
-  //   "professional-scouts": [
-  //     // Scouts gain the ability to carry animal carcasses and +200% damage against wild animals.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "professional-scouts": [
+    // Scouts gain the ability to carry animal carcasses and +200% damage against wild animals.
+    {
+      property: "huntCarryCapacity",
+      select: { id: ["scout"] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+    {
+      property: "rangedAttack",
+      target: { class: [["hunt"]] },
+      select: { id: ["scout"] },
+      effect: "multiply",
+      value: 3,
+      type: "passive",
+    },
+    {
+      property: "meleeAttack",
+      target: { class: [["hunt"]] },
+      select: { id: ["scout"] },
+      effect: "multiply",
+      value: 3,
+      type: "passive",
+    },
+  ],
 
-  //   "reinforced-foundations": [
-  //     // Houses and Town Centers grant an additional +5 maximum Population.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "reinforced-foundations": [
+    // Houses and Town Centers grant an additional +5 maximum Population.
+    {
+      property: "maxPopulation",
+      select: { id: ["house", "town-center"] },
+      effect: "change",
+      value: 5,
+      type: "passive",
+    },
+  ],
 
-  //   "roller-shutter-triggers": [
-  //     // Increase the weapon range of Springalds by +2 tiles and reduce their reload time by  +25%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "roller-shutter-triggers": [
+    // Increase the weapon range of Springalds by +2 tiles and reduce their reload time by  +25%.
+    {
+      property: "maxRange",
+      select: { id: ["springald"] },
+      effect: "change",
+      value: 2,
+      type: "passive",
+    },
+    {
+      property: "attackSpeed",
+      select: { id: ["springald"] },
+      effect: "multiply",
+      value: 0.75,
+      type: "passive",
+    },
+  ],
 
-  //   sanctity: [
-  //     // Allow Scholars to capture Sacred Sites before the Castle Age (III). Sacred Sites generate +100% more Gold.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  sanctity: [
+    // Allow Scholars to capture Sacred Sites before the Castle Age (III). Sacred Sites generate +100% more Gold.
+    {
+      property: "goldGeneration",
+      select: { id: ["sacred-site"] },
+      effect: "multiply",
+      value: 1.2,
+      type: "passive",
+    },
+    {
+      property: "unknown",
+      select: { id: ["scholar"] },
+      effect: "multiply",
+      value: 1,
+      type: "ability",
+    },
+  ],
 
-  //   "siege-elephant": [
-  //     // Upgrade Tower War Elephants to have Elite Crossbowmen as riders instead of Archers.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "siege-elephant": [
+    // Upgrade Tower War Elephants to have Elite Crossbowmen as riders instead of Archers.
+    {
+      property: "rangedAttack",
+      target: { class: [["heavy"]] },
+      select: { id: ["tower-elephant"] },
+      effect: "change",
+      value: 11,
+      type: "passive",
+    },
+  ],
 
   "siege-works": [
     // Increase the health of siege engines by +20% and their ranged armor by  +3.
@@ -1163,15 +1260,16 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "slow-burning-defenses": [
-  //     // Increase the fire armor of Stone Wall Towers, Keeps, and Outposts by +10.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "slow-burning-defenses": [
+    // Increase the fire armor of Stone Wall Towers, Keeps, and Outposts by +10.
+    {
+      property: "fireArmor",
+      select: { id: ["stone-wall-tower", "keep", "outpost"] },
+      effect: "change",
+      value: 10,
+      type: "passive",
+    },
+  ],
 
   swiftness: [
     // Increase the movement speed of Scholars by +100%.
@@ -1195,55 +1293,62 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "tithe-barns": [
-  //     // Relics placed in a Monastery provide an income of +30 Food, undefined Wood, and undefined Stone every minute.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  // Todo, unsure if it also applies to regnitz catherdral
+  // Todo encode
+  "tithe-barns": [
+    // Relics placed in a Monastery provide an income of +30 Food, undefined Wood, and undefined Stone every minute.
+    {
+      property: "unknown",
+      select: { id: ["monastery", "mosque", "prayer-tent", "regnitz-cathedral"] },
+      effect: "change",
+      value: 30,
+      type: "influence",
+    },
+  ],
 
-  //   "tranquil-venue": [
-  //     // Mosques restore +1 health to nearby unit every second.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "tranquil-venue": [
+    // Mosques restore +1 health to nearby unit every second.
+    {
+      property: "healingRate",
+      select: { id: ["mosque"] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
 
-  //   "village-fortresses": [
-  //     // Keeps act like Town Centers, including unit production, population capacity, and technology.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "village-fortresses": [
+    // Keeps act like Town Centers, including unit production, population capacity, and technology.
+    {
+      property: "unknown",
+      select: { id: ["keep"] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
 
-  //   zeal: [
-  //     // Units healed by Scholars gain +50% attack speed for  3 seconds.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  zeal: [
+    // Units healed by Scholars gain +50% attack speed for  3 seconds.
+    {
+      property: "attackSpeed",
+      select: { class: [["infantry"], ["cavalry"]], id: ["scholar"] },
+      effect: "multiply",
+      value: 1.5,
+      type: "influence",
+    },
+  ],
 
-  //   agriculture: [
-  //     // Improve Villagers' gathering rate from Farms by +15%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  agriculture: [
+    // Improve Villagers' gathering rate from Farms by +15%.
+    {
+      property: "foodGatherRate",
+      select: { id: ["villager", "farm"] },
+      effect: "multiply",
+      value: 1.15,
+      type: "passive",
+    },
+  ],
 
   "armored-caravans": [
     // Grant +5 armor to Traders and Trade Ships.
@@ -1278,29 +1383,31 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Increase the armor of camel units by +2.
     {
       property: "meleeArmor",
-      select: { id: ["camel-rider", "camel-archer"] },
+      select: common.camelUnits,
       effect: "change",
       value: 2,
       type: "passive",
     },
     {
       property: "rangedArmor",
-      select: { id: ["camel-rider", "camel-archer"] },
+      select: common.camelUnits,
+
       effect: "change",
       value: 2,
       type: "passive",
     },
   ],
 
-  //   "camel-handling": [
-  //     // Increase the movement speed of camel units by +15%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "camel-handling": [
+    // Increase the movement speed of camel units by +15%.
+    {
+      property: "moveSpeed",
+      select: common.camelUnits,
+      effect: "multiply",
+      value: 1.15,
+      type: "passive",
+    },
+  ],
 
   "camel-rider-shields": [
     // Grant Camel Riders shields, improving their melee armor by +3.
@@ -1313,25 +1420,27 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "camel-support": [
-  //     // Camels increase the armor of nearby infantry by +1.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "camel-support": [
+    // Camels increase the armor of nearby infantry by +1.
+    {
+      property: "meleeArmor",
+      select: { class: [["infantry"], ["cavalry"]], id: ["camel-rider", "camel-archer"] },
+      effect: "change",
+      value: 1,
+      type: "influence",
+    },
+  ],
 
-  //   "composite-bows": [
-  //     // Reduce the reload time of Archers by -25%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "composite-bows": [
+    // Reduce the reload time of Archers by -25%.
+    {
+      property: "attackSpeed",
+      select: { id: ["archer"] },
+      effect: "multiply",
+      value: 0.75,
+      type: "passive",
+    },
+  ],
 
   //   "culture-wing": [
   //     // Constructs the Culture Wing.
@@ -1361,55 +1470,60 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   //     },
   //   ],
 
-  //   faith: [
-  //     // Imams can convert units without holding a Relic, but can only target a single unit.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  faith: [
+    // Imams can convert units without holding a Relic, but can only target a single unit.
+    {
+      property: "unknown",
+      select: { id: ["imam"] },
+      effect: "change",
+      value: 1,
+      type: "ability",
+    },
+  ],
 
-  //   "fresh-foodstuffs": [
-  //     // Reduce the cost to produce Villagers by -50%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "fresh-foodstuffs": [
+    // Reduce the cost to produce Villagers by -50%.
+    {
+      property: "foodCost",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 0.5,
+      type: "passive",
+    },
+  ],
 
-  //   "grand-bazaar": [
-  //     // Traders also return with a secondary resource. This resource is 0.25 the base Gold value and is set at the market.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "grand-bazaar": [
+    // Traders also return with a secondary resource. This resource is 0.25 the base Gold value and is set at the market.
+    {
+      property: "unknown",
+      select: { id: ["trader"] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
 
-  //   "improved-processing": [
-  //     // Villagers drop off +8% more resources.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "improved-processing": [
+    // Villagers drop off +8% more resources.
+    {
+      property: "unknown",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.08,
+      type: "passive",
+    },
+  ],
 
-  //   "medical-centers": [
-  //     // Keeps heal nearby units for +2 health every  1s second.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "medical-centers": [
+    // Keeps heal nearby units for +2 health every  1s second.
+    {
+      property: "healingRate",
+      select: { id: ["keep"] },
+      effect: "change",
+      value: 2,
+      type: "influence",
+    },
+  ],
 
   //   "military-wing": [
   //     // Constructs the Military Wing.
@@ -1425,45 +1539,56 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   //     },
   //   ],
 
-  //   phalanx: [
-  //     // Increase the attack range of Spearmen by +100%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  phalanx: [
+    // Increase the attack range of Spearmen by +100%.
+    {
+      property: "maxRange",
+      select: { id: ["spearman"] },
+      effect: "multiply",
+      value: 2,
+      type: "passive",
+    },
+  ],
 
-  //   "preservation-of-knowledge": [
-  //     // Reduce the cost of all technology by -30%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "preservation-of-knowledge": [
+    // Reduce the cost of all technology by -30%.
+    {
+      property: "goldCost",
+      select: { class: [["technology"]] },
+      effect: "multiply",
+      value: 0.7,
+      type: "passive",
+    },
+    {
+      property: "woodCost",
+      select: { class: [["technology"]] },
+      effect: "multiply",
+      value: 0.7,
+      type: "passive",
+    },
+  ],
 
-  //   "spice-roads": [
-  //     // Increase the Gold income from Traders by +30%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "spice-roads": [
+    // Increase the Gold income from Traders by +30%.
+    {
+      property: "goldGatherRate",
+      select: { id: ["traders"] },
+      effect: "multiply",
+      value: 1.3,
+      type: "passive",
+    },
+  ],
 
-  //   "teak-masts": [
-  //     // Increase the health of Dhows by +100.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "teak-masts": [
+    // Increase the health of Dhows by +100.
+    {
+      property: "hitpoints",
+      select: { id: ["dhow"] },
+      effect: "change",
+      value: 100,
+      type: "passive",
+    },
+  ],
 
   //   "trade-wing": [
   //     // Constructs the Trade Wing.
@@ -1479,49 +1604,54 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   //     },
   //   ],
 
-  //   "additional-torches": [
-  //     // Increase the torch damage of all infantry and cavalry by +5.
-  //     // If Additional Torches has already been researched, increase the torch damage from all infantry and cavalry by  +2.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  // Todo, add improved version
 
-  //   "monastic-shrines": [
-  //     // Monasteries allow Improved Production in their districts even without an Ovoo.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "additional-torches": [
+    // Increase the torch damage of all infantry and cavalry by +5.
+    // If Additional Torches has already been researched, increase the torch damage from all infantry and cavalry by  +2.
+    {
+      property: "fireAttack",
+      select: { class: [["infantry"], ["cavalry"]] },
+      effect: "change",
+      value: 3,
+      type: "passive",
+    },
+  ],
+
+  "monastic-shrines": [
+    // Monasteries allow Improved Production in their districts even without an Ovoo.
+    {
+      property: "unknown",
+      select: { id: ["prayer-tent"] },
+      effect: "change",
+      value: 1,
+      type: "influence",
+    },
+  ],
 
   // Todo, improve
   piracy: [
     // Gain +50 Wood and  +50 Gold when sinking an enemy ship.
     {
-      property: "unknown" as ModifyableProperty,
-      select: { class: [["ship"]] },
+      property: "unknown",
+      select: { id: ["light-junk", "explosive-junk", "war-junk", "baochuan"] },
       effect: "change",
       value: 50,
       type: "ability",
     },
   ],
 
-  //   "raid-bounty": [
-  //     // Increase the raid income for igniting a building to +75 Food and Gold.
-  //     // If Raid Bounty has already been researched, increase the raid income for igniting a building by  +25 Food and Gold.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "raid-bounty": [
+    // Increase the raid income for igniting a building to +75 Food and Gold.
+    // If Raid Bounty has already been researched, increase the raid income for igniting a building by  +25 Food and Gold.
+    {
+      property: "unknown",
+      select: { class: [["cavalry"], ["infantry"]] },
+      effect: "change",
+      value: 1,
+      type: "ability",
+    },
+  ],
 
   "siha-bow-limbs": [
     // Increase the ranged damage of Mangudai and the Khan by +1.
@@ -1534,77 +1664,84 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "stone-bounty": [
-  //     // Add +125 Stone to the raid income for igniting a building.
-  //     // If Stone Bounty has already been researched, add  +50 Stone to the raid income for igniting a building.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "stone-bounty": [
+    // Add +125 Stone to the raid income for igniting a building.
+    // If Stone Bounty has already been researched, add  +50 Stone to the raid income for igniting a building.
+    {
+      property: "unknown",
+      select: { class: [["cavalry"], ["infantry"]] },
+      effect: "change",
+      value: 1,
+      type: "ability",
+    },
+  ],
 
-  //   "stone-commerce": [
-  //     // Having 9 or more active Traders causes them to supply an increased amount of Stone as well as Gold.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "stone-commerce": [
+    // Having 9 or more active Traders causes them to supply an increased amount of Stone as well as Gold.
+    {
+      property: "unknown",
+      select: { id: ["trader"] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
 
-  //   "superior-mobility": [
-  //     // Packed buildings move and pack/unpack 50% faster.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "superior-mobility": [
+    // Packed buildings move and pack/unpack 50% faster.
+    {
+      property: "moveSpeed",
+      select: { class: [["building"]] },
+      effect: "multiply",
+      value: 1.5,
+      type: "ability",
+    },
+  ],
 
-  //   "whistling-arrows": [
-  //     // Increase the Khan's Signal Arrow duration by +7 seconds and range by  +3 tiles.
-  //     // If Whistling Arrows has already been researched, increase the Khan's Signal Arrow duration by  +2 seconds and range by  +1 tile.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "whistling-arrows": [
+    // Increase the Khan's Signal Arrow duration by +7 seconds and range by  +3 tiles.
+    // If Whistling Arrows has already been researched, increase the Khan's Signal Arrow duration by  +2 seconds and range by  +1 tile.
+    {
+      property: "unknown",
+      select: { id: ["khan"] },
+      effect: "change",
+      value: 1,
+      type: "ability",
+    },
+  ],
 
-  //   "yam-network": [
-  //     // Yam speed aura applies to all units instead of just Traders and cavalry units.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "yam-network": [
+    // Yam speed aura applies to all units instead of just Traders and cavalry units.
+    {
+      property: "unknown",
+      select: { class: [["infantry"], ["siege"]] },
+      effect: "change",
+      value: 1,
+      type: "influence",
+    },
+  ],
 
-  //   "banded-arms": [
-  //     // Increase the range of Springald by +1.5 tiles.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "banded-arms": [
+    // Increase the range of Springald by +1.5 tiles.
+    {
+      property: "maxRange",
+      select: { id: ["springald"] },
+      effect: "multiply",
+      value: 1.5,
+      type: "passive",
+    },
+  ],
 
-  //   "blessing-duration": [
-  //     // Increase the duration of Saint's Blessing by 10 seconds.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "blessing-duration": [
+    // Increase the duration of Saint's Blessing by 10 seconds.
+    {
+      property: "unknown",
+      select: { id: ["warrior-monk"] },
+      effect: "change",
+      value: 10,
+      type: "influence",
+    },
+  ],
 
   "boyars-fortitude": [
     // Increase the health of Rus cavalry by +20.
@@ -1646,35 +1783,45 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "double-time": [
-  //     // Streltsy gain the Double Time ability, which increases their movement speed by +30% and speeds up their Static Deployment time by  +50% for  10 seconds.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "double-time": [
+    // Streltsy gain the Double Time ability, which increases their movement speed by +30% and speeds up their Static Deployment time by  +50% for  10 seconds.
+    {
+      property: "moveSpeed",
+      select: { id: ["streltsy"] },
+      effect: "multiply",
+      value: 1.3,
+      type: "ability",
+    },
+    {
+      property: "unknown",
+      select: { id: ["streltsy"] },
+      effect: "multiply",
+      value: 1.5,
+      type: "ability",
+    },
+  ],
 
-  //   "fine-tuned-guns": [
-  //     // Reduce the reload time of Bombards by -25%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "fine-tuned-guns": [
+    // Reduce the reload time of Bombards by -25%.
+    {
+      property: "attackSpeed",
+      select: { id: ["bombard"] },
+      effect: "multiply",
+      value: 0.75,
+      type: "passive",
+    },
+  ],
 
-  //   "improved-blessing": [
-  //     // Improve the damage granted by Saint's Blessing by +1.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "improved-blessing": [
+    // Improve the damage granted by Saint's Blessing by +1.
+    {
+      property: "unknown",
+      select: { class: [["infantry"], ["cavalry"]], id: ["warrior-monk"] },
+      effect: "change",
+      value: 1,
+      type: "ability",
+    },
+  ],
 
   "knight-sabers": [
     // Increase the melee damage of Knights by +4.
@@ -1687,35 +1834,38 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "mounted-precision": [
-  //     // Increases the Horse Archers weapon range by %?%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "mounted-precision": [
+    // Increases the Horse Archers weapon range by %?%.
+    {
+      property: "maxRange",
+      select: { id: ["horse-archer"] },
+      effect: "change",
+      value: 2,
+      type: "passive",
+    },
+  ],
 
-  //   "saints-reach": [
-  //     // Increase the range of Saint's Blessing by 3 tiles.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "saints-reach": [
+    // Increase the range of Saint's Blessing by 3 tiles.
+    {
+      property: "unknown",
+      select: { id: ["warrior-monk"] },
+      effect: "change",
+      value: 1,
+      type: "ability",
+    },
+  ],
 
-  //   "siege-crew-training": [
-  //     // Setup and teardown speed of Trebuchets and Magonels is instant.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "siege-crew-training": [
+    // Setup and teardown speed of Trebuchets and Magonels is instant.
+    {
+      property: "attackSpeed",
+      select: { id: ["trebuchet", "mangonel"] },
+      effect: "change",
+      value: 0, // Todo, figure out real timings
+      type: "passive",
+    },
+  ],
 
   "wandering-town": [
     // Ram damage increased by +100%.

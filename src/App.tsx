@@ -1,5 +1,5 @@
 import { Link, RouteDefinition, useLocation, useNavigate, useRoutes } from "solid-app-router";
-import { Component, createEffect, ErrorBoundary } from "solid-js";
+import { Component, createEffect, createSignal, ErrorBoundary, on } from "solid-js";
 import { Toolbar } from "./components/Toolbar";
 import { Nav } from "./components/Nav";
 import { CivDetailRoute } from "./routes/civs/[slug]";
@@ -7,6 +7,8 @@ import { UnitOverviewRoute } from "./routes/units/units";
 import { UnitDetailRoute } from "./routes/units/[id]";
 import { CivOverviewRoute } from "./routes/civs/civs";
 import { Icon } from "./components/Icon";
+import { BuildingOverviewRoute } from "./routes/buildings/buildings";
+import { BuildingDetailRoute } from "./routes/buildings/[id]";
 
 const routes: RouteDefinition[] = [
   {
@@ -29,6 +31,10 @@ const routes: RouteDefinition[] = [
     component: () => UnitDetailRoute,
   },
   {
+    path: "/civs/:slug/buildings/:id",
+    component: () => BuildingDetailRoute,
+  },
+  {
     path: "/units",
     component: () => UnitOverviewRoute,
   },
@@ -36,13 +42,28 @@ const routes: RouteDefinition[] = [
     path: "/units/:id",
     component: () => UnitDetailRoute,
   },
+  {
+    path: "/buildings",
+    component: () => BuildingOverviewRoute,
+  },
+  {
+    path: "/buildings/:id",
+    component: () => BuildingDetailRoute,
+  },
 ];
 
-const navItems: [href: string, label: string][] = [
-  ["/civs", "Civs"],
-  ["/units/", "All units"],
-];
-
+export const [activePage, setActivePage] = createSignal<{ title?: string; description?: string }>();
+createEffect(
+  on(activePage, () => {
+    document.title = activePage()?.title ? activePage().title + " – Explorer – AoE4 World" : "Explorer – AoE4 World";
+    if (!document.querySelector("meta[name=description]")) {
+      const meta = document.createElement("meta");
+      meta.name = "description";
+      meta.content = activePage()?.description ?? "";
+      document.head.appendChild(meta);
+    } else document.querySelector("meta[name=description]")?.setAttribute("content", activePage()?.description ?? "");
+  })
+);
 const App: Component = () => {
   const Routes = useRoutes(routes);
   const location = useLocation();
@@ -52,9 +73,9 @@ const App: Component = () => {
     location.pathname;
     resetFocusEl?.focus();
   });
+
   return (
     <>
-      {/* <Nav items={navItems}></Nav> */}
       <div ref={resetFocusEl} class="outline-none" tabindex="-1"></div>
 
       <Toolbar></Toolbar>

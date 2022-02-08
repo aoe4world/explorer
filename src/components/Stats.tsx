@@ -87,12 +87,14 @@ export const StatBar: Component<{
               const [value, id, age, variation, type, label] = part();
 
               let partEl;
-              const isBase = variation.type == "unit" && i == 0;
+              const isBase = ["unit", "building"].includes(variation.type) && i == 0;
               let className = isBase
                 ? "bg-bar-base" + (value < props.max * 0.75 ? " shrink-0" : "")
                 : type == "bonus"
                 ? "bg-white/20 !text-white shrink"
-                : type == "upgrade" ?? variation.type == "unit"
+                : type == "upgrade" && ["building"].includes(variation.type)
+                ? "bg-bar-building shrink"
+                : type == "upgrade" ?? ["unit"].includes(variation.type)
                 ? "bg-bar-upgrade shrink-0"
                 : variation.unique
                 ? "bg-bar-uniqiue"
@@ -106,7 +108,7 @@ export const StatBar: Component<{
                   ref={partEl}
                   className={className}
                   style={{
-                    width: hide() ? "0" : `max(5px, calc(${(part()[0] / props.max) * 100}% - 2px))`,
+                    width: hide() ? "0" : `min(max(5px, calc(${(part()[0] / props.max) * 100}% - 2px)), 100%)`,
                     "margin-right": hide() ? "0" : "2px",
                     opacity: hide() ? 0 : 1,
                     transition: "all 0.2s ease-in",
@@ -120,6 +122,7 @@ export const StatBar: Component<{
                         </span>
                         <span class="float-right ml-4 opacity-50">{PRETTY_AGE_MAP[age]}</span>
                       </div>
+                      {type == "upgrade" && `${PRETTY_AGE_MAP[age]} upgrade for `}
                       {label ? (
                         <p>{label}</p>
                       ) : (
@@ -319,6 +322,9 @@ function formatSecondsToTime(seconds: number) {
   const s = Math.round(seconds % 60);
   return `${h > 0 ? `${h}:` : ""}${h && m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`;
 }
+function formatCurreny(number: number) {
+  return number > 2500 ? `${number / 1000}k` : number;
+}
 
 export const StatCosts: Component<{ costs: Item["costs"] }> = (props) => (
   <div>
@@ -328,7 +334,7 @@ export const StatCosts: Component<{ costs: Item["costs"] }> = (props) => (
         (type) =>
           (type == "popcap" ? props.costs[type] > 1 : props.costs[type] > 0) && (
             <div class="flex items-center gap-1">
-              <div class="text-white">{type == "time" ? formatSecondsToTime(props.costs[type]) : props.costs[type]}</div>
+              <div class="text-white">{type == "time" ? formatSecondsToTime(props.costs[type]) : formatCurreny(props.costs[type])}</div>
               <img src={RESOURCES[type]} class="h-4 object-contain w-5" />
             </div>
           )

@@ -1,3 +1,4 @@
+import { Building, PhysicalItem } from "../../data/.scripts/lib/types/units";
 import { CIVILIZATIONS, ITEMS } from "../config";
 import { technologyModifiers } from "../data/technologies";
 import { civAbbr, civConfig, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
@@ -31,12 +32,12 @@ export function filterItems<T extends UnifiedItem[]>(items: T, { civs, maxAge }:
 }
 
 /** Sort a list of unified units based on properties of their variations */
-const variationMin = (item: UnifiedItem<Unit>, property: keyof Unit) => {
+const variationMin = (item: UnifiedItem<PhysicalItem>, property: keyof Unit) => {
   return item.variations.reduce((min, variation) => {
     return +variation[property] < min ? +variation[property] : min;
   }, Infinity);
 };
-export function sortUnifiedUnitsByVariation(units: UnifiedItem<Unit>[], keys: (keyof Unit)[]) {
+export function sortUnifiedItemsByVariation<T extends Unit | Building>(units: UnifiedItem<T>[], keys: (keyof T)[]) {
   for (const key of keys) {
     units = units.sort((a, b) => variationMin(a, key) - variationMin(b, key));
   }
@@ -44,13 +45,13 @@ export function sortUnifiedUnitsByVariation(units: UnifiedItem<Unit>[], keys: (k
 }
 
 /** Query the technologies that apply to an item and merge them with all technology modifiers */
-export async function getItemTechnologies(
+export async function getItemTechnologies<T extends ITEMS>(
+  type: T,
   item: string | UnifiedItem,
   civ?: civAbbr | civConfig,
   includeAllCivsUnitSpecificTech = false
 ): Promise<UnifiedItem<Technology>[]> {
-  const [technologies, unifiedItem] = await Promise.all([fetchItems(ITEMS.TECHNOLOGIES), typeof item == "string" ? fetchItem(ITEMS.UNITS, item) : item]);
-  const simplifiedClasses = unifiedItem.classes.flatMap((c) => c.split(" ").map((c) => c.toLowerCase()));
+  const [technologies, unifiedItem] = await Promise.all([fetchItems(ITEMS.TECHNOLOGIES), typeof item == "string" ? fetchItem(type, item) : item]);
   return technologies.reduce((acc, t) => {
     // Todo, reduce over item.variations instead and read 'effects'. Filter by civ
     const modifiers = technologyModifiers[t.id];
@@ -58,17 +59,19 @@ export async function getItemTechnologies(
     const variations = t.variations.filter((v) => (filteringByCiv ? v.civs.includes(mapCivsArgument(civ)[0].abbr) : true));
     if (!modifiers || !variations.length) return acc;
 
+    const techResearchedAtId = false; //t.variations.some((v) => v.producedBy.includes(unifiedItem.id));
     const techMatchesItemId = modifiers.some((m) => m.select.id?.includes(unifiedItem.id));
-    const techMatchesItemClass = modifiers.some((m) => m.select.class?.some((cl) => cl?.every((c) => simplifiedClasses.includes(c))));
+    const techMatchesItemClass = modifiers.some((m) => m.select.class?.some((cl) => cl?.every((c) => unifiedItem.classes.includes(c))));
     const appliesToMultipleCivs = t.civs.length > 1;
     const itemIsUnique = unifiedItem.civs.length === 1;
 
     if (
-      filteringByCiv
+      techResearchedAtId ||
+      (filteringByCiv
         ? techMatchesItemId || techMatchesItemClass
         : // If we're not looking at techs for a specific civ & unit combo
           // we show only techs that match by id, or those that match by class and have multiple civs
-          (techMatchesItemId && itemIsUnique) || (techMatchesItemId && includeAllCivsUnitSpecificTech) || (techMatchesItemClass && appliesToMultipleCivs)
+          (techMatchesItemId && itemIsUnique) || (techMatchesItemId && includeAllCivsUnitSpecificTech) || (techMatchesItemClass && appliesToMultipleCivs))
     ) {
       if (techMatchesItemId) acc.unshift({ ...t, variations });
       else acc.push({ ...t, variations });

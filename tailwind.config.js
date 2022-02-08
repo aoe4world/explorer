@@ -1,7 +1,18 @@
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx,css,md,mdx,html,json,scss}"],
   darkMode: "class",
-
+  safelist: [
+    "text-2xl",
+    "text-3xl",
+    {
+      pattern: /bg-item-(unit|technology|tech|building)/,
+      variants: ["hover"],
+    },
+    {
+      pattern: /text-item-(unit|technology|tech|building)/,
+      pattern: /text-item-(unit|technology|tech|building)-light/,
+    },
+  ],
   theme: {
     extend: {
       colors: {
@@ -17,17 +28,24 @@ module.exports = {
           800: "#0F0F11",
           900: "#070708",
         },
+        uniqiue: "#DFC686",
         item: {
           unit: "#824F34",
           "unit-light": "#C36B3C",
           tech: "#32806B",
+          technology: "#32806B",
           "tech-light": "#08A67B",
+          "technology-light": "#08A67B",
+          building: "#345469",
+          "building-light": "#477899",
         },
         bar: {
           upgrade: "#B16239",
           base: "#A9A9A9",
           tech: "#32806B",
+          technology: "#32806B",
           uniqiue: "#AF944E",
+          building: "#477899",
         },
       },
       fontFamily: {

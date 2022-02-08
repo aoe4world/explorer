@@ -1,13 +1,13 @@
 import { Link, useIsRouting, useParams } from "solid-app-router";
-import { createMemo, createResource, For, Show, Suspense } from "solid-js";
+import { createEffect, createMemo, createResource, For, Show, Suspense } from "solid-js";
+import { setActivePage } from "../../App";
 import { CivFlag } from "../../components/CivFlag";
 import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getCivData } from "../../data/civData";
 import { getItems } from "../../query/fetch";
-import { sortUnifiedUnitsByVariation, splitUnitsIntoGroups } from "../../query/utils";
+import { sortUnifiedItemsByVariation, splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass, mainIntroductionCSSClass } from "../../styles";
-import { GroupedUnits, UnifiedItem, Unit } from "../../types/data";
 
 export type CivInfo = {
   name: string;
@@ -31,7 +31,9 @@ export const CivDetailRoute = () => {
     (civ) => getItems(ITEMS.UNITS, civ.abbr)
   );
 
-  const grouped = createMemo(() => units() && splitUnitsIntoGroups(sortUnifiedUnitsByVariation(units(), ["hitpoints", "age"])));
+  const grouped = createMemo(() => units() && splitUnitsIntoGroups(sortUnifiedItemsByVariation(units(), ["hitpoints", "age"])));
+
+  createEffect(() => civ() && setActivePage({ title: civ().name, description: civ().description }));
 
   return (
     <>
@@ -40,7 +42,7 @@ export const CivDetailRoute = () => {
           <div class="flex gap-4 items-center mb-3">
             <div class="flex-none self-start w-24 h-16  relative">
               <div class="ring-inset ring-2 ring-black/20 w-full h-full rounded-md absolute pointer-events-none"></div>
-              <CivFlag abbr={civConfig().abbr} class="w-full h-full rounded-md " />
+              <CivFlag abbr={civConfig().abbr} class="w-full h-full rounded-md object-cover" />
             </div>
             <div class="ml-2">
               <span class="text-white/50 ">Civilization</span>

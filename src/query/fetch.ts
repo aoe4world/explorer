@@ -1,17 +1,19 @@
 import { ITEMS, DATA_ROOT, MUTED_UNITS } from "../config";
-import { Unit, Technology, UnifiedItem, civAbbr } from "../types/data";
+import { Unit, Technology, UnifiedItem, civAbbr, Building } from "../types/data";
 
 type ItemTypes = {
   [ITEMS.UNITS]: Unit;
   [ITEMS.TECHNOLOGIES]: Technology;
+  [ITEMS.BUILDINGS]: Building;
 };
 
 const itemsCache = {
   [ITEMS.UNITS]: new Map<string, UnifiedItem<Unit>>(),
   [ITEMS.TECHNOLOGIES]: new Map<string, UnifiedItem<Technology>>(),
+  [ITEMS.BUILDINGS]: new Map<string, UnifiedItem<Building>>(),
 };
 
-export async function fetchItems<T extends ITEMS>(type: T) {
+export async function fetchItems<T extends ITEMS>(type: T): Promise<UnifiedItem<ItemTypes[T]>[]> {
   const res = await fetchJson<{ data: UnifiedItem<ItemTypes[T]>[] }>(`${DATA_ROOT}/${type}/all-unified.json`, true);
   const items = [];
   for (const item of res.data) {

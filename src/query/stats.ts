@@ -1,16 +1,20 @@
 import { firstBy } from "thenby";
 import { ITEMS, SUPPORTED_MODIFIER_PROPERTIES } from "../config";
 import { technologyModifiers } from "../data/technologies";
-import { civAbbr, civConfig, Modifier, Technology, UnifiedItem, Unit } from "../types/data";
+import { Building, civAbbr, civConfig, Modifier, Technology, UnifiedItem, Unit } from "../types/data";
 import { CalculatedStats, Stat, StatPart, StatProperty } from "../types/stats";
 import { fetchItem } from "./fetch";
 import { getItemTechnologies, mapCivsArgument } from "./utils";
 
-export async function getUnitStats(unit: string | UnifiedItem<Unit>, civ?: civAbbr | civConfig): Promise<ReturnType<typeof mergeVariationsToStats>> {
+export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
+  type: T,
+  unit: string | UnifiedItem<Unit | Building>,
+  civ?: civAbbr | civConfig
+): Promise<ReturnType<typeof mergeVariationsToStats>> {
   const forCiv = mapCivsArgument(civ);
-  const getStats = async (unit: UnifiedItem<Unit>) => {
+  const getStats = async (unit: UnifiedItem<Unit | Building>) => {
     const combatStats = mergeVariationsToStats(unit.variations.filter((u) => u.civs.some((c) => forCiv.some((fc) => fc.abbr == c))));
-    const techs = await getItemTechnologies(unit, civ);
+    const techs = await getItemTechnologies(type, unit, civ);
 
     for (const [tech, modifiers] of techs.map((t) => [t, technologyModifiers[t.id]] as [UnifiedItem<Technology>, Modifier[]])) {
       for (const modifier of modifiers) {
@@ -28,11 +32,11 @@ export async function getUnitStats(unit: string | UnifiedItem<Unit>, civ?: civAb
     return combatStats;
   };
 
-  if (typeof unit == "string") return fetchItem(ITEMS.UNITS, unit).then((x) => getStats(x));
+  if (typeof unit == "string") return fetchItem(type, unit).then((x) => getStats(x));
   else return getStats(unit);
 }
 
-function mergeVariationsToStats(variations: Unit[]) {
+function mergeVariationsToStats(variations: (Unit | Building)[]) {
   return variations
     .sort(
       firstBy<Unit>((a, b) => a.age - b.age) // Sort by age
@@ -42,9 +46,10 @@ function mergeVariationsToStats(variations: Unit[]) {
     .map((variation) => {
       const stats: Partial<Record<StatProperty, number>> = {
         hitpoints: variation.hitpoints,
-        moveSpeed: variation.movement.speed,
         lineOfSight: variation.sight.line / 4.5,
       };
+
+      if (variation.type == "unit") stats.moveSpeed = variation.movement.speed;
 
       const bonus: Modifier[] = [];
 

@@ -3,6 +3,7 @@ import { ModifyableProperty } from "../data/.scripts/lib/types/units";
 export { CIVILIZATIONS, CIV_ABBR };
 export enum ITEMS {
   UNITS = "units",
+  BUILDINGS = "buildings",
   TECHNOLOGIES = "technologies",
 }
 
@@ -38,7 +39,7 @@ export const SIMILAIR_UNITS = [
   ["scholar", "imam", "monk", "warrior-monk", "shaman", "prelate"],
   ["horse-archer", "mangudai", "camel-archer", "tower-elephant"],
   ["crossbowman", "arbaletrier"],
-  ["cannon", "royal-cannon"],
+  ["cannon", "royal-cannon", "bombard"],
   ["streltsy", "handcannoneer"],
   ["traction-trebuchet", "trebuchet"],
   ["man-at-arms", "palace-guard"],
@@ -49,6 +50,7 @@ export const SIMILAIR_UNITS = [
   ["war-junk", "baghlah", "hulk"],
   ["junk", "light-junk", "lodya-attack-ship", "dhow", "galley"],
   ["demolition-ship", "lodya-demolition-ship", "explosive-junk", "explosive-dhow"],
+  ["monastery", "mosque", "prayer-tent"],
 ];
 
 // Rendering wrong or not fitting model, never include
