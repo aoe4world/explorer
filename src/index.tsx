@@ -3,12 +3,18 @@ import { render } from "solid-js/web";
 import { Router } from "solid-app-router";
 
 import App from "./App";
+interface explorerOptions {
+  /** The path at which the explorer is located */
+  base?: string;
+}
 
-render(
+export function initializeExplorer(el: HTMLElement = document.getElementById("explorer"), options: explorerOptions = {}) {
+  render(
     () => (
-        <Router>
-            <App />
-        </Router>
+      <Router base={options.base}>
+        <App />
+      </Router>
     ),
-    document.getElementById("root") as HTMLElement
-);
+    el
+  );
+}

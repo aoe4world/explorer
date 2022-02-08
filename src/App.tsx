@@ -45,10 +45,17 @@ const navItems: [href: string, label: string][] = [
 
 const App: Component = () => {
   const Routes = useRoutes(routes);
+  const location = useLocation();
+  let resetFocusEl: HTMLDivElement;
 
+  createEffect(() => {
+    location.pathname;
+    resetFocusEl?.focus();
+  });
   return (
     <>
-      <Nav items={navItems}></Nav>
+      {/* <Nav items={navItems}></Nav> */}
+      <div ref={resetFocusEl} class="outline-none" tabindex="-1"></div>
 
       <Toolbar></Toolbar>
       <ErrorBoundary

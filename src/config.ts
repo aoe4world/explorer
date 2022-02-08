@@ -30,7 +30,7 @@ export const SUPPORTED_MODIFIER_PROPERTIES: ModifyableProperty[] = [
   "maxRange",
 ];
 
-export const DATA_ROOT = import.meta.env.DEV ? window.location.origin + "/data/" : "https://data.aoe4world.com/";
+export const DATA_ROOT = import.meta.env.DATA_URL ? import.meta.env.DATA_URL : "https://data.aoe4world.com/";
 
 export const SIMILAIR_UNITS = [
   ["archer", "longbowman"],
