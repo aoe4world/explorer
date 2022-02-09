@@ -55,6 +55,7 @@ export const SIMILAIR_UNITS = [
   ["hunting-cabin", "mill", "ger"],
   ["palisade-gate", "fortified-palisade-gate"],
   ["palisade-wall", "fortified-palisade-wall"],
+  ["outpost", "wooden-fortress"],
 ];
 
 // Rendering wrong or not fitting model, never include

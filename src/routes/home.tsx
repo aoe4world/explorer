@@ -31,7 +31,7 @@ export const CivOverviewRoute = () => {
             </Link>
             <Link href="/buildings" class={buttonClass + " outline outline-white "}>
               <Icon icon="landmark" class="mr-3" />
-              Exlpore All Buildings
+              Explore All Buildings
             </Link>
           </div>
         </div>

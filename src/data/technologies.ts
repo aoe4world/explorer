@@ -1880,4 +1880,183 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       type: "passive",
     },
   ],
+
+  "castle-turret": [
+    // Increase the damage of arrows fired from this Wooden Fortress by +2.
+    {
+      property: "rangedAttack",
+      select: { id: ["wooden-fortress"] },
+      effect: "change",
+      value: 2,
+      type: "passive",
+    },
+  ],
+
+  "castle-watch": [
+    // Increase the sight range of this Wooden Fortress by 6 tiles.
+    {
+      property: "lineOfSight",
+      select: { id: ["wooden-fortress"] },
+      effect: "change",
+      value: 6,
+      type: "passive",
+    },
+  ],
+
+  "arrow-slits": [
+    // Add defensive arrowslits to this structure.
+    {
+      property: "rangedAttack",
+      select: { id: ["wooden-fortress", "outpost"] },
+      effect: "change",
+      value: 10,
+      type: "passive",
+    },
+    {
+      property: "maxRange",
+      select: { id: ["wooden-fortress", "outpost"] },
+      effect: "change",
+      value: 8,
+      type: "passive",
+    },
+    {
+      property: "rangedAttack",
+      select: { id: ["wooden-fortress", "outpost"] },
+      target: { class: [["ship", "warship"]] },
+      effect: "change",
+      value: 25,
+      type: "bonus",
+    },
+    {
+      property: "attackSpeed",
+      select: { id: ["wooden-fortress", "outpost"] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
+
+  "handcannon-slits": [
+    // Add defensive handcannon slits to this structure.
+    {
+      property: "rangedAttack",
+      select: { id: ["outpost"] },
+      effect: "change",
+      value: 25,
+      type: "passive",
+    },
+    {
+      property: "maxRange",
+      select: { id: ["outpost"] },
+      effect: "change",
+      value: 8,
+      type: "passive",
+    },
+    {
+      property: "rangedAttack",
+      select: { id: ["outpost"] },
+      target: { class: [["ship", "warship"]] },
+      effect: "change",
+      value: 25,
+      type: "bonus",
+    },
+    {
+      property: "attackSpeed",
+      select: { id: ["outpost"] },
+      effect: "change",
+      value: 3,
+      type: "passive",
+    },
+  ],
+
+  "springald-emplacement": [
+    // Add a defensive springald emplacement to this structure.
+    {
+      property: "rangedAttack",
+      select: { id: ["wooden-fortress", "outpost", "keep"] },
+      effect: "change",
+      value: 60,
+      type: "passive",
+    },
+    {
+      property: "maxRange",
+      select: { id: ["wooden-fortress", "outpost", "keep"] },
+      effect: "change",
+      value: 9,
+      type: "passive",
+    },
+    {
+      property: "rangedAttack",
+      select: { id: ["wooden-fortress", "outpost", "keep"] },
+      target: { class: [["ship", "warship"]] },
+      effect: "change",
+      value: 50,
+      type: "bonus",
+    },
+    {
+      property: "attackSpeed",
+      select: { id: ["wooden-fortress", "outpost", "keep"] },
+      effect: "change",
+      value: 6.25,
+      type: "passive",
+    },
+  ],
+
+  "cannon-emplacement": [
+    // Add a defensive cannon emplacement to this structure.
+    {
+      property: "rangedAttack",
+      select: { id: ["outpost", "keep"] },
+      effect: "change",
+      value: 85,
+      type: "passive",
+    },
+    {
+      property: "maxRange",
+      select: { id: ["outpost", "keep"] },
+      effect: "change",
+      value: 10,
+      type: "passive",
+    },
+    {
+      property: "rangedAttack",
+      select: { id: ["outpost", "keep"] },
+      target: { class: [["ship", "warship"]] },
+      effect: "change",
+      value: 85,
+      type: "bonus",
+    },
+    {
+      property: "attackSpeed",
+      select: { id: ["outpost", "keep"] },
+      effect: "change",
+      value: 7,
+      type: "passive",
+    },
+  ],
+
+  "fortify-outpost": [
+    // Add +1000 health and  +5 fire armor to this Outpost.
+    {
+      property: "hitpoints",
+      select: { id: ["outpost"] },
+      effect: "change",
+      value: 1000,
+      type: "passive",
+    },
+    {
+      property: "rangedArmor",
+      select: { id: ["outpost"] },
+      effect: "change",
+      value: 5,
+      type: "passive",
+    },
+    {
+      property: "meleeArmor",
+      select: { id: ["outpost"] },
+      effect: "change",
+      value: 5,
+      type: "passive",
+    },
+  ],
 };
