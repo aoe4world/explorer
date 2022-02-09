@@ -1,11 +1,13 @@
 import { Link, useLocation, useNavigate, useParams } from "solid-app-router";
-import { Component, createEffect, createResource, createSignal, For, on, Show, useTransition } from "solid-js";
+import { Component, createEffect, createResource, createSignal, For, on, Show, Suspense, useTransition } from "solid-js";
 import { RESOURCES } from "../../../assets";
 import { setActivePage } from "../../App";
 import { CivFlag } from "../../components/CivFlag";
 import { ReportButton } from "../../components/ReportButton";
 import { StatNumber, StatBar, StatDps, StatCosts } from "../../components/Stats";
 import { TechnologyCard } from "../../components/TechnologyCard";
+import { Tooltip } from "../../components/Tooltip";
+import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS, SIMILAIR_UNITS } from "../../config";
 import { getCivData } from "../../data/civData";
 import { getItem, getItems } from "../../query/fetch";
@@ -67,6 +69,18 @@ export function BuildingDetailRoute() {
     // We're not really picking up the variations right now
   );
 
+  const [units] = createResource(
+    () => [params.id, CIVILIZATION_BY_SLUG[params.slug]?.abbr] as [string, civAbbr],
+    async ([item, civ]) =>
+      item && (await getItems(ITEMS.UNITS, civ)).filter((u) => u.variations.some((v) => (!civ || v.civs.includes(civ)) && v.producedBy.includes(item)))
+  );
+
+  const [research] = createResource(
+    () => [params.id, CIVILIZATION_BY_SLUG[params.slug]?.abbr] as [string, civAbbr],
+    async ([item, civ]) =>
+      item && (await getItems(ITEMS.TECHNOLOGIES, civ)).filter((u) => u.variations.some((v) => (!civ || v.civs.includes(civ)) && v.producedBy.includes(item)))
+  );
+
   const [stats] = createResource(
     () => ({ unit: unfilteredItem(), civ: civConfig()?.abbr }),
     (x) => getUnitStats(ITEMS.BUILDINGS, x.unit, x.civ)
@@ -114,6 +128,54 @@ export function BuildingDetailRoute() {
               <div class="my-8">
                 <ReportButton />
               </div>
+              <Show when={units()?.length}>
+                <h2 class="text-lg text-white font-bold  mt-12 mb-3">Produces</h2>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-y-2 flex-wrap mb-2">
+                  <For each={units()}>
+                    {(unit) => {
+                      let el;
+                      return (
+                        <Link href={`../../units/${unit.id}`} class="flex flex-row items-center mb-2 group " ref={el}>
+                          <div class="flex-none  rounded bg-item-unit/80 group-hover:bg-item-unit/100 w-10 h-10 p-0.5 mr-2 transition">
+                            <img src={unit.icon} />
+                          </div>
+                          <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
+                          <Tooltip attachTo={el}>
+                            <div class="max-w-md bg-gray-800 rounded-2xl border border-item-unit">
+                              <UnitCard unit={unit} civ={civConfig()} />
+                            </div>
+                          </Tooltip>
+                        </Link>
+                      );
+                    }}
+                  </For>
+                </div>
+              </Show>
+              <Show when={research()?.length}>
+                <h2 class="text-lg text-white font-bold mt-12 mb-3">Research</h2>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-y-2 flex-wrap mb-2">
+                  <For each={research()}>
+                    {(tech) => {
+                      let el;
+                      return (
+                        <div class="flex flex-row items-center mb-2 group " ref={el}>
+                          <div class="flex-none  rounded bg-item-technology/80 group-hover:bg-item-technology/100 w-10 h-10 p-0.5 mr-2 transition">
+                            <img src={tech.icon} />
+                          </div>
+                          <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{tech.name}</span>
+                          <Tooltip attachTo={el}>
+                            <div class="max-w-md bg-gray-800 rounded-2xl border border-item-technology">
+                              <TechnologyCard item={tech} civ={civConfig()} />
+                            </div>
+                          </Tooltip>
+                        </div>
+                      );
+                    }}
+                  </For>
+                </div>
+              </Show>
             </div>
             <div class="flex-auto flex flex-col gap-8">
               <div class=" bg-black/70 rounded-2xl p-6 ">
@@ -155,7 +217,7 @@ export function BuildingDetailRoute() {
           </div>
 
           <Show when={technologies()}>
-            <h2 class="text-xl font-bold text-white mt-6 mb-4">Technologies</h2>
+            <h2 class="text-xl font-bold text-white mt-6 mb-4">Technology Upgrades</h2>
             <div class={itemGridCSSClass}>
               <For each={technologies()}>{(tech) => <TechnologyCard item={tech}></TechnologyCard>}</For>
             </div>

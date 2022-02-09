@@ -99,7 +99,7 @@ export const StatBar: Component<{
                 : variation.unique
                 ? "bg-bar-unique"
                 : type == "technology"
-                ? "bg-bar-tech"
+                ? "bg-bar-technology"
                 : "bg-bar-base shrink-0";
               const hide = () => part()[0] <= 0;
               return (

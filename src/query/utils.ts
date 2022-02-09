@@ -1,7 +1,7 @@
 import { Building, PhysicalItem } from "../../data/.scripts/lib/types/units";
 import { CIVILIZATIONS, ITEMS } from "../config";
 import { technologyModifiers } from "../data/technologies";
-import { civAbbr, civConfig, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
+import { civAbbr, civConfig, GroupedBuildings, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
 import { fetchItem, fetchItems } from "./fetch";
 
 /** Map any of civAbbr | civConfig | civConfig[] | civAbbr[] to a single array */
@@ -84,15 +84,32 @@ export async function getItemTechnologies<T extends ITEMS>(
 export function splitUnitsIntoGroups(units: UnifiedItem<Unit>[]) {
   return units?.reduce(
     (acc, unit) => {
-      if (unit.classes.some((c) => c.toLowerCase().includes("ship"))) acc.ships.push(unit);
-      else if (unit.classes.some((c) => c.toLowerCase().includes("worker"))) acc.workers.push(unit);
-      else if (unit.classes.some((c) => c.toLowerCase().includes("infantry"))) acc.infantry.push(unit);
-      else if (unit.classes.some((c) => c.toLowerCase().includes("cavalry"))) acc.cavalry.push(unit);
-      else if (unit.classes.some((c) => c.toLowerCase().includes("siege"))) acc.siege.push(unit);
+      if (unit.classes.some((c) => c === "ship")) acc.ships.push(unit);
+      else if (unit.classes.some((c) => c === "worker")) acc.workers.push(unit);
+      else if (unit.classes.some((c) => c === "infantry")) acc.infantry.push(unit);
+      else if (unit.classes.some((c) => c === "cavalry")) acc.cavalry.push(unit);
+      else if (unit.classes.some((c) => c === "siege")) acc.siege.push(unit);
       else acc.workers.push(unit);
 
       return acc;
     },
     { workers: [], infantry: [], cavalry: [], siege: [], ships: [] } as GroupedUnits
+  );
+}
+
+export function splitBuildingsIntoGroups(buildings: UnifiedItem<Building>[]) {
+  return buildings?.reduce(
+    (acc, unit) => {
+      if (unit.classes.some((c) => c === "landmark")) acc.landmarks.push(unit);
+      else if (unit.classes.some((c) => c === "wonder")) acc.wonders.push(unit);
+      else if (unit.classes.some((c) => c === "defensive")) acc.defensive.push(unit);
+      else if (unit.classes.some((c) => c === "technology")) acc.technology.push(unit);
+      else if (unit.classes.some((c) => c === "religious")) acc.religious.push(unit);
+      else if (unit.classes.some((c) => c === "military")) acc.military.push(unit);
+      else acc.economy.push(unit);
+
+      return acc;
+    },
+    { economy: [], military: [], defensive: [], religious: [], technology: [], landmarks: [], wonders: [] } as GroupedBuildings
   );
 }

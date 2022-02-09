@@ -47,6 +47,7 @@ export const SIMILAIR_UNITS = [
   ["transport-ship", "lodya-transport-ship"],
   ["fishing-boat", "lodya-fishing-boat"],
   ["baochuan", "carrack", "xebec"],
+  ["farm", "pasture"],
   ["war-junk", "baghlah", "hulk"],
   ["junk", "light-junk", "lodya-attack-ship", "dhow", "galley"],
   ["demolition-ship", "lodya-demolition-ship", "explosive-junk", "explosive-dhow"],

@@ -35,7 +35,7 @@ export async function getItem<T extends ITEMS>(type: T, id: string) {
 
 export async function getItems<T extends ITEMS>(type: T, civ: civAbbr) {
   if (!itemsCache[type].size) await fetchItems(type);
-  return [...(itemsCache[type] as Map<string, UnifiedItem<ItemTypes[T]>>).values()].filter((item) => item.civs.includes(civ));
+  return [...(itemsCache[type] as Map<string, UnifiedItem<ItemTypes[T]>>).values()].filter((item) => !civ || item.civs.includes(civ));
 }
 
 const pendingRequests = new Map<string, Promise<any>>();

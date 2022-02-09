@@ -63,7 +63,7 @@ export function UnitDetailRoute() {
   const [productionBuildings] = createResource(
     () => ({ item: unfilteredItem(), civ: civConfig()?.abbr }),
     async ({ item, civ }) => {
-      const producedBy = [...new Set(item.variations.flatMap((v) => v.producedBy))].map((p) => (p.endsWith("barrack") ? "barracks" : p));
+      const producedBy = [...new Set(item.variations.flatMap((v) => v.producedBy))];
       const items = await Promise.all(producedBy.map((b) => getItem(ITEMS.BUILDINGS, b)));
       if (items.length != producedBy.length) console.warn("Some buildings were not found", producedBy, items);
       return (civ ? items.filter((i) => !!i && i.civs.includes(civ)) : items).filter(Boolean).sort((a, b) => b.civs?.length - a.civs?.length);
@@ -189,7 +189,7 @@ export function UnitDetailRoute() {
           </div>
 
           <Show when={technologies()}>
-            <h2 class="text-xl font-bold text-white mt-6 mb-4">Technologies</h2>
+            <h2 class="text-xl font-bold text-white mt-6 mb-4">Technology Upgrades</h2>
             <div class={itemGridCSSClass}>
               <For each={technologies()}>{(tech) => <TechnologyCard item={tech} civ={civConfig()}></TechnologyCard>}</For>
             </div>
