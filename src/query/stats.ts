@@ -23,8 +23,14 @@ export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
         if (tech.civs.length > 1) lazelyPickJustTheFirst.unique = false;
         // if (modifier.type == "influence") continue;
         if (SUPPORTED_MODIFIER_PROPERTIES.includes(modifier.property as any)) {
-          combatStats[modifier.property] ??= { category: modifier.property, parts: [], modifiers: [] };
-          combatStats[modifier.property]?.modifiers.push([modifier, tech.id, lazelyPickJustTheFirst.age, lazelyPickJustTheFirst]);
+          combatStats[modifier.property] ??= { category: modifier.property, parts: [], modifiers: [], bonus: [] };
+
+          combatStats[modifier.property]?.[modifier.type == "bonus" ? "bonus" : "modifiers"].push([
+            modifier,
+            tech.id,
+            lazelyPickJustTheFirst.age,
+            lazelyPickJustTheFirst,
+          ]);
         }
       }
     }

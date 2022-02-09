@@ -123,18 +123,13 @@ export const StatBar: Component<{
                         <span class="float-right ml-4 opacity-50">{PRETTY_AGE_MAP[age]}</span>
                       </div>
                       {type == "upgrade" && `${PRETTY_AGE_MAP[age]} upgrade for `}
-                      {label ? (
-                        <p>{label}</p>
-                      ) : (
-                        <>
-                          <strong>{variation.name}</strong>
-                          {variation.type == "technology" && <p>{variation.description}</p>}
-                          {variation.unique && (
-                            <p class="text-bar-unique">
-                              <i class="fas fa-sparkles"></i> Unique to {CIVILIZATIONS[variation.civs[0]].name}
-                            </p>
-                          )}
-                        </>
+                      <strong>{variation.name}</strong>
+                      {label && <p>{label}</p>}
+                      {!["upgrade", "base"].includes(type) && <p>{variation.description}</p>}
+                      {variation.unique && (
+                        <p class="text-bar-unique">
+                          <i class="fas fa-sparkles"></i> Unique to {CIVILIZATIONS[variation.civs[0]].name}
+                        </p>
                       )}
                     </div>
                   </Tooltip>

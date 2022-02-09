@@ -458,9 +458,10 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     {
       property: "attackSpeed",
       select: { class: [["infantry"]] },
+      target: { class: [["infantry"], ["cavalry"], ["building"]] },
       effect: "change",
       value: 1.2, // 1.25 * 1.2 = 1.5
-      type: "influence",
+      type: "bonus",
     },
   ],
 
@@ -550,11 +551,12 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   "heavy-maces": [
     // Men-at-Arms wield maces, increasing their bonus damage against heavy targets by +6.
     {
-      property: "meleeAttack", // TODO, only against heavy targets
+      property: "meleeAttack",
       select: { id: ["man-at-arms"] },
+      target: { class: [["heavy"]] },
       effect: "change",
-      value: 1,
-      type: "ability",
+      value: 6,
+      type: "bonus",
     },
   ],
 
@@ -671,9 +673,10 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     {
       property: "meleeAttack",
       select: { id: ["royal-knight"] },
-      effect: "multiply",
-      value: 1.1,
-      type: "ability",
+      target: { class: [["infantry"], ["cavalry"]] },
+      effect: "change",
+      value: 10,
+      type: "bonus",
     },
   ],
 
@@ -1169,17 +1172,17 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       property: "rangedAttack",
       target: { class: [["hunt"]] },
       select: { id: ["scout"] },
-      effect: "multiply",
-      value: 3,
-      type: "passive",
+      effect: "change",
+      value: 9, // 3 + 2*2
+      type: "bonus",
     },
     {
       property: "meleeAttack",
       target: { class: [["hunt"]] },
       select: { id: ["scout"] },
       effect: "multiply",
-      value: 3,
-      type: "passive",
+      value: 3, // 3 + 2 * 2
+      type: "bonus",
     },
   ],
 
@@ -1238,7 +1241,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       select: { id: ["tower-elephant"] },
       effect: "change",
       value: 11,
-      type: "passive",
+      type: "bonus",
     },
   ],
 
