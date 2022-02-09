@@ -10,6 +10,11 @@ module.exports = {
     },
     {
       pattern: /text-item-(unit|technology|tech|building)/,
+    },
+    {
+      pattern: /bg-bar-(unit|technology|tech|building|unique|bonus)/,
+    },
+    {
       pattern: /text-item-(unit|technology|tech|building)-light/,
     },
   ],
@@ -28,7 +33,7 @@ module.exports = {
           800: "#0F0F11",
           900: "#070708",
         },
-        uniqiue: "#DFC686",
+        unique: "#DFC686",
         item: {
           unit: "#824F34",
           "unit-light": "#C36B3C",
@@ -44,8 +49,9 @@ module.exports = {
           base: "#A9A9A9",
           tech: "#32806B",
           technology: "#32806B",
-          uniqiue: "#AF944E",
+          unique: "#AF944E",
           building: "#477899",
+          bonus: "#5B5B5B",
         },
       },
       fontFamily: {

@@ -39,7 +39,7 @@ export const Card: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) =
       {props.civ ? (
         props.item.civs.length == 1 && (
           <div class="flex h-6 mt-5  items-center gap-2">
-            <span class="text-uniqiue text-sm font-semibold">
+            <span class="text-unique text-sm font-semibold">
               <Icon icon="sparkles" /> Unique to {props.civ.name}
             </span>
           </div>
@@ -58,7 +58,7 @@ export const Card: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) =
             }
           </For>
           {props.item.civs.length == 1 && (
-            <span class="text-uniqiue text-sm font-semibold ml-auto">
+            <span class="text-unique text-sm font-semibold ml-auto">
               <Icon icon="sparkles" /> Unique
             </span>
           )}

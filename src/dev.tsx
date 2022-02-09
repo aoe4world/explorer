@@ -9,6 +9,7 @@ const navItems: [href: string, label: string][] = [
   ["/civs", "Civs"],
   ["/units/", "Units"],
   ["/buildings/", "Buildings"],
+  ["/about/", "About"],
 ];
 render(
   () => (

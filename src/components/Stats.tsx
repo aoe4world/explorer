@@ -97,7 +97,7 @@ export const StatBar: Component<{
                 : type == "upgrade" ?? ["unit"].includes(variation.type)
                 ? "bg-bar-upgrade shrink-0"
                 : variation.unique
-                ? "bg-bar-uniqiue"
+                ? "bg-bar-unique"
                 : type == "technology"
                 ? "bg-bar-tech"
                 : "bg-bar-base shrink-0";
@@ -130,7 +130,7 @@ export const StatBar: Component<{
                           <strong>{variation.name}</strong>
                           {variation.type == "technology" && <p>{variation.description}</p>}
                           {variation.unique && (
-                            <p class="text-bar-uniqiue">
+                            <p class="text-bar-unique">
                               <i class="fas fa-sparkles"></i> Unique to {CIVILIZATIONS[variation.civs[0]].name}
                             </p>
                           )}

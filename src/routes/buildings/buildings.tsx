@@ -25,7 +25,7 @@ export const BuildingOverviewRoute = () => {
         }
       >
         <div>
-          {/* <h2 class="text-2xl font-bold text-white mt-16 mb-4 pl-2">{b[0].toUpperCase() + k.slice(1)}</h2> */}
+          <h2 class="text-2xl font-bold text-white mt-16 mb-4 pl-2">Buildings</h2>
           <div class={itemGridCSSClass}>
             <For each={buildings()}>{(unit) => <BuildingCard unit={unit}></BuildingCard>}</For>
           </div>

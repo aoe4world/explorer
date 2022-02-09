@@ -5,22 +5,23 @@ import { Nav } from "./components/Nav";
 import { CivDetailRoute } from "./routes/civs/[slug]";
 import { UnitOverviewRoute } from "./routes/units/units";
 import { UnitDetailRoute } from "./routes/units/[id]";
-import { CivOverviewRoute } from "./routes/civs/civs";
+import { CivOverviewRoute } from "./routes/home";
 import { Icon } from "./components/Icon";
 import { BuildingOverviewRoute } from "./routes/buildings/buildings";
 import { BuildingDetailRoute } from "./routes/buildings/[id]";
+import { AboutRoute } from "./routes/about";
 
 const routes: RouteDefinition[] = [
   {
     path: "/",
-    component: () => {
-      useNavigate()("/civs/");
-      return null;
-    },
+    component: () => CivOverviewRoute,
   },
   {
     path: "/civs",
-    component: () => CivOverviewRoute,
+    component: () => {
+      useNavigate()("/");
+      return null;
+    },
   },
   {
     path: "/civs/:slug",
@@ -49,6 +50,10 @@ const routes: RouteDefinition[] = [
   {
     path: "/buildings/:id",
     component: () => BuildingDetailRoute,
+  },
+  {
+    path: "/about",
+    component: () => AboutRoute,
   },
 ];
 
