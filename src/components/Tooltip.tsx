@@ -1,4 +1,4 @@
-import { computePosition, offset, flip } from "@floating-ui/dom";
+import { computePosition, offset, flip, shift } from "@floating-ui/dom";
 import { Component, createSignal, onMount, onCleanup, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 
@@ -22,7 +22,7 @@ export const Tooltip: Component<{ attachTo: HTMLElement }> = (props) => {
       computePosition(props.attachTo, el, {
         placement: "bottom-start",
         strategy: "absolute",
-        middleware: [offset(10), flip()],
+        middleware: [flip(), shift()],
       }).then(({ x, y }) =>
         Object.assign(el.style, {
           left: `${x}px`,
@@ -42,7 +42,7 @@ export const Tooltip: Component<{ attachTo: HTMLElement }> = (props) => {
     <>
       <Show when={hover()}>
         <Portal>
-          <div class="z-100 w-50" style="opacity: 0; position: absolute;" ref={(el) => positionTooltip(el)}>
+          <div class="z-100 w-50 p-5 w-screen sm:w-auto" style="opacity: 0; position: absolute;" ref={(el) => positionTooltip(el)}>
             {props.children}
           </div>
         </Portal>

@@ -32,7 +32,7 @@ export const StatBar: Component<{
   );
   return (
     <Show when={parts().length > 0 || props.displayAlways}>
-      <div>
+      <div classList={{ "opacity-20": !values().total }}>
         <div class="mb-2 flex flex-row items-center">
           <span class="text-white text-[14px] flex-auto flex items-center" ref={totalEl}>
             {props.icon && <Icon icon={props.icon} class="mr-1.5 text-[12px]" />}
@@ -81,7 +81,7 @@ export const StatBar: Component<{
             )}
           </div>
         </Tooltip>
-        <div class="h-3.5 md:h-2 bg-gray-50/10 flex flex-row relative">
+        <div class="h-4 md:h-3 bg-gray-50/10 flex flex-row relative">
           <Index each={parts()}>
             {(part, i) => {
               const [value, id, age, variation, type, label] = part();
@@ -108,7 +108,7 @@ export const StatBar: Component<{
                   ref={partEl}
                   className={className}
                   style={{
-                    width: hide() ? "0" : `min(max(5px, calc(${(part()[0] / props.max) * 100}% - 2px)), 100%)`,
+                    width: hide() ? "0" : `min(max(8px, calc(${(part()[0] / props.max) * 100}% - 2px)), 100%)`,
                     "margin-right": hide() ? "0" : "2px",
                     opacity: hide() ? 0 : 1,
                     transition: "all 0.2s ease-in",
