@@ -862,12 +862,12 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "reload-drills": [
-    // Reduce the reload time of Bombards by -33%.
+    // Reduce the reload time of Bombards by -20%.
     {
       property: "attackSpeed",
       select: { id: ["bombard"] },
       effect: "multiply",
-      value: 0.77,
+      value: 0.8,
       type: "passive",
     },
   ],
@@ -1642,7 +1642,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "raid-bounty": [
-    // Increase the raid income for igniting a building to +75 Food and Gold.
+    // Increase the raid income for igniting a building to +50 Food and Gold.
     // If Raid Bounty has already been researched, increase the raid income for igniting a building by  +25 Food and Gold.
     {
       property: "unknown",
@@ -1802,12 +1802,12 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "fine-tuned-guns": [
-    // Reduce the reload time of Bombards by -25%.
+    // Reduce the reload time of Bombards by -20%.
     {
       property: "attackSpeed",
       select: { id: ["bombard"] },
       effect: "multiply",
-      value: 0.75,
+      value: 0.8,
       type: "passive",
     },
   ],
