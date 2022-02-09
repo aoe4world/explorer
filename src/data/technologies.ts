@@ -6,9 +6,15 @@ import { Modifier, ModifyableProperty } from "../../data/.scripts/lib/types/unit
 // Common class/id presets
 const common = {
   allMeleeUnitsExceptSiege: { class: [["melee"]] } as Modifier["select"],
-  allNonSiegeUnits: { class: [["infantry"], ["cavalry"], ["ship"]] } as Modifier["select"],
-  allRangedUnitsAndBuildingsExceptSiege: { class: [["ranged"]] } as Modifier["select"],
-  allMillitaryShips: { class: [["ship", "attack"], ["ship", "archer"], ["ship", "incendiary"], ["warship"]] } as Modifier["select"],
+  allNonSiegeUnits: { class: [["infantry"], ["cavalry"]] } as Modifier["select"],
+  allRangedUnitsAndBuildingsExceptSiege: {
+    class: [
+      ["ranged", "cavalry"],
+      ["archer", "ship"],
+    ],
+    id: ["longbowman", "zhuge-nu", "archer", "arbaletrier", "crossbowman"],
+  } as Modifier["select"],
+  allMillitaryShips: { class: [["ship", "attack"], ["ship", "archer"], ["ship", "incendiary"], ["warship"]], id: ["galleass"] } as Modifier["select"],
   allKeepLikeLandmarks: { id: ["berkshire-palace", "elzbach-palace", "kremlin", "spasskaya-tower", "red-palace", "the-white-tower"] },
   allReligiousUnits: { id: ["prelate", "monk", "scholar", "shaman", "imam", "warrior-monk"] } as Modifier["select"],
   camelUnits: { id: ["camel-rider", "camel-archer"] } as Modifier["select"],
@@ -723,15 +729,16 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
-  //   "long-guns": [
-  //     // Increase the damage of naval cannons by +10%.
-  //     {
-  //       property: "",
-  //       select: { class: [[]] },
-  //       effect: "change",
-  //       value: 1,
-  //     },
-  //   ],
+  "long-guns": [
+    // Increase the damage of naval cannons by +10%.
+    {
+      property: "rangedAttack",
+      select: { class: [["warship"]], id: ["galleass"] },
+      effect: "multiply",
+      value: 1.1,
+      type: "passive",
+    },
+  ],
 
   "royal-bloodlines": [
     // Increase the health of all cavalry by +35%.
@@ -919,16 +926,16 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Grant +2 armor to War Elephants and Tower War Elephants.
     {
       property: "meleeArmor",
-      select: { id: ["war-elephant", "tower-elephant"] },
+      select: { id: ["war-elephant"] }, //, "tower-elephant"] }, // bug, game does not apply correctly
       effect: "change",
-      value: 2,
+      value: 3, // Actual game value may be bug
       type: "passive",
     },
     {
       property: "rangedArmor",
-      select: { id: ["war-elephant", "tower-elephant"] },
+      select: { id: ["war-elephant"] }, //, "tower-elephant"] }, // bug, game does not apply correctly
       effect: "change",
-      value: 2,
+      value: 3, // Actual game value may be bug
       type: "passive",
     },
   ],
@@ -977,14 +984,14 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Increase the damage of gunpowder units by +20%.
     {
       property: "rangedAttack",
-      select: { class: [["gunpowder"]] },
+      select: { class: [["gunpowder"], ["warship"]] },
       effect: "multiply",
       value: 1.2,
       type: "passive",
     },
     {
       property: "siegeAttack",
-      select: { class: [["gunpowder"]] },
+      select: { class: [["gunpowder"], ["warship"]] },
       effect: "multiply",
       value: 1.2,
       type: "passive",
@@ -1017,14 +1024,14 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Increase the health of all melee infantry by +20% and their damage by undefined.
     {
       property: "hitpoints",
-      select: { class: [["melee"]] },
+      select: { class: [["melee", "infantry"]] },
       effect: "multiply",
       value: 1.2,
       type: "passive",
     },
     {
       property: "meleeAttack",
-      select: { class: [["melee"]] },
+      select: { class: [["melee", "infantry"]] },
       effect: "multiply",
       value: 1.2,
       type: "passive",
@@ -1109,7 +1116,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
           "longbowman",
           "zhuge-nu",
           "archer",
-          "arbeletrier",
+          "arbaletrier",
           "crossbowman",
           // And other ranged buildings
           "town-center",
@@ -1153,8 +1160,8 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     {
       property: "hitpoints",
       select: common.allReligiousUnits,
-      effect: "multiply",
-      value: 1.4,
+      effect: "change",
+      value: 40,
       type: "passive",
     },
   ],
@@ -1290,8 +1297,8 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     {
       property: "hitpoints",
       select: { id: ["villager"] },
-      effect: "multiply",
-      value: 1.25,
+      effect: "change",
+      value: 25,
       type: "passive",
     },
   ],
@@ -1377,7 +1384,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       property: "hitpoints",
       select: { class: [["infantry"]] },
       effect: "multiply",
-      value: 1,
+      value: 1.15,
       type: "passive",
     },
   ],
@@ -1683,7 +1690,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Having 9 or more active Traders causes them to supply an increased amount of Stone as well as Gold.
     {
       property: "unknown",
-      select: { id: ["trader"] },
+      select: { id: ["trader", "trade-ship"] },
       effect: "change",
       value: 1,
       type: "passive",

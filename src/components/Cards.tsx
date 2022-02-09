@@ -20,11 +20,13 @@ function getItemHref(item: UnifiedItem, civ?: civConfig) {
 }
 
 export const Card: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
+  const minAge = () => (!props.civ ? props.item.minAge : props.item.variations.reduce((a, v) => (v.civs.includes(props.civ.abbr) ? Math.min(a, v.age) : a), 4));
+
   return (
     <div
       class="text-white rounded-2xl p-4 z-0  transition-all flex flex-col bg-opacity-10 hover:bg-opacity-20 group"
       className={`bg-item-${props.item.type}`}
-      style={{ opacity: globalAgeFilter() >= props.item.minAge ? 1 : 0.5 }}
+      style={{ opacity: globalAgeFilter() >= minAge() ? 1 : 0.5 }}
     >
       {props.item.type == "technology" ? (
         <CardHeader item={props.item} civ={props.civ} />
