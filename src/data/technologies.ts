@@ -1621,7 +1621,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // If Additional Torches has already been researched, increase the torch damage from all infantry and cavalry by  +2.
     {
       property: "fireAttack",
-      select: { class: [["infantry"], ["cavalry"]] },
+      select: { class: [["infantry"], ["cavalry", "melee"]] },
       effect: "change",
       value: 3,
       type: "passive",
@@ -1736,7 +1736,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     {
       property: "maxRange",
       select: { id: ["springald"] },
-      effect: "multiply",
+      effect: "change",
       value: 1.5,
       type: "passive",
     },
