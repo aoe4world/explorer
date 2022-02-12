@@ -180,6 +180,22 @@ export function BuildingDetailRoute() {
             <div class="flex-auto flex flex-col gap-8">
               <div class=" bg-black/70 rounded-2xl p-6 ">
                 <StatCosts costs={item()?.variations[0].costs} />
+                <Show when={item().variations[0].popcapIncrease}>
+                  {(amount) => (
+                    <div class="mt-4">
+                      <div class="text-white/50 uppercase text-xs font-bold tracking-widest">Effects</div>
+                      <p>Increases max population by {amount}</p>
+                    </div>
+                  )}
+                </Show>
+                <Show when={item().variations[0].garrison}>
+                  {(g) => (
+                    <div class="mt-4">
+                      <div class="text-white/50 uppercase text-xs font-bold tracking-widest">Garrison</div>
+                      <p>Can garrison up to {g.capacity} units</p>
+                    </div>
+                  )}
+                </Show>
               </div>
               <Show when={stats()}>
                 {(stats) => (
