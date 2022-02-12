@@ -18,7 +18,8 @@ export const BuildingCard: Component<{ unit: UnifiedItem<Building>; baseHref?: s
             <StatBar label="Hitpoints" icon="heart" stat={stats().hitpoints} max={8000} />
             <StatBar label="Siege Attack" icon="meteor" stat={stats().siegeAttack} max={500} />
             <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats().rangedAttack} max={100} />
-            <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats().rangedArmor} max={50} displayAlways={true} />
+            <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats().rangedArmor} max={60} displayAlways={true} />
+            <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats().fireArmor} max={20} displayAlways={true} />
           </div>
           <div class="flex flex-col gap-4 mt-auto">
             <div class="flex gap-4  flex-wrap">

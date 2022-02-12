@@ -162,6 +162,7 @@ export function UnitDetailRoute() {
                       <StatBar label="Siege Attack" icon="meteor" stat={stats.siegeAttack} max={500} />
                       <StatBar label="Melee Attack" icon="swords" stat={stats.meleeAttack} max={50} />
                       <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats.rangedAttack} max={50} />
+                      <StatBar label={item().classes.includes("incendiary") ? "Fire Attack" : "Torch Attack"} icon="fire" stat={stats.fireAttack} max={50} />
                       <StatBar label="Melee Armor" icon="shield-blank" stat={stats.meleeArmor} max={20} displayAlways={true} />
                       <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats.rangedArmor} max={20} displayAlways={true} />
                     </div>

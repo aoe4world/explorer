@@ -8,7 +8,7 @@ import { Card, CardHeader } from "./Cards";
 import { StatBar, StatCosts, StatDps, StatNumber } from "./Stats";
 import { globalAgeFilter } from "./Toolbar";
 
-const increaseBarSizeForClass = ["Siege", "Elephant"];
+const increaseBarSizeForClass = ["siege", "elephant", "incendiary"];
 function getBarSize(unit: UnifiedItem<Unit>, baseSize: number, increasedSize: number) {
   return unit.classes.some((c) => increaseBarSizeForClass.includes(c)) ? increasedSize : baseSize;
 }
@@ -24,8 +24,15 @@ export const UnitCard: Component<{ unit: UnifiedItem<Unit>; civ?: civConfig }> =
             <StatBar label="Siege Attack" icon="meteor" stat={stats().siegeAttack} max={500} />
             <StatBar label="Melee Attack" icon="swords" stat={stats().meleeAttack} max={getBarSize(props.unit, 50, 100)} />
             <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats().rangedAttack} max={getBarSize(props.unit, 50, 300)} />
+            <StatBar
+              label={props.unit.classes.includes("incendiary") ? "Fire Attack" : "Torch Attack"}
+              icon="fire"
+              stat={stats().fireAttack}
+              max={getBarSize(props.unit, 50, 300)}
+            />
             <StatBar label="Melee Armor" icon="shield-blank" stat={stats().meleeArmor} max={20} displayAlways={true} />
             <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats().rangedArmor} max={20} displayAlways={true} />
+            <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats().fireArmor} max={20} />
           </div>
           <div class="flex flex-col gap-4 mt-auto">
             <div class="flex gap-4  flex-wrap">

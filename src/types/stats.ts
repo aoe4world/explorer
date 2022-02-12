@@ -5,17 +5,18 @@ export type StatProperty =
   | "meleeArmor"
   | "meleeAttack"
   | "rangedArmor"
+  | "fireArmor"
   | "rangedAttack"
   | "siegeAttack"
   | "bonusAttack"
+  | "fireAttack"
   | "hitpoints"
   | "dps"
   | "attackSpeed"
   | "moveSpeed"
   | "minRange"
   | "maxRange"
-  | "lineOfSight"
-  | "fireAttack";
+  | "lineOfSight";
 
 export type Stat = {
   category: StatProperty;

@@ -206,8 +206,8 @@ export function BuildingDetailRoute() {
                       <StatBar label="Siege Attack" icon="meteor" stat={stats.siegeAttack} max={500} />
                       <StatBar label="Melee Attack" icon="swords" stat={stats.meleeAttack} max={50} />
                       <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats.rangedAttack} max={50} />
-                      <StatBar label="Melee Armor" icon="shield-blank" stat={stats.meleeArmor} max={20} displayAlways={true} />
-                      <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats.rangedArmor} max={20} displayAlways={true} />
+                      <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats.fireArmor} max={20} displayAlways={true} />
+                      <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats.rangedArmor} max={60} displayAlways={true} />
                     </div>
                     <div class="flex gap-5 flex-wrap bg-black/70 rounded-2xl p-6 ">
                       {stats.attackSpeed && (

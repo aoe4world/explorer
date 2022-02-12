@@ -117,20 +117,22 @@ export const StatBar: Component<{
                   <Tooltip attachTo={partEl}>
                     <div class={tooltipCSSClass}>
                       <div class="text-lg mb-4">
-                        <span class="bg-white text-black font-bold rounded-sm px-3 py-1" className={className}>
+                        <span class=" text-white font-bold rounded-sm px-2 py-1 inline-flex flex-col items-center" className={className}>
+                          <span class="text-xs uppercase ">{type}</span>
                           {!isBase && "+"} {value ?? 0}
                         </span>
                         <span class="float-right ml-4 opacity-50">{PRETTY_AGE_MAP[age]}</span>
                       </div>
                       {type == "upgrade" && `${PRETTY_AGE_MAP[age]} upgrade for `}
                       <strong>{variation.name}</strong>
-                      {label && <p>{label}</p>}
-                      {!["upgrade", "base"].includes(type) && <p>{variation.description}</p>}
+                      {label && <p class="mb-6">{label}</p>}
                       {variation.unique && (
                         <p class="text-bar-unique">
                           <i class="fas fa-sparkles"></i> Unique to {CIVILIZATIONS[variation.civs[0]].name}
                         </p>
                       )}
+
+                      {!["upgrade", "base"].includes(type) && <p class="my-2 whitespace-pre-wrap">{variation.description}</p>}
                     </div>
                   </Tooltip>
                 </div>

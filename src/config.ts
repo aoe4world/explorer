@@ -23,6 +23,8 @@ export const SUPPORTED_MODIFIER_PROPERTIES: ModifyableProperty[] = [
   "meleeAttack",
   "rangedArmor",
   "rangedAttack",
+  "fireAttack",
+  "fireArmor",
   "siegeAttack",
   "hitpoints",
   "moveSpeed",

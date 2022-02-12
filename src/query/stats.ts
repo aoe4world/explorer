@@ -70,6 +70,8 @@ function mergeVariationsToStats(variations: (Unit | Building)[]) {
           stats.siegeAttack = w.damage;
           stats.maxRange = w.range.max;
           stats.minRange = w.range.min;
+        } else if (w.type == "fire") {
+          stats.fireAttack = w.damage;
         }
         stats.attackSpeed = w.speed;
 
@@ -82,6 +84,7 @@ function mergeVariationsToStats(variations: (Unit | Building)[]) {
         // We assume there's only one armor type per variation, for now.
         if (a.type == "melee") stats.meleeArmor = a.value;
         else if (a.type == "ranged") stats.rangedArmor = a.value;
+        else if (a.type == "fire") stats.fireArmor = a.value;
       }
 
       return [variation, stats, bonus] as [typeof variation, typeof stats, Modifier[]];
