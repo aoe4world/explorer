@@ -12,13 +12,13 @@ export const UnitOverviewRoute = () => {
   setActivePage({ title: "Units", location: useLocation() });
 
   return (
-    <div class="max-w-screen-lg p-4 mx-auto">
+    <div class="max-w-screen-2xl p-4 md:p-8 mx-auto">
       <Suspense
         fallback={
           <>
             <h2 class="text-2xl font-bold text-white/20 mt-16 mb-4 pl-2">Loading...</h2>
             <div class={itemGridCSSClass}>
-              <For each={Array(9)}>{() => <div class="bg-item-unit/5  h-96 rounded-2xl "></div>}</For>
+              <For each={Array(12)}>{() => <div class="bg-item-unit/5  h-96 rounded-2xl "></div>}</For>
             </div>
           </>
         }
@@ -28,7 +28,7 @@ export const UnitOverviewRoute = () => {
             v?.length ? (
               <div>
                 <h2 class="text-2xl font-bold text-white mt-16 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
-                <div class={itemGridCSSClass}>
+                <div class={itemGridCSSClass + " xl:grid-cols-4"}>
                   <For each={v}>{(unit) => <UnitCard unit={unit}></UnitCard>}</For>
                 </div>
               </div>

@@ -92,12 +92,14 @@ export const CivDetailRoute = () => {
         <div class="my-8">
           <ReportButton />
         </div>
+      </div>
+      <div class="max-w-screen-2xl mx-auto p-4 md:p-8">
         <Show
           when={grouped()}
           fallback={
             <>
               <h2 class="text-2xl font-bold text-white/20 mt-20 mb-4 pl-2">Loading...</h2>
-              <div class={itemGridCSSClass}>
+              <div class={itemGridCSSClass + " xl:grid-cols-4"}>
                 <div class="bg-item-unit/5  h-36 rounded-2xl "></div>
                 <div class="bg-item-unit/5  h-36 rounded-2xl "></div>
                 <div class="bg-item-unit/5  h-36 rounded-2xl "></div>
@@ -110,7 +112,7 @@ export const CivDetailRoute = () => {
               v?.length ? (
                 <div>
                   <h2 class="text-2xl font-bold text-white mt-20 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
-                  <div class={itemGridCSSClass}>
+                  <div class={itemGridCSSClass + " xl:grid-cols-4"}>
                     <For each={v}>{(unit) => <UnitCard unit={unit} civ={civConfig()}></UnitCard>}</For>
                   </div>
                 </div>
