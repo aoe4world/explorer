@@ -32,7 +32,7 @@ export const BuildingOverviewRoute = () => {
               <div>
                 <h2 class="text-2xl font-bold text-white mt-16 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
                 <div class={itemGridCSSClass + " xl:grid-cols-4"}>
-                  <For each={v}>{(unit) => <BuildingCard unit={unit}></BuildingCard>}</For>
+                  <For each={v}>{(unit) => <BuildingCard item={unit}></BuildingCard>}</For>
                 </div>
               </div>
             ) : (

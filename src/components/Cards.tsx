@@ -29,10 +29,10 @@ export const Card: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) =
       style={{ opacity: globalAgeFilter() >= minAge() ? 1 : 0.5 }}
     >
       {props.item.type == "technology" ? (
-        <CardHeader item={props.item} civ={props.civ} />
+        <CardHeader item={props.item} civ={props.civ} minAge={minAge()} />
       ) : (
         <Link href={getItemHref(props.item, props.civ)}>
-          <CardHeader item={props.item} civ={props.civ} />
+          <CardHeader item={props.item} civ={props.civ} minAge={minAge()} />
         </Link>
       )}
 
@@ -70,7 +70,7 @@ export const Card: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) =
   );
 };
 
-export const CardHeader: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
+export const CardHeader: Component<{ item: UnifiedItem; civ?: civConfig; minAge: number }> = (props) => {
   return (
     <div class="flex gap-4 items-center mb-4">
       <div class="flex-none self-start rounded-md w-16 h-16 p-1" className={`bg-item-${props.item.type}`}>
@@ -80,7 +80,7 @@ export const CardHeader: Component<{ item: UnifiedItem; civ?: civConfig }> = (pr
         <div class="flex flex-row items-center">
           <h2 class="text-lg font-bold flex-auto leading-tight ">{props.item.name}</h2>
           <span class="text-sm uppercase whitespace-nowrap text-opacity-50" className={`text-item-${props.item.type}-light`}>
-            {PRETTY_AGE_MAP[props.item.minAge]}
+            {PRETTY_AGE_MAP[props.minAge]}
           </span>
         </div>
         <p class="text-sm leading-relaxed" className={`text-item-${props.item.type}-light`}>

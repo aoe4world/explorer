@@ -864,7 +864,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Increase the range of gunpowder units by +20%.
     {
       property: "maxRange",
-      select: { class: [["gunpowder"]] },
+      select: { class: [["gunpowder"], ["warship"]], id: ["grenadier"] },
       effect: "multiply",
       value: 1.2,
       type: "passive",

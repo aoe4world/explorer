@@ -28,6 +28,7 @@ export const Tooltip: Component<{ attachTo: HTMLElement }> = (props) => {
           left: `${x}px`,
           top: `${y}px`,
           opacity: "",
+          zIndex: 999,
         })
       );
     }
@@ -42,7 +43,7 @@ export const Tooltip: Component<{ attachTo: HTMLElement }> = (props) => {
     <>
       <Show when={hover()}>
         <Portal>
-          <div class="z-100 w-50 p-5 w-screen sm:w-auto" style="opacity: 0; position: absolute;" ref={(el) => positionTooltip(el)}>
+          <div class="w-50 p-5 w-screen sm:w-auto" style="opacity: 0; position: absolute;" ref={(el) => positionTooltip(el)}>
             {props.children}
           </div>
         </Portal>

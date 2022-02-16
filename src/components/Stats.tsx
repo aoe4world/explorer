@@ -108,7 +108,7 @@ export const StatBar: Component<{
                   ref={partEl}
                   className={className}
                   style={{
-                    width: hide() ? "0" : `min(max(8px, calc(${(part()[0] / props.max) * 100}% - 2px)), 100%)`,
+                    width: hide() ? "0" : `min(max(5px, calc(${(part()[0] / props.max) * 100}% - 2px)), 100%)`,
                     "margin-right": hide() ? "0" : "2px",
                     opacity: hide() ? 0 : 1,
                     transition: "all 0.2s ease-in",
@@ -237,7 +237,11 @@ function dps(attackDuration: number, damage: number) {
 function calculateDpsParts(speed: CalculatedStats, attacks: CalculatedStats[]) {
   return attacks.reduce(
     (acc, attack) => {
-      Object.keys(acc).forEach((key) => (acc[key] += dps(speed.base, attack[key])));
+      acc.base += dps(speed.base, attack.base);
+      acc.upgrades += dps(speed.base + speed.upgrades, attack.upgrades);
+      acc.technologies += dps(speed.total, attack.technologies) + (acc.upgrades - dps(speed.total, attack.upgrades));
+      acc.bonus += dps(speed.total + speed.bonus, attack.bonus);
+      acc.total += dps(speed.total, attack.total);
       return acc;
     },
     { base: 0, upgrades: 0, technologies: 0, total: 0, bonus: 0 }

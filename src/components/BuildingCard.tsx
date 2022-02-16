@@ -7,11 +7,11 @@ import { Building, civAbbr, civConfig, UnifiedItem, Unit } from "../types/data";
 import { Card, CardHeader } from "./Cards";
 import { StatBar, StatCosts, StatDps, StatNumber } from "./Stats";
 
-export const BuildingCard: Component<{ unit: UnifiedItem<Building>; baseHref?: string; civ?: civConfig | civAbbr }> = (props) => {
-  const [stats] = createResource(() => getUnitStats(ITEMS.BUILDINGS, props.unit, props.civ));
+export const BuildingCard: Component<{ item: UnifiedItem<Building>; civ?: civConfig }> = (props) => {
+  const [stats] = createResource(() => getUnitStats(ITEMS.BUILDINGS, props.item, props.civ));
 
   return (
-    <Card item={props.unit}>
+    <Card item={props.item} civ={props.civ}>
       <Show when={stats()}>
         <>
           <div class="flex flex-col gap-4 mb-8">
@@ -26,7 +26,7 @@ export const BuildingCard: Component<{ unit: UnifiedItem<Building>; baseHref?: s
               <StatNumber label="Atck Spd" stat={stats().attackSpeed} unitLabel="S"></StatNumber>
             </div>
             <StatDps label="Damage" speed={stats().attackSpeed} attacks={[stats().rangedAttack, stats().meleeAttack, stats().siegeAttack]}></StatDps>
-            <StatCosts costs={props.unit.variations[0].costs} />
+            <StatCosts costs={props.item.variations[0].costs} />
           </div>
         </>
       </Show>

@@ -141,7 +141,7 @@ export function calculateStatParts(stat: Stat, maxAge: number, { decimals }: { d
         let value = 0;
         if (age <= maxAge) {
           if (modifier.effect == "multiply") {
-            value = (modifier.value - 1) * (base + upgrades);
+            value = (modifier.value - 1) * (base + upgrades + technologies);
           } else if (modifier.effect == "change") value = modifier.value;
         }
         technologies += value;
