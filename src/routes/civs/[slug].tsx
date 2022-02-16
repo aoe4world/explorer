@@ -1,13 +1,14 @@
 import { Link, useIsRouting, useLocation, useParams } from "solid-app-router";
 import { createEffect, createMemo, createResource, For, on, Show, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
+import { BuildingCard } from "../../components/BuildingCard";
 import { CivFlag } from "../../components/CivFlag";
 import { ReportButton } from "../../components/ReportButton";
 import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getCivData } from "../../data/civData";
-import { getItems } from "../../query/fetch";
-import { sortUnifiedItemsByVariation, splitUnitsIntoGroups } from "../../query/utils";
+import { fetchItems, getItems } from "../../query/fetch";
+import { sortUnifiedItemsByVariation, splitBuildingsIntoGroups, splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass, mainIntroductionCSSClass } from "../../styles";
 
 export type CivInfo = {
@@ -32,8 +33,13 @@ export const CivDetailRoute = () => {
     (civ) => getItems(ITEMS.UNITS, civ.abbr)
   );
 
-  const grouped = createMemo(() => units() && splitUnitsIntoGroups(sortUnifiedItemsByVariation(units(), ["hitpoints", "age"])));
+  const [buildings] = createResource(
+    () => CIVILIZATION_BY_SLUG[params.slug],
+    (civ) => getItems(ITEMS.BUILDINGS, civ.abbr)
+  );
 
+  const groupedUnits = createMemo(() => units() && splitUnitsIntoGroups(sortUnifiedItemsByVariation(units(), ["hitpoints", "age"])));
+  const groupedBuildings = createMemo(() => buildings() && splitBuildingsIntoGroups(sortUnifiedItemsByVariation(buildings(), ["hitpoints", "age"])));
   createEffect(on(civ, () => !civ.loading && setActivePage({ title: civ()?.name, description: civ()?.description, location: useLocation() })));
 
   return (
@@ -56,7 +62,7 @@ export const CivDetailRoute = () => {
         <h2 class="text-lg text-white/40 font-bold  mb-3">Jump to</h2>
         <Suspense fallback={<p>Loading</p>}>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-2 flex-wrap mb-2">
-            <For each={grouped() && Object.entries(grouped())}>
+            <For each={groupedUnits() && Object.entries(groupedUnits())}>
               {([k, v]) => (
                 <For each={v}>
                   {(unit) => (
@@ -95,7 +101,7 @@ export const CivDetailRoute = () => {
       </div>
       <div class="max-w-screen-2xl mx-auto p-4 md:p-8">
         <Show
-          when={grouped()}
+          when={groupedUnits()}
           fallback={
             <>
               <h2 class="text-2xl font-bold text-white/20 mt-20 mb-4 pl-2">Loading...</h2>
@@ -107,13 +113,41 @@ export const CivDetailRoute = () => {
             </>
           }
         >
-          <For each={Object.entries(grouped())}>
+          <For each={Object.entries(groupedUnits())}>
             {([k, v]) =>
               v?.length ? (
                 <div>
                   <h2 class="text-2xl font-bold text-white mt-20 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
                   <div class={itemGridCSSClass + " xl:grid-cols-4"}>
                     <For each={v}>{(unit) => <UnitCard unit={unit} civ={civConfig()}></UnitCard>}</For>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )
+            }
+          </For>
+        </Show>
+        <Show
+          when={groupedBuildings()}
+          fallback={
+            <>
+              <h2 class="text-2xl font-bold text-white/20 mt-20 mb-4 pl-2">Loading...</h2>
+              <div class={itemGridCSSClass + " xl:grid-cols-4"}>
+                <div class="bg-item-building/5  h-36 rounded-2xl "></div>
+                <div class="bg-item-building/5  h-36 rounded-2xl "></div>
+                <div class="bg-item-building/5  h-36 rounded-2xl "></div>
+              </div>
+            </>
+          }
+        >
+          <For each={Object.entries(groupedBuildings())}>
+            {([k, v]) =>
+              v?.length ? (
+                <div>
+                  <h2 class="text-2xl font-bold text-white mt-20 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
+                  <div class={itemGridCSSClass + " xl:grid-cols-4"}>
+                    <For each={v}>{(item) => <BuildingCard item={item} civ={civConfig()}></BuildingCard>}</For>
                   </div>
                 </div>
               ) : (
