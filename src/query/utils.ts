@@ -1,4 +1,4 @@
-import { Building, PhysicalItem } from "../../data/.scripts/lib/types/units";
+import { Building, Item, Modifier, PhysicalItem } from "../../data/.scripts/lib/types/units";
 import { CIVILIZATIONS, ITEMS } from "../config";
 import { technologyModifiers } from "../data/technologies";
 import { civAbbr, civConfig, GroupedBuildings, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
@@ -60,8 +60,8 @@ export async function getItemTechnologies<T extends ITEMS>(
     if (!modifiers || !variations.length) return acc;
 
     const techResearchedAtId = false; //t.variations.some((v) => v.producedBy.includes(unifiedItem.id));
-    const techMatchesItemId = modifiers.some((m) => m.select.id?.includes(unifiedItem.id));
-    const techMatchesItemClass = modifiers.some((m) => m.select.class?.some((cl) => cl?.every((c) => unifiedItem.classes.includes(c))));
+    const techMatchesItemId = modifiers.some((m) => modifierMatches(m.select, unifiedItem).id);
+    const techMatchesItemClass = modifiers.some((m) => modifierMatches(m.select, unifiedItem).class);
     const appliesToMultipleCivs = t.civs.length > 1;
     const itemIsUnique = unifiedItem.civs.length === 1;
 
@@ -113,4 +113,10 @@ export function splitBuildingsIntoGroups(buildings: UnifiedItem<Building>[]) {
     },
     { economy: [], military: [], defensive: [], religious: [], technology: [], landmarks: [], wonders: [] } as GroupedBuildings
   );
+}
+
+export function modifierMatches(matcher: Modifier["select"], item: Item | UnifiedItem) {
+  const matchesId = matcher.id?.includes(item.id) || matcher.id?.includes((item as Item).baseId);
+  const matchesClass = matcher.class?.some((cl) => cl?.every((c) => item.classes.includes(c)));
+  return { id: matchesId, class: matchesClass, any: matchesId || matchesClass };
 }

@@ -5,13 +5,16 @@ import { Card, CardHeader } from "./Cards";
 import { StatCosts } from "./Stats";
 
 export const TechnologyCard: Component<{ item: UnifiedItem<Technology>; civ?: civConfig }> = (props) => {
-  const mostCommonCosts = createMemo(() => props.item.variations.sort((a, b) => b.civs.length - a.civs.length)[0].costs);
+  const mostAppropriateVariation = createMemo(
+    () =>
+      (props.civ ? props.item.variations.sort((a, b) => a.civs.length - b.civs.length) : props.item.variations.sort((a, b) => b.civs.length - a.civs.length))[0]
+  );
 
   return (
     <Card item={props.item} civ={props.civ}>
       <div class="flex-auto">
-        <p class="mb-5">{props.item.description}</p>
-        <StatCosts costs={mostCommonCosts()} />
+        <p class="mb-5">{mostAppropriateVariation().description}</p>
+        <StatCosts costs={mostAppropriateVariation().costs} />
       </div>
     </Card>
   );

@@ -703,7 +703,8 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       property: "attackSpeed",
       select: { id: ["arbaletrier"] },
       effect: "multiply",
-      value: 0.75,
+      // Attackspeed after technology 2 -> 1.69, so boils down to 0.845 instead of 0.75
+      value: 0.845,
       type: "passive",
     },
   ],
@@ -1098,7 +1099,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Increase the melee damage of Men-at-Arms and Knights by +3.
     {
       property: "meleeAttack",
-      select: { id: ["man-at-arms", "knight"] },
+      select: { id: ["man-at-arms", "knight", "lancer"] },
       effect: "change",
       value: 3,
       type: "passive",

@@ -1,10 +1,10 @@
 import { firstBy } from "thenby";
 import { ITEMS, SUPPORTED_MODIFIER_PROPERTIES } from "../config";
 import { technologyModifiers } from "../data/technologies";
-import { Building, civAbbr, civConfig, Modifier, Technology, UnifiedItem, Unit } from "../types/data";
+import { Building, civAbbr, civConfig, Item, Modifier, Technology, UnifiedItem, Unit } from "../types/data";
 import { CalculatedStats, Stat, StatPart, StatProperty } from "../types/stats";
 import { fetchItem } from "./fetch";
-import { getItemTechnologies, mapCivsArgument } from "./utils";
+import { getItemTechnologies, mapCivsArgument, modifierMatches } from "./utils";
 
 export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
   type: T,
@@ -62,18 +62,16 @@ function mergeVariationsToStats(variations: (Unit | Building)[]) {
       for (const w of variation.weapons) {
         // We assume there's only one weapon per type per variation, for now.
         if (w.type == "melee") stats.meleeAttack = w.damage;
-        else if (w.type == "ranged") {
-          stats.rangedAttack = w.damage;
+        else if (w.type == "ranged") stats.rangedAttack = w.damage;
+        else if (w.type == "siege") stats.siegeAttack = w.damage;
+        else if (w.type == "fire") stats.fireAttack = w.damage;
+
+        if (w.type != "fire" || variation.weapons.length == 1) stats.attackSpeed = w.speed;
+
+        if (w.type == "siege" || w.type == "ranged") {
           stats.maxRange = w.range.max;
           stats.minRange = w.range.min;
-        } else if (w.type == "siege") {
-          stats.siegeAttack = w.damage;
-          stats.maxRange = w.range.max;
-          stats.minRange = w.range.min;
-        } else if (w.type == "fire") {
-          stats.fireAttack = w.damage;
         }
-        stats.attackSpeed = w.speed;
 
         if (w.modifiers) {
           bonus.push(...w.modifiers);
@@ -117,8 +115,13 @@ export function round(number: number, decimals: number) {
   return Math.round(number * Math.pow(10, decimals)) / Math.pow(10, decimals);
 }
 
-export function calculateStatParts(stat: Stat, maxAge: number, { decimals }: { decimals: number } = { decimals: 0 }): CalculatedStats {
-  if (!stat) return { total: 0, base: 0, upgrades: 0, technologies: 0, bonus: 0, parts: [] };
+export function calculateStatParts(
+  stat: Stat,
+  maxAge: number,
+  { decimals, target }: { decimals?: number; target?: UnifiedItem | Item } = { decimals: 0 }
+): CalculatedStats {
+  if (!stat) return { total: 0, base: 0, upgrades: 0, technologies: 0, bonus: 0, parts: [], max: 0 };
+  if (!decimals) decimals = 0;
   const parts = stat.parts.sort((a, b) => a[2] - b[2]).map(([v, i, a, ...r]) => [a > maxAge ? 0 : round(v, decimals), i, a, ...r] as StatPart<number>);
 
   let base = parts[0]?.[0] ?? 0;
@@ -155,6 +158,7 @@ export function calculateStatParts(stat: Stat, maxAge: number, { decimals }: { d
     parts.push(
       ...stat.bonus?.reduce((parts, [modifier, id, age, variation]) => {
         if (modifier.property != stat.category) return parts;
+        if (target && !modifierMatches(modifier.target, target).any) return parts;
         if (modifier.type == "ability" || modifier.type == "influence") return parts;
         let value = 0;
         if (age <= maxAge) {
@@ -173,6 +177,7 @@ export function calculateStatParts(stat: Stat, maxAge: number, { decimals }: { d
   technologies = round(technologies, decimals);
   bonus = round(bonus, decimals);
   const total = round(base + upgrades + technologies, decimals);
+  const max = total + bonus;
 
-  return { total, base, upgrades, technologies, bonus, parts };
+  return { total, base, upgrades, technologies, bonus, parts, max };
 }

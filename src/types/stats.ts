@@ -38,4 +38,4 @@ export function isModifier(value: StatPart<number | Modifier>[0]): value is Modi
   return typeof value != "number";
 }
 
-export type CalculatedStats = { total: number; base: number; upgrades: number; technologies: number; bonus: number; parts: StatPart<number>[] };
+export type CalculatedStats = { total: number; base: number; upgrades: number; technologies: number; bonus: number; max: number; parts: StatPart<number>[] };
