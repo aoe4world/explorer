@@ -180,6 +180,19 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "military-academy-improved": [
+    // Reduce the time it takes to produce infantry, cavalry, siege, and transport units at buildings by -35%.
+    // Does not affect religious units or other support units.
+    // If Military Academy has already been researched, reduce the time by  -10% instead.
+    {
+      property: "buildTime",
+      select: { class: [["infantry"], ["melee", "cavalry"], ["ranged", "cavalry"]["siege"], ["transport"]] },
+      effect: "multiply",
+      value: 0.8666, // 0.65 / 0.75
+      type: "passive",
+    },
+  ],
+
   /// Common economic tecnologies ––––––––––––––––––––––––––––––––––––
 
   "crosscut-saw": [
@@ -189,6 +202,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       select: { id: ["villager"] },
       effect: "multiply",
       value: 1.15,
+      type: "passive",
+    },
+  ],
+
+  "crosscut-saw-improved": [
+    //  Increase Villagers' gathering rate for Wood by +20%.
+    // If Crosscut Saw has already been researched, increase it by + 5 % instead.
+    {
+      property: "woodGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434, // 1.2 / 1.15
       type: "passive",
     },
   ],
@@ -211,6 +236,25 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "cupellation-improved": [
+    //  ncrease Villagers' gathering rate for Gold by +20%.
+    // If Cupellation has already been researched, increase it by + 5 % instead.
+    {
+      property: "goldGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434, // 1.2 / 1.15
+      type: "passive",
+    },
+    {
+      property: "stoneGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434, // 1.2 / 1.15
+      type: "passive",
+    },
+  ],
+
   "double-broadaxe": [
     // Increase Villagers' gathering rate for Wood by +15%.
     {
@@ -218,6 +262,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       select: { id: ["villager"] },
       effect: "multiply",
       value: 1.15,
+      type: "passive",
+    },
+  ],
+
+  "double-broadaxe-improved": [
+    // Increase Villagers' gathering rate for Wood by +20%.
+    // If Double Broadaxe has already been researched, increase it by + 5 % instead.
+    {
+      property: "woodGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434, // 1.2 / 1.15
       type: "passive",
     },
   ],
@@ -262,6 +318,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "horticulture-improved": [
+    // Increase Villagers' gathering rate for Food by +20%.
+    // If Horticulture has already been researched, increase it by + 5 % instead.
+    {
+      property: "foodGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434, // 1.2 / 1.15
+      type: "passive",
+    },
+  ],
+
   fertilization: [
     // Increase Villagers' gathering rate for Food by +15%.
     {
@@ -273,6 +341,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "fertilization-improved": [
+    // Increase Villagers' gathering rate for Food by +20%.
+    // If Fertilization has already been researched, increase it by + 5 % instead.
+    {
+      property: "foodGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434, // 1.2 / 1.15
+      type: "passive",
+    },
+  ],
+
   forestry: [
     // Double the rate at which Villagers chop down trees.
     {
@@ -280,6 +360,17 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       select: { id: ["villager"] },
       effect: "multiply",
       value: 2,
+      type: "passive",
+    },
+  ],
+
+  "forestry-improved": [
+    // Villagers fell trees in a single chop.
+    {
+      property: "unknown",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 4, // ??
       type: "passive",
     },
   ],
@@ -302,6 +393,25 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "acid-distilization-improved": [
+    // Increase Villagers' gathering rate for Gold by +20%.
+    // If Acid Distillation has already been researched, increase it by + 5 % instead.
+    {
+      property: "goldGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434, // 1.2 / 1.15
+      type: "passive",
+    },
+    {
+      property: "stoneGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434,
+      type: "passive",
+    },
+  ],
+
   "specialized-pick": [
     // Increase Villagers' gathering rate for Gold and Stone by +15%.
     {
@@ -316,6 +426,25 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       select: { id: ["villager"] },
       effect: "multiply",
       value: 1.15,
+      type: "passive",
+    },
+  ],
+
+  "specialized-pick-improved": [
+    // Increase Villagers' gathering rate for Gold by +20%.
+    // If Specialized Pick has already been researched, increase it by + 5 % instead.
+    {
+      property: "goldGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434, // 1.2 / 1.15
+      type: "passive",
+    },
+    {
+      property: "stoneGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434,
       type: "passive",
     },
   ],
@@ -338,6 +467,25 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "survival-techniques-improved": [
+    // Increase Villagers' hunted meat carry capacity by +20 and hunted meat gather rate by  +20%.
+    // If Survival Techniques has already been researched, increase Villagers' hunted meat carry capacity by  +10, and hunted meat gather rate by  +5% instead.
+    {
+      property: "huntCarryCapacity",
+      select: { id: ["villager"] },
+      effect: "change",
+      value: 10,
+      type: "passive",
+    },
+    {
+      property: "huntGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434, // 1.2 / 1.15
+      type: "passive",
+    },
+  ],
+
   wheelbarrow: [
     // Increase the carry capacity of Villagers by +5 and their movement speed by  +15%.
     {
@@ -356,6 +504,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "wheelbarrow-improved": [
+    // Increase Villagers' resource carry capacity by +7 and movement speed by  +15%.
+    // If Wheelbarrow has already been researched, increase carry capacity by + 2 instead.
+    {
+      property: "carryCapacity",
+      select: { id: ["villager"] },
+      effect: "change",
+      value: 2,
+      type: "passive",
+    },
+  ],
+
   "lumber-preservation": [
     // Increase Villagers' gathering rate for Wood by +15%.
     {
@@ -367,6 +527,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "lumber-preservation-improved": [
+    // Increase Villagers' gathering rate for Wood by +20%.
+    // If Lumber Preservation has already been researched, increase it by + 5 % instead.
+    {
+      property: "woodGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434, // 1.2 / 1.15
+      type: "passive",
+    },
+  ],
+
   "precision-cross-breeding": [
     // Increase Villagers' gathering rate for Food by +15%.
     {
@@ -374,6 +546,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       select: { id: ["villager"] },
       effect: "multiply",
       value: 1.15,
+      type: "passive",
+    },
+  ],
+
+  "precision-cross-breeding-improved": [
+    // Increase Villagers' gathering rate for Food by +20%.
+    // If Precision Crossbreeding has already been researched, increase it by + 5 % instead.
+    {
+      property: "foodGatherRate",
+      select: { id: ["villager"] },
+      effect: "multiply",
+      value: 1.0434, // 1.2 / 1.15
       type: "passive",
     },
   ],
@@ -652,6 +836,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "siege-engineering-improved": [
+    // Melee and ranged infantry can construct Siege Towers and Battering Rams in the field.
+    // Improved Siege Engineering allows for the construction of Mangonels, Springalds and Trebuchets as well.
+    {
+      property: "unknown",
+      select: { class: [["infantry"]] },
+      effect: "change",
+      value: 1,
+      type: "ability",
+    },
+  ],
+
   "slate-and-stone-construction": [
     // All buildings gain +5 fire armor.
     {
@@ -912,6 +1108,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "adjustable-crossbars-improved": [
+    // "Reduce the reload time of Mangonels by -35%.
+    // If Adjustable Crossbars has already been researched, reduce reload time by - 10 % instead.
+    {
+      property: "attackSpeed",
+      select: { id: ["mangonel"] },
+      effect: "multiply",
+      value: 0.8666, // 0.65 / 0.75
+      type: "passive",
+    },
+  ],
+
   "all-seeing-eye": [
     // Increase the sight range of Scholars by +100%.
     {
@@ -970,6 +1178,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "biology-improved": [
+    // Increase the health of all cavalry by +30%.
+    // If Biology has already been researched, increase it by + 10 % instead.
+    {
+      property: "hitpoints",
+      select: { class: [["cavalry"]] },
+      effect: "multiply",
+      value: 1.083, // 1.3 / 1.2
+      type: "passive",
+    },
+  ],
+
   "boiling-oil": [
     // Towers and Keeps gain a boiling oil attack against nearby units that deals  damage.
     {
@@ -1022,7 +1242,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "elite-army-tactics": [
-    // Increase the health of all melee infantry by +20% and their damage by undefined.
+    // Increase the health of all melee infantry by +20% and their damage by 20%.
     {
       property: "hitpoints",
       select: { class: [["melee", "infantry"]] },
@@ -1035,6 +1255,25 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       select: { class: [["melee", "infantry"]] },
       effect: "multiply",
       value: 1.2,
+      type: "passive",
+    },
+  ],
+
+  "elite-army-tactics-improved": [
+    //  Increase the health of all melee infantry by +30% and their damage by  +30%.
+    // If Elite Army Tactics has already been researched, increase health and damage by + 10 % instead.
+    {
+      property: "hitpoints",
+      select: { class: [["melee", "infantry"]] },
+      effect: "multiply",
+      value: 1.083, // 1.3 / 1.2
+      type: "passive",
+    },
+    {
+      property: "meleeAttack",
+      select: { class: [["melee", "infantry"]] },
+      effect: "multiply",
+      value: 1.083, // 1.3 / 1.2
       type: "passive",
     },
   ],
@@ -1073,6 +1312,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "greased-axles-improved": [
+    // Increase the movement speed of siege engines by +30%.
+    // If Greased Axles has already been researched, increase it by + 10 % instead.
+    {
+      property: "moveSpeed",
+      select: { class: [["siege"]] },
+      effect: "multiply",
+      value: 1.083, // 1.3 / 1.2
+      type: "passive",
+    },
+  ],
+
   "hearty-rations": [
     // Increase the carrying capacity of Villagers by +5.
     {
@@ -1091,6 +1342,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       select: common.allReligiousUnits,
       effect: "multiply",
       value: 2,
+      type: "passive",
+    },
+  ],
+
+  "herbal-medicine-improved": [
+    // Increase the healing rate of religious units by +150%.
+    // If Herbal Medicine has already been researched, increase it by + 50 % instead.
+    {
+      property: "healingRate",
+      select: common.allReligiousUnits,
+      effect: "multiply",
+      value: 1.333, // 2 / 1.5
       type: "passive",
     },
   ],
@@ -1167,6 +1430,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "piety-improved": [
+    // Increase the health of religious units by +60.
+    // If Piety has already been researched, increase it by + 20 instead.
+    {
+      property: "hitpoints",
+      select: common.allReligiousUnits,
+      effect: "change",
+      value: 20,
+      type: "passive",
+    },
+  ],
+
   "professional-scouts": [
     // Scouts gain the ability to carry animal carcasses and +200% damage against wild animals.
     {
@@ -1181,15 +1456,27 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       target: { class: [["hunt"]] },
       select: { id: ["scout"] },
       effect: "change",
-      value: 9, // 3 + 2*2
+      value: 9, // 3 + 200% *2
       type: "bonus",
     },
+  ],
+
+  "professional-scouts-improved": [
+    // Scouts gain the ability to carry animal carcasses and +300% damage against wild animals.
+    // If Professional Scouts has already been researched, increase increase ranged damage against wild animals by  +100% instead
     {
-      property: "meleeAttack",
+      property: "huntCarryCapacity",
+      select: { id: ["scout"] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+    {
+      property: "rangedAttack",
       target: { class: [["hunt"]] },
       select: { id: ["scout"] },
-      effect: "multiply",
-      value: 3, // 3 + 2 * 2
+      effect: "change",
+      value: 2, // 100% *2
       type: "bonus",
     },
   ],
@@ -1219,6 +1506,25 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       select: { id: ["springald"] },
       effect: "multiply",
       value: 0.75,
+      type: "passive",
+    },
+  ],
+
+  "roller-shutter-triggers-improved": [
+    // Increase the weapon range of Springalds by +3 tiles and reduce their reload time by  +35%.
+    // If Roller Shutter Triggers has already been researched, increase the weapon range of Springalds by +1 tile and reduce their reload time by  +10%.
+    {
+      property: "maxRange",
+      select: { id: ["springald"] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+    {
+      property: "attackSpeed",
+      select: { id: ["springald"] },
+      effect: "multiply",
+      value: 0.8666, // 0.65 / 0.75
       type: "passive",
     },
   ],
@@ -1271,6 +1577,25 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "siege-works-improved": [
+    // Increase the health of siege engines by +30% and their ranged armor by  +4.
+    // If Siege Works has already been researched, increase their health by  +10% and ranged armor by  +1 instead.
+    {
+      property: "hitpoints",
+      select: { class: [["siege"]] },
+      effect: "multiply",
+      value: 1.0833, // 1.3 / 1.2
+      type: "passive",
+    },
+    {
+      property: "rangedArmor",
+      select: { class: [["siege"]] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
+
   "slow-burning-defenses": [
     // Increase the fire armor of Stone Wall Towers, Keeps, and Outposts by +10.
     {
@@ -1313,6 +1638,17 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       select: { id: ["monastery", "mosque", "prayer-tent", "regnitz-cathedral"] },
       effect: "change",
       value: 30,
+      type: "influence",
+    },
+  ],
+
+  "tithe-barns-improved": [
+    //  Relics placed in a Prayer Tent provide an income of +20 Food, +20 Wood, and +20 Stone every minute.
+    {
+      property: "unknown",
+      select: { id: ["monastery", "mosque", "prayer-tent", "regnitz-cathedral"] },
+      effect: "change",
+      value: 20,
       type: "influence",
     },
   ],
@@ -1618,8 +1954,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   // Todo, add improved version
 
   "additional-torches": [
-    // Increase the torch damage of all infantry and cavalry by +5.
-    // If Additional Torches has already been researched, increase the torch damage from all infantry and cavalry by  +2.
+    // Increase the torch damage of all infantry and cavalry by +3.
     {
       property: "fireAttack",
       select: { class: [["infantry"], ["cavalry", "melee"]] },
@@ -1628,6 +1963,20 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       type: "passive",
     },
   ],
+
+  "additional-torches-improved": [
+    // Increase the torch damage of all infantry and cavalry by +5.
+    // If Additional Torches has already been researched, increase the torch damage from all infantry and cavalry by  +2.
+    {
+      property: "fireAttack",
+      select: { class: [["infantry"], ["cavalry", "melee"]] },
+      effect: "change",
+      value: 2,
+      type: "passive",
+    },
+  ],
+
+  // Increase the torch damage of all infantry and cavalry by +5.\nIf Additional Torches has already been researched, increase the torch damage from all infantry and cavalry by  +2.
 
   "monastic-shrines": [
     // Monasteries allow Improved Production in their districts even without an Ovoo.
@@ -1653,6 +2002,17 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "raid-bounty": [
+    // Increase the raid income for igniting a building to +25 Food and Gold.
+    {
+      property: "unknown",
+      select: { class: [["cavalry"], ["infantry"]] },
+      effect: "change",
+      value: 1,
+      type: "ability",
+    },
+  ],
+
+  "raid-bounty-improved": [
     // Increase the raid income for igniting a building to +50 Food and Gold.
     // If Raid Bounty has already been researched, increase the raid income for igniting a building by  +25 Food and Gold.
     {
@@ -1675,7 +2035,30 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "siha-bow-limbs-improved": [
+    // ncrease the ranged damage of Mangudai and the Khan by +2.
+    // If Siha Bow Limbs has already been researched, increase the ranged damage of Mangudai and the Khan by + 1.
+    {
+      property: "rangedAttack",
+      select: { id: ["khan", "mangudai"] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
+
   "stone-bounty": [
+    // Add +75 Stone to the raid income for igniting a building.
+    {
+      property: "unknown",
+      select: { class: [["cavalry"], ["infantry"]] },
+      effect: "change",
+      value: 1,
+      type: "ability",
+    },
+  ],
+
+  "stone-bounty-improved": [
     // Add +125 Stone to the raid income for igniting a building.
     // If Stone Bounty has already been researched, add  +50 Stone to the raid income for igniting a building.
     {
@@ -1688,6 +2071,17 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "stone-commerce": [
+    // Having 9 or more active Traders causes them to supply of Stone as well as Gold.
+    {
+      property: "unknown",
+      select: { id: ["trader", "trade-ship"] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
+
+  "stone-commerce-improved": [
     // Having 9 or more active Traders causes them to supply an increased amount of Stone as well as Gold.
     {
       property: "unknown",
@@ -1710,6 +2104,17 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "whistling-arrows": [
+    // Increase the Khan's Signal Arrow duration by +5 seconds and range by  +2 tiles.
+    {
+      property: "unknown",
+      select: { id: ["khan"] },
+      effect: "change",
+      value: 1,
+      type: "ability",
+    },
+  ],
+
+  "whistling-arrows-improved": [
     // Increase the Khan's Signal Arrow duration by +7 seconds and range by  +3 tiles.
     // If Whistling Arrows has already been researched, increase the Khan's Signal Arrow duration by  +2 seconds and range by  +1 tile.
     {
