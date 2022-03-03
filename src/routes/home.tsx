@@ -3,22 +3,41 @@ import { For } from "solid-js";
 import { setActivePage } from "../App";
 import { CivFlag } from "../components/CivFlag";
 import { Icon } from "../components/Icon";
+import { Tooltip } from "../components/Tooltip";
 import { CIVILIZATIONS } from "../config";
-import { mainIntroductionCSSClass } from "../styles";
+import { mainIntroductionCSSClass, tooltipCSSClass } from "../styles";
 const buttonClass = `block font-bold px-7 py-2 rounded-full transition hover:opacity-70`;
 export const CivOverviewRoute = () => {
   setActivePage({ title: "Civilizations", description: "Overview of all civilizations", location: useLocation() });
+  let el;
   return (
     <>
       <div class="max-w-screen-lg p-4 mx-auto mb-4 mt-12">
         <div class="mx-2 sm:mx-6">
-          <h1 class="text-3xl font-bold">AoE4 Explorer</h1>
+          <div class="flex flex-wrap items-center">
+            <h1 class="text-3xl font-bold mr-6">AoE4 Explorer</h1>
+            <a
+              href="https://www.ageofempires.com/news/age-of-empires-iv-patch-11963/"
+              target="_blank"
+              rel="noopener"
+              class="text-xs px-3 uppercase font-bold py-1 rounded-full text-gray-100 bg-black border border-gray-300"
+              ref={el}
+            >
+              <i class="fas fa-asterisk mr-1"></i> Patch 11963
+            </a>
+            <Tooltip attachTo={el}>
+              <div class={tooltipCSSClass}>The Explorer includes all changes introduced with the most recent March Patch 11963</div>
+            </Tooltip>
+          </div>
           <p class="text-2xl mt-2 text-gray-200">Discover all units, buildings and technologies in the game.</p>
+
           <p class={mainIntroductionCSSClass}>
             AoE4 World Explorer provides you with a detailed breakdown on what specific upgrades, tecnologies and bonuses make units perform better.
             <br />
             <br />
             Use the tool to explore different civilizations, buidlings and army units and get a better understanding of Age of Empires 4.
+            <br />
+            <br />
           </p>
           <div class="flex flex-wrap gap-5 mt-12 mb-16">
             <Link href="/about" class={buttonClass + " bg-white text-black hover:bg-gray-100 "}>

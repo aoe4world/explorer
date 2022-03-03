@@ -1029,12 +1029,12 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "imperial-examination": [
-    // Increase the maximum amount of Gold carried by Imperial Officials from +20 to undefined
+    // Increase the maximum amount of Gold carried by Imperial Officials from +40 to +80
     {
       property: "carryCapacity",
       select: { id: ["imperial-official"] },
       effect: "change",
-      value: 10,
+      value: 40,
       type: "passive",
     },
   ],
@@ -1535,7 +1535,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       property: "goldGeneration",
       select: { id: ["sacred-site"] },
       effect: "multiply",
-      value: 1.2,
+      value: 1.5,
       type: "passive",
     },
     {
