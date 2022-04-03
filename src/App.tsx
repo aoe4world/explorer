@@ -10,6 +10,8 @@ import { Icon } from "./components/Icon";
 import { BuildingOverviewRoute } from "./routes/buildings/buildings";
 import { BuildingDetailRoute } from "./routes/buildings/[id]";
 import { AboutRoute } from "./routes/about";
+import { TechnologyDetailRoute } from "./routes/technologies/[id]";
+import { TechnologoiesOverviewRoute } from "./routes/technologies/technologies";
 
 const routes: RouteDefinition[] = [
   {
@@ -36,6 +38,10 @@ const routes: RouteDefinition[] = [
     component: () => BuildingDetailRoute,
   },
   {
+    path: "/civs/:slug/technologies/:id",
+    component: () => TechnologyDetailRoute,
+  },
+  {
     path: "/units",
     component: () => UnitOverviewRoute,
   },
@@ -50,6 +56,14 @@ const routes: RouteDefinition[] = [
   {
     path: "/buildings/:id",
     component: () => BuildingDetailRoute,
+  },
+  {
+    path: "/technologies",
+    component: () => TechnologoiesOverviewRoute,
+  },
+  {
+    path: "/technologies/:id",
+    component: () => TechnologyDetailRoute,
   },
   {
     path: "/about",

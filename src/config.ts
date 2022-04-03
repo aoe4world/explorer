@@ -64,3 +64,4 @@ export const SIMILAIR_UNITS = [
 export const MUTED_UNITS = ["wynguard-army", "khaganate-units"];
 
 export const PRETTY_AGE_MAP = ["", "Age I", "Age II", "Age III", "Age IV"];
+export const PRETTY_AGE_MAP_LONG = ["", "Dark Age (I)", "Feudal Age (II)", "Castle Age (III)", "Imperial Age (IV)"];

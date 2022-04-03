@@ -67,13 +67,13 @@ export const CivOverviewRoute = () => {
         </div>
       </div>
       <div
-        class="absolute top-28 w-screen h-screen opacity-20 saturate-0	-z-10 bg-right-top bg-contain bg-no-repeat"
+        class="fixed top-0 w-screen h-screen opacity-20 saturate-0	-z-10 bg-right-top bg-contain bg-no-repeat"
         style={{
           "background-image": `url(https://www.ageofempires.com/wp-content/themes/ageOfEmpires/dist/images/defaults/default-news-section-bg-right-desk.png)`,
         }}
       ></div>
       <div
-        class="absolute top-28 w-screen h-screen opacity-20 saturate-0	-z-10 bg-left-bottom bg-contain bg-no-repeat"
+        class="fixed top-0 w-screen h-screen opacity-20 saturate-0	-z-10 bg-left-bottom bg-contain bg-no-repeat"
         style={{ "background-image": `url(https://www.ageofempires.com/wp-content/themes/ageOfEmpires/dist/images/bgs/bg-insider-signup-desk.png)` }}
       ></div>
     </>

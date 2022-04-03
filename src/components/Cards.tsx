@@ -14,7 +14,8 @@ const typeToPathMap = {
   unit: "units",
   technology: "technologies",
 };
-function getItemHref(item: UnifiedItem, civ?: civConfig) {
+
+export function getItemHref(item: UnifiedItem, civ?: civConfig) {
   if (item.civs.length == 1 && !civ) civ = CIVILIZATIONS[item.civs[0]];
   return `${civ ? `/civs/${civ.slug}` : ""}/${typeToPathMap[item.type]}/${item.id}`;
 }
@@ -28,13 +29,9 @@ export const Card: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) =
       className={`bg-item-${props.item.type}`}
       style={{ opacity: globalAgeFilter() >= minAge() ? 1 : 0.5 }}
     >
-      {props.item.type == "technology" ? (
+      <Link href={getItemHref(props.item, props.civ)}>
         <CardHeader item={props.item} civ={props.civ} minAge={minAge()} />
-      ) : (
-        <Link href={getItemHref(props.item, props.civ)}>
-          <CardHeader item={props.item} civ={props.civ} minAge={minAge()} />
-        </Link>
-      )}
+      </Link>
 
       {props.children}
 
@@ -42,7 +39,7 @@ export const Card: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) =
         props.item.civs.length == 1 && (
           <div class="flex h-6 mt-5  items-center gap-2">
             <span class="text-unique text-sm font-semibold">
-              <Icon icon="sparkles" /> Unique to {props.civ.name}
+              <Icon icon="star-sharp" /> Unique to {props.civ.name}
             </span>
           </div>
         )
@@ -61,7 +58,7 @@ export const Card: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) =
           </For>
           {props.item.civs.length == 1 && (
             <span class="text-unique text-sm font-semibold ml-auto">
-              <Icon icon="sparkles" /> Unique
+              <Icon icon="star-sharp" /> Unique
             </span>
           )}
         </div>

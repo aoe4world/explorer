@@ -37,7 +37,8 @@ const variationMin = (item: UnifiedItem<PhysicalItem>, property: keyof Unit) => 
     return +variation[property] < min ? +variation[property] : min;
   }, Infinity);
 };
-export function sortUnifiedItemsByVariation<T extends Unit | Building>(units: UnifiedItem<T>[], keys: (keyof T)[]) {
+export function sortUnifiedItemsByVariation<T extends Unit | Building | Technology>(units: UnifiedItem<T>[], keys: (keyof T)[]) {
+  units.sort((a, b) => b.civs.length - a.civs.length);
   for (const key of keys) {
     units = units.sort((a, b) => variationMin(a, key) - variationMin(b, key));
   }
@@ -112,6 +113,45 @@ export function splitBuildingsIntoGroups(buildings: UnifiedItem<Building>[]) {
       return acc;
     },
     { economy: [], military: [], defensive: [], religious: [], technology: [], landmarks: [], wonders: [] } as GroupedBuildings
+  );
+}
+
+export function splitTechnologiesIntroGroups(buildings: UnifiedItem<Technology>[]) {
+  return buildings?.reduce(
+    (acc, unit) => {
+      if (unit.classes.some((c) => ["advance"].includes(c))) return acc;
+      else if (unit.classes.some((c) => ["ship", "naval", "warship"].includes(c))) acc.naval.push(unit);
+      else if (
+        unit.classes.some((c) =>
+          [
+            "mining",
+            "gathering",
+            "woodcutting",
+            "farm",
+            "hunting",
+            "villager",
+            "fishing",
+            "construction",
+            "official",
+            "population",
+            "trade",
+            "economic",
+            "research",
+            "raiding",
+            "packing",
+          ].includes(c)
+        )
+      )
+        acc.economy.push(unit);
+      else if (unit.classes.some((c) => ["defensive", "emplacement", "building", "outpost", "keep"].includes(c))) acc.defensive.push(unit);
+      else if (unit.classes.some((c) => ["religious", "healing"].includes(c))) acc.religious.push(unit);
+      else if (unit.classes.some((c) => ["Production", "siege", "melee", "cavalry", "infantry", "ranged", "production", "gunpowder"].includes(c)))
+        acc.military.push(unit);
+      else acc.units.push(unit);
+
+      return acc;
+    },
+    { economy: [], naval: [], defensive: [], religious: [], military: [], units: [] } as Record<string, UnifiedItem<Technology>[]>
   );
 }
 
