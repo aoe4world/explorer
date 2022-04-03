@@ -1,10 +1,11 @@
 import { Link, NavLink, useIsRouting, useLocation } from "solid-app-router";
-import { Component, createMemo, createSignal, For, Show, useTransition } from "solid-js";
+import { Component, createMemo, createSignal, For, Show } from "solid-js";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG } from "../config";
 import { tooltipCSSClass } from "../styles";
 import { civAbbr } from "../types/data";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
+import { Search } from "./Search";
 import { Tooltip } from "./Tooltip";
 
 export const [globalAgeFilter, setGlobalAgeFilter] = createSignal(4);
@@ -18,26 +19,27 @@ export const Toolbar: Component = () => {
     return { route, civ, subroute };
   });
 
-  const navButtonClass = "hover:bg-white bg-gray-900 text-white/70 hover:text-black text-lg px-3 grid h-full w-12 md:w-10 rounded-md flex-none transition";
+  const navButtonClass =
+    "w-12 h-10 md:w-10 lg:h-8 md:hover:bg-white md:hover:text-black bg-gray-900 text-white/70text-lg px-3 grid rounded-md flex-none transition";
 
   return (
     <div class="bg-gray-700 z-10 border-bottom border border-gray-500  sticky mt-25 top-0" classList={{ "opacity-20": pending() }}>
-      <div class="max-w-screen-2xl py-2 px-4 md:px-8 h-16 md:h-14 text-sm md:text-base md:p-3 mx-auto flex flex-row gap-2 md:gap-5">
-        <div class="flex flex-row gap-2 ">
+      <div class="max-w-screen-2xl py-2 px-4 lg:px-8 h-auto text-base lg:p-3 mx-auto flex flex-row flex-wrap sm:flex-nowrap gap-2 lg:gap-5">
+        <div class="flex flex-row gap-2 h-10 lg:h-8 ">
           {current().subroute ? (
             <Link href={`civs/${current().civ}/`} class={navButtonClass} noScroll={true}>
-              <Icon icon="arrow-left" class="place-self-center" />
+              <Icon icon="grid-horizontal" class="place-self-center" />
             </Link>
           ) : (
             <Link href={`/`} class={navButtonClass} noScroll={true}>
-              <Icon icon="grid-horizontal" class="place-self-center" />
+              <Icon icon="home" class="place-self-center" />
             </Link>
           )}
           <For each={Object.values(CIVILIZATIONS)}>
             {(civ) => (
               <NavLink
                 href={[`/civs/${civ.slug}`, current().subroute].join("/")}
-                class="h-full relative w-16 rounded-md overflow-hidden border-2 shadow-inner opacity-50 hover:opacity-100  border-transparent hidden md:block transition"
+                class="h-full relative w-14 rounded-md overflow-hidden border-2 shadow-inner opacity-50 hover:opacity-100  border-transparent hidden lg:block transition"
                 activeClass="opacity-90 border-white"
                 aria-label={civ.name}
                 noScroll={true}
@@ -49,17 +51,17 @@ export const Toolbar: Component = () => {
         </div>
         <Show when={CIVILIZATION_BY_SLUG[current()?.civ]}>
           {(civ) => (
-            <div class="group flex-auto md:hidden">
-              <button class="flex items-center gap-2 w-full  bg-gray-900 h-full px-3 rounded-md">
-                <CivFlag abbr={civ.abbr} class="h-7 w-10 rounded object-cover" />
-                <span class="truncate">{civ.name}</span>
-                <Icon icon="caret-down" class="ml-auto mr-2" />
+            <div class="group flex-auto lg:hidden">
+              <button class="flex items-center gap-2 bg-gray-900 h-10 px-3 rounded-md">
+                <CivFlag abbr={civ.abbr} class="h-6 w-10 rounded object-cover" />
+                <span class="truncate hidden sm:inline">{civ.name}</span>
+                <Icon icon="caret-down" class=" ml-4 mr-2" />
               </button>
-              <div class="hidden group-hover:block group-focus-within:block rounded-md absolute bg-gray-900 w-64 mt-0 ">
+              <div class="hidden group-hover:block group-focus-within:block z-10 rounded-md absolute bg-gray-900 w-60 mt-0 ">
                 <For each={Object.values(CIVILIZATIONS)}>
                   {(civ) => (
-                    <NavLink href={[`/civs/${civ.slug}`, current().subroute].join("/")} noScroll={true} class="flex p-4 hover:bg-gray-700">
-                      <CivFlag abbr={civ.abbr} class="h-7 w-10 mr-3 rounded object-cover" /> {civ.name}
+                    <NavLink href={[`/civs/${civ.slug}`, current().subroute].join("/")} noScroll={true} class="flex p-3 hover:bg-gray-700">
+                      <CivFlag abbr={civ.abbr} class="h-6 w-10 mr-3 rounded object-cover" /> {civ.name}
                     </NavLink>
                   )}
                 </For>
@@ -72,7 +74,7 @@ export const Toolbar: Component = () => {
           let el;
           return (
             <>
-              <Link href={`about`} ref={el} class={navButtonClass} noScroll={true}>
+              <Link href={`about`} ref={el} class={`${navButtonClass} ml-auto`} noScroll={true}>
                 <Icon icon="circle-question" class="place-self-center" />
               </Link>
               <Tooltip attachTo={el}>
@@ -100,8 +102,7 @@ export const Toolbar: Component = () => {
             </>
           );
         }}
-
-        <div class="flex items-center text-center bg-gray-900 h-full rounded-md ml-auto">
+        <div class="flex items-center text-center bg-gray-900 h-10 lg:h-8 rounded-md">
           <button
             class="w-8 h-full z-2 -mr-4 disabled:opacity-50"
             onClick={() => setGlobalAgeFilter(Math.max(1, globalAgeFilter() - 1))}
@@ -121,6 +122,7 @@ export const Toolbar: Component = () => {
             <Icon icon="angle-right" />
           </button>
         </div>
+        <Search class="basis-full my-2 sm:my-0 sm:basis-48 lg:basis-96" />
       </div>
     </div>
   );
