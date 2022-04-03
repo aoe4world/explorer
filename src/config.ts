@@ -35,7 +35,7 @@ export const SUPPORTED_MODIFIER_PROPERTIES: ModifyableProperty[] = [
 
 export const DATA_ROOT = import.meta.env.DATA_URL && import.meta.env.DEV ? import.meta.env.DATA_URL : "https://data.aoe4world.com/";
 
-export const SIMILAIR_UNITS = [
+export const SIMILAIR_ITEMS = [
   ["archer", "longbowman"],
   ["knight", "lancer", "royal-knight"],
   ["scholar", "imam", "monk", "warrior-monk", "shaman", "prelate"],

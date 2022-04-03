@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "solid-app-router";
 import { Component, createEffect, createResource, createSignal, For, onCleanup, onMount, Show } from "solid-js";
-import { ITEMS, SIMILAIR_UNITS } from "../config";
+import { ITEMS, SIMILAIR_ITEMS } from "../config";
 import { fetchItems } from "../query/fetch";
 import { UnifiedItem } from "../types/data";
 import { getItemHref } from "./Cards";
@@ -12,7 +12,7 @@ function mergeSearchableData(item: UnifiedItem) {
   const keywords = [
     item.name.toLowerCase(),
     item.displayClasses.join(" ").toLowerCase(),
-    SIMILAIR_UNITS.filter((x) => x.includes(item.id)).flatMap((x) => x.join(" ").replace("-", " ")),
+    SIMILAIR_ITEMS.filter((x) => x.includes(item.id)).flatMap((x) => x.join(" ").replace("-", " ")),
   ];
   return [keywords.join(" "), keywords] as [string, string[]];
 }

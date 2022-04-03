@@ -12,6 +12,10 @@ import { BuildingDetailRoute } from "./routes/buildings/[id]";
 import { AboutRoute } from "./routes/about";
 import { TechnologyDetailRoute } from "./routes/technologies/[id]";
 import { TechnologoiesOverviewRoute } from "./routes/technologies/technologies";
+import { civConfig, UnifiedItem } from "./types/data";
+import { ITEMS, SIMILAIR_ITEMS } from "./config";
+import { getItems } from "./query/fetch";
+import { getItemHref } from "./components/Cards";
 
 const routes: RouteDefinition[] = [
   {
@@ -72,6 +76,22 @@ const routes: RouteDefinition[] = [
 ];
 
 export const [activePage, setActivePage] = createSignal<{ title?: string; description?: string; location: ReturnType<typeof useLocation> }>();
+
+export const setActivePageForItem = (item: UnifiedItem, civ: civConfig) =>
+  setActivePage({
+    title: item.name + (civ?.name ? ` — ${civ?.name}` : ""),
+    description: item.description,
+    location: useLocation(),
+  });
+
+export async function tryRedirectToClosestMatch(type: ITEMS, id: string, civ: civConfig, fallback?: Function) {
+  const navigate = useNavigate();
+  const similair = SIMILAIR_ITEMS.find((units) => units.includes(id));
+  const closestMatch = similair && (await getItems(type, civ.abbr)).find((i) => similair.includes(i.id));
+  if (closestMatch) navigate(getItemHref(closestMatch, civ));
+  else fallback();
+}
+
 let lastPathname: string;
 createEffect(
   on(activePage, () => {
