@@ -16,6 +16,7 @@ import { civConfig, UnifiedItem } from "./types/data";
 import { ITEMS, SIMILAIR_ITEMS } from "./config";
 import { getItems } from "./query/fetch";
 import { getItemHref } from "./components/Cards";
+import { PatchDetailRoute } from "./routes/patches/[id]";
 
 const routes: RouteDefinition[] = [
   {
@@ -72,6 +73,10 @@ const routes: RouteDefinition[] = [
   {
     path: "/about",
     component: () => AboutRoute,
+  },
+  {
+    path: "/patches/:id",
+    component: () => PatchDetailRoute,
   },
 ];
 

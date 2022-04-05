@@ -2,6 +2,7 @@ import { useParams } from "solid-app-router";
 import { createEffect, createResource, createSignal, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { ItemPage } from "../../components/ItemPage";
+import { PatchHistory } from "../../components/PatchHistory";
 import { ReportButton } from "../../components/ReportButton";
 import { StatCosts } from "../../components/Stats";
 import { CIVILIZATION_BY_SLUG, ITEMS, PRETTY_AGE_MAP_LONG } from "../../config";
@@ -33,6 +34,8 @@ export function TechnologyDetailRoute() {
               <ItemPage.ProducedAt item={item} civ={civ} title="Researched at" />
 
               {!civ && <ItemPage.CivPicker item={item} />}
+
+              <PatchHistory item={item} civ={civ} />
 
               <div class="my-8">
                 <ReportButton />

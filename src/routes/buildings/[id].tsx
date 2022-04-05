@@ -3,6 +3,7 @@ import { Component, createEffect, createResource, createSignal, For, Show } from
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { getItemHref } from "../../components/Cards";
 import { ItemPage } from "../../components/ItemPage";
+import { PatchHistory } from "../../components/PatchHistory";
 import { ReportButton } from "../../components/ReportButton";
 import { StatNumber, StatBar, StatDps, StatCosts } from "../../components/Stats";
 import { TechnologyCard } from "../../components/TechnologyCard";
@@ -101,6 +102,8 @@ export function BuildingDetailRoute() {
                   </For>
                 </div>
               </Show>
+
+              <PatchHistory item={item} civ={civ} />
             </div>
             <BuildingSidebar item={item} civ={civ} />
           </div>

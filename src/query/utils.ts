@@ -2,7 +2,7 @@ import { Building, Item, Modifier, PhysicalItem } from "../../data/.scripts/lib/
 import { CIVILIZATIONS, ITEMS } from "../config";
 import { technologyModifiers } from "../data/technologies";
 import { civAbbr, civConfig, GroupedBuildings, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
-import { fetchItem, fetchItems } from "./fetch";
+import { fetchItem, fetchItems, getItem } from "./fetch";
 
 /** Map any of civAbbr | civConfig | civConfig[] | civAbbr[] to a single array */
 export type civFilterParam = Parameters<typeof mapCivsArgument>[0];
@@ -159,4 +159,14 @@ export function modifierMatches(matcher: Modifier["select"], item: Item | Unifie
   const matchesId = matcher.id?.includes(item.id) || matcher.id?.includes((item as Item).baseId);
   const matchesClass = matcher.class?.some((cl) => cl?.every((c) => item.classes.includes(c)));
   return { id: matchesId, class: matchesClass, any: matchesId || matchesClass };
+}
+
+export function canonicalItemName(item: Item | UnifiedItem) {
+  const group = item.type === "unit" ? "units" : item.type === "building" ? "buildings" : "technologies";
+  return `${group}/${"baseId" in item ? item.baseId : item.id}`;
+}
+
+export function getItemByCanonicalName(canonicalName: string) {
+  const [group, id] = canonicalName.split("/");
+  return getItem(group as ITEMS, id);
 }

@@ -1,5 +1,9 @@
+import { firstBy } from "thenby";
 import { ITEMS, DATA_ROOT, MUTED_UNITS } from "../config";
-import { Unit, Technology, UnifiedItem, civAbbr, Building } from "../types/data";
+import { patches } from "../data/patches/patch";
+import { Unit, Technology, UnifiedItem, civAbbr, Building, civConfig } from "../types/data";
+import { PatchLine, PatchNotes } from "../types/patches";
+import { canonicalItemName } from "./utils";
 
 type ItemTypes = {
   [ITEMS.UNITS]: Unit;
@@ -67,4 +71,33 @@ export async function fetchJson<T = any>(url: string, useCache = false): Promise
 
   pendingRequests.set(url, request);
   return request;
+}
+
+const patchOrder = ["buff", "nerf", "fix"];
+export const sortPatchDiff = (a: PatchLine, b: PatchLine) => patchOrder.indexOf(a[0]) - patchOrder.indexOf(b[0]);
+
+/** Get all changes, line by line, that apply to a specific item */
+export async function getPatchHistory(item: UnifiedItem, civs?: civConfig[]) {
+  const cid = canonicalItemName(item);
+  const history: { patch: Pick<PatchNotes, "id" | "name">; diff: PatchLine[] }[] = [];
+  for (const patch of patches) {
+    // const { sections, ...rest } = patch;
+    for (const section of patch.sections) {
+      const diff = section.changes
+        .reduce(
+          (acc, c) => (c.items.includes(cid) && (!civs?.length || !c.civs.length || civs.some((cc) => c.civs.includes(cc.abbr))) ? [...acc, ...c.diff] : acc),
+          [] as PatchLine[]
+        )
+        .sort(sortPatchDiff);
+      if (diff.length) {
+        const { name, id } = patch;
+        history.push({ patch: { name, id }, diff });
+      }
+    }
+  }
+  return history;
+}
+
+export async function getPatch(id: string) {
+  return patches.find((patch) => patch.id === id);
 }

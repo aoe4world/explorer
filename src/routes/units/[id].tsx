@@ -1,15 +1,15 @@
-import { useParams } from "solid-app-router";
-import { Component, createEffect, createResource, createSignal, Show } from "solid-js";
+import { Link, useParams } from "solid-app-router";
+import { Component, createEffect, createResource, createSignal, For, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { ReportButton } from "../../components/ReportButton";
 import { StatNumber, StatBar, StatDps, StatCosts } from "../../components/Stats";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
-import { getItem } from "../../query/fetch";
+import { getItem, getPatchHistory } from "../../query/fetch";
 import { getUnitStats } from "../../query/stats";
 import { mainIntroductionCSSClass } from "../../styles";
 import { civConfig, UnifiedItem, Unit } from "../../types/data";
 import { ItemPage } from "../../components/ItemPage";
-
+import { PatchHistory } from "../../components/PatchHistory";
 export function UnitDetailRoute() {
   const itemType = ITEMS.UNITS;
   const params = useParams();
@@ -34,6 +34,9 @@ export function UnitDetailRoute() {
               <ItemPage.ProducedAt item={item} civ={civ} />
               {/* {item().name && <Fandom query={item().name} />} */}
               {!civ && <ItemPage.CivPicker item={item} />}
+
+              <PatchHistory item={item} civ={civ} />
+
               <div class="my-8">
                 <ReportButton />
               </div>
