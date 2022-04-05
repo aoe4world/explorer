@@ -76,7 +76,10 @@ export const Search: Component<{ class?: string }> = (props) => {
   createEffect(() => results() && setSelected(0));
 
   function globalKeyupListener(e: KeyboardEvent) {
-    if (e.key === "k" && (e.metaKey || e.ctrlKey)) focus();
+    if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+      focus();
+      e.preventDefault();
+    }
   }
 
   onMount(() => window.addEventListener("keydown", globalKeyupListener));
