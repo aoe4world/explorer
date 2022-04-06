@@ -1,5 +1,6 @@
 import { Building, Item, Modifier, PhysicalItem } from "../../data/.scripts/lib/types/units";
 import { CIVILIZATIONS, ITEMS } from "../config";
+import { staticMaps } from "../data/maps";
 import { technologyModifiers } from "../data/technologies";
 import { civAbbr, civConfig, GroupedBuildings, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
 import { fetchItem, fetchItems, getItem } from "./fetch";
@@ -168,5 +169,24 @@ export function canonicalItemName(item: Item | UnifiedItem) {
 
 export function getItemByCanonicalName(canonicalName: string) {
   const [group, id] = canonicalName.split("/");
+  if (group == "maps") return getMapAsItem(id);
   return getItem(group as ITEMS, id);
+}
+
+function getMapAsItem(id: string) {
+  const [name, icon] = staticMaps[id] ?? [capitlize(id.replaceAll("-", " ")), ""];
+
+  return {
+    id,
+    name,
+    civs: [],
+    classes: ["Map"],
+    icon,
+    description: "",
+    type: "map",
+  } as unknown as UnifiedItem;
+}
+
+export function capitlize(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }

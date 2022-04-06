@@ -7,5 +7,5 @@ export const tooltipCSSClass = `bg-gray-800 outline-2 outline outline-white/20 p
 export const itemGridCSSClass = `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7`;
 
 export function getItemCssClass(item: UnifiedItem) {
-  return item.type === "unit" ? "item-unit" : item.type == "building" ? "item-building" : "item-tech";
+  return item.type === "unit" ? "item-unit" : item.type == "building" ? "item-building" : item.type == "technology" ? "item-tech" : "item-building";
 }

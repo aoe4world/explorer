@@ -78,6 +78,10 @@ const routes: RouteDefinition[] = [
     path: "/patches/:id",
     component: () => PatchDetailRoute,
   },
+  {
+    path: "civs/:civ/patches/:id",
+    component: () => PatchDetailRoute,
+  },
 ];
 
 export const [activePage, setActivePage] = createSignal<{ title?: string; description?: string; location: ReturnType<typeof useLocation> }>();

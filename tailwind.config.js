@@ -35,6 +35,7 @@ module.exports = {
         },
         unique: "#DFC686",
         item: {
+          map: "#3A5D7E",
           unit: "#824F34",
           "unit-light": "#C36B3C",
           tech: "#32806B",
