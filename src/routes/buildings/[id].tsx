@@ -103,7 +103,7 @@ export function BuildingDetailRoute() {
                 </div>
               </Show>
 
-              {/* <PatchHistory item={item} civ={civ} /> */}
+              <PatchHistory item={item} civ={civ} />
             </div>
             <BuildingSidebar item={item} civ={civ} />
           </div>

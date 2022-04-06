@@ -35,7 +35,7 @@ export function UnitDetailRoute() {
               {/* {item().name && <Fandom query={item().name} />} */}
               {!civ && <ItemPage.CivPicker item={item} />}
 
-              {/* <PatchHistory item={item} civ={civ} /> */}
+              <PatchHistory item={item} civ={civ} />
 
               <div class="my-8">
                 <ReportButton />

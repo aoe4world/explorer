@@ -12,7 +12,7 @@ export const PatchHistory: Component<{ item: UnifiedItem; civ: civConfig }> = (p
       <For each={patchHistory()}>
         {(history) => (
           <div>
-            <Link href={`../../../../../patches/${history.patch.id}`} class="font-bold text-gray-300 mb-1.5">
+            <Link href={`../../../../patches/${history.patch.id}`} class="font-bold text-gray-300 mb-1.5">
               Upcoming {history.patch.name}
             </Link>
             <For each={history.diff}>
