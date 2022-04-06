@@ -31,6 +31,8 @@ const s1: PatchNotes = {
     {
       subtitle: "Core Units",
       civs: ["ab", "mo"],
+      description:
+        "Developer Note: Siege weapons are frequently built by many infantry at the same time in the field. We wanted to add more time here to give opponents an adequate chance at counter play.",
       changes: [
         // All units
 
@@ -58,6 +60,8 @@ const s1: PatchNotes = {
     {
       subtitle: "Economy",
       civs: [],
+      description:
+        "Developer Note: We found scout attack times to feel too long and unresponsive. This is especially noticeable in the early stages of the game when unit counts are lower. --  We’re aim to encourage earlier game deer play to reward players for being out on the map.",
       changes: [
         {
           // Scout hunting bow reload time reduced from 2 to 1 second
@@ -231,7 +235,10 @@ const s1: PatchNotes = {
           // Stone Wall Tower build time increased from 60 to 90 seconds
           items: ["buildings/stone-wall-tower"],
           civs: ["ab", "de", "en", "fr", "hr", "mo", "ru"],
-          diff: [["nerf", "Stone Wall Tower build time increased from 60 to 90 seconds"]],
+          diff: [
+            ["nerf", "Stone Wall Tower build time increased from 60 to 90 seconds"],
+            ["nerf", "Stone Wall Tower cost increased from 200 to 300 stone"],
+          ],
         },
         {
           // Keep build time increased from 120 to 140 seconds
@@ -330,9 +337,17 @@ const s1: PatchNotes = {
         },
         {
           // Repair ability now shows the correct requirements when attempting to use it on an enemy player
+          // Attempting to observe a modded game when you do not have the same mods enables should no longer result in a crash
+          // Improvements made to sheep to allow for easier selection
+          // Selection tool should now prioritize siege unit selection over building selection when the unit overlaps with a building
           items: [],
           civs: [],
-          diff: [["fix", "Repair ability now shows the correct requirements when attempting to use it on an enemy player"]],
+          diff: [
+            ["fix", "Repair ability now shows the correct requirements when attempting to use it on an enemy player"],
+            ["fix", "Attempting to observe a modded game when you do not have the same mods enables should no longer result in a crash"],
+            ["fix", "Improvements made to sheep to allow for easier selection"],
+            ["fix", "Selection tool should now prioritize siege unit selection over building selection when the unit overlaps with a building"],
+          ],
         },
       ],
     },
