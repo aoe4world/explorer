@@ -45,7 +45,7 @@ export const PatchDetailRoute = () => {
       }, [] as PatchSection[]);
     }
   );
-  
+
   createEffect(() => patch() && setActivePage({ title: patch()?.name, description: patch()?.summary, location: useLocation() }));
 
   return (
@@ -61,7 +61,7 @@ export const PatchDetailRoute = () => {
             <div class="text-sm font-bold">Filter updates by civilization</div>
             <div class="flex flex-wrap gap-2 my-2">
               <Link
-                href={`${civ() ? `../../../../`: ''}/../patches/${params.id}`}
+                href={`${civ() ? `../../../../` : ""}/../patches/${params.id}`}
                 onClick={() => setCiv(null)}
                 class={`w-10 h-6 rounded grid place-content-center bg-gray-400 uppercase text-sm text-white hover:text-gray-50 ${
                   !civ() ? "outline outline-white" : ""
@@ -71,7 +71,7 @@ export const PatchDetailRoute = () => {
               </Link>
               <For each={Object.values(CIVILIZATIONS)}>
                 {(c) => (
-                  <Link href={`${civ() ? `../../`: ''}../../civs/${c.slug}/patches/${params.id}`} onClick={() => setCiv(c.abbr)}>
+                  <Link href={`${civ() ? `../../` : ""}../../civs/${c.slug}/patches/${params.id}`} onClick={() => setCiv(c.abbr)}>
                     <CivFlag abbr={c.abbr} class={`w-10 h-5.5 rounded  ${civ() == c.abbr ? "outline outline-white" : ""}`} />
                   </Link>
                 )}
@@ -131,6 +131,12 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
               </div>
             )}
             <DiffList diff={c.diff.sort(sortPatchDiff)} />
+            {c.note && (
+              <div class="my-5 rounded-lg p-4 bg-gray-500">
+                <h5 class="font-bold text-gray-300 uppercase text-sm mb-1">Developer note</h5>
+                <p class="text-gray-100">{c.note}</p>
+              </div>
+            )}
           </div>
         )}
       </For>
@@ -155,12 +161,14 @@ const DiffList: Component<{ diff: PatchLine[] }> = (props) => (
 
 const Sidebar = () => {
   const { headings } = useTableOfContents();
-  onMount(() => setTimeout(() => {
-    const id = window.location.hash?.replace('#','');
-    if(!id) return;
-    const el = document.getElementById(id)
-    el?.scrollIntoView({ behavior: "auto", block: "start" });
-  }, 200));
+  onMount(() =>
+    setTimeout(() => {
+      const id = window.location.hash?.replace("#", "");
+      if (!id) return;
+      const el = document.getElementById(id);
+      el?.scrollIntoView({ behavior: "auto", block: "start" });
+    }, 200)
+  );
   return (
     <div class="">
       <span class="font-semibold text-gray-400">Jump to</span>

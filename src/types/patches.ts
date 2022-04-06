@@ -21,5 +21,6 @@ export type PatchSet = {
   items: string[];
   civs: civAbbr[];
   diff: PatchLine[];
+  note?: string;
 };
 export type PatchLine = ["nerf" | "buff" | "fix", string, civAbbr[]?];

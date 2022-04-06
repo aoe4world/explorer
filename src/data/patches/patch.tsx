@@ -12,7 +12,7 @@ const s1: PatchNotes = {
   html: (
     <div class="max-w-prose">
       <a
-        href=""
+        href="https://www.ageofempires.com/news/age-of-empires-iv-season-one-update-release-notes/"
         class="mb-8 inline-block text-gray-300 font-bold text-sm bg-gray-600 rounded px-3 py-2 hover:bg-gray-500 hover:text-gray-50 transition"
         target="_blank"
         rel="noopener noreferrer"
@@ -31,8 +31,6 @@ const s1: PatchNotes = {
     {
       subtitle: "Core Units",
       civs: ["ab", "mo"],
-      description:
-        "Developer Note: Siege weapons are frequently built by many infantry at the same time in the field. We wanted to add more time here to give opponents an adequate chance at counter play.",
       changes: [
         // All units
 
@@ -54,6 +52,7 @@ const s1: PatchNotes = {
           items: ["units/traction-trebuchet"],
           civs: ["mo"],
           diff: [["nerf", "Field construction time increased from 35 to 80 seconds"]],
+          note: "Siege weapons are frequently built by many infantry at the same time in the field. We wanted to add more time here to give opponents an adequate chance at counter play.",
         },
       ],
     },
@@ -61,7 +60,7 @@ const s1: PatchNotes = {
       subtitle: "Economy",
       civs: [],
       description:
-        "Developer Note: We found scout attack times to feel too long and unresponsive. This is especially noticeable in the early stages of the game when unit counts are lower. --  We’re aim to encourage earlier game deer play to reward players for being out on the map.",
+        "We found scout attack times to feel too long and unresponsive. This is especially noticeable in the early stages of the game when unit counts are lower. --  We’re aim to encourage earlier game deer play to reward players for being out on the map.",
       changes: [
         {
           // Scout hunting bow reload time reduced from 2 to 1 second
@@ -74,6 +73,7 @@ const s1: PatchNotes = {
             ["buff", "Melee weapon cool down reduced from 4 to 2 seconds"],
             ["buff", "Melee weapon damage reduced from 4 to 2"],
           ],
+          note: "We found scout attack times to feel too long and unresponsive. This is especially noticeable in the early stages of the game when unit counts are lower.",
         },
 
         {
@@ -94,6 +94,7 @@ const s1: PatchNotes = {
             ["buff", "Hunted meat harvest rate increased from 10% to 15%"],
             ["buff", "Research time reduced from 75 to 45 seconds"],
           ],
+          note: "We’re aim to encourage earlier game deer play to reward players for being out on the map.",
         },
         {
           // SUL and ABB orchard bonus reduced from +250 to +100 food
@@ -101,6 +102,7 @@ const s1: PatchNotes = {
           items: ["buildings/mill"],
           civs: ["ab", "de"],
           diff: [["nerf", "Delhi and Abbasid Orchard Bonus (building a mill nearby Berry Bushes) reduced from +250 to +100 food"]],
+          note: "We like that the berry gathering speed makes this a prime resource for Abbasid, but it gives a boon for too long. We want them to have to move out on the map to more risky positions sooner.",
         },
       ],
     },
@@ -120,6 +122,7 @@ const s1: PatchNotes = {
             ],
             ["fix", "Galley, Dhow and Junk help text updated to specifically indicate they benefit from ranged damage Blacksmith technology"],
           ],
+          note: "Engaging in naval battles was very swingy as once a player started losing it was difficult to retreat against fire while moving boats. We’re also hoping to see more tactical poke and retreat style feigns and harassment.",
         },
         {
           // Extended Lines research time reduced from 75 to 45 seconds
@@ -132,6 +135,7 @@ const s1: PatchNotes = {
           items: ["technologies/drift-nets"],
           civs: [],
           diff: [["buff", "Research time reduced from 75 to 45 seconds"]],
+          note: "Between making more fishing boats and researching, the dock had to choose between these economic techs that took so long. It was generally better just to make more fishing boats. Reducing the research time makes these techs enticing earlier in the match.",
         },
         {
           // Naval Navigator no longer gives +1 weapon range, increased sight range improvement from 1 to 4 tiles
@@ -141,6 +145,7 @@ const s1: PatchNotes = {
             ["nerf", "No longer gives +1 weapon range"],
             ["buff", "Increased sight range improvement from 1 to 4 tiles"],
           ],
+          note: "Naval units frequently are hampered from firing at their max range by inability to see land units on hills. This helps combat their sight issues as well as making the technology more situationally useful instead of an automatic research every game.",
         },
         {
           // Arrow ships can no longer fire while moving
@@ -178,6 +183,7 @@ const s1: PatchNotes = {
           items: ["units/galleass"],
           civs: [],
           diff: [["buff", "Population reduced from 6 to 5"]],
+          note: "Attack ships are designed to counter arrowships. However we felt the armor was so extreme of a counter it felt ineffective and unfun to engage in these naval battles.",
         },
         {
           // Attack Ship ranged armor reduced by 1, except for the French Hulk
@@ -203,6 +209,7 @@ const s1: PatchNotes = {
             ["buff", "Springald weapon damage increased from 50 to 70"],
             ["nerf", "Attack speed reduced from 3.25 to 3.75 seconds"],
           ],
+          note: "Helps Baghlah’s ability to take out enemy structures. This is also a net increase to Baghlah DPS to account for the lack of Swivel Ballista technology.",
         },
 
         {
@@ -217,6 +224,7 @@ const s1: PatchNotes = {
           items: ["units/baochuan"],
           civs: ["ch", "mo"],
           diff: [["nerf", "Weapon range reduced from 9 to 8 tiles"]],
+          note: "We want to give land units and defenses more opportunity to return fire against naval units. It’s not satisfying for a boat to out range your defenses and kill them without taking any damage. Having both sides take some damage creates a more interesting back and forth dynamic between players that adds strategy and micro into the mix.",
         },
       ],
     },
@@ -229,6 +237,7 @@ const s1: PatchNotes = {
           items: [],
           civs: [],
           diff: [["nerf", "Buildings under construction receive 50% more damage"]],
+          note: "Players were dropping buildings in the middle of battles and there wasn’t any way to stop it. We’ve added this damage penalty to in progress buildings to add more risk and counterplay to these strategies to even out how powerful they are.",
         },
 
         {
@@ -239,6 +248,7 @@ const s1: PatchNotes = {
             ["nerf", "Stone Wall Tower build time increased from 60 to 90 seconds"],
             ["nerf", "Stone Wall Tower cost increased from 200 to 300 stone"],
           ],
+          note: "These changes together are specifically targeted at weakening feudal age stone wall tower rushes as it’s difficult to get enough army together in time to prevent them.",
         },
         {
           // Keep build time increased from 120 to 140 seconds
@@ -256,6 +266,7 @@ const s1: PatchNotes = {
             ["nerf", "Cost increased from 250 Gold, 100 Stone to 500 Gold, 200 Stone"],
             ["nerf", "Research time increased from 60 to 90 seconds"],
           ],
+          note: "One of the most powerful castle age upgrades. This was frequently grabbed as soon as a keep was completed. Increasing the cost adds more strategic contemplation to when it’s researched. Still well worth the investment!",
         },
 
         {
@@ -276,6 +287,7 @@ const s1: PatchNotes = {
             ["buff", "Cost reduced from 300 Wood, 700 Gold to 100 Wood, 225 Gold"],
             ["buff", "Research time reduced from 90 to 45 seconds"],
           ],
+          note: "As geometry only affects 2 units that only damage buildings, we found the steep cost wasn’t justified and limited the intended scaling of late game rams.",
         },
 
         {
@@ -293,6 +305,7 @@ const s1: PatchNotes = {
             ["nerf", "Research time increased from 60 to 90 seconds"],
             ["nerf", "Delhi Research time increased from 900 to 1350 seconds", ["de"]],
           ],
+          note: "As university holds powerful technologies that affect entire classes of units, it was a much better fit for this technology.",
         },
         {
           // Mongol Improved version cost increased from 500 Stone to 1000 Stone
@@ -334,6 +347,7 @@ const s1: PatchNotes = {
           items: ["units/battering-ram"],
           civs: [],
           diff: [["fix", "Rams can no longer target naval units"]],
+          note: "While this was a bug fix, we received player feedback about how it added a fun dynamic to the game. We’ll look into readjusting in the future.",
         },
         {
           // Repair ability now shows the correct requirements when attempting to use it on an enemy player
@@ -389,6 +403,7 @@ const s1: PatchNotes = {
             ["buff", "Age IV damage increased from 10 to 16"],
             ["nerf", "Age IV bonus damage vs. Cavalry reduced from 20 to 16"],
           ],
+          note: "For both camel units we wanted them to be a bit more useful overall instead of just niche counter units. As Camel archers are ranged, fast, and high damage we’ll be scrutinizing them for upcoming balance patches.",
         },
 
         {
@@ -404,6 +419,7 @@ const s1: PatchNotes = {
             ["buff", "Cost reduced from 300 Food, 700 Gold to 100 Food, 225 Gold"],
             ["buff", "research time reduced from 90 to 45 seconds"],
           ],
+          note: "Camel archers already get to benefit from Biology and Incendiary Arrows, this helps combat some of the upgrade stacking issues.",
         },
       ],
     },
@@ -421,6 +437,7 @@ const s1: PatchNotes = {
             ["buff", "Cost reduced from 200 Wood, 500 Gold to 75 Wood, 200 Gold"],
             ["buff", "Research time reduced from 90 to 45 seconds"],
           ],
+          note: "Previously, the strongest wing bonuses weren’t available until reaching Imperial Age. This meant that choosing a wing wasn’t exciting as the payoff was very far in the future. We’ve resolved this by adding more enticing options starting off in the Feudal age!",
         },
       ],
     },
@@ -548,8 +565,22 @@ const s1: PatchNotes = {
             ["nerf", "Supervise production and research speed reduced from 200% to 150%"],
             // ["nerf", "Train time increased from 20 to 30 seconds"],
             // CHI Imperial Official train time reduced from 30 to 20 seconds (This is reverting the change from the original PUP release notes)
+          ],
+          note: "We found that China is quite strong with the improvements to their dynasties and the flexibility of 200% production speed allowing them an easier counter vs most tech switches.",
+        },
+        {
+          // Official Changes
+          // Supervise production and research speed reduced from 200% to 150%
+          // Official train time increased from 20 to 30 seconds
+          // Official cost changed from 150 Food to 100 Food, 50 Gold
+          items: ["units/imperial-official"],
+          civs: ["ch"],
+          diff: [
+            // ["nerf", "Train time increased from 20 to 30 seconds"],
+            // CHI Imperial Official train time reduced from 30 to 20 seconds (This is reverting the change from the original PUP release notes)
             ["nerf", "Cost changed from 150 Food to 100 Food, 50 Gold"],
           ],
+          note: "China was able to rapidly accelerate their age of time by skipping a mining camp and using tax gold to age up with their faster building production time.",
         },
         {
           items: ["buildings/astronomical-clocktower"],
@@ -571,6 +602,7 @@ const s1: PatchNotes = {
             ["nerf", "Cost increased from 150 Wood, 350 Gold to 200 Wood, 500 Gold"],
             ["nerf", "Research time increased from 60 to 90 seconds"],
           ],
+          note: "As players start in a dynasty and normally grab Song early this tech is giving at least a 10% bonus to gather rates and up to 20% for all resources.",
         },
         {
           // Barbican of the Sun sight range increased to match the Outpost
@@ -612,6 +644,7 @@ const s1: PatchNotes = {
             ["nerf", "Cost increased from 100 Wood to 125 Wood"],
             ["buff", "Health increased from 1000 to 1500"],
           ],
+          note: "Adding earlier villages allows Chinese to create defensive garrison to resource nodes right at the start of the game.",
         },
         {
           // Granary requirement reduced from Yuan Dynasty to Song Dynasty
@@ -624,6 +657,7 @@ const s1: PatchNotes = {
             ["nerf", "Villager harvest bonus reduced from 15% to 10%"],
             ["buff", "Health increased from 1000 to 1500"],
           ],
+          note: "Building the Granary earlier allows you to plan out your base layout while making the farm transition, instead of trying to fit in a large building after crops have already been established.",
         },
         {
           // Pagoda requirement reduced from Ming Dynasty to Yuan Dynasty
@@ -634,6 +668,7 @@ const s1: PatchNotes = {
             ["buff", "Moved from Ming Dynasty to Yuan Dynasty"],
             ["nerf", "Relic resource bonus reduced from 100 Gold, Food, Wood and Stone to 100 Gold, 50 Food, 50 Wood, 50 Stone per minute"],
           ],
+          note: "Moving up the Pagoda allows the dynasty building to be built in the castle age when players are collecting relics.",
         },
       ],
     },
@@ -644,10 +679,23 @@ const s1: PatchNotes = {
       civs: ["de"],
       changes: [
         {
+          items: [],
+          civs: ["de"],
+          diff: [["nerf", "Starting Wood reduced from 250 to 200"]],
+          note: "This wood bonus was originally added to help make an early Mosque. As the civ is quite strong in Feudal age, we wanted to require more commitment to unlocking the power of an early Mosque. Additionally, the extra starting wood was providing a powerful boost on maps where fishing boats could be constructed.",
+        },
+        {
+          items: ["technologies/sanctity"],
+          civs: ["de"],
+          diff: [["nerf", "Sanctity Gold bonus reduced from +100% to +50%"]],
+          note: "Providing so much gold bonus early allowed Delhi to snowball an early lead into an unstoppable victory.",
+        },
+        {
           // Herbal Medicine technology moved from the Dark Age to the Castle Age
           items: ["technologies/herbal-medicine"],
           civs: ["de"],
           diff: [["nerf", "Moved from the Dark Age to the Castle Age"]],
+          note: "This powerful tech was providing a large power spike too early in the game. We’ve moved it back to Castle Age to match other civs.",
         },
         {
           // The Delhi Sultanate tech tree now lists Honed Blades under Imperial Age instead of Castle Age
@@ -681,6 +729,7 @@ const s1: PatchNotes = {
           items: [],
           civs: ["en"],
           diff: [["buff", "Starting Wood increased from 150 to 200"]],
+          note: "This, along with the previous changes, gives English more options early game to start with a barracks rush, early farming, or save for feudal age.",
         },
         {
           // Man-at-Arms train time reduced from 22 to 15 seconds
@@ -691,6 +740,7 @@ const s1: PatchNotes = {
             ["buff", "Train time reduced from 22 to 15 second"],
             ["buff", "Vanguard (Age I) Man-at-Arms armor increased from 2 to 3"],
           ],
+          note: "We want to create more dynamic choices in the unit roster for the English civilization. This allows English players the ability to pump out powerful early game units quickly. As the Man at Arms is very food-heavy, it also synergizes with their farming bonuses.",
         },
         {
           // Abbey of Kings healing rate increased from 4 health/1.5 seconds to 6 health/ 1 second
@@ -707,6 +757,7 @@ const s1: PatchNotes = {
             ["fix", "Can no longer be triggered while in combat"],
             ["fix", "Now has the correct requirements text"],
           ],
+          note: "The fantasy for this technology is troops relaxing at a warm fire after a tough battle. Note that it can still be activated while moving.",
         },
       ],
     },
@@ -732,7 +783,11 @@ const s1: PatchNotes = {
           civs: ["fr"],
           diff: [["fix", "Arbaletrier Pavise ability now increases armor by +5 instead of setting armor to 5"]],
         },
-
+        {
+          items: ["buildings/red-palace"],
+          civs: ["fr"],
+          diff: [["fix", "Red Palace now has visual weapon emplacements for boiling oil"]],
+        },
         {
           // Royal Knight help text updated to reflect proper duration of bonus after a successful charge attack
           items: ["units/royal-knight"],
@@ -750,12 +805,14 @@ const s1: PatchNotes = {
           items: ["buildings/regnitz-cathedral"],
           civs: ["hr"],
           diff: [["nerf", "Regnitz Cathedral Relic capacity reduced from 3 to 2"]],
+          note: "This helps balance the high gold per minute provided by the relic. In addition, it allows HRE more options for powering up Keeps and Outposts by adding relics to them.",
         },
         {
           // Burgrave Palace now produces infantry 400% faster instead of training units in batches of 5
           items: ["buildings/burgrave-palace"],
           civs: ["hr"],
           diff: [["buff", "Burgrave Palace now produces infantry 400% faster instead of training units in batches of 5"]],
+          note: "While technically the same as training in batches of 5, this is better for multiple reasons: First off, it now applies to all barracks techs for awesome timing attacks! This change also allows units to hit the field much faster, with smaller resource requirements, and additional flexibility in the units produced.",
         },
         {
           // Meinwerk Palace research discount increased from 25% to 30%
@@ -778,6 +835,7 @@ const s1: PatchNotes = {
           items: ["technologies/inspired-warriors"],
           civs: ["hr"],
           diff: [["buff", "Inspired Warriors effect duration increased from 30 seconds to 60 seconds"]],
+          note: "This, along with the Marching Drills, changes are intended to make it more rewarding for you to put Prelates into your main army.",
         },
         {
           // Marching Drills cost reduced from 100 Food, 250 Gold to 50 Food, 125 Gold
@@ -790,6 +848,7 @@ const s1: PatchNotes = {
             ["buff", "Research time reduced from 90 to 60 seconds"],
             ["buff", "Now affects Prelates"],
           ],
+          note: "While Marching Drills is a powerful tech, the cost was difficult to afford in Feudal age. We’re hoping this opens up new strategic potential for expanded HRE Feudal play.",
         },
 
         {
@@ -853,6 +912,7 @@ const s1: PatchNotes = {
             ["buff", "New Improved Technology: Textiles (Improved) has been added to the Town Center, available in the Castle Age"],
             ["buff", "Textiles (Improved) increases the health of Villagers by +50"],
           ],
+          note: "This is intended to help Mongols defend from raids later in the game as they have no keeps or walls.",
         },
 
         // Mongols Bug Fixes
@@ -861,6 +921,7 @@ const s1: PatchNotes = {
           items: ["technologies/biology-improved"],
           civs: ["mo"],
           diff: [["fix", "Now only provides +10% health instead of +15%, for a total of +30% instead of +35%"]],
+          note: "This is consistent with other Mongol stone upgrades that provide a 50% increased bonus over the base upgrade.",
         },
 
         {
@@ -928,6 +989,7 @@ const s1: PatchNotes = {
             ["buff", "Weapon range increased from 1.15 to 3"],
             ["buff", "Charge weapon range increased from 2.15 to 3"],
           ],
+          note: "This allows warrior monks to safely attack from behind a line of infantry and provide their combat buff without being too exposed to enemy melee attackers.",
         },
         {
           // Horse Archer Precision technology weapon range bonus reduced from 2 to 1
@@ -938,12 +1000,14 @@ const s1: PatchNotes = {
             ["nerf", "Weapon range bonus reduced from 2 to 1"],
             ["buff", "Research time reduced from 90 to 60 seconds"],
           ],
+          note: "It’s our intention that Horse Archers are countered by Archers. Being speedy and then getting this upgrade to out-range Archers means unit counters in imperial were too limited.",
         },
         {
           // Streltsy Double Time ability no longer quickens their Static Deployment ability
           items: ["technologies/double-time", "units/streltsy"],
           civs: ["ru"],
           diff: [["nerf", "Double Time ability no longer quickens Streltsy Static Deployment ability"]],
+          note: "We wanted the focus of this technology to be about the movement ability instead of adding extra functionality to an already powerful unit.",
         },
         {
           // Lodya Fishing Ship
@@ -969,6 +1033,7 @@ const s1: PatchNotes = {
           items: ["technologies/banded-arms"],
           civs: ["ru"],
           diff: [["nerf", "Banded Arms bonus range decreased from +1.5 to +0.5"]],
+          note: "The large range bonus on this tech was difficult to play against and led to some drawn out stalemate-style gameplay that wasn’t exciting for most players. We’ll revisit this upgrade in a future patch.",
         },
         // Rus Bug Fixes
         {
