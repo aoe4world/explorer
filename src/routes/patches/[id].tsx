@@ -1,5 +1,5 @@
 import { Link, useLocation, useParams } from "solid-app-router";
-import { Component, createMemo, createResource, createSignal, For, Index, Resource } from "solid-js";
+import { Component, createMemo, onMount, createResource, createSignal, For, Index, Resource, createEffect } from "solid-js";
 import { setActivePage } from "../../App";
 import { getItemHref } from "../../components/Cards";
 import { CivFlag } from "../../components/CivFlag";
@@ -40,14 +40,13 @@ export const PatchDetailRoute = () => {
           }
           return chs;
         }, [] as PatchSet[]);
-        console.log(changes.length, s.title);
         if ((!s.civs?.length || (s.civs && s.civs.includes(civ))) && changes.length) sections.push({ ...s, changes });
         return sections;
       }, [] as PatchSection[]);
     }
   );
-
-  setActivePage({ title: "Update 1", description: "About the AoE4 Explorer", location: useLocation() });
+  
+  createEffect(() => patch() && setActivePage({ title: patch()?.name, description: patch()?.summary, location: useLocation() }));
 
   return (
     <TableOfContentsProvider>
@@ -62,7 +61,7 @@ export const PatchDetailRoute = () => {
             <div class="text-sm font-bold">Filter updates by civilization</div>
             <div class="flex flex-wrap gap-2 my-2">
               <Link
-                href={`../../../../patches/${params.id}`}
+                href={`${civ() ? `../../../../`: ''}/../patches/${params.id}`}
                 onClick={() => setCiv(null)}
                 class={`w-10 h-6 rounded grid place-content-center bg-gray-400 uppercase text-sm text-white hover:text-gray-50 ${
                   !civ() ? "outline outline-white" : ""
@@ -72,7 +71,7 @@ export const PatchDetailRoute = () => {
               </Link>
               <For each={Object.values(CIVILIZATIONS)}>
                 {(c) => (
-                  <Link href={`../../../../civs/${c.slug}/patches/${params.id}`} onClick={() => setCiv(c.abbr)}>
+                  <Link href={`${civ() ? `../../`: ''}../../civs/${c.slug}/patches/${params.id}`} onClick={() => setCiv(c.abbr)}>
                     <CivFlag abbr={c.abbr} class={`w-10 h-5.5 rounded  ${civ() == c.abbr ? "outline outline-white" : ""}`} />
                   </Link>
                 )}
@@ -156,6 +155,12 @@ const DiffList: Component<{ diff: PatchLine[] }> = (props) => (
 
 const Sidebar = () => {
   const { headings } = useTableOfContents();
+  onMount(() => setTimeout(() => {
+    const id = window.location.hash?.replace('#','');
+    if(!id) return;
+    const el = document.getElementById(id)
+    el?.scrollIntoView({ behavior: "auto", block: "start" });
+  }, 200));
   return (
     <div class="">
       <span class="font-semibold text-gray-400">Jump to</span>
