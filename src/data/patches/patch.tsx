@@ -679,18 +679,6 @@ const s1: PatchNotes = {
       civs: ["de"],
       changes: [
         {
-          items: [],
-          civs: ["de"],
-          diff: [["nerf", "Starting Wood reduced from 250 to 200"]],
-          note: "This wood bonus was originally added to help make an early Mosque. As the civ is quite strong in Feudal age, we wanted to require more commitment to unlocking the power of an early Mosque. Additionally, the extra starting wood was providing a powerful boost on maps where fishing boats could be constructed.",
-        },
-        {
-          items: ["technologies/sanctity"],
-          civs: ["de"],
-          diff: [["nerf", "Sanctity Gold bonus reduced from +100% to +50%"]],
-          note: "Providing so much gold bonus early allowed Delhi to snowball an early lead into an unstoppable victory.",
-        },
-        {
           // Herbal Medicine technology moved from the Dark Age to the Castle Age
           items: ["technologies/herbal-medicine"],
           civs: ["de"],
