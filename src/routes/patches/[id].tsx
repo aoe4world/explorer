@@ -32,10 +32,10 @@ export const PatchDetailRoute = () => {
 
       return patch?.sections?.reduce((sections, s) => {
         const changes = s.changes.reduce((chs, c) => {
-          if (c.civs.length ? c.civs.includes(civ) : c.items.some((i) => items.get(i)?.civs.includes(civ))) {
+          if (c.civs.length ? c.civs.includes(civ) : !c.items.length || c.items.some((i) => items.get(i)?.civs.includes(civ))) {
             const filterdChange: PatchSet = { ...c };
-            filterdChange.items = c.items.filter((i) => items.get(i)?.civs.includes(civ));
-            filterdChange.diff = filterdChange.diff.filter(([t, d, c]) => !c || c.includes(civ));
+            filterdChange.items = c.items.filter((i) => !i || items.get(i)?.civs.includes(civ));
+            filterdChange.diff = filterdChange.diff.filter(([t, d, c]) => !c?.length || c.includes(civ));
             chs.push(filterdChange);
           }
           return chs;
