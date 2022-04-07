@@ -77,10 +77,7 @@ export const PatchDetailRoute = () => {
                 )}
               </For>
             </div>
-            <div class="text-sm text-gray-200 my-4">
-              Click on different units or technologies to learn more about them.
-              <br /> Note: The stats on units will update to reflect the change in this list once the game is released.
-            </div>
+            <div class="text-sm text-gray-200 my-4">Click on different units or technologies to learn more about them.</div>
           </div>
 
           <For each={filteredPatchNotes()}>{(section) => <Section section={section} items={items()} civ={civ()} />}</For>
@@ -134,7 +131,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
             {c.note && (
               <div class="my-5 rounded-lg p-4 bg-gray-500">
                 <h5 class="font-bold text-gray-300 uppercase text-sm mb-1">Developer note</h5>
-                <p class="text-gray-100">{c.note}</p>
+                <p class="text-gray-100">"{c.note}"</p>
               </div>
             )}
           </div>
@@ -145,18 +142,20 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
 };
 
 const DiffList: Component<{ diff: PatchLine[] }> = (props) => (
-  <For each={props.diff}>
-    {([type, change]) => (
-      <div class="flex py-1 ml-2">
-        <div class="text-xs mr-3 mt-1">
-          {type == "buff" && <Icon icon="circle-plus" class="text-green-700" />}
-          {type == "nerf" && <Icon icon="circle-minus" class="text-red-700" />}
-          {type == "fix" && <Icon icon="circle-check" class="text-gray-300" />}
-        </div>
-        <p class="text-gray-100 text-base">{change}</p>
-      </div>
-    )}
-  </For>
+  <ul>
+    <For each={props.diff}>
+      {([type, change]) => (
+        <li class="flex py-1 ml-2">
+          <div class="text-xs mr-3 mt-1">
+            {type == "buff" && <Icon icon="circle-plus" class="text-green-700" />}
+            {type == "nerf" && <Icon icon="circle-minus" class="text-red-700" />}
+            {type == "fix" && <Icon icon="circle-check" class="text-gray-300" />}
+          </div>
+          <p class="text-gray-100 text-base">{change}</p>
+        </li>
+      )}
+    </For>
+  </ul>
 );
 
 const Sidebar = () => {

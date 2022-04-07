@@ -17,7 +17,6 @@ const common = {
   allMillitaryShips: { class: [["ship", "attack"], ["ship", "archer"], ["ship", "incendiary"], ["warship"]], id: ["galleass"] } as Modifier["select"],
   allKeepLikeLandmarks: { id: ["berkshire-palace", "elzbach-palace", "kremlin", "spasskaya-tower", "red-palace", "the-white-tower"] },
   allReligiousUnits: { id: ["prelate", "monk", "scholar", "shaman", "imam", "warrior-monk"] } as Modifier["select"],
-  camelUnits: { id: ["camel-rider", "camel-archer"] } as Modifier["select"],
 };
 
 export const technologyModifiers: Record<string, Modifier[]> = {
@@ -450,14 +449,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "survival-techniques": [
-    // Increase Villagers' hunted meat carry capacity by +10 and hunted meat gather rate by  +15%.
-    {
-      property: "huntCarryCapacity",
-      select: { id: ["villager"] },
-      effect: "change",
-      value: 10,
-      type: "passive",
-    },
+    // Increase Villagers' hunted meat gather rate by  +15%.
     {
       property: "huntGatherRate",
       select: { id: ["villager"] },
@@ -793,10 +785,10 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "marching-drills": [
-    // Increase the movement speed of infantry by +10%.
+    // Increase the movement speed of infantry and prelates by +10%.
     {
       property: "moveSpeed",
-      select: { class: [["infantry"]] },
+      select: { class: [["infantry"]], id: ["prelate"] },
       effect: "multiply",
       value: 1.1,
       type: "passive",
@@ -1040,19 +1032,12 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "navigator-lookout": [
-    // Increase the sight range of military ships by +2 and their weapon range by  +1.
+    // Increase the sight range of military ships by +4.
     {
       property: "lineOfSight",
       select: common.allMillitaryShips,
       effect: "change",
-      value: 2,
-      type: "passive",
-    },
-    {
-      property: "maxRange",
-      select: common.allMillitaryShips,
-      effect: "change",
-      value: 1,
+      value: 4,
       type: "passive",
     },
   ],
@@ -1302,24 +1287,24 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "greased-axles": [
-    // Increase the movement speed of siege engines by +20%.
+    // Increase the movement speed of siege engines by +15%.
     {
       property: "moveSpeed",
       select: { class: [["siege"]] },
       effect: "multiply",
-      value: 1.2,
+      value: 1.15,
       type: "passive",
     },
   ],
 
   "greased-axles-improved": [
-    // Increase the movement speed of siege engines by +30%.
+    // Increase the movement speed of siege engines by +25%.
     // If Greased Axles has already been researched, increase it by + 10 % instead.
     {
       property: "moveSpeed",
       select: { class: [["siege"]] },
       effect: "multiply",
-      value: 1.083, // 1.3 / 1.2
+      value: 1.086, // 1.3 / 1.2
       type: "passive",
     },
   ],
@@ -1629,6 +1614,17 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  "textiles-improved": [
+    // Increase Villagers' health by +50, if already researched by +25.
+    {
+      property: "hitpoints",
+      select: { id: ["villager"] },
+      effect: "change",
+      value: 25,
+      type: "passive",
+    },
+  ],
+
   // Todo, unsure if it also applies to regnitz catherdral
   // Todo encode
   "tithe-barns": [
@@ -1727,18 +1723,17 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "camel-barding": [
-    // Increase the armor of camel units by +2.
+    // Increase the armor of camel riders by +2.
     {
       property: "meleeArmor",
-      select: common.camelUnits,
+      select: { id: ["camel-rider"] },
       effect: "change",
       value: 2,
       type: "passive",
     },
     {
       property: "rangedArmor",
-      select: common.camelUnits,
-
+      select: { id: ["camel-rider"] },
       effect: "change",
       value: 2,
       type: "passive",
@@ -1749,7 +1744,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Increase the movement speed of camel units by +15%.
     {
       property: "moveSpeed",
-      select: common.camelUnits,
+      select: { id: ["camel-rider", "camel-archer"] },
       effect: "multiply",
       value: 1.15,
       type: "passive",
@@ -1768,12 +1763,12 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "camel-support": [
-    // Camels increase the armor of nearby infantry by +1.
+    // Camels increase the armor of nearby infantry by +2.
     {
       property: "meleeArmor",
       select: { class: [["infantry"], ["cavalry"]], id: ["camel-rider", "camel-archer"] },
       effect: "change",
-      value: 1,
+      value: 2,
       type: "influence",
     },
   ],
@@ -2138,12 +2133,12 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "banded-arms": [
-    // Increase the range of Springald by +1.5 tiles.
+    // Increase the range of Springald by +0.5 tiles.
     {
       property: "maxRange",
       select: { id: ["springald"] },
       effect: "change",
-      value: 1.5,
+      value: 0.5,
       type: "passive",
     },
   ],
@@ -2200,19 +2195,12 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "double-time": [
-    // Streltsy gain the Double Time ability, which increases their movement speed by +30% and speeds up their Static Deployment time by  +50% for  10 seconds.
+    // Streltsy gain the Double Time ability, which increases their movement speed by +30% for  10 seconds.
     {
       property: "moveSpeed",
       select: { id: ["streltsy"] },
       effect: "multiply",
       value: 1.3,
-      type: "ability",
-    },
-    {
-      property: "unknown",
-      select: { id: ["streltsy"] },
-      effect: "multiply",
-      value: 1.5,
       type: "ability",
     },
   ],
@@ -2251,12 +2239,12 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "mounted-precision": [
-    // Increases the Horse Archers weapon range by %?%.
+    // Increases the Horse Archers weapon range by 1.
     {
       property: "maxRange",
       select: { id: ["horse-archer"] },
       effect: "change",
-      value: 2,
+      value: 1,
       type: "passive",
     },
   ],

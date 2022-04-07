@@ -925,8 +925,7 @@ const s1: PatchNotes = {
           // Textiles (Improved) has been added to the Town Center, available in the Castle Age
 
           // Textiles (Improved) increases the health of Villagers by +50
-          items: ["technologies/textiles"],
-          // items: ["technologies/textiles-improved"],
+          items: ["technologies/textiles-improved"],
           civs: ["mo"],
           diff: [
             ["buff", "New Improved Technology: Textiles (Improved) has been added to the Town Center, available in the Castle Age"],

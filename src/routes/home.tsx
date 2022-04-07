@@ -16,17 +16,11 @@ export const CivOverviewRoute = () => {
         <div class="mx-2 sm:mx-6">
           <div class="flex flex-wrap items-center">
             <h1 class="text-3xl font-bold mr-6">AoE4 Explorer</h1>
-            <a
-              href="https://www.ageofempires.com/news/age-of-empires-iv-patch-11963/"
-              target="_blank"
-              rel="noopener"
-              class="text-xs px-3 uppercase font-bold py-1 rounded-full text-gray-100 bg-black border border-gray-300"
-              ref={el}
-            >
-              <i class="fas fa-asterisk mr-1"></i> Patch 11963
-            </a>
+            <Link href="patches/season-one" class="text-xs px-3 uppercase font-bold py-1 rounded-full text-gray-100 bg-black border border-gray-300" ref={el}>
+              <i class="fas fa-asterisk mr-1"></i> Season One Update {/*12973*/}
+            </Link>
             <Tooltip attachTo={el}>
-              <div class={tooltipCSSClass}>The Explorer includes all changes introduced with the most recent March Patch 11963</div>
+              <div class={tooltipCSSClass}>The Explorer includes all changes introduced with the Season One Update (12973)</div>
             </Tooltip>
           </div>
           <p class="text-2xl mt-2 text-gray-200">Discover all units, buildings and technologies in the game.</p>
