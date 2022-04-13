@@ -18,7 +18,7 @@ import { Building, civAbbr, civConfig, UnifiedItem } from "../../types/data";
 export function BuildingDetailRoute() {
   const itemType = ITEMS.BUILDINGS;
   const params = useParams();
-  const civ = CIVILIZATION_BY_SLUG[params.slug];
+  const civ: civConfig = CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
   const [item] = createResource(params.id, (id) => getItem(itemType, id));
 
@@ -42,7 +42,7 @@ export function BuildingDetailRoute() {
 
   return (
     <ItemPage.Wrapper civ={civ}>
-      <Show when={item()}>
+      <Show when={!unmatched() && item()}>
         {(item) => (
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
@@ -62,7 +62,7 @@ export function BuildingDetailRoute() {
                     {(unit) => {
                       let el;
                       return (
-                        <Link href={`../../units/${unit.id}`} class="flex flex-row items-center mb-2 group " ref={el}>
+                        <Link href={`${civ ? `/civs/${civ.slug}` : ""}/units/${unit.id}`} class="flex flex-row items-center mb-2 group " ref={el}>
                           <div class="flex-none  rounded bg-item-unit/80 group-hover:bg-item-unit/100 w-10 h-10 p-0.5 mr-2 transition">
                             <img src={unit.icon} />
                           </div>
@@ -109,9 +109,8 @@ export function BuildingDetailRoute() {
           </div>
         )}
       </Show>
-
-      <ItemPage.AvailableUpgrades item={item()} civ={civ} />
       {unmatched() && <ItemPage.UnavailableForCiv item={item()} civ={civ} />}
+      {!unmatched() && <ItemPage.AvailableUpgrades item={item()} civ={civ} />}
       {item.error && <div class="text-red-600">Error!</div>}
     </ItemPage.Wrapper>
   );

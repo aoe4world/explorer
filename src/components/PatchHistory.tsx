@@ -4,7 +4,7 @@ import { getPatchHistory } from "../query/fetch";
 import { UnifiedItem, civConfig } from "../types/data";
 import { Icon } from "./Icon";
 
-export const PatchHistory: Component<{ item: UnifiedItem; civ: civConfig }> = (props) => {
+export const PatchHistory: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
   const [patchHistory] = createResource(() => getPatchHistory(props.item, props.civ ? [props.civ] : undefined));
 
   return (
@@ -12,7 +12,7 @@ export const PatchHistory: Component<{ item: UnifiedItem; civ: civConfig }> = (p
       <For each={patchHistory()}>
         {(history) => (
           <div>
-            <Link href={`../../../../patches/${history.patch.id}`} class="font-bold text-gray-300 mb-1.5">
+            <Link href={`${props.civ ? `/civs/${props.civ.slug}` : ""}/patches/${history.patch.id}`} class="font-bold text-gray-300 mb-1.5">
               Changed in {history.patch.name}
             </Link>
             <For each={history.diff}>

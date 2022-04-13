@@ -27,7 +27,7 @@ export const Toolbar: Component = () => {
       <div class="max-w-screen-2xl py-2 px-4 lg:px-8 h-auto text-base lg:p-3 mx-auto flex flex-row flex-wrap sm:flex-nowrap gap-2 lg:gap-5">
         <div class="flex flex-row gap-2 h-10 lg:h-8 ">
           {current().subroute ? (
-            <Link href={`civs/${current().civ}/`} class={navButtonClass} noScroll={true}>
+            <Link href={`/civs/${current().civ}/`} class={navButtonClass} noScroll={true}>
               <Icon icon="grid-horizontal" class="place-self-center" />
             </Link>
           ) : (
@@ -74,7 +74,7 @@ export const Toolbar: Component = () => {
           let el;
           return (
             <>
-              <Link href={`about`} ref={el} class={`${navButtonClass} ml-auto`} noScroll={true}>
+              <Link href={`/about`} ref={el} class={`${navButtonClass} ml-auto`} noScroll={true}>
                 <Icon icon="circle-question" class="place-self-center" />
               </Link>
               <Tooltip attachTo={el}>

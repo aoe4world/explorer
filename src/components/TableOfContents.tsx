@@ -1,19 +1,22 @@
-import { Accessor, Component, createContext, createSignal, useContext } from "solid-js";
+import { Accessor, Component, createContext, createSignal, onCleanup, onMount, useContext } from "solid-js";
 
 type Heading = { label: string; id: string; level: number };
-const TableOfContentsContext = createContext<{
+type TocContext = {
   headings: Accessor<Heading[]>;
-  createHeadingId(label: string, level?: number): string;
-}>({
+  add(label: string, level?: number): string;
+  remove(id: string): void;
+};
+const TableOfContentsContext = createContext<TocContext>({
   headings: () => [],
-  createHeadingId: () => "",
+  add: () => "",
+  remove: () => null,
 });
 
 export const TableOfContentsProvider: Component = (props) => {
   const [headings, setHeadings] = createSignal<Heading[]>([]);
-  const value = {
+  const value: TocContext = {
     headings,
-    createHeadingId: (label: string, level = 1) => {
+    add: (label: string, level = 1) => {
       const slugified = label.replace(/\s/g, "-").toLowerCase();
       let id = slugified;
       let i = 0;
@@ -21,9 +24,23 @@ export const TableOfContentsProvider: Component = (props) => {
       setHeadings(headings().concat({ label, id, level }));
       return id;
     },
+    remove: (id: string) => setHeadings(headings().filter((h) => h.id !== id)),
   };
 
+  onMount(() => {
+    const id = window.location.hash?.replace("#", "");
+    if (!id) return;
+    headings()?.find((h) => h.id === id) && requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+  });
+
   return <TableOfContentsContext.Provider value={value}>{props.children}</TableOfContentsContext.Provider>;
+};
+
+export const TableOfContentsAnchor: Component<{ label: string; level?: number }> = (props) => {
+  const { add: createHeadingId, remove: removeHeading } = useContext(TableOfContentsContext);
+  const id = createHeadingId(props.label, props.level);
+  onCleanup(() => removeHeading(id));
+  return <a id={id}></a>;
 };
 
 export function useTableOfContents() {
@@ -40,3 +57,8 @@ export function scrollIntoViewIfNeeded(e: MouseEvent, id: string) {
     return false;
   }
 }
+
+export const TableOfContents = {
+  Provider: TableOfContentsProvider,
+  Anchor: TableOfContentsAnchor,
+};

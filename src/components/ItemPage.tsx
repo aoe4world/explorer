@@ -9,6 +9,7 @@ import { getItem } from "../query/fetch";
 import { getItemTechnologies } from "../query/utils";
 import { getItemCssClass, itemGridCSSClass, mainIntroductionCSSClass, mainItemTitleCSSClass } from "../styles";
 import { civAbbr, civConfig, UnifiedItem } from "../types/data";
+import { Icon } from "./Icon";
 
 const Header: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
   const itemCssClass = getItemCssClass(props.item);
@@ -21,7 +22,7 @@ const Header: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
         <span class={`text-${itemCssClass}-light`}>{props.item.displayClasses.join(", ")}</span>
         <h2 class={mainItemTitleCSSClass}>{props.item.name}</h2>
         {props.civ && (
-          <Link href="../../" class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80">
+          <Link href={`/civs/${props.civ.slug}`} class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80">
             <CivFlag abbr={props.civ.abbr} class="h-3 w-4.5 rounded-sm  " />
             {props.civ?.name}
           </Link>
@@ -64,7 +65,7 @@ const ProducedAt: Component<{ item: UnifiedItem; civ: civConfig; title?: string 
       <div class="flex gap-10 flex-wrap mb-8">
         <For each={productionBuildings()}>
           {(building) => (
-            <Link href={`../../buildings/${building.id}`} class="flex flex-row items-center mb-2 group ">
+            <Link href={`${props.civ ? `/civs/${props.civ.slug}` : ""}/buildings/${building.id}`} class="flex flex-row items-center mb-2 group ">
               <div class="flex-none  rounded bg-item-building/80 group-hover:bg-item-building/100 w-10 h-10 p-0.5 mr-2 transition">
                 <img src={building.icon} />
               </div>
@@ -154,6 +155,7 @@ const CivOptionsForItem: Component<{ item: UnifiedItem; civs: civAbbr[] }> = (pr
             class="flex gap-2 items-center font-bold text-base  mr-3 bg-gray-900 p-2 rounded-md hover:text-white text-gray-100 hover:bg-black"
           >
             <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {CIVILIZATIONS[civ].name}
+            <Icon icon="arrow-right" class="ml-auto mr-2" />
           </Link>
         )}
       </For>

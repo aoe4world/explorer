@@ -25,7 +25,7 @@ export function UnitDetailRoute() {
 
   return (
     <ItemPage.Wrapper civ={civ}>
-      <Show when={item()}>
+      <Show when={!unmatched() && item()}>
         {(item) => (
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
@@ -45,7 +45,7 @@ export function UnitDetailRoute() {
           </div>
         )}
       </Show>
-      <ItemPage.AvailableUpgrades item={item()} civ={civ} />
+      {!unmatched() && <ItemPage.AvailableUpgrades item={item()} civ={civ} />}
       {unmatched() && <ItemPage.UnavailableForCiv item={item()} civ={civ} />}
       {item.error && <div class="text-red-600">Error!</div>}
     </ItemPage.Wrapper>

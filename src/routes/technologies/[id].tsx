@@ -24,7 +24,7 @@ export function TechnologyDetailRoute() {
 
   return (
     <ItemPage.Wrapper civ={civ}>
-      <Show when={item()}>
+      <Show when={!unmatched() && item()}>
         {(item) => (
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">

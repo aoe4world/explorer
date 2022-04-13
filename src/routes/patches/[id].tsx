@@ -4,7 +4,7 @@ import { setActivePage } from "../../App";
 import { getItemHref } from "../../components/Cards";
 import { CivFlag } from "../../components/CivFlag";
 import { Icon } from "../../components/Icon";
-import { scrollIntoViewIfNeeded, TableOfContentsProvider, useTableOfContents } from "../../components/TableOfContents";
+import { scrollIntoViewIfNeeded, TableOfContents, useTableOfContents } from "../../components/TableOfContents";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG } from "../../config";
 import { fetchItem, getPatch, sortPatchDiff } from "../../query/fetch";
 import { capitlize, getItemByCanonicalName } from "../../query/utils";
@@ -49,7 +49,7 @@ export const PatchDetailRoute = () => {
   createEffect(() => patch() && setActivePage({ title: patch()?.name, description: patch()?.summary, location: useLocation() }));
 
   return (
-    <TableOfContentsProvider>
+    <TableOfContents.Provider>
       <div class="max-w-screen-lg p-4 mx-auto  mt-12">
         <h1 class="text-3xl font-bold">{patch()?.name}</h1>
         <div class={mainIntroductionCSSClass}>{patch()?.summary}</div>
@@ -61,7 +61,7 @@ export const PatchDetailRoute = () => {
             <div class="text-sm font-bold">Filter updates by civilization</div>
             <div class="flex flex-wrap gap-2 my-2">
               <Link
-                href={`${civ() ? `../../../../` : ""}/../patches/${params.id}`}
+                href={`/patches/${params.id}`}
                 onClick={() => setCiv(null)}
                 class={`w-10 h-6 rounded grid place-content-center bg-gray-400 uppercase text-sm text-white hover:text-gray-50 ${
                   !civ() ? "outline outline-white" : ""
@@ -71,7 +71,7 @@ export const PatchDetailRoute = () => {
               </Link>
               <For each={Object.values(CIVILIZATIONS)}>
                 {(c) => (
-                  <Link href={`${civ() ? `../../` : ""}../../civs/${c.slug}/patches/${params.id}`} onClick={() => setCiv(c.abbr)}>
+                  <Link href={`${civ() ? `/civs/${c.slug}` : ""}/patches/${params.id}`} onClick={() => setCiv(c.abbr)}>
                     <CivFlag abbr={c.abbr} class={`w-10 h-5.5 rounded  ${civ() == c.abbr ? "outline outline-white" : ""}`} />
                   </Link>
                 )}
@@ -86,17 +86,18 @@ export const PatchDetailRoute = () => {
           <Sidebar />
         </div>
       </div>
-    </TableOfContentsProvider>
+    </TableOfContents.Provider>
   );
 };
 
 const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem>; civ: civAbbr }> = (props) => {
-  const id = useTableOfContents().createHeadingId(props.section.title ?? props.section.subtitle, props.section.subtitle ? 2 : 1);
-
   return (
-    <div class="mb-10 max-w-prose scroll-mt-24" id={id}>
+    <div class="mb-10 max-w-prose scroll-mt-24">
+      <TableOfContents.Anchor label={props.section.title ?? props.section.subtitle} level={props.section.subtitle ? 2 : 1} />
+
       {props.section.title && <h2 class="text-4xl font-bold mb-4 mt-20  border-b pb-3 border-white/20">{props.section.title}</h2>}
       {props.section.subtitle && <h2 class="text-xl font-bold mb-4">{props.section.subtitle}</h2>}
+      {props.section.description && <p class="leading-6 text-white/80 my-8 max-w-prose whitespace-pre-wrap">{props.section.description}</p>}
       <For each={props.section.changes}>
         {(c) => (
           <div class="mb-8">
@@ -160,14 +161,7 @@ const DiffList: Component<{ diff: PatchLine[] }> = (props) => (
 
 const Sidebar = () => {
   const { headings } = useTableOfContents();
-  onMount(() =>
-    setTimeout(() => {
-      const id = window.location.hash?.replace("#", "");
-      if (!id) return;
-      const el = document.getElementById(id);
-      el?.scrollIntoView({ behavior: "auto", block: "start" });
-    }, 200)
-  );
+
   return (
     <div class="">
       <span class="font-semibold text-gray-400">Jump to</span>

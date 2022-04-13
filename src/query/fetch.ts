@@ -81,18 +81,20 @@ export async function getPatchHistory(item: UnifiedItem, civs?: civConfig[]) {
   const cid = canonicalItemName(item);
   const history: { patch: Pick<PatchNotes, "id" | "name">; diff: PatchLine[] }[] = [];
   for (const patch of patches) {
-    // const { sections, ...rest } = patch;
+    const diff = [];
     for (const section of patch.sections) {
-      const diff = section.changes
-        .reduce(
-          (acc, c) => (c.items.includes(cid) && (!civs?.length || !c.civs.length || civs.some((cc) => c.civs.includes(cc.abbr))) ? [...acc, ...c.diff] : acc),
-          [] as PatchLine[]
-        )
-        .sort(sortPatchDiff);
-      if (diff.length) {
-        const { name, id } = patch;
-        history.push({ patch: { name, id }, diff });
-      }
+      diff.push(
+        ...section.changes
+          .reduce(
+            (acc, c) => (c.items.includes(cid) && (!civs?.length || !c.civs.length || civs.some((cc) => c.civs.includes(cc.abbr))) ? [...acc, ...c.diff] : acc),
+            [] as PatchLine[]
+          )
+          .sort(sortPatchDiff)
+      );
+    }
+    if (diff.length) {
+      const { name, id } = patch;
+      history.push({ patch: { name, id }, diff });
     }
   }
   return history;
