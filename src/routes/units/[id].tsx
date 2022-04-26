@@ -1,5 +1,5 @@
 import { Link, useParams } from "solid-app-router";
-import { Component, createEffect, createResource, createSignal, For, Show } from "solid-js";
+import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { ReportButton } from "../../components/ReportButton";
 import { StatNumber, StatBar, StatDps, StatCosts } from "../../components/Stats";
@@ -7,9 +7,10 @@ import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getItem, getPatchHistory } from "../../query/fetch";
 import { getUnitStats } from "../../query/stats";
 import { mainIntroductionCSSClass } from "../../styles";
-import { civConfig, UnifiedItem, Unit } from "../../types/data";
+import { Building, civConfig, UnifiedItem, Unit } from "../../types/data";
 import { ItemPage } from "../../components/ItemPage";
 import { PatchHistory } from "../../components/PatchHistory";
+import { getMostAppropriateVariation } from "../../query/utils";
 export function UnitDetailRoute() {
   const itemType = ITEMS.UNITS;
   const params = useParams();
@@ -57,11 +58,12 @@ const UnitSidebar: Component<{ item?: UnifiedItem<Unit>; civ: civConfig }> = (pr
     () => ({ unit: props.item, civ: props.civ }),
     (x) => getUnitStats(ITEMS.UNITS, x.unit, x.civ)
   );
+  const variation = createMemo(() => getMostAppropriateVariation<Unit>(props.item, props.civ));
 
   return (
     <div class="flex-auto flex flex-col gap-8">
       <div class=" bg-black/70 rounded-2xl p-6 ">
-        <StatCosts costs={props.item.variations[0].costs} />
+        <StatCosts costs={variation().costs} />
       </div>
       <Show when={stats()}>
         {(stats) => (

@@ -3,12 +3,14 @@ import { Component, createMemo, createResource, Show } from "solid-js";
 import { PhysicalItem } from "../../data/.scripts/lib/types/units";
 import { ITEMS, PRETTY_AGE_MAP } from "../config";
 import { getUnitStats } from "../query/stats";
+import { getMostAppropriateVariation } from "../query/utils";
 import { Building, civAbbr, civConfig, UnifiedItem, Unit } from "../types/data";
 import { Card, CardHeader } from "./Cards";
 import { StatBar, StatCosts, StatDps, StatNumber } from "./Stats";
 
 export const BuildingCard: Component<{ item: UnifiedItem<Building>; civ?: civConfig }> = (props) => {
   const [stats] = createResource(() => getUnitStats(ITEMS.BUILDINGS, props.item, props.civ));
+  const variation = createMemo(() => getMostAppropriateVariation<Building>(props.item, props.civ));
 
   return (
     <Card item={props.item} civ={props.civ}>
@@ -26,7 +28,7 @@ export const BuildingCard: Component<{ item: UnifiedItem<Building>; civ?: civCon
               <StatNumber label="Atck Spd" stat={stats().attackSpeed} unitLabel="S"></StatNumber>
             </div>
             <StatDps label="Damage" speed={stats().attackSpeed} attacks={[stats().rangedAttack, stats().meleeAttack, stats().siegeAttack]}></StatDps>
-            <StatCosts costs={props.item.variations[0].costs} />
+            <StatCosts costs={variation()?.costs} />
           </div>
         </>
       </Show>

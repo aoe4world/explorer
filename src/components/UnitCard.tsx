@@ -3,6 +3,7 @@ import { RouterUtils } from "solid-app-router";
 import { Component, createMemo, createResource, Show } from "solid-js";
 import { ITEMS, PRETTY_AGE_MAP } from "../config";
 import { getUnitStats } from "../query/stats";
+import { getMostAppropriateVariation } from "../query/utils";
 import { civAbbr, civConfig, UnifiedItem, Unit } from "../types/data";
 import { Card, CardHeader } from "./Cards";
 import { StatBar, StatCosts, StatDps, StatNumber } from "./Stats";
@@ -15,6 +16,8 @@ function getBarSize(unit: UnifiedItem<Unit>, baseSize: number, increasedSize: nu
 
 export const UnitCard: Component<{ unit: UnifiedItem<Unit>; civ?: civConfig }> = (props) => {
   const [stats] = createResource(() => getUnitStats(ITEMS.UNITS, props.unit, props.civ));
+  const variation = createMemo(() => getMostAppropriateVariation<Unit>(props.unit, props.civ));
+
   return (
     <Card item={props.unit} civ={props.civ}>
       <Show when={stats()}>
@@ -40,7 +43,7 @@ export const UnitCard: Component<{ unit: UnifiedItem<Unit>; civ?: civConfig }> =
               <StatNumber label="Atck Spd" stat={stats().attackSpeed} unitLabel="S"></StatNumber>
             </div>
             <StatDps label="Damage" speed={stats().attackSpeed} attacks={[stats().rangedAttack, stats().meleeAttack, stats().siegeAttack]}></StatDps>
-            <StatCosts costs={props.unit.variations[0].costs} />
+            <StatCosts costs={variation()?.costs} />
           </div>
         </>
       </Show>

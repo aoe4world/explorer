@@ -1,5 +1,5 @@
 import { useParams } from "solid-app-router";
-import { createEffect, createResource, createSignal, Show } from "solid-js";
+import { createEffect, createMemo, createResource, createSignal, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { ItemPage } from "../../components/ItemPage";
 import { PatchHistory } from "../../components/PatchHistory";
@@ -7,7 +7,9 @@ import { ReportButton } from "../../components/ReportButton";
 import { StatCosts } from "../../components/Stats";
 import { CIVILIZATION_BY_SLUG, ITEMS, PRETTY_AGE_MAP_LONG } from "../../config";
 import { getItem } from "../../query/fetch";
+import { getMostAppropriateVariation } from "../../query/utils";
 import { mainIntroductionCSSClass } from "../../styles";
+import { Technology } from "../../types/data";
 
 export function TechnologyDetailRoute() {
   const itemType = ITEMS.TECHNOLOGIES;
@@ -21,6 +23,8 @@ export function TechnologyDetailRoute() {
     if (civ && !item()?.civs.includes(civ.abbr)) tryRedirectToClosestMatch(itemType, params.id, civ, () => setUnmatched(true));
     setActivePageForItem(item(), civ);
   });
+
+  const variation = createMemo(() => getMostAppropriateVariation<Technology>(item(), civ));
 
   return (
     <ItemPage.Wrapper civ={civ}>
@@ -43,7 +47,7 @@ export function TechnologyDetailRoute() {
             </div>
             <div class="flex-auto flex flex-col gap-8">
               <div class=" bg-black/70 rounded-2xl p-6 ">
-                <StatCosts costs={item.variations?.sort((a, b) => b.civs.length - a.civs.length)[0].costs} />
+                <StatCosts costs={variation()?.costs} />
               </div>
             </div>
           </div>

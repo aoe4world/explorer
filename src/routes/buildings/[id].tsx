@@ -1,5 +1,5 @@
 import { Link, useParams } from "solid-app-router";
-import { Component, createEffect, createResource, createSignal, For, Show } from "solid-js";
+import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { getItemHref } from "../../components/Cards";
 import { ItemPage } from "../../components/ItemPage";
@@ -12,6 +12,7 @@ import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getItem, getItems } from "../../query/fetch";
 import { getUnitStats } from "../../query/stats";
+import { getMostAppropriateVariation } from "../../query/utils";
 import { mainIntroductionCSSClass } from "../../styles";
 import { Building, civAbbr, civConfig, UnifiedItem } from "../../types/data";
 
@@ -121,11 +122,14 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
     () => ({ unit: props.item, civ: props.civ }),
     (x) => getUnitStats(ITEMS.UNITS, x.unit, x.civ)
   );
+
+  const variation = createMemo(() => getMostAppropriateVariation<Building>(props.item, props.civ));
+
   return (
     <div class="flex-auto flex flex-col gap-8">
       <div class=" bg-black/70 rounded-2xl p-6 ">
-        <StatCosts costs={props.item.variations[0].costs} />
-        <Show when={props.item.variations[0].popcapIncrease}>
+        <StatCosts costs={variation().costs} />
+        <Show when={variation().popcapIncrease}>
           {(amount) => (
             <div class="mt-4">
               <div class="text-white/50 uppercase text-xs font-bold tracking-widest">Effects</div>
@@ -133,7 +137,7 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
             </div>
           )}
         </Show>
-        <Show when={props.item.variations[0].garrison}>
+        <Show when={variation().garrison}>
           {(g) => (
             <div class="mt-4">
               <div class="text-white/50 uppercase text-xs font-bold tracking-widest">Garrison</div>
