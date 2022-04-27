@@ -10,6 +10,7 @@ import { Icon } from "./components/Icon";
 import { BuildingOverviewRoute } from "./routes/buildings/buildings";
 import { BuildingDetailRoute } from "./routes/buildings/[id]";
 import { AboutRoute } from "./routes/about";
+import { CompareRoute } from "./routes/compare";
 import { TechnologyDetailRoute } from "./routes/technologies/[id]";
 import { TechnologoiesOverviewRoute } from "./routes/technologies/technologies";
 import { civConfig, UnifiedItem } from "./types/data";
@@ -69,6 +70,10 @@ const routes: RouteDefinition[] = [
   {
     path: "/technologies/:id",
     component: () => TechnologyDetailRoute,
+  },
+  {
+    path: "/compare",
+    component: () => CompareRoute,
   },
   {
     path: "/about",
