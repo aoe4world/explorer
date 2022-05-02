@@ -79,25 +79,23 @@ export const sortPatchDiff = (a: PatchLine, b: PatchLine) => patchOrder.indexOf(
 /** Get all changes, line by line, that apply to a specific item */
 export async function getPatchHistory(item: UnifiedItem, civs?: civConfig[]) {
   const cid = canonicalItemName(item);
-  const history: { patch: Pick<PatchNotes, "id" | "name">; diff: PatchLine[] }[] = [];
+  const history: { patch: PatchNotes; diff: PatchLine[] }[] = [];
   for (const patch of patches) {
     const diff = [];
     for (const section of patch.sections) {
       diff.push(
-        ...section.changes
-          .reduce(
-            (acc, c) => (c.items.includes(cid) && (!civs?.length || !c.civs.length || civs.some((cc) => c.civs.includes(cc.abbr))) ? [...acc, ...c.diff] : acc),
-            [] as PatchLine[]
-          )
-          .sort(sortPatchDiff)
+        ...section.changes.reduce(
+          (acc, c) => (c.items.includes(cid) && (!civs?.length || !c.civs.length || civs.some((cc) => c.civs.includes(cc.abbr))) ? [...acc, ...c.diff] : acc),
+          [] as PatchLine[]
+        )
       );
     }
     if (diff.length) {
-      const { name, id } = patch;
-      history.push({ patch: { name, id }, diff });
+      diff.sort(sortPatchDiff);
+      history.push({ patch, diff });
     }
   }
-  return history;
+  return history.sort((a, b) => b.patch.date.getTime() - a.patch.date.getTime());
 }
 
 export async function getPatch(id: string) {

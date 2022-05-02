@@ -1,11 +1,12 @@
 import { Link, useLocation, useParams } from "solid-app-router";
-import { Component, createMemo, onMount, createResource, createSignal, For, Index, Resource, createEffect } from "solid-js";
+import { Component, createMemo, onMount, createResource, createSignal, For, Index, Resource, createEffect, Show } from "solid-js";
 import { setActivePage } from "../../App";
 import { getItemHref } from "../../components/Cards";
 import { CivFlag } from "../../components/CivFlag";
 import { Icon } from "../../components/Icon";
 import { scrollIntoViewIfNeeded, TableOfContents, useTableOfContents } from "../../components/TableOfContents";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG } from "../../config";
+import { patches } from "../../data/patches/patch";
 import { fetchItem, getPatch, sortPatchDiff } from "../../query/fetch";
 import { capitlize, getItemByCanonicalName } from "../../query/utils";
 import { getItemCssClass, mainIntroductionCSSClass } from "../../styles";
@@ -46,13 +47,54 @@ export const PatchDetailRoute = () => {
     }
   );
 
-  createEffect(() => patch() && setActivePage({ title: patch()?.name, description: patch()?.summary, location: useLocation() }));
+  const [pagination] = createResource(params.id, (id) => {
+    const i = patches.findIndex((p) => p.id === id);
+    return { previous: patches[i - 1], next: patches[i + 1] };
+  });
+
+  createEffect(
+    () =>
+      patch() &&
+      setActivePage({ title: `${patch()?.name} ${civ() ? `– ${CIVILIZATIONS[civ()]?.name}` : ""}`, description: patch()?.summary, location: useLocation() })
+  );
 
   return (
     <TableOfContents.Provider>
-      <div class="max-w-screen-lg p-4 mx-auto  mt-12">
-        <h1 class="text-3xl font-bold">{patch()?.name}</h1>
+      <div class="max-w-screen-lg p-4 mx-auto mt-12">
+        <div class="mb-6 text-gray-300 space-x-4">
+          <Show when={pagination()?.previous}>
+            {(prev) => (
+              <Link href={`/patches/${prev.id}`}>
+                <Icon icon="arrow-left-long" class="mr-1"></Icon> {prev.name}
+              </Link>
+            )}
+          </Show>
+          <Show when={pagination()?.next}>
+            {(next) => (
+              <Link href={`/patches/${next.id}`}>
+                {next.name} <Icon icon="arrow-right-long" class="ml-1"></Icon>
+              </Link>
+            )}
+          </Show>
+        </div>
+        <h1 class="text-3xl font-bold">
+          {patch()?.name} {civ() && `– ${CIVILIZATIONS[civ()]?.name}`}
+        </h1>
+        <div class="text-gray-300 mt-1">
+          {patch()?.date.toLocaleDateString("en-US", { dateStyle: "full" })} {patch()?.buildId && <span class="ml-2">#{patch().buildId}</span>}
+        </div>
         <div class={mainIntroductionCSSClass}>{patch()?.summary}</div>
+
+        {patch()?.officialUrl && (
+          <a
+            href={patch()?.officialUrl}
+            class="mb-8 inline-block text-gray-300 font-bold text-sm bg-gray-600 rounded px-3 py-2 hover:bg-gray-500 hover:text-gray-50 transition"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read full release notes <Icon icon="external-link-alt" class="ml-1" />
+          </a>
+        )}
         {patch()?.html}
       </div>
       <div class="max-w-screen-lg p-4 mx-auto mb-4 mt-0 flex">

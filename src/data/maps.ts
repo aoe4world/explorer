@@ -35,4 +35,8 @@ export const staticMaps = {
   ],
   nagari: ["Nagari", "https://static.aoe4world.com/assets/maps/nagari-a89f44d0283a3e6ca61443994d0fbf025c41e362b0c21297bc889efe9bc91889.png"],
   "boulder-bay": ["Boulder Bay", "https://static.aoe4world.com/assets/maps/boulder_bay-11f453b895a76e632a4507e57653e46ca1e6505801b413e3c3f71c20ef6b91f1.png"],
+  "warring-islands": [
+    "Warring Islands",
+    "https://static.aoe4world.com/assets/maps/warring_islands-4f4e6f79e416317cce05b106056cc551e6cadce4aece5c5c5ebb24da5bc0b346.png",
+  ],
 };

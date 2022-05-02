@@ -3,7 +3,9 @@ import { civAbbr } from "./data";
 export type PatchNotes = {
   id: string;
   name: string;
-  date: string;
+  date: Date;
+  buildId?: number;
+  officialUrl?: string;
   summary: string;
   html?: JSX.Element;
   sections: PatchSection[];

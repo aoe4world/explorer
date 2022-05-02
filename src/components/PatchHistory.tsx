@@ -11,9 +11,12 @@ export const PatchHistory: Component<{ item: UnifiedItem; civ?: civConfig }> = (
     <div>
       <For each={patchHistory()}>
         {(history) => (
-          <div>
-            <Link href={`${props.civ ? `/civs/${props.civ.slug}` : ""}/patches/${history.patch.id}`} class="font-bold text-gray-300 mb-1.5">
-              Changed in {history.patch.name}
+          <div class="mb-6">
+            <Link
+              href={`${props.civ ? `/civs/${props.civ.slug}` : ""}/patches/${history.patch.id}`}
+              class="font-bold text-gray-300 mb-1.5 hover:text-white transition"
+            >
+              {history.patch.name} Changes
             </Link>
             <For each={history.diff}>
               {([type, change]) => (
