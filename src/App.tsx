@@ -17,6 +17,7 @@ import { ITEMS, SIMILAIR_ITEMS } from "./config";
 import { getItems } from "./query/fetch";
 import { getItemHref } from "./components/Cards";
 import { PatchDetailRoute } from "./routes/patches/[id]";
+import { findClosestMatch } from "./query/utils";
 
 const routes: RouteDefinition[] = [
   {
@@ -95,8 +96,7 @@ export const setActivePageForItem = (item: UnifiedItem, civ: civConfig) =>
 
 export async function tryRedirectToClosestMatch(type: ITEMS, id: string, civ: civConfig, fallback?: Function) {
   const navigate = useNavigate();
-  const similair = SIMILAIR_ITEMS.find((units) => units.includes(id));
-  const closestMatch = similair && (await getItems(type, civ.abbr)).find((i) => similair.includes(i.id));
+  const closestMatch = await findClosestMatch(type, id, civ);
   if (closestMatch) navigate(getItemHref(closestMatch, civ));
   else fallback();
 }

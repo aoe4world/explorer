@@ -42,6 +42,7 @@ export const SIMILAIR_ITEMS = [
   ["horse-archer", "mangudai", "camel-archer", "tower-elephant"],
   ["crossbowman", "arbaletrier"],
   ["cannon", "royal-cannon", "bombard"],
+  ["culverin", "royal-culverin"],
   ["streltsy", "handcannoneer"],
   ["traction-trebuchet", "trebuchet"],
   ["man-at-arms", "palace-guard"],

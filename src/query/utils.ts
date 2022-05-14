@@ -1,9 +1,9 @@
 import { Building, Item, Modifier, PhysicalItem } from "../../data/.scripts/lib/types/units";
-import { CIVILIZATIONS, ITEMS } from "../config";
+import { CIVILIZATIONS, ITEMS, SIMILAIR_ITEMS } from "../config";
 import { staticMaps } from "../data/maps";
 import { technologyModifiers } from "../data/technologies";
 import { civAbbr, civConfig, GroupedBuildings, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
-import { fetchItem, fetchItems, getItem } from "./fetch";
+import { fetchItem, fetchItems, getItem, getItems } from "./fetch";
 
 /** Map any of civAbbr | civConfig | civConfig[] | civAbbr[] to a single array */
 export type civFilterParam = Parameters<typeof mapCivsArgument>[0];
@@ -177,6 +177,12 @@ export function getItemByCanonicalName(canonicalName: string) {
   const [group, id] = canonicalName.split("/");
   if (group == "maps") return getMapAsItem(id);
   return getItem(group as ITEMS, id);
+}
+
+export async function findClosestMatch<T extends ITEMS>(type: T, id: string, civ: civConfig) {
+  const similair = SIMILAIR_ITEMS.find((units) => units.includes(id));
+  const closestMatch = similair && (await getItems(type, civ.abbr)).find((i) => similair.includes(i.id));
+  return closestMatch ?? null;
 }
 
 function getMapAsItem(id: string) {
