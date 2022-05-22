@@ -60,6 +60,7 @@ export const SIMILAIR_ITEMS = [
   ["palisade-gate", "fortified-palisade-gate"],
   ["palisade-wall", "fortified-palisade-wall"],
   ["outpost", "wooden-fortress"],
+  ["university", "madrasa"],
 ];
 
 // Rendering wrong or not fitting model, never include
