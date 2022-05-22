@@ -1,7 +1,6 @@
-import { firstBy } from "thenby";
 import { ITEMS, DATA_ROOT, MUTED_UNITS } from "../config";
 import { patches } from "../data/patches/patch";
-import { Unit, Technology, UnifiedItem, civAbbr, Building, civConfig } from "../types/data";
+import { Unit, Technology, Upgrade, UnifiedItem, civAbbr, Building, civConfig } from "../types/data";
 import { PatchLine, PatchNotes } from "../types/patches";
 import { canonicalItemName } from "./utils";
 
@@ -9,12 +8,14 @@ type ItemTypes = {
   [ITEMS.UNITS]: Unit;
   [ITEMS.TECHNOLOGIES]: Technology;
   [ITEMS.BUILDINGS]: Building;
+  [ITEMS.UPGRADES]: Upgrade;
 };
 
 const itemsCache = {
   [ITEMS.UNITS]: new Map<string, UnifiedItem<Unit>>(),
   [ITEMS.TECHNOLOGIES]: new Map<string, UnifiedItem<Technology>>(),
   [ITEMS.BUILDINGS]: new Map<string, UnifiedItem<Building>>(),
+  [ITEMS.UPGRADES]: new Map<string, UnifiedItem<Upgrade>>(),
 };
 
 export async function fetchItems<T extends ITEMS>(type: T): Promise<UnifiedItem<ItemTypes[T]>[]> {

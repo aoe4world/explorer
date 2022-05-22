@@ -5,17 +5,17 @@ module.exports = {
     "text-2xl",
     "text-3xl",
     {
-      pattern: /bg-item-(unit|technology|tech|building)/,
+      pattern: /bg-item-(unit|technology|tech|building|upgrade)/,
       variants: ["hover"],
     },
     {
-      pattern: /text-item-(unit|technology|tech|building)/,
+      pattern: /text-item-(unit|technology|tech|building|upgrade)/,
     },
     {
-      pattern: /bg-bar-(unit|technology|tech|building|unique|bonus)/,
+      pattern: /bg-bar-(unit|technology|tech|building|unique|bonus|upgrade)/,
     },
     {
-      pattern: /text-item-(unit|technology|tech|building)-light/,
+      pattern: /text-item-(unit|technology|tech|building|upgrade)-light/,
     },
   ],
   theme: {
@@ -38,8 +38,10 @@ module.exports = {
           map: "#3A5D7E",
           unit: "#824F34",
           "unit-light": "#C36B3C",
+          upgrade: "#32806B",
           tech: "#32806B",
           technology: "#32806B",
+          "upgrade-light": "#08A67B",
           "tech-light": "#08A67B",
           "technology-light": "#08A67B",
           building: "#345469",

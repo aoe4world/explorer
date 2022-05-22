@@ -5,6 +5,7 @@ export enum ITEMS {
   UNITS = "units",
   BUILDINGS = "buildings",
   TECHNOLOGIES = "technologies",
+  UPGRADES = "upgrades",
 }
 
 export const CIVILIZATION_BY_SLUG = {
