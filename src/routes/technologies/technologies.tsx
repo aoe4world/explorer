@@ -1,15 +1,20 @@
-import { useLocation } from "solid-app-router";
+import { useLocation, useParams } from "solid-app-router";
 import { createResource, For, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
 import { TechnologyCard } from "../../components/TechnologyCard";
-import { ITEMS } from "../../config";
-import { fetchItems } from "../../query/fetch";
+import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
+import { getItems } from "../../query/fetch";
 import { sortUnifiedItemsByVariation, splitTechnologiesIntroGroups } from "../../query/utils";
 import { itemGridCSSClass } from "../../styles";
 
 export const TechnologoiesOverviewRoute = () => {
-  const [technologies] = createResource(async () => splitTechnologiesIntroGroups(sortUnifiedItemsByVariation(await fetchItems(ITEMS.TECHNOLOGIES), ["age"])));
-  setActivePage({ title: "Technologies", location: useLocation() });
+  const params = useParams();
+  const civ = CIVILIZATION_BY_SLUG[params.slug];
+  const [technologies] = createResource(async () =>
+    splitTechnologiesIntroGroups(sortUnifiedItemsByVariation(await getItems(ITEMS.TECHNOLOGIES, civ?.abbr), ["age"]))
+  );
+
+  setActivePage({ title: `Technologies ${civ ? ` — ${civ?.name}` : ""}`, location: useLocation() });
 
   return (
     <div class="max-w-screen-2xl mx-auto p-4 md:p-8">

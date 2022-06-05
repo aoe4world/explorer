@@ -36,12 +36,24 @@ const routes: RouteDefinition[] = [
     component: () => CivDetailRoute,
   },
   {
+    path: "/civs/:slug/units",
+    component: () => UnitOverviewRoute,
+  },
+  {
     path: "/civs/:slug/units/:id",
     component: () => UnitDetailRoute,
   },
   {
+    path: "/civs/:slug/buildings",
+    component: () => BuildingOverviewRoute,
+  },
+  {
     path: "/civs/:slug/buildings/:id",
     component: () => BuildingDetailRoute,
+  },
+  {
+    path: "/civs/:slug/technologies",
+    component: () => TechnologoiesOverviewRoute,
   },
   {
     path: "/civs/:slug/technologies/:id",

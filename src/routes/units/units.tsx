@@ -1,15 +1,18 @@
-import { useLocation } from "solid-app-router";
-import { createResource, For, Suspense } from "solid-js";
+import { useLocation, useParams } from "solid-app-router";
+import { createEffect, createMemo, createResource, For, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
 import { UnitCard } from "../../components/UnitCard";
-import { ITEMS } from "../../config";
-import { fetchItems } from "../../query/fetch";
+import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
+import { getItems } from "../../query/fetch";
 import { sortUnifiedItemsByVariation, splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass } from "../../styles";
 
 export const UnitOverviewRoute = () => {
-  const [units] = createResource(() => fetchItems(ITEMS.UNITS).then((u) => splitUnitsIntoGroups(sortUnifiedItemsByVariation(u, ["hitpoints", "age"]))));
-  setActivePage({ title: "Units", location: useLocation() });
+  const params = useParams();
+  const civ = CIVILIZATION_BY_SLUG[params.slug];
+  const [units] = createResource(async (c) => splitUnitsIntoGroups(sortUnifiedItemsByVariation(await getItems(ITEMS.UNITS, civ?.abbr), ["hitpoints", "age"])));
+
+  setActivePage({ title: `Units ${civ ? ` — ${civ?.name}` : ""}`, location: useLocation() });
 
   return (
     <div class="max-w-screen-2xl p-4 md:p-8 mx-auto">

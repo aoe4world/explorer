@@ -8,7 +8,7 @@ import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getCivData } from "../../data/civData";
 import { fetchItems, getItems } from "../../query/fetch";
-import { sortUnifiedItemsByVariation, splitBuildingsIntoGroups, splitUnitsIntoGroups } from "../../query/utils";
+import { sortUnifiedItemsByVariation, splitBuildingsIntoGroups, splitTechnologiesIntroGroups, splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass, mainIntroductionCSSClass } from "../../styles";
 
 export type CivInfo = {
@@ -22,24 +22,17 @@ export type CivInfo = {
 export const CivDetailRoute = () => {
   const pending = useIsRouting();
   const params = useParams();
-  const civConfig = () => CIVILIZATION_BY_SLUG[params.slug];
-  const [civ] = createResource(
-    () => CIVILIZATION_BY_SLUG[params.slug],
-    (civ) => getCivData(civ.abbr)
+  const civConfig = CIVILIZATION_BY_SLUG[params.slug];
+  const [civ] = createResource(() => getCivData(civConfig.abbr));
+  const [units] = createResource(async () =>
+    splitUnitsIntoGroups(sortUnifiedItemsByVariation(await getItems(ITEMS.UNITS, civConfig.abbr), ["hitpoints", "age"]))
   );
-
-  const [units] = createResource(
-    () => CIVILIZATION_BY_SLUG[params.slug],
-    (civ) => getItems(ITEMS.UNITS, civ.abbr)
+  const [buildings] = createResource(async () =>
+    splitBuildingsIntoGroups(sortUnifiedItemsByVariation(await getItems(ITEMS.BUILDINGS, civConfig.abbr), ["hitpoints", "age"]))
   );
-
-  const [buildings] = createResource(
-    () => CIVILIZATION_BY_SLUG[params.slug],
-    (civ) => getItems(ITEMS.BUILDINGS, civ.abbr)
+  const [technologies] = createResource(async () =>
+    splitTechnologiesIntroGroups(sortUnifiedItemsByVariation(await getItems(ITEMS.TECHNOLOGIES, civConfig.abbr), ["age"]))
   );
-
-  const groupedUnits = createMemo(() => units() && splitUnitsIntoGroups(sortUnifiedItemsByVariation(units(), ["hitpoints", "age"])));
-  const groupedBuildings = createMemo(() => buildings() && splitBuildingsIntoGroups(sortUnifiedItemsByVariation(buildings(), ["hitpoints", "age"])));
   createEffect(on(civ, () => !civ.loading && setActivePage({ title: civ()?.name, description: civ()?.description, location: useLocation() })));
 
   return (
@@ -49,7 +42,7 @@ export const CivDetailRoute = () => {
           <div class="flex gap-4 items-center mb-3">
             <div class="flex-none self-start w-24 h-16  relative">
               <div class="ring-inset ring-2 ring-black/20 w-full h-full rounded-md absolute pointer-events-none"></div>
-              <CivFlag abbr={civConfig().abbr} class="w-full h-full rounded-md object-cover" />
+              <CivFlag abbr={civConfig.abbr} class="w-full h-full rounded-md object-cover" />
             </div>
             <div class="ml-2">
               <span class="text-white/50 ">Civilization</span>
@@ -62,19 +55,43 @@ export const CivDetailRoute = () => {
         <h2 class="text-lg text-white/40 font-bold  mb-3">Jump to</h2>
         <Suspense fallback={<p>Loading</p>}>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-2 flex-wrap mb-2">
-            <For each={groupedUnits() && Object.entries(groupedUnits())}>
-              {([k, v]) => (
-                <For each={v}>
-                  {(unit) => (
-                    <Link href={`./units/${unit.id}`} class="flex flex-row items-center mb-2 group ">
-                      <div class="flex-none  rounded bg-item-unit/80 group-hover:bg-item-unit/100 w-10 h-10 p-0.5 mr-2 transition">
-                        <img src={unit.icon} />
-                      </div>
-                      <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
-                    </Link>
-                  )}
-                </For>
+            <For each={units() && Object.values(units()).flat()}>
+              {(unit) => (
+                <Link href={`./units/${unit.id}`} class="flex flex-row items-center mb-2 group ">
+                  <div class="flex-none  rounded bg-item-unit/80 group-hover:bg-item-unit/100 w-10 h-10 p-0.5 mr-2 transition">
+                    <img src={unit.icon} />
+                  </div>
+                  <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
+                </Link>
               )}
+            </For>
+          </div>
+          <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-2 flex-wrap mb-2">
+            <For each={buildings() && Object.values(buildings()).flat()}>
+              {(building) =>
+                building.unique && (
+                  <Link href={`./buildings/${building.id}`} class="flex flex-row items-center mb-2 group ">
+                    <div class="flex-none  rounded bg-item-building/80 group-hover:bg-item-building/100 w-10 h-10 p-0.5 mr-2 transition">
+                      <img src={building.icon} />
+                    </div>
+                    <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{building.name}</span>
+                  </Link>
+                )
+              }
+            </For>
+          </div>
+          <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-2 flex-wrap mb-2">
+            <For each={technologies() && Object.values(technologies()).flat()}>
+              {(tech) =>
+                tech.unique && (
+                  <Link href={`./technologies/${tech.id}`} class="flex flex-row items-center mb-2 group ">
+                    <div class="flex-none  rounded bg-item-technology/80 group-hover:bg-item-technology/100 w-10 h-10 p-0.5 mr-2 transition">
+                      <img src={tech.icon} />
+                    </div>
+                    <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{tech.name}</span>
+                  </Link>
+                )
+              }
             </For>
           </div>
         </Suspense>
@@ -101,7 +118,7 @@ export const CivDetailRoute = () => {
       </div>
       <div class="max-w-screen-2xl mx-auto p-4 md:p-8">
         <Show
-          when={groupedUnits()}
+          when={units()}
           fallback={
             <>
               <h2 class="text-2xl font-bold text-white/20 mt-20 mb-4 pl-2">Loading...</h2>
@@ -113,13 +130,13 @@ export const CivDetailRoute = () => {
             </>
           }
         >
-          <For each={Object.entries(groupedUnits())}>
+          <For each={Object.entries(units())}>
             {([k, v]) =>
               v?.length ? (
                 <div>
                   <h2 class="text-2xl font-bold text-white mt-20 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
                   <div class={itemGridCSSClass + " xl:grid-cols-4"}>
-                    <For each={v}>{(unit) => <UnitCard unit={unit} civ={civConfig()}></UnitCard>}</For>
+                    <For each={v}>{(unit) => <UnitCard unit={unit} civ={civConfig}></UnitCard>}</For>
                   </div>
                 </div>
               ) : (
@@ -129,7 +146,7 @@ export const CivDetailRoute = () => {
           </For>
         </Show>
         <Show
-          when={groupedBuildings()}
+          when={buildings()}
           fallback={
             <>
               <h2 class="text-2xl font-bold text-white/20 mt-20 mb-4 pl-2">Loading...</h2>
@@ -141,13 +158,13 @@ export const CivDetailRoute = () => {
             </>
           }
         >
-          <For each={Object.entries(groupedBuildings())}>
+          <For each={Object.entries(buildings())}>
             {([k, v]) =>
               v?.length ? (
                 <div>
                   <h2 class="text-2xl font-bold text-white mt-20 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
                   <div class={itemGridCSSClass + " xl:grid-cols-4"}>
-                    <For each={v}>{(item) => <BuildingCard item={item} civ={civConfig()}></BuildingCard>}</For>
+                    <For each={v}>{(item) => <BuildingCard item={item} civ={civConfig}></BuildingCard>}</For>
                   </div>
                 </div>
               ) : (
