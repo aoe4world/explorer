@@ -560,7 +560,7 @@ Of course, we still want there to be multiple counter play options to siege weap
           diff: [
             ["buff", "Cost reduced from 350 Gold to 275 Gold"],
             ["buff", "Research time reduced from 60 to 45 seconds"],
-            ["buff", "Delhi Sultanate research time increased from 180 to 225", ["de"]],
+            ["nerf", "Delhi Sultanate research time increased from 180 to 225", ["de"]],
           ],
         },
         // * Siege Engineering technology research time reduced from 60 to 45 seconds
