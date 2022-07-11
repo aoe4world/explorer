@@ -171,7 +171,7 @@ Of course, we still want there to be multiple counter play options to siege weap
           diff: [
             ["nerf", "Health reduced from 200 to 125 HP"],
             ["buff", "Ranged armor increased from 8 to 20"],
-            ["nerf", "Bonus damage vs Siege reduced from 90 to 70"],
+            ["nerf", "Bonus damage vs Siege reduced from +90 to +70"],
             ["nerf", "Clocktower Health reduced from 300 to 190 HP", ["ch"]],
             ["buff", "Clocktower Ranged armor increased from 8 to 20", ["ch"]],
           ],
@@ -216,7 +216,7 @@ Of course, we still want there to be multiple counter play options to siege weap
             ["nerf", "Health reduced from 400 to 220 HP"],
             ["buff", "Ranged armor increased from 12 to 20"],
             ["buff", "Damage increased from 75 to 85"],
-            ["nerf", "Bonus damage vs Siege reduced from 200 to 100"],
+            ["nerf", "Bonus damage vs Siege reduced from +200 to +100"],
           ],
         },
         // * Royal Culverins
@@ -228,8 +228,8 @@ Of course, we still want there to be multiple counter play options to siege weap
           items: ["units/royal-culverin"],
           civs: ["fr"],
           diff: [
-            ["nerf", "Bonus damage vs Siege reduced from 204 to 120"],
-            ["buff", "Bonus damage vs Naval increased from 204 to 240"],
+            ["nerf", "Bonus damage vs Siege reduced from +204 to +120"],
+            ["buff", "Bonus damage vs Naval increased from +204 to +240"],
             ["nerf", "Health reduced from 400 to 220 HP"],
             ["buff", "Ranged armor increased from 12 to 20"],
           ],
@@ -246,7 +246,7 @@ Of course, we still want there to be multiple counter play options to siege weap
             ["nerf", "Health reduced from 400 to 240 HP"],
             ["buff", "Ranged armor increased from 12 to 30"],
             ["nerf", "Damage reduced from 170 to 100"],
-            ["buff", "Bonus damage vs Naval & Buildings increased from 340 to 410"],
+            ["buff", "Bonus damage vs Naval & Buildings increased from +340 to +410"],
           ],
         },
         // * Cannon
@@ -261,7 +261,7 @@ Of course, we still want there to be multiple counter play options to siege weap
             ["nerf", "Health reduced from 320 to 190 HP"],
             ["buff", "Ranged armor increased from 12 to 30"],
             ["nerf", "Damage reduced from 200 to 100"],
-            ["buff", "Bonus damage vs Naval & Buildings increased from 400 to 500"],
+            ["buff", "Bonus damage vs Naval & Buildings increased from +400 to +500"],
           ],
         },
         // * Royal Cannon
@@ -276,7 +276,7 @@ Of course, we still want there to be multiple counter play options to siege weap
             ["nerf", "Health reduced from 320 to 190 HP"],
             ["buff", "Ranged armor increased from 12 to 30"],
             ["nerf", "Damage reduced from 240 to 120"],
-            ["buff", "Bonus damage vs Naval & Buildings increased from 480 to 600"],
+            ["buff", "Bonus damage vs Naval & Buildings increased from +480 to +600"],
           ],
         },
         // * Trebuchets
@@ -291,7 +291,7 @@ Of course, we still want there to be multiple counter play options to siege weap
             ["nerf", "Health reduced from 320 to 190 HP"],
             ["buff", "Ranged armor increased from 8 to 20"],
             ["nerf", "Damage reduced from 100 to 50"],
-            ["buff", "Bonus damage vs Building increased from 200 to 250"],
+            ["buff", "Bonus damage vs Building increased from +200 to +250"],
           ],
         },
         //     *    Counterweight Trebuchet health reduced from 400 to 210
@@ -307,7 +307,7 @@ Of course, we still want there to be multiple counter play options to siege weap
             ["nerf", "Health reduced from 400 to 210 HP"],
             ["buff", "Ranged armor increased from 8 to 20"],
             ["nerf", "Damage reduced from 100 to 50"],
-            ["buff", "Bonus damage vs Building increased from 450 to 500"],
+            ["buff", "Bonus damage vs Building increased from +450 to +500"],
             ["nerf", "Clocktower Health reduced from 600 to 300 HP", ["ch"]],
             // ["buff", "Clocktower Ranged armor increased from 8 to 20", ["ch"]],
           ],
@@ -362,7 +362,7 @@ Of course, we still want there to be multiple counter play options to siege weap
           civs: [],
           diff: [
             ["nerf", "Damage decreased from 60 to 40"],
-            ["nerf", "Attack speed decreased from 6.25 to 4.5"],
+            ["buff", "Attack interval reduced from 6.25 to 4.5 seconds"],
           ],
           note: "The high range and burst damage on Springald towers makes them extremely powerful. Their low cost makes them spammable. Note that these changes in combination with the increased armor on siege weapons means Springald Emplacements are now less cost effective.",
         },
@@ -560,7 +560,7 @@ Of course, we still want there to be multiple counter play options to siege weap
           diff: [
             ["buff", "Cost reduced from 350 Gold to 275 Gold"],
             ["buff", "Research time reduced from 60 to 45 seconds"],
-            ["nerf", "Delhi Sultanate research time increased from 180 to 225", ["de"]],
+            ["nerf", "Delhi Sultanate research time increased from 180 to 225 seconds", ["de"]],
           ],
         },
         // * Siege Engineering technology research time reduced from 60 to 45 seconds
@@ -728,9 +728,9 @@ Of course, we still want there to be multiple counter play options to siege weap
           civs: [],
           diff: [
             ["buff", "Fire Lancer move speed increased from 6 to 6.5"],
-            ["buff", "Fire Lancer time between attacks reduced from 1.75 to 1.62"],
+            ["buff", "Fire Lancer attack interval reduced from 1.75 to 1.62 seconds"],
           ],
-          note: "We’ve got more plans for the Fire Lancer in the future. The move speed increase was an easy win to help fit it into its intended raiding role.  We made some backend changes to attack speeds which resulted in some units attacking slightly slower. The attack speed change helps set the unit back to its original strength.",
+          note: "We’ve got more plans for the Fire Lancer in the future. The move speed increase was an easy win to help fit it into its intended raiding role. We made some backend changes to attack speeds which resulted in some units attacking slightly slower. The attack speed change helps set the unit back to its original strength.",
         },
         // * Grenadier damage decreased from 15 to 13. Weapon range decreased from 4 to 3. AoE Falloff damage reduced from 100%/75%/50% to 100%/66%/33%
         // > In addition to having no unit counter from the core unit roster Grenadiers also deal great damage to buildings. These stat tweaks make them a bit less cost effective and create a bigger risk when damaging buildings.
@@ -981,7 +981,7 @@ Of course, we still want there to be multiple counter play options to siege weap
           items: ["units/tower-elephant"],
           civs: [],
           diff: [
-            ["nerf", "Health reduced from 960 to 860"],
+            ["nerf", "Health reduced from 960 to 860 HP"],
             ["fix", "Ranged units riding the Tower Elephant are now properly affected by all damage upgrades (Blacksmith and university)"],
           ],
         },
@@ -1159,7 +1159,7 @@ Of course, we still want there to be multiple counter play options to siege weap
         {
           items: ["units/mangudai"],
           civs: [],
-          diff: [["buff", "Time between attacks reduced from 1.38 to 1.25"]],
+          diff: [["buff", "Attack interval reduced from 1.38 to 1.25 seconds"]],
           note: "We made some backend changes to attack speeds which resulted in some units attacking slightly slower. This change helps set the unit back to it’s original strength.",
         },
         // * The Traction Trebuchet unit and the Improved Siege Works research are included in the Melee v Siege Rework (see above)
@@ -1240,7 +1240,7 @@ Of course, we still want there to be multiple counter play options to siege weap
         {
           items: ["units/horse-archer"],
           civs: [],
-          diff: [["buff", "Time between attacks reduced from 2.62 to 2.125"]],
+          diff: [["buff", "Attack interval reduced from 2.62 to 2.125 seconds"]],
           note: "We made some backend changes to attack speeds which resulted in some units attacking slightly slower. This change helps set the unit back to it’s original strength.",
         },
         // * Spaskaya Tower Landmark now unlocks the building of Stone Walls
