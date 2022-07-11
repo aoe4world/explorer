@@ -80,13 +80,15 @@ export const sortPatchDiff = (a: PatchLine, b: PatchLine) => patchOrder.indexOf(
 /** Get all changes, line by line, that apply to a specific item */
 export async function getPatchHistory(item: UnifiedItem, civs?: civConfig[]) {
   const cid = canonicalItemName(item);
+  const civAbbrs = civs?.map((c) => c.abbr);
   const history: { patch: PatchNotes; diff: PatchLine[] }[] = [];
   for (const patch of patches) {
     const diff = [];
     for (const section of patch.sections) {
+      if (!civOverlap(civAbbrs, section.civs)) continue;
       diff.push(
         ...section.changes.reduce(
-          (acc, c) => (c.items.includes(cid) && (!civs?.length || !c.civs.length || civs.some((cc) => c.civs.includes(cc.abbr))) ? [...acc, ...c.diff] : acc),
+          (acc, c) => (c.items.includes(cid) && civOverlap(civAbbrs, c.civs) ? [...acc, ...c.diff.filter(([t, l, lc]) => civOverlap(civAbbrs, lc))] : acc),
           [] as PatchLine[]
         )
       );
@@ -97,6 +99,11 @@ export async function getPatchHistory(item: UnifiedItem, civs?: civConfig[]) {
     }
   }
   return history.sort((a, b) => b.patch.date.getTime() - a.patch.date.getTime());
+}
+
+function civOverlap(filter: civAbbr[], value: civAbbr[]) {
+  if (!value?.length || !filter?.length) return true;
+  return filter.some((c) => value.includes(c));
 }
 
 export async function getPatch(id: string) {

@@ -83,7 +83,9 @@ export const PatchDetailRoute = () => {
         <div class="text-gray-300 mt-1">
           {patch()?.date.toLocaleDateString("en-US", { dateStyle: "full" })} {patch()?.buildId && <span class="ml-2">#{patch().buildId}</span>}
         </div>
-        <div class={mainIntroductionCSSClass}>{patch()?.summary}</div>
+        <div class={mainIntroductionCSSClass}>
+          <DirtSimpleMd md={patch()?.summary} />
+        </div>
 
         {patch()?.officialUrl && (
           <a
@@ -125,6 +127,21 @@ export const PatchDetailRoute = () => {
           <For each={filteredPatchNotes()}>{(section) => <Section section={section} items={items()} civ={civ()} />}</For>
         </div>
         <div class="hidden lg:block sticky basis-72 -order-1 top-24 max-h-screen overflow-y-auto pb-24 self-start align-self-start bottom-48">
+          {civ() && (
+            <div class="my-5 rounded-lg p-4 bg-gray-500  gap-2">
+              <p class="text-gray-100 text-sm">
+                Showing notes for the <CivFlag abbr={civ()} class="w-7 h-4 ml-1 inline-block" /> {CIVILIZATIONS[civ()]?.name}. Other patch notes are hidden.
+              </p>
+              <Link
+                href={`/patches/${params.id}`}
+                onClick={() => setCiv(null)}
+                class="rounded basis-full grid place-content-center uppercase p-1 mt-3 bg-gray-400 text-[12px] text-white hover:text-gray-50"
+              >
+                View the full notes
+              </Link>
+            </div>
+          )}
+
           <Sidebar />
         </div>
       </div>
@@ -140,6 +157,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
       {props.section.title && <h2 class="text-4xl font-bold mb-4 mt-20  border-b pb-3 border-white/20">{props.section.title}</h2>}
       {props.section.subtitle && <h2 class="text-xl font-bold mb-4">{props.section.subtitle}</h2>}
       {props.section.description && <p class="leading-6 text-white/80 my-8 max-w-prose whitespace-pre-wrap">{props.section.description}</p>}
+      {props.section.md && <DirtSimpleMd md={props.section.md} />}
       <For each={props.section.changes}>
         {(c) => (
           <div class="mb-8">
@@ -171,12 +189,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
               </div>
             )}
             <DiffList diff={c.diff.sort(sortPatchDiff)} />
-            {c.note && (
-              <div class="my-5 rounded-lg p-4 bg-gray-500">
-                <h5 class="font-bold text-gray-300 uppercase text-sm mb-1">Developer note</h5>
-                <p class="text-gray-100">"{c.note}"</p>
-              </div>
-            )}
+            <DevNote note={c.note} />
           </div>
         )}
       </For>
@@ -184,6 +197,16 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
   );
 };
 
+const DevNote: Component<{ note: string }> = (props) => {
+  return (
+    props.note && (
+      <div class="my-5 rounded-lg p-4 bg-gray-500">
+        <h5 class="font-bold text-gray-300 uppercase text-sm mb-1">Developer note</h5>
+        <p class="text-gray-100">"{props.note}"</p>
+      </div>
+    )
+  );
+};
 const DiffList: Component<{ diff: PatchLine[] }> = (props) => (
   <ul>
     <For each={props.diff}>
@@ -220,5 +243,24 @@ const Sidebar = () => {
         )}
       </For>
     </div>
+  );
+};
+
+const DirtSimpleMd: Component<{ md: string }> = (props) => {
+  return (
+    <>
+      {...(props.md ?? "").split("\n").map((line) => {
+        line = line.trim();
+        if (line.startsWith("###")) return <h5 class="text-md font-bold  mb-2 mt-4">{line.slice(4)}</h5>;
+        if (line.startsWith("##")) return <h4 class="text-lg font-bold mb-2 mt-4">{line.slice(3)}</h4>;
+        if (line.startsWith("#")) return <h3 class="text-xl text-white font-bold  mb-2 mt-4">{line.slice(2)}</h3>;
+        if (line.startsWith("> ")) return <DevNote note={line.slice(2)} />;
+        if (line.startsWith("* "))
+          return (
+            <p class="text-gray-100 pl-4 text-base before:content-['•'] before:text-gray-200 before:-ml-4 before:inline-block before:w-4 ">{line.slice(2)}</p>
+          );
+        return <p class="text-gray-100 text-base my-2">{line}</p>;
+      })}
+    </>
   );
 };

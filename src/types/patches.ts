@@ -16,6 +16,7 @@ export type PatchSection = {
   description?: string;
   civs: civAbbr[];
   changes: PatchSet[];
+  md?: string;
 };
 
 export type PatchSet = {
