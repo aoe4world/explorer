@@ -658,6 +658,18 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     },
   ],
 
+  admirality: [
+    // Increases the range of all combat ships by +1.
+    {
+      property: "maxRange",
+      select: { id: ["galley", "hulk", "carrack"] },
+      effect: "change",
+      value: 1,
+      type: "passive",
+    },
+  ],
+
+  // Now a civ bonus
   shipwrights: [
     // Reduce the cost of ships by -10%.
     {
@@ -1043,23 +1055,23 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   pyrotechnics: [
-    // Increase the range of gunpowder units by +20%.
+    // Increase the range of gunpowder units by 1.5 tiles.
     {
       property: "maxRange",
-      select: { class: [["gunpowder"], ["warship"]], id: ["grenadier"] },
-      effect: "multiply",
-      value: 1.2,
+      select: { id: ["handcannoneer"] },
+      effect: "change",
+      value: 1.5,
       type: "passive",
     },
   ],
 
   "reload-drills": [
-    // Reduce the reload time of Bombards by -20%.
+    // Reduce the reload time of Bombards by -33%.
     {
       property: "attackSpeed",
       select: { id: ["bombard"] },
       effect: "multiply",
-      value: 0.8,
+      value: 0.67,
       type: "passive",
     },
   ],
@@ -1120,16 +1132,16 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Grant +2 armor to War Elephants and Tower War Elephants.
     {
       property: "meleeArmor",
-      select: { id: ["war-elephant"] }, //, "tower-elephant"] }, // bug, game does not apply correctly
+      select: { id: ["war-elephant"] },
       effect: "change",
-      value: 3, // Actual game value may be bug
+      value: 3,
       type: "passive",
     },
     {
       property: "rangedArmor",
-      select: { id: ["war-elephant"] }, //, "tower-elephant"] }, // bug, game does not apply correctly
+      select: { id: ["war-elephant"] },
       effect: "change",
-      value: 3, // Actual game value may be bug
+      value: 3,
       type: "passive",
     },
   ],
@@ -1766,7 +1778,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     // Camels increase the armor of nearby infantry by +2.
     {
       property: "meleeArmor",
-      select: { class: [["infantry"], ["cavalry"]], id: ["camel-rider", "camel-archer"] },
+      select: { class: [["infantry"]], id: ["camel-rider", "camel-archer"] },
       effect: "change",
       value: 2,
       type: "influence",
@@ -2323,7 +2335,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     {
       property: "rangedAttack",
       select: { id: ["wooden-fortress", "outpost"] },
-      target: { class: [["ship", "warship"]] },
+      target: { class: [["ship"]] },
       effect: "change",
       value: 25,
       type: "bonus",
@@ -2356,7 +2368,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     {
       property: "rangedAttack",
       select: { id: ["outpost"] },
-      target: { class: [["ship", "warship"]] },
+      target: { class: [["ship"]] },
       effect: "change",
       value: 25,
       type: "bonus",
@@ -2376,7 +2388,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       property: "rangedAttack",
       select: { id: ["wooden-fortress", "outpost", "keep"] },
       effect: "change",
-      value: 60,
+      value: 40,
       type: "passive",
     },
     {
@@ -2389,16 +2401,16 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     {
       property: "rangedAttack",
       select: { id: ["wooden-fortress", "outpost", "keep"] },
-      target: { class: [["ship", "warship"]] },
+      target: { class: [["ship"]] },
       effect: "change",
-      value: 50,
+      value: 40,
       type: "bonus",
     },
     {
       property: "attackSpeed",
       select: { id: ["wooden-fortress", "outpost", "keep"] },
       effect: "change",
-      value: 6.25,
+      value: 4.5,
       type: "passive",
     },
   ],
@@ -2409,7 +2421,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       property: "rangedAttack",
       select: { id: ["outpost", "keep"] },
       effect: "change",
-      value: 85,
+      value: 70,
       type: "passive",
     },
     {
@@ -2422,9 +2434,9 @@ export const technologyModifiers: Record<string, Modifier[]> = {
     {
       property: "rangedAttack",
       select: { id: ["outpost", "keep"] },
-      target: { class: [["ship", "warship"]] },
+      target: { class: [["ship"]] },
       effect: "change",
-      value: 85,
+      value: 70,
       type: "bonus",
     },
     {

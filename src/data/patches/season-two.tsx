@@ -14,23 +14,8 @@ export const season2: PatchNotes = {
   ## Age of Discovery Event
   The wait is almost over for Ranked Season Two! You can jump into all the fun on July 14th! More information will be on its way then – so stay tuned! `,
   buildId: 17718,
-  date: new Date("2022-07-12 19:00:00 UTC"),
+  date: new Date("2022-07-12 17:00:00 UTC"),
   sections: [
-    {
-      title: "Overview",
-      civs: [],
-      changes: [],
-      md: `
-      Welcome to an exciting Season Two starting tomorrow, July 12th! We’re kicking off with an update full of new key features, quality of life improvements, more customization options, and even more say in how you play – you won’t want to miss out! No matter how you choose to play Age IV, be it single player, campaign, or ranked, we’ve got you covered. Here are a few highlights that you can look forward to in tomorrow’s update!
-
-* Map Preference System
-* Player Color Picker
-* Remappable Hotkeys
-* Fully Unlocked Campaigns
-
-### Age of Discovery Event
-The wait is almost over for Ranked Season Two! You can jump into all the fun on July 14th! More information will be on its way then – so stay tuned!`,
-    },
     {
       title: "New Features and Highlights",
       civs: [],
@@ -822,7 +807,7 @@ Of course, we still want there to be multiple counter play options to siege weap
           civs: [],
           diff: [
             ["nerf", "Spirit Way Landmark no longer reduces the cost of dynasty units in Stables and Archery Ranges around the Landmark"],
-            ["buff", "Now houses technologies to upgrade dynasty units which can be researched for -50% cost and +100% research speed"],
+            ["buff", "Now houses technologies to upgrade dynasty units which can be researched for -50% cost and 50% of the research time"],
             ["buff", "When a dynasty unit dies, all nearby units will receive +20% attack speed and +20 health over 10 seconds"],
           ],
           note: "We wanted the landmark to add more adaptive and dynamic elements to the Chinese gameplan. Previously you committed to 1 building type around the spirit way and were locked into those units. Now you can mix in different forces based on your current dynasty and combat needs.",
