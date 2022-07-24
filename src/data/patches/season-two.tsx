@@ -504,7 +504,7 @@ Of course, we still want there to be multiple counter play options to siege weap
         // * Handcannon hitpoints decreased from 150 > 130
         // > Our vision for handcannons is that they are a frail high damage output unit. With the previous stats it felt like they were too cost effective vs most units, even intended counters like cavalry with good positioning. This change is aimed at making more diverse lategame armies that focus more attention on battlefield positioning.
         {
-          items: ["units/handcannoneer"],
+          items: ["units/handcannoneer", "units/streltsy"],
           civs: [],
           diff: [["nerf", "Hit points decreased from 150 to 130"]],
           note: "Our vision for handcannons is that they are a frail high damage output unit. With the previous stats it felt like they were too cost effective vs most units, even intended counters like cavalry with good positioning. This change is aimed at making more diverse lategame armies that focus more attention on battlefield positioning.",
@@ -1079,7 +1079,7 @@ Of course, we still want there to be multiple counter play options to siege weap
         {
           items: ["technologies/chivalry"],
           civs: [],
-          diff: [["buff", "Cost increased from 50 Wood 125 Gold to 100 Wood 200 Gold"]],
+          diff: [["nerf", "Cost increased from 50 Wood 125 Gold to 100 Wood 200 Gold"]],
           note: "French Knights are a very strong harassment tool early on and can constantly re-engage with the Chivalry tech. We love this playstyle but want there to be a bigger sacrifice and more strategic consideration for when to invest in Chivalry.",
         },
       ],

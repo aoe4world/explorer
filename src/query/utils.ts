@@ -85,8 +85,11 @@ export async function getItemTechnologies<T extends ITEMS>(
 
 export function getMostAppropriateVariation<T extends Item = Item>(item: UnifiedItem<T>, civ: civConfig): T {
   if (!item) return null;
-  if (civ) return item.variations.filter((v) => v.civs.includes(civ.abbr)).sort((a, b) => b.civs.length - a.civs.length)[0] ?? item.variations[0];
-  return item.variations.sort((a, b) => b.civs.length - a.civs.length)[0];
+  return (
+    (civ ? item.variations.filter((v) => v.civs.includes(civ.abbr)) : item.variations)
+      .sort((a, b) => a.id.length - b.id.length)
+      .sort((a, b) => b.civs.length - a.civs.length)[0] ?? item.variations[0]
+  );
 }
 
 export function splitUnitsIntoGroups(units: UnifiedItem<Unit>[]) {

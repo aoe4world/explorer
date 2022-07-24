@@ -1557,7 +1557,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
   ],
 
   "siege-works": [
-    // Increase the health of siege engines by +20% and their ranged armor by  +3.
+    // Increase the health of siege engines by +20% and their ranged armor by  +10.
     {
       property: "hitpoints",
       select: { class: [["siege"]] },
@@ -1569,7 +1569,7 @@ export const technologyModifiers: Record<string, Modifier[]> = {
       property: "rangedArmor",
       select: { class: [["siege"]] },
       effect: "change",
-      value: 3,
+      value: 10,
       type: "passive",
     },
   ],
