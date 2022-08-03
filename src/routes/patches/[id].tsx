@@ -251,7 +251,7 @@ const DirtSimpleMd: Component<{ md: string }> = (props) => {
     <>
       {...(props.md ?? "").split("\n").map((line) => {
         line = line.trim();
-        if (line.startsWith("###")) return <h5 class="text-md font-bold  mb-2 mt-4">{line.slice(4)}</h5>;
+        if (line.startsWith("###")) return <h5 class="text-md font-bold mb-2 mt-4">{line.slice(4)}</h5>;
         if (line.startsWith("##")) return <h4 class="text-lg font-bold mb-2 mt-4">{line.slice(3)}</h4>;
         if (line.startsWith("#")) return <h3 class="text-xl text-white font-bold  mb-2 mt-4">{line.slice(2)}</h3>;
         if (line.startsWith("> ")) return <DevNote note={line.slice(2)} />;
