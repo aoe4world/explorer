@@ -1,5 +1,5 @@
 import { CIVILIZATIONS, CIV_ABBR } from "../data/.scripts/lib/config/civs";
-import { ModifyableProperty } from "../data/.scripts/lib/types/units";
+import { Building, ModifyableProperty, Technology, Unit, Upgrade } from "../data/.scripts/lib/types/units";
 export { CIVILIZATIONS, CIV_ABBR };
 export enum ITEMS {
   UNITS = "units",
@@ -7,6 +7,12 @@ export enum ITEMS {
   TECHNOLOGIES = "technologies",
   UPGRADES = "upgrades",
 }
+export type ItemTypes = {
+  [ITEMS.UNITS]: Unit;
+  [ITEMS.TECHNOLOGIES]: Technology;
+  [ITEMS.BUILDINGS]: Building;
+  [ITEMS.UPGRADES]: Upgrade;
+};
 
 export const CIVILIZATION_BY_SLUG = {
   english: CIVILIZATIONS.en,

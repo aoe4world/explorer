@@ -10,18 +10,19 @@ import { TechnologyCard } from "../../components/TechnologyCard";
 import { Tooltip } from "../../components/Tooltip";
 import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
-import { getItem, getItems } from "../../query/fetch";
 import { getUnitStats } from "../../query/stats";
 import { getMostAppropriateVariation } from "../../query/utils";
 import { mainIntroductionCSSClass } from "../../styles";
 import { Building, civAbbr, civConfig, UnifiedItem } from "../../types/data";
+
+const SDK = import("../../../data/sdk/index");
 
 export function BuildingDetailRoute() {
   const itemType = ITEMS.BUILDINGS;
   const params = useParams();
   const civ: civConfig = CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
-  const [item] = createResource(params.id, (id) => getItem(itemType, id));
+  const [item] = createResource(params.id, async (id) => (await SDK).Data.buildings.get(id));
 
   createEffect(() => {
     if (!item()) return;
@@ -29,17 +30,8 @@ export function BuildingDetailRoute() {
     setActivePageForItem(item(), civ);
   });
 
-  const [units] = createResource(
-    () => [params.id, CIVILIZATION_BY_SLUG[params.slug]?.abbr] as [string, civAbbr],
-    async ([item, civ]) =>
-      item && (await getItems(ITEMS.UNITS, civ)).filter((u) => u.variations.some((v) => (!civ || v.civs.includes(civ)) && v.producedBy.includes(item)))
-  );
-
-  const [research] = createResource(
-    () => [params.id, CIVILIZATION_BY_SLUG[params.slug]?.abbr] as [string, civAbbr],
-    async ([item, civ]) =>
-      item && (await getItems(ITEMS.TECHNOLOGIES, civ)).filter((u) => u.variations.some((v) => (!civ || v.civs.includes(civ)) && v.producedBy.includes(item)))
-  );
+  const [units] = createResource(async () => (await SDK).Data.units.where({ producedAt: params.id, civilization: civ?.abbr }));
+  const [research] = createResource(async () => (await SDK).Data.technologies.where({ producedAt: params.id, civilization: civ?.abbr }));
 
   return (
     <ItemPage.Wrapper civ={civ}>

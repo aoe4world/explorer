@@ -3,7 +3,9 @@ import { CIVILIZATIONS, ITEMS, SIMILAIR_ITEMS } from "../config";
 import { staticMaps } from "../data/maps";
 import { technologyModifiers } from "../data/technologies";
 import { civAbbr, civConfig, GroupedBuildings, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
-import { fetchItem, fetchItems, getItem, getItems } from "./fetch";
+import { PatchLine, PatchNotes } from "../types/patches";
+
+const SDK = import("../../data/sdk");
 
 /** Map any of civAbbr | civConfig | civConfig[] | civAbbr[] to a single array */
 export type civFilterParam = Parameters<typeof mapCivsArgument>[0];
@@ -32,20 +34,6 @@ export function filterItems<T extends UnifiedItem[]>(items: T, { civs, maxAge }:
   }, [] as typeof items);
 }
 
-/** Sort a list of unified units based on properties of their variations */
-const variationMin = (item: UnifiedItem<PhysicalItem>, property: keyof Unit) => {
-  return item.variations.reduce((min, variation) => {
-    return +variation[property] < min ? +variation[property] : min;
-  }, Infinity);
-};
-export function sortUnifiedItemsByVariation<T extends Unit | Building | Technology>(units: UnifiedItem<T>[], keys: (keyof T)[]) {
-  units.sort((a, b) => b.civs.length - a.civs.length);
-  for (const key of keys) {
-    units = units.sort((a, b) => variationMin(a, key) - variationMin(b, key));
-  }
-  return units;
-}
-
 /** Query the technologies that apply to an item and merge them with all technology modifiers */
 export async function getItemTechnologies<T extends ITEMS>(
   type: T,
@@ -53,8 +41,9 @@ export async function getItemTechnologies<T extends ITEMS>(
   civ?: civAbbr | civConfig,
   includeAllCivsUnitSpecificTech = false
 ): Promise<UnifiedItem<Technology>[]> {
-  const [technologies, unifiedItem] = await Promise.all([fetchItems(ITEMS.TECHNOLOGIES), typeof item == "string" ? fetchItem(type, item) : item]);
-  return technologies.reduce((acc, t) => {
+  const { Data } = await SDK;
+  const unifiedItem = typeof item == "string" ? Data.Get(`${type}/${item}`) : item;
+  return Data.technologies.reduce((acc, t) => {
     // Todo, reduce over item.variations instead and read 'effects'. Filter by civ
     const modifiers = technologyModifiers[t.id];
     const filteringByCiv = !!civ;
@@ -176,15 +165,14 @@ export function canonicalItemName(item: Item | UnifiedItem) {
   return `${group}/${"baseId" in item ? item.baseId : item.id}`;
 }
 
-export function getItemByCanonicalName(canonicalName: string) {
-  const [group, id] = canonicalName.split("/");
-  if (group == "maps") return getMapAsItem(id);
-  return getItem(group as ITEMS, id);
+export function getItemByCanonicalName(id: string) {
+  if (id.startsWith("maps/")) return getMapAsItem(id.split("/")[1]);
+  return SDK.then((sdk) => sdk.Data.Get(id as any));
 }
 
 export async function findClosestMatch<T extends ITEMS>(type: T, id: string, civ: civConfig) {
   const similair = SIMILAIR_ITEMS.find((units) => units.includes(id));
-  const closestMatch = similair && (await getItems(type, civ.abbr)).find((i) => similair.includes(i.id));
+  const closestMatch = similair && (await SDK).Data[type].where({ civilization: civ.abbr }).find((i) => similair.includes(i.id));
   return closestMatch ?? null;
 }
 
@@ -204,4 +192,38 @@ function getMapAsItem(id: string) {
 
 export function capitlize(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+const patchOrder = ["buff", "nerf", "fix"];
+export const sortPatchDiff = (a: PatchLine, b: PatchLine) => patchOrder.indexOf(a[0]) - patchOrder.indexOf(b[0]);
+
+/** Get all changes, line by line, that apply to a specific item */
+export async function getPatchHistory(item: UnifiedItem, civs?: civConfig[]) {
+  const { patches } = await import("../data/patches/patch");
+
+  const cid = canonicalItemName(item);
+  const civAbbrs = civs?.map((c) => c.abbr);
+  const history: { patch: PatchNotes; diff: PatchLine[] }[] = [];
+  for (const patch of patches) {
+    const diff = [];
+    for (const section of patch.sections) {
+      if (!civOverlap(civAbbrs, section.civs)) continue;
+      diff.push(
+        ...section.changes.reduce(
+          (acc, c) => (c.items.includes(cid) && civOverlap(civAbbrs, c.civs) ? [...acc, ...c.diff.filter(([t, l, lc]) => civOverlap(civAbbrs, lc))] : acc),
+          [] as PatchLine[]
+        )
+      );
+    }
+    if (diff.length) {
+      diff.sort(sortPatchDiff);
+      history.push({ patch, diff });
+    }
+  }
+  return history.sort((a, b) => b.patch.date.valueOf() - a.patch.date.valueOf());
+}
+
+function civOverlap(filter: civAbbr[], value: civAbbr[]) {
+  if (!value?.length || !filter?.length) return true;
+  return filter.some((c) => value.includes(c));
 }

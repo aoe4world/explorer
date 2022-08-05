@@ -7,8 +7,7 @@ import { ReportButton } from "../../components/ReportButton";
 import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getCivData } from "../../data/civData";
-import { fetchItems, getItems } from "../../query/fetch";
-import { sortUnifiedItemsByVariation, splitBuildingsIntoGroups, splitTechnologiesIntroGroups, splitUnitsIntoGroups } from "../../query/utils";
+import { splitBuildingsIntoGroups, splitTechnologiesIntroGroups, splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass, mainIntroductionCSSClass } from "../../styles";
 
 export type CivInfo = {
@@ -24,15 +23,15 @@ export const CivDetailRoute = () => {
   const params = useParams();
   const civConfig = CIVILIZATION_BY_SLUG[params.slug];
   const [civ] = createResource(() => getCivData(civConfig.abbr));
-  const [units] = createResource(async () =>
-    splitUnitsIntoGroups(sortUnifiedItemsByVariation(await getItems(ITEMS.UNITS, civConfig.abbr), ["hitpoints", "age"]))
-  );
-  const [buildings] = createResource(async () =>
-    splitBuildingsIntoGroups(sortUnifiedItemsByVariation(await getItems(ITEMS.BUILDINGS, civConfig.abbr), ["hitpoints", "age"]))
-  );
-  const [technologies] = createResource(async () =>
-    splitTechnologiesIntroGroups(sortUnifiedItemsByVariation(await getItems(ITEMS.TECHNOLOGIES, civConfig.abbr), ["age"]))
-  );
+  const [data] = createResource(async () => {
+    const civ = (await import("../../../data/sdk")).Data.civs.Get(civConfig.abbr);
+    return {
+      units: splitUnitsIntoGroups(civ.Units.order("hitpoints", "age")),
+      buildings: splitBuildingsIntoGroups(civ.Buildings.order("hitpoints", "age")),
+      technologies: splitTechnologiesIntroGroups(civ.Technologies.order("age")),
+    };
+  });
+
   createEffect(on(civ, () => !civ.loading && setActivePage({ title: civ()?.name, description: civ()?.description, location: useLocation() })));
 
   return (
@@ -55,7 +54,7 @@ export const CivDetailRoute = () => {
         <h2 class="text-lg text-white/40 font-bold  mb-3">Jump to</h2>
         <Suspense fallback={<p>Loading</p>}>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-2 flex-wrap mb-2">
-            <For each={units() && Object.values(units()).flat()}>
+            <For each={data() && Object.values(data().units).flat()}>
               {(unit) => (
                 <Link href={`./units/${unit.id}`} class="flex flex-row items-center mb-2 group ">
                   <div class="flex-none  rounded bg-item-unit/80 group-hover:bg-item-unit/100 w-10 h-10 p-0.5 mr-2 transition">
@@ -67,7 +66,7 @@ export const CivDetailRoute = () => {
             </For>
           </div>
           <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-2 flex-wrap mb-2">
-            <For each={buildings() && Object.values(buildings()).flat()}>
+            <For each={data() && Object.values(data().buildings).flat()}>
               {(building) =>
                 building.unique && (
                   <Link href={`./buildings/${building.id}`} class="flex flex-row items-center mb-2 group ">
@@ -81,7 +80,7 @@ export const CivDetailRoute = () => {
             </For>
           </div>
           <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-2 flex-wrap mb-2">
-            <For each={technologies() && Object.values(technologies()).flat()}>
+            <For each={data() && Object.values(data().technologies).flat()}>
               {(tech) =>
                 tech.unique && (
                   <Link href={`./technologies/${tech.id}`} class="flex flex-row items-center mb-2 group ">
@@ -118,7 +117,7 @@ export const CivDetailRoute = () => {
       </div>
       <div class="max-w-screen-2xl mx-auto p-4 md:p-8">
         <Show
-          when={units()}
+          when={data()?.units}
           fallback={
             <>
               <h2 class="text-2xl font-bold text-white/20 mt-20 mb-4 pl-2">Loading...</h2>
@@ -130,7 +129,7 @@ export const CivDetailRoute = () => {
             </>
           }
         >
-          <For each={Object.entries(units())}>
+          <For each={Object.entries(data().units)}>
             {([k, v]) =>
               v?.length ? (
                 <div>
@@ -146,7 +145,7 @@ export const CivDetailRoute = () => {
           </For>
         </Show>
         <Show
-          when={buildings()}
+          when={data()?.buildings}
           fallback={
             <>
               <h2 class="text-2xl font-bold text-white/20 mt-20 mb-4 pl-2">Loading...</h2>
@@ -158,7 +157,7 @@ export const CivDetailRoute = () => {
             </>
           }
         >
-          <For each={Object.entries(buildings())}>
+          <For each={Object.entries(data()?.buildings)}>
             {([k, v]) =>
               v?.length ? (
                 <div>

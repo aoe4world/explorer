@@ -1,6 +1,6 @@
 import { Link } from "solid-app-router";
 import { Component, createResource, For } from "solid-js";
-import { getPatchHistory } from "../query/fetch";
+import { getPatchHistory } from "../query/utils";
 import { UnifiedItem, civConfig } from "../types/data";
 import { Icon } from "./Icon";
 

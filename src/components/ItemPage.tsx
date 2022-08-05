@@ -5,7 +5,6 @@ import { CivFlag } from "./CivFlag";
 import { TechnologyCard } from "./TechnologyCard";
 import { CIVILIZATIONS, ITEMS } from "../config";
 import { getCivData } from "../data/civData";
-import { getItem } from "../query/fetch";
 import { getItemTechnologies } from "../query/utils";
 import { getItemCssClass, itemGridCSSClass, mainIntroductionCSSClass, mainItemTitleCSSClass } from "../styles";
 import { civAbbr, civConfig, UnifiedItem } from "../types/data";
@@ -53,7 +52,7 @@ const ProducedAt: Component<{ item: UnifiedItem; civ: civConfig; title?: string 
     () => ({ item: props.item, civ: props.civ?.abbr }),
     async ({ item, civ }) => {
       const producedBy = [...new Set(item.variations.flatMap((v) => v.producedBy))];
-      const items = await Promise.all(producedBy.map((b) => getItem(ITEMS.BUILDINGS, b)));
+      const items = await Promise.all(producedBy.map(async (b) => (await import("../../data/sdk")).Data.buildings.get(b)));
       if (items.length != producedBy.length) console.warn("Some buildings were not found", producedBy, items);
       return (civ ? items.filter((i) => !!i && i.civs.includes(civ)) : items).filter(Boolean).sort((a, b) => b.civs?.length - a.civs?.length);
     }

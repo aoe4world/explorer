@@ -3,7 +3,6 @@ import { ITEMS, SUPPORTED_MODIFIER_PROPERTIES } from "../config";
 import { technologyModifiers } from "../data/technologies";
 import { Building, civAbbr, civConfig, Item, Modifier, Technology, UnifiedItem, Unit } from "../types/data";
 import { CalculatedStats, Stat, StatPart, StatProperty } from "../types/stats";
-import { fetchItem } from "./fetch";
 import { getItemTechnologies, mapCivsArgument, modifierMatches } from "./utils";
 
 export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
@@ -38,7 +37,7 @@ export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
     return combatStats;
   };
 
-  if (typeof unit == "string") return fetchItem(type, unit).then((x) => getStats(x));
+  if (typeof unit == "string") return getStats((await import("../../data/sdk")).Data[type].get(unit));
   else return getStats(unit);
 }
 

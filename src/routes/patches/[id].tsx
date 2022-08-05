@@ -6,16 +6,14 @@ import { CivFlag } from "../../components/CivFlag";
 import { Icon } from "../../components/Icon";
 import { scrollIntoViewIfNeeded, TableOfContents, useTableOfContents } from "../../components/TableOfContents";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG } from "../../config";
-import { patches } from "../../data/patches/patch";
-import { fetchItem, getPatch, sortPatchDiff } from "../../query/fetch";
-import { capitlize, getItemByCanonicalName } from "../../query/utils";
+import { capitlize, getItemByCanonicalName, sortPatchDiff } from "../../query/utils";
 import { getItemCssClass, mainIntroductionCSSClass } from "../../styles";
 import { civAbbr, Item, UnifiedItem } from "../../types/data";
 import { PatchLine, PatchSection, PatchSet } from "../../types/patches";
 
 export const PatchDetailRoute = () => {
   const params = useParams();
-  const [patch] = createResource(params.id, getPatch);
+  const [patch] = createResource(async () => (await import("../../data/patches/patch")).patches.find((patch) => patch.id === params.id));
   const [civ, setCiv] = createSignal<civAbbr>(CIVILIZATION_BY_SLUG[params.civ]?.abbr);
   const [items] = createResource(patch, async (patch) => {
     const items = patch.sections
@@ -47,7 +45,8 @@ export const PatchDetailRoute = () => {
     }
   );
 
-  const [pagination] = createResource(params.id, (id) => {
+  const [pagination] = createResource(params.id, async (id) => {
+    const { patches } = await import("../../data/patches/patch");
     const i = patches.findIndex((p) => p.id === id);
     return { previous: patches[i - 1], next: patches[i + 1] };
   });

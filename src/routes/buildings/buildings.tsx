@@ -3,15 +3,14 @@ import { createResource, For, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
 import { BuildingCard } from "../../components/BuildingCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
-import { getItems } from "../../query/fetch";
-import { sortUnifiedItemsByVariation, splitBuildingsIntoGroups } from "../../query/utils";
+import { splitBuildingsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass } from "../../styles";
 
 export const BuildingOverviewRoute = () => {
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [buildings] = createResource(async () =>
-    splitBuildingsIntoGroups(sortUnifiedItemsByVariation(await getItems(ITEMS.BUILDINGS, civ?.abbr), ["hitpoints", "age"]))
+    splitBuildingsIntoGroups((await import("../../../data/sdk")).Data.buildings.where({ civilization: civ?.abbr }).order("age"))
   );
 
   setActivePage({ title: `Buildings ${civ ? ` — ${civ?.name}` : ""}`, location: useLocation() });

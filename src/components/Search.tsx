@@ -1,12 +1,16 @@
 import { Link, useLocation, useNavigate } from "solid-app-router";
 import { Component, createEffect, createResource, createSignal, For, onCleanup, onMount, Show } from "solid-js";
 import { ITEMS, SIMILAIR_ITEMS } from "../config";
-import { fetchItems } from "../query/fetch";
 import { UnifiedItem } from "../types/data";
 import { getItemHref } from "./Cards";
 import { Icon } from "./Icon";
 
 const isMac = /mac/i.test(navigator.userAgent);
+
+async function getEverything() {
+  const SDK = await import("../../data/sdk");
+  return [SDK.Data.buildings, SDK.Data.technologies, SDK.Data.units].flat();
+}
 
 function mergeSearchableData(item: UnifiedItem) {
   const keywords = [
@@ -22,9 +26,7 @@ async function search(q: string = "") {
   q = q.trim().toLowerCase();
   if (!q.length) return [];
 
-  allItems ??= await Promise.all([fetchItems(ITEMS.UNITS), fetchItems(ITEMS.BUILDINGS), fetchItems(ITEMS.TECHNOLOGIES)]).then((x) =>
-    x.flat().map((x) => [...mergeSearchableData(x), x] as [string, string[], UnifiedItem])
-  );
+  allItems ??= (await getEverything()).map((x) => [...mergeSearchableData(x), x] as [string, string[], UnifiedItem]);
 
   return allItems
     .filter(([m]) => m.includes(q))

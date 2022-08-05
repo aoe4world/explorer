@@ -4,7 +4,6 @@ import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { ReportButton } from "../../components/ReportButton";
 import { StatNumber, StatBar, StatDps, StatCosts } from "../../components/Stats";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
-import { getItem, getPatchHistory } from "../../query/fetch";
 import { getUnitStats } from "../../query/stats";
 import { mainIntroductionCSSClass } from "../../styles";
 import { Building, civConfig, UnifiedItem, Unit } from "../../types/data";
@@ -16,7 +15,7 @@ export function UnitDetailRoute() {
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
-  const [item] = createResource(params.id, (id) => getItem(itemType, id));
+  const [item] = createResource(params.id, async (id) => (await import("../../../data/sdk/index")).Data.units.get(id));
 
   createEffect(() => {
     if (!item()) return;

@@ -6,7 +6,6 @@ import { PatchHistory } from "../../components/PatchHistory";
 import { ReportButton } from "../../components/ReportButton";
 import { StatCosts } from "../../components/Stats";
 import { CIVILIZATION_BY_SLUG, ITEMS, PRETTY_AGE_MAP_LONG } from "../../config";
-import { getItem } from "../../query/fetch";
 import { getMostAppropriateVariation } from "../../query/utils";
 import { mainIntroductionCSSClass } from "../../styles";
 import { Technology } from "../../types/data";
@@ -16,7 +15,7 @@ export function TechnologyDetailRoute() {
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
-  const [item] = createResource(params.id, (id) => getItem(itemType, id));
+  const [item] = createResource(params.id, async (id) => (await import("../../../data/sdk/index")).Data.technologies.get(id));
 
   createEffect(() => {
     if (!item()) return;
