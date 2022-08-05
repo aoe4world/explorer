@@ -100,7 +100,7 @@ function mergeVariationsToStats(variations: (Unit | Building)[]) {
         if (bonus.length) {
           bonus.forEach((mod, mi) => {
             mod = { ...mod };
-            const previousModifierValue = arr[i - 1]?.[2][mi].value ?? 0;
+            const previousModifierValue = arr[i - 1]?.[2][mi]?.value ?? 0;
             if ((mod.effect as any) == "increase") mod.effect = "change";
             if (previousModifierValue) mod.value = mod.value - previousModifierValue;
             total[cat as StatProperty].bonus.push([mod, variation.id, variation.age, variation, "bonus"]);

@@ -143,7 +143,7 @@ export const patch20249: PatchNotes = {
         {
           // * Defenses No longer favor Rams as a target.
           // > When defending a Ram push, defenses will get stuck attacking Rams since they do so little damage. It’s possible to force defenses to attack other targets manually but we want to give defenders more breathing space to focus on managing more interesting elements of combat.
-          items: ["buildings/town-center", "buildings/keep", "buildings/outpost", "units/battering-ram"],
+          items: ["buildings/town-center", "buildings/capital-town-center", "buildings/keep", "buildings/outpost", "units/battering-ram"],
           civs: [],
           diff: [["buff", "Defenses no longer favor Rams as a target."]],
           note: "When defending a Ram push, defenses will get stuck attacking Rams since they do so little damage. It’s possible to force defenses to attack other targets manually but we want to give defenders more breathing space to focus on managing more interesting elements of combat.",
@@ -153,7 +153,7 @@ export const patch20249: PatchNotes = {
           // * Town Center Garrison arrow attack interval increased from 1.12 to 1.88.
           // * Town Center Garrison slots reduced from 20 to 15.
           // > This change in combination with the change to prevent defenses from prioritizing attacking Rams helps to even out the defender advantage. We want pushes in the Feudal Age to be more viable at punishing heavy greed strategies.
-          items: ["buildings/town-center"],
+          items: ["buildings/town-center", "buildings/capital-town-center"],
           civs: [],
           diff: [
             ["nerf", "Default weapon attack interval increased from 1.12 to 1.88."],
