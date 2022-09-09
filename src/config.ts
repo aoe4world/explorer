@@ -1,29 +1,7 @@
-import { CIVILIZATIONS, CIV_ABBR } from "../data/.scripts/lib/config/civs";
-import { Building, ModifyableProperty, Technology, Unit, Upgrade } from "../data/.scripts/lib/types/units";
-export { CIVILIZATIONS, CIV_ABBR };
-export enum ITEMS {
-  UNITS = "units",
-  BUILDINGS = "buildings",
-  TECHNOLOGIES = "technologies",
-  UPGRADES = "upgrades",
-}
-export type ItemTypes = {
-  [ITEMS.UNITS]: Unit;
-  [ITEMS.TECHNOLOGIES]: Technology;
-  [ITEMS.BUILDINGS]: Building;
-  [ITEMS.UPGRADES]: Upgrade;
-};
-
-export const CIVILIZATION_BY_SLUG = {
-  english: CIVILIZATIONS.en,
-  hre: CIVILIZATIONS.hr,
-  french: CIVILIZATIONS.fr,
-  chinese: CIVILIZATIONS.ch,
-  delhi: CIVILIZATIONS.de,
-  abbasid: CIVILIZATIONS.ab,
-  mongols: CIVILIZATIONS.mo,
-  rus: CIVILIZATIONS.ru,
-};
+import { ModifyableProperty } from "../data/src/types/items";
+export { CIVILIZATIONS, CIV_ABBR, CIVILIZATION_BY_SLUG } from "../data/src/lib/config/civs";
+export { ITEMS } from "../data/src/types/items";
+export type { Building, ModifyableProperty, Technology, Unit, Upgrade, ItemTypes } from "../data/src/types/items";
 
 export const SUPPORTED_MODIFIER_PROPERTIES: ModifyableProperty[] = [
   "meleeArmor",

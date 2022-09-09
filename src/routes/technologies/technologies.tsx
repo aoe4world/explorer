@@ -10,7 +10,7 @@ export const TechnologoiesOverviewRoute = () => {
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [technologies] = createResource(async () =>
-    splitTechnologiesIntroGroups((await import("../../../data/sdk")).Data.technologies.where({ civilization: civ?.abbr }).order("age"))
+    splitTechnologiesIntroGroups((await import("../../../data/src/sdk")).technologies.where({ civilization: civ?.abbr }).order("age"))
   );
 
   setActivePage({ title: `Technologies ${civ ? ` — ${civ?.name}` : ""}`, location: useLocation() });

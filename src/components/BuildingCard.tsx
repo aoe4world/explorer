@@ -1,11 +1,9 @@
-import { Link } from "solid-app-router";
 import { Component, createMemo, createResource, Show } from "solid-js";
-import { PhysicalItem } from "../../data/.scripts/lib/types/units";
-import { ITEMS, PRETTY_AGE_MAP } from "../config";
+import { ITEMS } from "../../data/src/types/items";
 import { getUnitStats } from "../query/stats";
 import { getMostAppropriateVariation } from "../query/utils";
-import { Building, civAbbr, civConfig, UnifiedItem, Unit } from "../types/data";
-import { Card, CardHeader } from "./Cards";
+import { Building, civConfig, UnifiedItem } from "../types/data";
+import { Card } from "./Cards";
 import { StatBar, StatCosts, StatDps, StatNumber } from "./Stats";
 
 export const BuildingCard: Component<{ item: UnifiedItem<Building>; civ?: civConfig }> = (props) => {

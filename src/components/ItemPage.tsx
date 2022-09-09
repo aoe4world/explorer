@@ -4,11 +4,11 @@ import { getItemHref } from "./Cards";
 import { CivFlag } from "./CivFlag";
 import { TechnologyCard } from "./TechnologyCard";
 import { CIVILIZATIONS, ITEMS } from "../config";
-import { getCivData } from "../data/civData";
 import { getItemTechnologies } from "../query/utils";
 import { getItemCssClass, itemGridCSSClass, mainIntroductionCSSClass, mainItemTitleCSSClass } from "../styles";
 import { civAbbr, civConfig, UnifiedItem } from "../types/data";
 import { Icon } from "./Icon";
+import { civBackdrops } from "../data/civData";
 
 const Header: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
   const itemCssClass = getItemCssClass(props.item);
@@ -52,7 +52,7 @@ const ProducedAt: Component<{ item: UnifiedItem; civ: civConfig; title?: string 
     () => ({ item: props.item, civ: props.civ?.abbr }),
     async ({ item, civ }) => {
       const producedBy = [...new Set(item.variations.flatMap((v) => v.producedBy))];
-      const items = await Promise.all(producedBy.map(async (b) => (await import("../../data/sdk")).Data.buildings.get(b)));
+      const items = await Promise.all(producedBy.map(async (b) => (await import("../../data/src/sdk")).buildings.get(b)));
       if (items.length != producedBy.length) console.warn("Some buildings were not found", producedBy, items);
       return (civ ? items.filter((i) => !!i && i.civs.includes(civ)) : items).filter(Boolean).sort((a, b) => b.civs?.length - a.civs?.length);
     }
@@ -100,13 +100,12 @@ const AvailableUpgrades: Component<{ item: UnifiedItem; civ: civConfig }> = (pro
 
 const Wrapper: Component<{ civ?: civConfig }> = (props) => {
   const [pending] = useTransition();
-  const [civData] = createResource(() => props.civ?.abbr, getCivData);
   return (
     <>
       {" "}
       <div
         class="absolute top-28 w-screen h-screen opacity-20 saturate-0 -z-10 bg-right-top bg-contain bg-no-repeat transition-[background-image] duration-400"
-        style={{ "background-image": `url(${civData()?.backdrop})` }}
+        style={{ "background-image": `url(${civBackdrops[props.civ?.abbr]})` }}
         classList={{ "opacity-0": pending() }}
       ></div>
       <div class="max-w-screen-lg p-4 mx-auto gap-4 mb-4 mt-8">{props.children}</div>

@@ -1,11 +1,10 @@
-import { Building, Item, Modifier, PhysicalItem } from "../../data/.scripts/lib/types/units";
+import { Building, Item, Modifier, PhysicalItem } from "../../data/src/types/items";
 import { CIVILIZATIONS, ITEMS, SIMILAIR_ITEMS } from "../config";
 import { staticMaps } from "../data/maps";
-import { technologyModifiers } from "../data/technologies";
 import { civAbbr, civConfig, GroupedBuildings, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
 import { PatchLine, PatchNotes } from "../types/patches";
 
-const SDK = import("../../data/sdk");
+const SDK = import("../../data/src/sdk");
 
 /** Map any of civAbbr | civConfig | civConfig[] | civAbbr[] to a single array */
 export type civFilterParam = Parameters<typeof mapCivsArgument>[0];
@@ -41,13 +40,12 @@ export async function getItemTechnologies<T extends ITEMS>(
   civ?: civAbbr | civConfig,
   includeAllCivsUnitSpecificTech = false
 ): Promise<UnifiedItem<Technology>[]> {
-  const { Data } = await SDK;
-  const unifiedItem = typeof item == "string" ? Data.Get(`${type}/${item}`) : item;
-  return Data.technologies.reduce((acc, t) => {
-    // Todo, reduce over item.variations instead and read 'effects'. Filter by civ
-    const modifiers = technologyModifiers[t.id];
+  const { Get, technologies } = await SDK;
+  const unifiedItem = typeof item == "string" ? Get(`${type}/${item}`) : item;
+  return technologies.reduce((acc, t) => {
     const filteringByCiv = !!civ;
     const variations = t.variations.filter((v) => (filteringByCiv ? v.civs.includes(mapCivsArgument(civ)[0].abbr) : true));
+    const modifiers = variations.flatMap((v) => v.effects).filter(Boolean);
     if (!modifiers || !variations.length) return acc;
 
     const techResearchedAtId = false; //t.variations.some((v) => v.producedBy.includes(unifiedItem.id));
@@ -167,12 +165,12 @@ export function canonicalItemName(item: Item | UnifiedItem) {
 
 export function getItemByCanonicalName(id: string) {
   if (id.startsWith("maps/")) return getMapAsItem(id.split("/")[1]);
-  return SDK.then((sdk) => sdk.Data.Get(id as any));
+  return SDK.then((sdk) => sdk.Get(id as any));
 }
 
 export async function findClosestMatch<T extends ITEMS>(type: T, id: string, civ: civConfig) {
   const similair = SIMILAIR_ITEMS.find((units) => units.includes(id));
-  const closestMatch = similair && (await SDK).Data[type].where({ civilization: civ.abbr }).find((i) => similair.includes(i.id));
+  const closestMatch = similair && (await SDK)[type].where({ civilization: civ.abbr }).find((i) => similair.includes(i.id));
   return closestMatch ?? null;
 }
 

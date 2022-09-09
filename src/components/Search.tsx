@@ -8,8 +8,8 @@ import { Icon } from "./Icon";
 const isMac = /mac/i.test(navigator.userAgent);
 
 async function getEverything() {
-  const SDK = await import("../../data/sdk");
-  return [SDK.Data.buildings, SDK.Data.technologies, SDK.Data.units].flat();
+  const SDK = await import("../../data/src/sdk");
+  return [SDK.buildings, SDK.technologies, SDK.units].flat();
 }
 
 function mergeSearchableData(item: UnifiedItem) {

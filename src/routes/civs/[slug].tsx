@@ -1,38 +1,32 @@
 import { Link, useIsRouting, useLocation, useParams } from "solid-app-router";
-import { createEffect, createMemo, createResource, For, on, Show, Suspense } from "solid-js";
+import { createEffect, createResource, For, on, Show, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
 import { BuildingCard } from "../../components/BuildingCard";
 import { CivFlag } from "../../components/CivFlag";
 import { ReportButton } from "../../components/ReportButton";
 import { UnitCard } from "../../components/UnitCard";
-import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
-import { getCivData } from "../../data/civData";
+import { CIVILIZATION_BY_SLUG } from "../../config";
+import { civBackdrops } from "../../data/civData";
 import { splitBuildingsIntoGroups, splitTechnologiesIntroGroups, splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass, mainIntroductionCSSClass } from "../../styles";
-
-export type CivInfo = {
-  name: string;
-  classes: string;
-  description: string;
-  backdrop?: string;
-  overview: { title: string; description?: string; list?: string[] }[];
-};
 
 export const CivDetailRoute = () => {
   const pending = useIsRouting();
   const params = useParams();
   const civConfig = CIVILIZATION_BY_SLUG[params.slug];
-  const [civ] = createResource(() => getCivData(civConfig.abbr));
   const [data] = createResource(async () => {
-    const civ = (await import("../../../data/sdk")).Data.civs.Get(civConfig.abbr);
+    const civ = (await import("../../../data/src/sdk")).civilizations.Get(civConfig.abbr);
     return {
+      civ,
       units: splitUnitsIntoGroups(civ.Units.order("hitpoints", "age")),
       buildings: splitBuildingsIntoGroups(civ.Buildings.order("hitpoints", "age")),
       technologies: splitTechnologiesIntroGroups(civ.Technologies.order("age")),
     };
   });
 
-  createEffect(on(civ, () => !civ.loading && setActivePage({ title: civ()?.name, description: civ()?.description, location: useLocation() })));
+  createEffect(
+    on(data, () => !data.loading && setActivePage({ title: data()?.civ.info.name, description: data()?.civ.info.description, location: useLocation() }))
+  );
 
   return (
     <>
@@ -45,10 +39,10 @@ export const CivDetailRoute = () => {
             </div>
             <div class="ml-2">
               <span class="text-white/50 ">Civilization</span>
-              <h1 class="text-3xl font-bold ">{civ()?.name}</h1>
+              <h1 class="text-3xl font-bold ">{data()?.civ.info.name}</h1>
             </div>
           </div>
-          <p class={mainIntroductionCSSClass}>{civ()?.description}</p>
+          <p class={mainIntroductionCSSClass}>{data()?.civ.info.description}</p>
         </div>
 
         <h2 class="text-lg text-white/40 font-bold  mb-3">Jump to</h2>
@@ -96,7 +90,7 @@ export const CivDetailRoute = () => {
         </Suspense>
         <div class="flex gap-4 mt-14 mb-10">
           <div class="md:columns-2 gap-16 space-y-7 leading-6">
-            <For each={civ()?.overview}>
+            <For each={data()?.civ.info.overview}>
               {(x) => (
                 <div class="break-inside-avoid max-w-prose">
                   <h2 class="text-lg text-white/40 font-bold mt-2 mb-3 ">{x.title}</h2>
@@ -175,7 +169,7 @@ export const CivDetailRoute = () => {
       </div>
       <div
         class="absolute top-28 w-screen h-screen opacity-20 saturate-0	-z-10 bg-right-top bg-contain bg-no-repeat transition-all duration-400"
-        style={{ "background-image": `url(${civ()?.backdrop})` }}
+        style={{ "background-image": `url(${civBackdrops[civConfig.abbr]})` }}
       ></div>
     </>
   );

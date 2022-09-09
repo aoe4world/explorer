@@ -10,8 +10,8 @@ export const UnitOverviewRoute = () => {
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [units] = createResource(async () => {
-    const SDK = await import("../../../data/sdk");
-    return splitUnitsIntoGroups(SDK.Data.units.where({ civilization: civ?.abbr }).order("hitpoints", "age"));
+    const SDK = await import("../../../data/src/sdk");
+    return splitUnitsIntoGroups(SDK.units.where({ civilization: civ?.abbr }).order("hitpoints", "age"));
   });
 
   setActivePage({ title: `Units ${civ ? ` — ${civ?.name}` : ""}`, location: useLocation() });

@@ -10,7 +10,7 @@ export const BuildingOverviewRoute = () => {
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [buildings] = createResource(async () =>
-    splitBuildingsIntoGroups((await import("../../../data/sdk")).Data.buildings.where({ civilization: civ?.abbr }).order("age"))
+    splitBuildingsIntoGroups((await import("../../../data/src/sdk")).buildings.where({ civilization: civ?.abbr }).order("age"))
   );
 
   setActivePage({ title: `Buildings ${civ ? ` — ${civ?.name}` : ""}`, location: useLocation() });

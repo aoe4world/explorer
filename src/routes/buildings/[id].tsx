@@ -15,14 +15,14 @@ import { getMostAppropriateVariation } from "../../query/utils";
 import { mainIntroductionCSSClass } from "../../styles";
 import { Building, civAbbr, civConfig, UnifiedItem } from "../../types/data";
 
-const SDK = import("../../../data/sdk/index");
+const SDK = import("../../../data/src/sdk/index");
 
 export function BuildingDetailRoute() {
   const itemType = ITEMS.BUILDINGS;
   const params = useParams();
   const civ: civConfig = CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
-  const [item] = createResource(params.id, async (id) => (await SDK).Data.buildings.get(id));
+  const [item] = createResource(params.id, async (id) => (await SDK).buildings.get(id));
 
   createEffect(() => {
     if (!item()) return;
@@ -30,8 +30,8 @@ export function BuildingDetailRoute() {
     setActivePageForItem(item(), civ);
   });
 
-  const [units] = createResource(async () => (await SDK).Data.units.where({ producedAt: params.id, civilization: civ?.abbr }));
-  const [research] = createResource(async () => (await SDK).Data.technologies.where({ producedAt: params.id, civilization: civ?.abbr }));
+  const [units] = createResource(async () => (await SDK).units.where({ producedAt: params.id, civilization: civ?.abbr }));
+  const [research] = createResource(async () => (await SDK).technologies.where({ producedAt: params.id, civilization: civ?.abbr }));
 
   return (
     <ItemPage.Wrapper civ={civ}>

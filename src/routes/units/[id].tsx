@@ -15,7 +15,7 @@ export function UnitDetailRoute() {
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
-  const [item] = createResource(params.id, async (id) => (await import("../../../data/sdk/index")).Data.units.get(id));
+  const [item] = createResource(params.id, async (id) => (await import("../../../data/src/sdk/index")).units.get(id));
 
   createEffect(() => {
     if (!item()) return;

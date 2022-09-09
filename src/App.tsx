@@ -14,7 +14,6 @@ import { TechnologyDetailRoute } from "./routes/technologies/[id]";
 import { TechnologoiesOverviewRoute } from "./routes/technologies/technologies";
 import { civConfig, UnifiedItem } from "./types/data";
 import { ITEMS, SIMILAIR_ITEMS } from "./config";
-import { getItems } from "./query/fetch";
 import { getItemHref } from "./components/Cards";
 import { PatchDetailRoute } from "./routes/patches/[id]";
 import { findClosestMatch } from "./query/utils";

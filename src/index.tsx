@@ -5,6 +5,7 @@ import { Path } from "solid-app-router/dist/types";
 
 import App, { activePage } from "./App";
 import { createEffect, on } from "solid-js";
+
 interface explorerOptions {
   /** The path at which the explorer is located */
   base?: string;

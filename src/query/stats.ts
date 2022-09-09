@@ -1,6 +1,6 @@
 import { firstBy } from "thenby";
-import { ITEMS, SUPPORTED_MODIFIER_PROPERTIES } from "../config";
-import { technologyModifiers } from "../data/technologies";
+import { ITEMS } from "../../data/src/types/items";
+import { SUPPORTED_MODIFIER_PROPERTIES } from "../config";
 import { Building, civAbbr, civConfig, Item, Modifier, Technology, UnifiedItem, Unit } from "../types/data";
 import { CalculatedStats, Stat, StatPart, StatProperty } from "../types/stats";
 import { getItemTechnologies, mapCivsArgument, modifierMatches } from "./utils";
@@ -15,9 +15,9 @@ export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
     const combatStats = mergeVariationsToStats(unit.variations.filter((u) => u.civs.some((c) => forCiv.some((fc) => fc.abbr == c))));
     const techs = await getItemTechnologies(type, unit, civ);
 
-    for (const [tech, modifiers] of techs.map((t) => [t, technologyModifiers[t.id]] as [UnifiedItem<Technology>, Modifier[]])) {
-      for (const modifier of modifiers) {
-        let lazelyPickJustTheFirst = tech.variations.sort((a, b) => b.civs.length - a.civs.length)[0]; //tech.variations?.[0];
+    for (const tech of techs) {
+      let lazelyPickJustTheFirst = tech.variations.sort((a, b) => b.civs.length - a.civs.length)[0]; //tech.variations?.[0];
+      for (const modifier of lazelyPickJustTheFirst.effects) {
         if (!lazelyPickJustTheFirst) continue;
         if (tech.civs.length > 1) lazelyPickJustTheFirst.unique = false;
         // if (modifier.type == "influence") continue;
@@ -37,7 +37,7 @@ export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
     return combatStats;
   };
 
-  if (typeof unit == "string") return getStats((await import("../../data/sdk")).Data[type].get(unit));
+  if (typeof unit == "string") return getStats((await import("../../data/src/sdk"))[type].get(unit));
   else return getStats(unit);
 }
 

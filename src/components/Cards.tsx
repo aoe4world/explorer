@@ -1,12 +1,9 @@
 import { Link } from "solid-app-router";
-import { Component, createMemo, createResource, For, Show } from "solid-js";
-import { PhysicalItem, Technology } from "../../data/.scripts/lib/types/units";
+import { Component, For } from "solid-js";
 import { CIVILIZATIONS, PRETTY_AGE_MAP } from "../config";
-import { getUnitStats } from "../query/stats";
-import { Building, civAbbr, civConfig, UnifiedItem, Unit } from "../types/data";
+import { civConfig, UnifiedItem } from "../types/data";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
-import { StatBar, StatCosts, StatDps, StatNumber } from "./Stats";
 import { globalAgeFilter } from "./Toolbar";
 
 const typeToPathMap = {
