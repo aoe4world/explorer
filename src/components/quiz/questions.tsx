@@ -1,6 +1,5 @@
 import { Component, createEffect, createResource, createSignal, For, JSX, Show, Suspense } from "solid-js";
 import { RESOURCES } from "../../../assets";
-import { ResourceType } from "../../../components/parsing/types";
 import { Item, ItemClass, UnifiedItem } from "../../../data/src/types/items";
 import { CivFlag } from "../../components/CivFlag";
 import { Icon } from "../../components/Icon";
@@ -17,6 +16,8 @@ export type Question = {
   answers: JSX.Element[];
   correctAnswer: number;
 };
+
+type ResourceType = "food" | "wood" | "gold" | "stone";
 
 const levels = {
   beginner: { passAfter: 3, chance: 0, questions: [getCivLandmarkQuestion, getCivBonusQuestion] },
@@ -195,15 +196,13 @@ async function getCostQuestion(i?: number, civ?: civConfig): Promise<Question> {
  */
 
 async function getStraightUpFightQuestion(i?: number, civ?: civConfig): Promise<Question> {
-  console.log(Random.chance(0.9), Random.chance(0.9), Random.chance(0.9), Random.chance(0.9), Random.chance(0.9), Random.chance(0.9));
   const units: Unit[] = [];
   const excludeClasses: ItemClass[] = [
     "worker",
     "religious",
     "ship",
-    ...(Random.chance(0.2) ? (["cavalry", "infantry"] as ItemClass[]) : (["warship", "siege"] as ItemClass[])),
+    ...(Random.chance(0.1) ? (["cavalry", "infantry"] as ItemClass[]) : (["warship", "siege"] as ItemClass[])),
   ];
-  console.log(excludeClasses);
   let attempts = 0;
   while (units.length < 2) {
     attempts++;
@@ -211,11 +210,13 @@ async function getStraightUpFightQuestion(i?: number, civ?: civConfig): Promise<
       console.warn("Could not generate suitable matchup");
       return getStraightUpFightQuestion(i, civ);
     }
-    const unit = getMostAppropriateVariation<Unit>(await getRandomItem("straight-up-fight", [ITEMS.UNITS], civ, ["battering-ram"], excludeClasses), civ);
+    const unit = getMostAppropriateVariation<Unit>(
+      await getRandomItem("straight-up-fight", [ITEMS.UNITS], civ, ["battering-ram", "ribauldequin"], excludeClasses),
+      civ
+    );
     if (unit.weapons.filter((w) => w.type != "fire")?.length !== 1) continue; // || units.find((u) => u.hitpoints > unit.hitpoints * 8 || unit.hitpoints > u.hitpoints * 8)) continue;
     units.push(unit);
   }
-  console.log(units.map((u) => u.name).join(" vs "));
 
   const options = Random.order(units);
 
@@ -241,7 +242,13 @@ async function getStraightUpFightQuestion(i?: number, civ?: civConfig): Promise<
  * "How many archers does it take to one-shot a horseman?"
  */
 async function getOneShotQuestion(i?: number, civ?: civConfig): Promise<Question> {
-  const rangedUnit = await getRandomItem("oneshot", [ITEMS.UNITS], civ, ["khan"], ["worker", "melee", "religious", "ship", "warship"]);
+  const rangedUnit = await getRandomItem(
+    "oneshot",
+    [ITEMS.UNITS],
+    civ,
+    ["khan", "battering-ram", "ribauldequin"],
+    ["worker", "melee", "religious", "ship", "warship"]
+  );
 
   const targetUnit = await getRandomItem(
     "oneshot-target",
@@ -301,8 +308,8 @@ const getIncorrectCosts = (correct: Record<ResourceType, number>) => {
 
   const fuckitUps = [
     () =>
-      // Double a cost
-      (costs[Random.key(costs)] *= 2),
+      // Double all cost
+      ["food", "wood", "stone", "gold"].forEach((r) => (costs[r] *= 2)),
     () => {
       const key = Random.key(costs);
       costs[key] = Math.floor(costs[key] * Random.pick(0.05, 0.02)) * 10;

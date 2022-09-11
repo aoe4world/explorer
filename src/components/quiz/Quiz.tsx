@@ -2,18 +2,6 @@ import { Component, createResource, createSignal, For, onCleanup, onMount } from
 import { Icon } from "../../components/Icon";
 import { getRandomQuestion } from "./questions";
 
-const SDK = import("../../../data/src/sdk");
-
-const indexToLetter = {
-  0: "A",
-  1: "B",
-  2: "C",
-  3: "D",
-  4: "E",
-};
-
-const keys = Object.values(indexToLetter);
-
 export const Quiz: Component<{ difficulty?: number }> = (props) => {
   const [score, setScore] = createSignal({ correct: 0, incorrect: 0, total: 0, streak: 0 });
   const [pending, setPending] = createSignal(false);
@@ -103,7 +91,7 @@ export const Quiz: Component<{ difficulty?: number }> = (props) => {
   );
 };
 
-const MultipleChoiceOption: Component<{ option: "A" | "B" | "C" | "D"; correct?: boolean; onPick: Function }> = (props) => {
+export const MultipleChoiceOption: Component<{ option: "A" | "B" | "C" | "D"; correct?: boolean; onPick: Function; class?: string }> = (props) => {
   return (
     <button
       class={`whitespace-nowrap inline-flex items-center gap-2 bg-gray-500 p-2  
@@ -112,6 +100,7 @@ const MultipleChoiceOption: Component<{ option: "A" | "B" | "C" | "D"; correct?:
     ${props.correct === null ? "opacity-50" : ""}
     ${props.correct ? "bg-green-800 outline-green-500" : ""}
     ${props.correct === false ? "bg-red-800 outline-red-500" : ""}
+    ${props.class ?? ""}
     `}
       onClick={() => props.onPick()}
     >
@@ -120,3 +109,13 @@ const MultipleChoiceOption: Component<{ option: "A" | "B" | "C" | "D"; correct?:
     </button>
   );
 };
+
+const indexToLetter = {
+  0: "A",
+  1: "B",
+  2: "C",
+  3: "D",
+  4: "E",
+};
+
+const keys = Object.values(indexToLetter);

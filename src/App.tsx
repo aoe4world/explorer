@@ -91,6 +91,14 @@ const routes: RouteDefinition[] = [
     component: lazy(() => import("./routes/quiz/quiz")),
   },
   {
+    path: "/quiz/twitch",
+    component: lazy(() => import("./routes/quiz/twitch")),
+  },
+  {
+    path: "/quiz/twitch/:channel",
+    component: lazy(() => import("./routes/quiz/twitch")),
+  },
+  {
     path: "/patches/:id",
     component: () => PatchDetailRoute,
   },
