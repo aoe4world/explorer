@@ -1,0 +1,52 @@
+import { Component, createSignal, Show } from "solid-js";
+import { Quiz } from "../../components/quiz/Quiz";
+
+export const QuizRoute: Component = () => {
+  const [show, setShow] = createSignal(false);
+  const [difficulty, setDifficulty] = createSignal(0);
+  return (
+    <div class="max-w-screen-lg p-4 mx-auto gap-4 mb-4 mt-8">
+      <Show
+        when={show()}
+        fallback={
+          <div class="my-5 rounded-lg p-6 bg-gray-600">
+            <div class="max-w-lg mx-auto">
+              <h1 class="font-bold text-white text-2xl my-3">Test your game knowledge</h1>
+              <p class="text-gray-200 mt-1 max-w-prose">
+                Play the multiple choise quiz and (im)prove what you know about Age of Empires 4. The difficulty of questions increases if you get more answers
+                correct.
+              </p>
+              <ul class="list-disc text-gray-200 max-w-prose flex flex-col gap-2 pl-6 my-4">
+                <li>Landmarks and civivilization bonuses.</li>
+                <li>Availiblity of technologies, buildings and units</li>
+                <li>Research per age and unit costs</li>
+                <li>Which unit wins, or how many to one shot</li>
+              </ul>
+              <p class="text-gray-200 mt-1 max-w-prose">Try and get the longest streak and have fun!</p>
+              <small class="text-gray-300 text-sm mt-4 block">Tip: You can also pick your answer using the keyboard (A, B, C or 1, 2, 3)</small>
+              <div class="flex flex-col items-center mt-8">
+                <button
+                  class="whitespace-nowrap inline-flex items-center gap-2 bg-gray-400 py-2 px-10 font-bold text-lg  outline outline-gray-800 rounded-md
+             hover:outline-white/30 hover:bg-gray-400/50 active:bg-white active:text-black"
+                  onClick={() => setShow(true)}
+                >
+                  Start
+                </button>
+                <button
+                  onClick={() => setDifficulty(80) && setShow(true)}
+                  class="fond-bold underline underline-offset-2 text-sm text-gray-300 p-2 active:outline outline-white"
+                >
+                  Start without easy questions
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      >
+        <Quiz difficulty={difficulty()} />
+      </Show>
+    </div>
+  );
+};
+
+export default QuizRoute;
