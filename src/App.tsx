@@ -1,5 +1,5 @@
 import { Link, RouteDefinition, useLocation, useNavigate, useRoutes } from "solid-app-router";
-import { Component, createEffect, createSignal, ErrorBoundary, on } from "solid-js";
+import { Component, createEffect, createSignal, ErrorBoundary, lazy, on } from "solid-js";
 import { Toolbar } from "./components/Toolbar";
 import { Nav } from "./components/Nav";
 import { CivDetailRoute } from "./routes/civs/[slug]";
@@ -85,6 +85,18 @@ const routes: RouteDefinition[] = [
   {
     path: "/about",
     component: () => AboutRoute,
+  },
+  {
+    path: "/quiz",
+    component: lazy(() => import("./routes/quiz/quiz")),
+  },
+  {
+    path: "/quiz/twitch",
+    component: lazy(() => import("./routes/quiz/twitch")),
+  },
+  {
+    path: "/quiz/twitch/:channel",
+    component: lazy(() => import("./routes/quiz/twitch")),
   },
   {
     path: "/patches/:id",
