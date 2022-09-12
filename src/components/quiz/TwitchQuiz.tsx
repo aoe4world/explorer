@@ -6,10 +6,10 @@ import { MultipleChoiceOption } from "./Quiz";
 import { ChatClient } from "@twurple/chat";
 import { Random } from "./random";
 
-const graceperiod = 7000,
-  autoplaySpeed = 20000;
-
+const graceperiod = 5000,
+  autoplaySpeed = 15000;
 let cancelableAction: Function;
+let secondsInterval;
 export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = (props) => {
   const [choice, setChoice] = createSignal<number>(undefined);
   const [users, setUsers] = createStore<Record<string, TwitchUser>>({});
@@ -22,6 +22,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
   const [submissionsClosed, setSubmissionsClosed] = createSignal(false);
   const [pendingSubmissionsClosed, setPendingSubmissionsClosed] = createSignal(false);
   const [question, { refetch }] = createResource(() => getRandomQuestion(questionCount() + (props.difficulty ?? 0)));
+  const [secondsLeft, setSecondsLeft] = createSignal(0);
   let progressBar: HTMLDivElement;
 
   const chat = useIncomingTwitchMessages({ channel: props.channel }, ({ user, message }) => {
@@ -33,11 +34,16 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
 
   onCleanup(async () => (await chat).disconnect());
   function setTimer(cb: Function, time: number, cancelable = false) {
-    setStepQueued(true);
     if (cancelable) cancelableAction = cb;
+    setStepQueued(true);
+    clearInterval(secondsInterval);
+    setSecondsLeft(Math.ceil(time / 1000));
+    secondsInterval = window.setInterval(() => setSecondsLeft((s) => Math.max(0, s - 1)), 1000);
     progressBar.getAnimations().forEach((a) => a.cancel());
     progressBar?.animate([{ width: "100%" }, { width: "0%" }], { duration: time, easing: "linear" });
     setTimeout(() => {
+      clearInterval(secondsInterval);
+      setSecondsLeft(0);
       if (cancelable) {
         if (cancelableAction === cb) {
           cancelableAction = undefined;
@@ -51,6 +57,8 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
   function stopTimer() {
     if (cancelableAction) {
       cancelableAction = undefined;
+      clearInterval(secondsInterval);
+      setSecondsLeft(0);
       progressBar.getAnimations().forEach((a) => a.cancel());
       progressBar.style.width = "0%";
       setStepQueued(false);
@@ -147,6 +155,10 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
     stopTimer();
   }
 
+  function formatSeconds(s: number) {
+    return s == 1 ? "01 second" : `${s < 10 ? `0${s}` : s} seconds`;
+  }
+
   return (
     <div class="my-5 rounded-lg p-6 bg-gray-600 relative">
       <div class="absolute top-0 left-0 h-1 bg-gray-300" ref={progressBar} />
@@ -187,9 +199,11 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
       </div>
 
       <div class="flex gap-4 my-4 items-center h-12">
-        {pendingSubmissionsClosed() && <div>Submissions closed, waiting for last messages to come in</div>}
-        {submissionsClosed() && <div>Results are in!</div>}
-        {!pendingSubmissionsClosed() && !submissionsClosed() && <div>Send your answers in chat (i.e. 'A' or 'B')</div>}
+        {pendingSubmissionsClosed() && <div>Submissions closed.</div>}
+        {submissionsClosed() && <div>Results are in! {secondsLeft() && <>Next question in {formatSeconds(secondsLeft())}.</>}</div>}
+        {!pendingSubmissionsClosed() && !submissionsClosed() && (
+          <div>Send your answers in chat (i.e. 'A' or 'B'). {secondsLeft() && <>Round closes in {formatSeconds(secondsLeft())}.</>}</div>
+        )}
         <button
           class="ml-auto bg-gray-50 hover:bg-white text-black rounded py-2 px-6 disabled:opacity-30 disabled:bg-gray-700"
           onClick={() => next()}
