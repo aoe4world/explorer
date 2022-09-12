@@ -26,7 +26,6 @@ const levels = {
 };
 
 export async function getRandomQuestion(i?: number, civ?: civConfig): Promise<Question> {
-  //   return getStraightUpFightQuestion(i, civ);
   try {
     for (const level of Object.values(levels)) {
       if (i < level.passAfter || Random.chance(Math.max(level.passAfter / i / 2, level.chance))) {
@@ -169,9 +168,13 @@ async function getCostQuestion(i?: number, civ?: civConfig): Promise<Question> {
   let attempts = 0;
   while (answers.length < 3) {
     const incorrectAnswer = getIncorrectCosts(costs);
-    if (Object.values(incorrectAnswer).some((i) => i > 0) && answers.every((a) => Object.keys(incorrectAnswer).some((k) => a[k] != incorrectAnswer[k]))) {
+    if (
+      Object.values(incorrectAnswer).some((i) => i > 0) &&
+      !Object.values(incorrectAnswer).some((i) => isNaN(i)) &&
+      answers.every((a) => Object.keys(incorrectAnswer).some((k) => !!incorrectAnswer[k] && !!k && a[k] !== incorrectAnswer[k]))
+    ) {
       answers.push(incorrectAnswer);
-    } else if (attempts > 4) {
+    } else if (attempts > 10) {
       console.warn(`Could not generate suitable answer for '${question}'`, item);
       return getCostQuestion(i, civ);
     }
@@ -304,29 +307,50 @@ const getIncorrectCosts = (correct: Record<ResourceType, number>) => {
   const costs = Object.fromEntries(Object.entries(correct).filter(([k, v]) => v > 0)) as Record<ResourceType, number>;
   const { gold, food, wood, stone } = costs;
 
+  let resourcesWithValues = 0;
+  [gold, food, wood, stone].forEach((r) => (resourcesWithValues += r > 0 ? 1 : 0));
+
   const fuckitUps = [
     () =>
       // Double all cost
-      ["food", "wood", "stone", "gold"].forEach((r) => (costs[r] *= 2)),
+      ["food", "wood", "stone", "gold"].forEach((r) => (costs[r] = (costs[r] || 0) * 2)),
     () => {
       const key = Random.key(costs);
-      costs[key] = Math.floor(costs[key] * Random.pick(0.05, 0.02)) * 10;
+      costs[key] = Math.floor((costs[key] || 0) * Random.pick(0.05, 0.02)) * 10;
     },
     () => (costs[Random.key(costs)] = 0),
     () => {
+      // Realistic cost adding if just one resource
+      if (!gold && !food && !stone) costs.wood = (wood || 30) + 20;
+      else if (!gold && !food && !wood) costs.stone = (stone || 50) * 2;
+      else if (!gold && !wood && !stone) costs.food = (food || 30) + 25;
+      else if (!food && !wood && !stone) costs.gold = (gold || 0) + 50;
+    },
+    () => {
+      if (wood && food) {
+        costs.wood = food;
+        costs.food = wood;
+      }
+      if (food && gold) {
+        costs.food = gold;
+        costs.gold = food;
+      }
+    },
+    () => {
+      if (resourcesWithValues === 1) return;
       // Flip resources
       if (wood && !gold) {
         costs.gold = wood;
         costs.wood = 0;
       } else if (gold && !wood) {
-        costs.wood = gold * 2;
+        costs.wood = (gold || 50) * 2;
         costs.gold = 0;
       } else if (stone && !wood) {
-        costs.wood = stone * 2;
+        costs.wood = (stone || 50) * 2;
         costs.stone = 0;
       } else {
         costs[Random.key(costs)] = 0;
-        costs[Random.pick(stone, gold)] = Math.max(food, wood, gold, stone);
+        costs[Random.pick(["stone", "gold"])] = Math.max(food, wood, gold, stone);
       }
     },
   ];

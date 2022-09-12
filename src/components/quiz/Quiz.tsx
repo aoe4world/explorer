@@ -87,6 +87,11 @@ export const Quiz: Component<{ difficulty?: number }> = (props) => {
           )}
         </For>
       </div>
+      {score()?.correct >= 30 && (
+        <div class="bg-gray-400 text-sm p-4 rounded mt-6">
+          The quiz currently goes on indefinetly. You reach 30+ correct answers, great job. You can stop if you want to.
+        </div>
+      )}
     </div>
   );
 };
