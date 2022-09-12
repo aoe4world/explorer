@@ -40,7 +40,7 @@ export const QuizRoute: Component = () => {
               <div class="my-4">
                 <strong class="font-bold text-gray-300 mb-0.5 block">Autoplay</strong>
                 There's a set time for the viewers to submit answers, after the timer is done, the correct answer is displayed and a new question loads. This
-                mode is great to turn on while you are taking a small brake, you can however participate if you want by selecting your own answers.
+                mode is great to turn on while you are taking a small break, but you are free to play along by selecting your own answers.
               </div>
               <p class="text-gray-200 mt-1 max-w-prose">Try and get the longest streak and have fun!</p>
               <div class="flex flex-row gap-4 items-center mt-8">
@@ -71,7 +71,7 @@ export const QuizRoute: Component = () => {
           </div>
         }
       >
-        <TwitchQuiz difficulty={100 ?? difficulty()} channel={channel()} />
+        <TwitchQuiz difficulty={difficulty()} channel={channel()} />
       </Show>
     </div>
   );

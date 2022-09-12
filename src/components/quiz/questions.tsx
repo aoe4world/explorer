@@ -1,10 +1,8 @@
-import { Component, createEffect, createResource, createSignal, For, JSX, Show, Suspense } from "solid-js";
+import { JSX } from "solid-js";
 import { RESOURCES } from "../../../assets";
-import { Item, ItemClass, UnifiedItem } from "../../../data/src/types/items";
+import { ItemClass, UnifiedItem } from "../../../data/src/types/items";
 import { CivFlag } from "../../components/CivFlag";
-import { Icon } from "../../components/Icon";
-import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
-import { calculateStatParts, getUnitStats } from "../../query/stats";
+import { CIVILIZATIONS, ITEMS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
 import { getMostAppropriateVariation, modifierMatches } from "../../query/utils";
 import { civConfig, Unit } from "../../types/data";
 import { Random } from "./random";
@@ -68,7 +66,7 @@ async function getCivLandmarkQuestion(i?: number, civ?: civConfig): Promise<Ques
     note: `"${correctLandmark.description.replace(correctLandmark.name, "landmark")}"`,
     answers: options.map((l) => (
       <>
-        <img src={l.icon} class="w-8 bg-item-building rounded-sm" /> {l.name}
+        <img src={/*@once*/ l.icon} class="w-8 bg-item-building rounded-sm" /> {/*@once*/ l.name}
       </>
     )),
     correctAnswer: options.indexOf(correctLandmark),
@@ -156,7 +154,7 @@ async function getCivHasAccessQuestion(i?: number, civ?: civConfig): Promise<Que
  * "What is the cost of Boachoan?"
  */
 async function getCostQuestion(i?: number, civ?: civConfig): Promise<Question> {
-  const excludeIds = ["trade-wing", "economic-wing", "military-wing", "trade-wing", "culture-wing"];
+  const excludeIds = ["trade-wing", "economic-wing", "military-wing", "trade-wing", "culture-wing", "capital-town-center"];
   const excludeClasses: ItemClass[] = ["landmark", "wonder"];
   const item = await getRandomItem("cost-question", [ITEMS.UNITS, ITEMS.BUILDINGS], civ, excludeIds, excludeClasses);
   const variation = getMostAppropriateVariation(item, civ);
@@ -174,7 +172,7 @@ async function getCostQuestion(i?: number, civ?: civConfig): Promise<Question> {
     if (Object.values(incorrectAnswer).some((i) => i > 0) && answers.every((a) => Object.keys(incorrectAnswer).some((k) => a[k] != incorrectAnswer[k]))) {
       answers.push(incorrectAnswer);
     } else if (attempts > 4) {
-      console.warn("Could not generate suitable answer for");
+      console.warn(`Could not generate suitable answer for '${question}'`, item);
       return getCostQuestion(i, civ);
     }
     attempts++;
@@ -214,7 +212,7 @@ async function getStraightUpFightQuestion(i?: number, civ?: civConfig): Promise<
       await getRandomItem("straight-up-fight", [ITEMS.UNITS], civ, ["battering-ram", "ribauldequin"], excludeClasses),
       civ
     );
-    if (unit.weapons.filter((w) => w.type != "fire")?.length !== 1) continue; // || units.find((u) => u.hitpoints > unit.hitpoints * 8 || unit.hitpoints > u.hitpoints * 8)) continue;
+    if (unit.weapons.filter((w) => w.type != "fire")?.length !== 1) continue;
     units.push(unit);
   }
 
@@ -228,7 +226,7 @@ async function getStraightUpFightQuestion(i?: number, civ?: civConfig): Promise<
     answers: [
       ...options.map((u) => (
         <>
-          {u.name} <span class="opacity-50 ml-2">{PRETTY_AGE_MAP_LONG[u.age]}</span>
+          {/*@once*/ u.name} <span class="opacity-50 ml-2">{/*@once*/ PRETTY_AGE_MAP_LONG[u.age]}</span>
         </>
       )),
       "It's a draw",
@@ -297,7 +295,7 @@ const formatCosts = (costs: Record<ResourceType, number>) =>
   Object.entries(costs).map(([key, value]) =>
     value ? (
       <>
-        <img src={RESOURCES[key]} class="h-4 object-contain w-5" /> {value}
+        <img src={/*@once*/ RESOURCES[key]} class="h-4 object-contain w-5" /> {/*@once*/ value}
       </>
     ) : undefined
   );
@@ -373,8 +371,8 @@ function battleUnits(a: Unit, b: Unit) {
 function formatCiv(civ: civConfig) {
   return (
     <>
-      <CivFlag abbr={civ.abbr} class="w-4" />
-      {civ.name}
+      <CivFlag abbr={/*@once*/ civ.abbr} class="w-4" />
+      {/*@once*/ civ.name}
     </>
   );
 }

@@ -9,31 +9,52 @@ import { Random } from "./random";
 const graceperiod = 7000,
   autoplaySpeed = 20000;
 
+let cancelableAction: Function;
 export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = (props) => {
   const [choice, setChoice] = createSignal<number>(undefined);
   const [users, setUsers] = createStore<Record<string, TwitchUser>>({});
   const [pendingAnswers, setPendingAnswers] = createStore<PendingAnswers>({ total: {}, host: undefined, viewers: {} });
   const [scores, setScores] = createStore<Scores>({ host: { correct: 0, incorrect: 0, total: 0, streak: 0 }, viewers: [] });
   const [autoplay, setAutoplay] = createSignal(false);
+  const [stepQueued, setStepQueued] = createSignal(false);
   const [nextReady, setNextReady] = createSignal(false);
   const [questionCount, setQuestionCount] = createSignal(0);
   const [submissionsClosed, setSubmissionsClosed] = createSignal(false);
   const [pendingSubmissionsClosed, setPendingSubmissionsClosed] = createSignal(false);
   const [question, { refetch }] = createResource(() => getRandomQuestion(questionCount() + (props.difficulty ?? 0)));
+  let progressBar: HTMLDivElement;
 
   const chat = useIncomingTwitchMessages({ channel: props.channel }, ({ user, message }) => {
-    const choice = parseChoice(message); // ?? Random.pick([0, 1, 2, 3]);
+    const choice = parseChoice(message) ?? Random.pick([0, 1, 2, 3]);
     if (choice == undefined) return;
     if (!users[user.username]) setUsers(user.username, user);
     registerViewerChoice(user.username, choice);
   });
 
   onCleanup(async () => (await chat).disconnect());
-
-  let progressBar: HTMLDivElement;
-  function setTimer(cb: Function, time: number) {
+  function setTimer(cb: Function, time: number, cancelable = false) {
+    setStepQueued(true);
+    if (cancelable) cancelableAction = cb;
+    progressBar.getAnimations().forEach((a) => a.cancel());
     progressBar?.animate([{ width: "100%" }, { width: "0%" }], { duration: time, easing: "linear" });
-    setTimeout(() => cb(), time);
+    setTimeout(() => {
+      if (cancelable) {
+        if (cancelableAction === cb) {
+          cancelableAction = undefined;
+          cb();
+        }
+      } else cb();
+      setStepQueued(false);
+    }, time);
+  }
+
+  function stopTimer() {
+    if (cancelableAction) {
+      cancelableAction = undefined;
+      progressBar.getAnimations().forEach((a) => a.cancel());
+      progressBar.style.width = "0%";
+      setStepQueued(false);
+    }
   }
 
   const pickChoice = (choice) => registerHostChoice(choice);
@@ -53,7 +74,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
 
   function stopSubmissionsAndShowResults() {
     setPendingSubmissionsClosed(true);
-    setTimer(() => getResults(), graceperiod);
+    setTimer(getResults, graceperiod, false);
   }
 
   function getResults() {
@@ -79,9 +100,10 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
           .sort((a, b) => b.correct - a.correct);
       })
     );
-
     setNextReady(true);
-    if (autoplay()) setTimer(() => next(), autoplaySpeed * 0.5);
+    if (autoplay()) {
+      setTimer(next, autoplaySpeed * 0.5, true);
+    }
   }
 
   function next() {
@@ -92,7 +114,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
     setSubmissionsClosed(false);
     setPendingAnswers({ total: {}, host: undefined, viewers: {} });
     refetch();
-    if (autoplay()) setTimer(() => stopSubmissionsAndShowResults(), autoplaySpeed);
+    if (autoplay()) setTimer(stopSubmissionsAndShowResults, autoplaySpeed, true);
   }
 
   function keyDownListener(e: KeyboardEvent) {
@@ -112,8 +134,17 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
   function startAutoplay() {
     if (autoplay()) return;
     setAutoplay(true);
-    if (nextReady()) setTimer(() => next(), autoplaySpeed);
-    else if (!setPendingSubmissionsClosed()) setTimer(() => stopSubmissionsAndShowResults(), autoplaySpeed);
+    if (stepQueued()) return;
+    if (nextReady()) {
+      setNextReady(false);
+      setTimer(next, autoplaySpeed * 0.5, true);
+    } else if (!setPendingSubmissionsClosed()) setTimer(stopSubmissionsAndShowResults, autoplaySpeed, true);
+  }
+
+  function pauseAutoplay() {
+    if (!autoplay()) return;
+    setAutoplay(false);
+    stopTimer();
   }
 
   return (
@@ -122,7 +153,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
       <div class="flex items-center">
         <h5 class="font-bold text-gray-300 uppercase text-sm mb-1 flex-auto">Question</h5>
         {autoplay() && (
-          <button onClick={() => setAutoplay(false)}>
+          <button onClick={() => pauseAutoplay()}>
             <Icon icon="pause" class="text-gray-300" />
           </button>
         )}
@@ -145,7 +176,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
               correct={choice() !== undefined ? (index() == question()?.correctAnswer ? true : index() == choice() ? false : null) : undefined}
               onPick={() => pickChoice(index)}
             >
-              {answer}
+              {/*@once*/ answer}
               <span class="ml-auto mr-2">
                 {pendingAnswers.host == index() && <Icon icon="video-camera" class="mr-2" />}
                 {pendingAnswers.total[index()]}
@@ -155,10 +186,15 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
         </For>
       </div>
 
-      <div class="flex gap-4 mt-8">
-        {(pendingSubmissionsClosed() || submissionsClosed()) && <div>Submissions closed!</div>}
-        {!pendingSubmissionsClosed() && !submissionsClosed() && !autoplay() && <div>Send your answers in chat (i.e. 'A' or 'B')</div>}
-        <button class="ml-auto bg-grey-400 rounded p-2 disabled:opacity-30" onClick={() => next()} disabled={!nextReady() || autoplay()}>
+      <div class="flex gap-4 my-4 items-center h-12">
+        {pendingSubmissionsClosed() && <div>Submissions closed, waiting for last messages to come in</div>}
+        {submissionsClosed() && <div>Results are in!</div>}
+        {!pendingSubmissionsClosed() && !submissionsClosed() && <div>Send your answers in chat (i.e. 'A' or 'B')</div>}
+        <button
+          class="ml-auto bg-gray-50 hover:bg-white text-black rounded py-2 px-6 disabled:opacity-30 disabled:bg-gray-700"
+          onClick={() => next()}
+          disabled={!nextReady() || autoplay()}
+        >
           Next
         </button>
       </div>
