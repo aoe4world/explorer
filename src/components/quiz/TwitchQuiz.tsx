@@ -26,10 +26,13 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
   let progressBar: HTMLDivElement;
 
   const chat = useIncomingTwitchMessages({ channel: props.channel }, ({ user, message }) => {
-    const choice = parseChoice(message) ?? Random.pick([0, 1, 2, 3]);
+    const choice = parseChoice(message);
     if (choice == undefined) return;
-    if (!users[user.username]) setUsers(user.username, user);
-    registerViewerChoice(user.username, choice);
+    if (user.username === props.channel) registerHostChoice(choice);
+    else {
+      if (!users[user.username]) setUsers(user.username, user);
+      registerViewerChoice(user.username, choice);
+    }
   });
 
   onCleanup(async () => (await chat).disconnect());
