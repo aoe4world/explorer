@@ -1,10 +1,12 @@
 import { JSX } from "solid-js";
 import { RESOURCES } from "../../../assets";
-import { ItemClass, UnifiedItem } from "../../../data/src/types/items";
+import { civilizations } from "../../../data/src/sdk";
+import { Item, ItemClass, UnifiedItem } from "../../../data/src/types/items";
 import { CivFlag } from "../../components/CivFlag";
-import { CIVILIZATIONS, ITEMS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
+import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
 import { getMostAppropriateVariation, modifierMatches } from "../../query/utils";
 import { civConfig, Unit } from "../../types/data";
+import { formatSecondsToTime } from "../Stats";
 import { Random } from "./random";
 const SDK = import("../../../data/src/sdk");
 
@@ -18,24 +20,25 @@ export type Question = {
 type ResourceType = "food" | "wood" | "gold" | "stone";
 
 const levels = {
-  beginner: { passAfter: 3, chance: 0, questions: [getCivLandmarkQuestion, getCivBonusQuestion] },
-  easy: { passAfter: 5, chance: 0.1, questions: [getCivHasAccessQuestion, getAgeRequirementQuestion, getCivLandmarkQuestion] },
-  medium: { passAfter: 10, chance: 0.2, questions: [getCostQuestion] },
-  hard: { passAfter: 15, chance: 0.3, questions: [getStraightUpFightQuestion, getCostQuestion] },
-  expert: { passAfter: 30, chance: 0.1, questions: [getOneShotQuestion] },
+  beginner: { difficulty: 0, maxDifficulty: 10, chance: 1, questions: [getCivLandmarkQuestion, getCivBonusQuestion, getCivHasAccessQuestion] },
+  easy: { difficulty: 5, maxDifficulty: 20, chance: 0.5, questions: [getAgeRequirementQuestion] },
+  medium: { difficulty: 10, maxDifficulty: undefined, chance: 0.4, questions: [getCostQuestion] },
+  hard: { difficulty: 15, maxDifficulty: undefined, chance: 0.2, questions: [getStraightUpFightQuestion] },
+  expert: { difficulty: 20, maxDifficulty: undefined, chance: 0.2, questions: [getOneShotQuestion, getTimeQuestion] },
 };
 
-export async function getRandomQuestion(i?: number, civ?: civConfig): Promise<Question> {
+export async function getRandomQuestion(difficulty?: number, civ?: civConfig): Promise<Question> {
+  difficulty = Math.max(0, difficulty);
   try {
-    for (const level of Object.values(levels)) {
-      if (i < level.passAfter || Random.chance(Math.max(level.passAfter / i / 2, level.chance))) {
-        return Random.pick(level.questions)(i, civ);
+    for (const level of Object.values(levels).reverse()) {
+      if (difficulty >= level.difficulty && (level.maxDifficulty == undefined || level.maxDifficulty > difficulty) && Random.chance(level.chance)) {
+        return Random.pick(level.questions)(difficulty, civ);
       }
     }
   } catch (e) {
     console.error(e);
   }
-  return getRandomQuestion(i, civ);
+  return getRandomQuestion(difficulty, civ);
 }
 
 /**
@@ -95,18 +98,47 @@ async function getCivBonusQuestion(i?: number, _?: civConfig): Promise<Question>
     correctAnswer: civs.indexOf(civ),
   };
 }
+const itemProduceVerb = {
+  building: "build",
+  unit: "produce",
+  technology: "research",
+};
 
 /**
  * MEDIUM
  * "From which age can you research wheelbarrow?"
  */
 async function getAgeRequirementQuestion(i?: number, civ?: civConfig): Promise<Question> {
-  const research = await getRandomItem("research-age", [ITEMS.TECHNOLOGIES], civ);
+  const item = getMostAppropriateVariation(
+    await getRandomItem(
+      "research-age",
+      [ITEMS.TECHNOLOGIES, ITEMS.BUILDINGS, ITEMS.UNITS],
+      civ,
+      [
+        "royal-bloodlines",
+        "enlistment-incentives",
+        "crossbow-stirrups",
+        "house",
+        "fortified-palisade-wall",
+        "trade-wing",
+        "economic-wing",
+        "military-wing",
+        "trade-wing",
+        "culture-wing",
+        "capital-town-center",
+        "farm",
+      ],
+      ["landmark", "wonder", "worker"]
+    ),
+    civ
+  );
   return {
-    question: `From which age on can ${research.unique ? "the " + CIVILIZATIONS[research.civs[0]].name : "you"} research ${research.name}?`,
+    question: `From which age on can ${item.unique ? "the " + CIVILIZATIONS[item.civs[0]].name : "most civs"} ${itemProduceVerb[item.type]} ${
+      item.type == "technology" ? item.name : plural(item.name)
+    }?`,
     answers: [PRETTY_AGE_MAP_LONG[1], PRETTY_AGE_MAP_LONG[2], PRETTY_AGE_MAP_LONG[3], PRETTY_AGE_MAP_LONG[4]],
-    correctAnswer: research.minAge - 1,
-    note: `"${research.description}"`,
+    correctAnswer: item.age - 1,
+    note: `"${item.description}"`,
   };
 }
 
@@ -117,11 +149,7 @@ async function getAgeRequirementQuestion(i?: number, civ?: civConfig): Promise<Q
 async function getCivHasAccessQuestion(i?: number, civ?: civConfig): Promise<Question> {
   const item = await getRandomItem("civHasAccess", [ITEMS.BUILDINGS, ITEMS.UNITS, ITEMS.TECHNOLOGIES], civ, [], ["landmark", "wonder"]);
   if (item.civs.length >= 7) return getCivHasAccessQuestion(i, civ);
-  const itemProduceVerb = {
-    building: "build",
-    unit: "produce",
-    technology: "research",
-  };
+
   if (item.civs.length >= 4) {
     const correctCiv = Random.pick(Object.values(CIVILIZATIONS).filter((c) => !item.civs.includes(c.abbr)));
     const incorrectCiv = Random.order(item.civs)
@@ -152,15 +180,28 @@ async function getCivHasAccessQuestion(i?: number, civ?: civConfig): Promise<Que
  * HARD
  * "What is the cost of Boachoan?"
  */
-async function getCostQuestion(i?: number, civ?: civConfig): Promise<Question> {
+async function getCostQuestion(difficulty?: number, civ?: civConfig): Promise<Question> {
   const excludeIds = ["trade-wing", "economic-wing", "military-wing", "trade-wing", "culture-wing", "capital-town-center"];
   const excludeClasses: ItemClass[] = ["landmark", "wonder"];
-  const item = await getRandomItem("cost-question", [ITEMS.UNITS, ITEMS.BUILDINGS], civ, excludeIds, excludeClasses);
+  const types =
+    difficulty < 10
+      ? [ITEMS.BUILDINGS]
+      : difficulty < 15
+      ? [ITEMS.UNITS, ITEMS.BUILDINGS]
+      : difficulty < 20
+      ? [ITEMS.UNITS]
+      : [ITEMS.UNITS, ITEMS.TECHNOLOGIES];
+  const item = await getRandomItem("cost-question", types, civ, excludeIds, excludeClasses);
   const variation = getMostAppropriateVariation(item, civ);
   const { popcap, time, total, ...costs } = variation.costs;
+  if (Object.values(costs).every((x) => x == 0)) {
+    // Switch to time costs for delhi research
+    if (item.civs.length == 1 && item.civs.includes("de")) return getTimeQuestion(difficulty, civ, item);
+    return getCostQuestion(difficulty, civ);
+  }
 
   const correctAnswer = costs;
-  let question = `What is the cost of a ${variation.name}?`,
+  let question = variation.type == "technology" ? `What does it cost to research ${variation.name}` : `What is the cost of a ${variation.name}?`,
     note = `Standard cost, without any civ or landmark discounts`,
     answers = [costs];
 
@@ -176,7 +217,7 @@ async function getCostQuestion(i?: number, civ?: civConfig): Promise<Question> {
       answers.push(incorrectAnswer);
     } else if (attempts > 10) {
       console.warn(`Could not generate suitable answer for '${question}'`, item);
-      return getCostQuestion(i, civ);
+      return getCostQuestion(difficulty, civ);
     }
     attempts++;
   }
@@ -193,10 +234,52 @@ async function getCostQuestion(i?: number, civ?: civConfig): Promise<Question> {
 
 /**
  * HARD
+ * "How much time does it take to research Wheelbarrow?"
+ */
+async function getTimeQuestion(difficulty?: number, civ?: civConfig, item?: UnifiedItem): Promise<Question> {
+  const excludeIds = ["trade-wing", "economic-wing", "military-wing", "trade-wing", "culture-wing", "capital-town-center"];
+  const excludeClasses: ItemClass[] = ["landmark", "wonder"];
+  const types =
+    difficulty < 10
+      ? [ITEMS.BUILDINGS]
+      : difficulty < 15
+      ? [ITEMS.UNITS, ITEMS.BUILDINGS]
+      : difficulty < 20
+      ? [ITEMS.UNITS]
+      : [ITEMS.UNITS, ITEMS.TECHNOLOGIES];
+  item ??= await getRandomItem("cost-question", types, civ, excludeIds, excludeClasses);
+  const variation = getMostAppropriateVariation(item, civ);
+  const time = variation.costs.time;
+
+  const correctAnswer = time;
+  let question = `How long does it take to ${itemProduceVerb[variation.type]} ${variation.name}`,
+    note = `Standard duration, without any civ or landmark discounts`,
+    answers = [time];
+
+  answers.push(
+    ...Random.order(
+      (difficulty < 30 ? [time + 30, time - 30, time * 2, time + 50] : [time - 50, time + 40, time - 20, time + 20, time + 50, time + 5, time - 5]).filter(
+        (t) => t > 20
+      )
+    ).slice(0, 2)
+  );
+
+  answers = Random.order(answers);
+
+  return {
+    question,
+    note,
+    answers: answers.map(formatSecondsToTime),
+    correctAnswer: answers.indexOf(correctAnswer),
+  };
+}
+
+/**
+ * HARD
  * "Which unit wins in a straight up fight?"
  */
 
-async function getStraightUpFightQuestion(i?: number, civ?: civConfig): Promise<Question> {
+async function getStraightUpFightQuestion(difficulty?: number, civ?: civConfig): Promise<Question> {
   const units: Unit[] = [];
   const excludeClasses: ItemClass[] = [
     "worker",
@@ -209,12 +292,15 @@ async function getStraightUpFightQuestion(i?: number, civ?: civConfig): Promise<
     attempts++;
     if (attempts > 20) {
       console.warn("Could not generate suitable matchup");
-      return getStraightUpFightQuestion(i, civ);
+      return getStraightUpFightQuestion(difficulty, civ);
     }
-    const unit = getMostAppropriateVariation<Unit>(
-      await getRandomItem("straight-up-fight", [ITEMS.UNITS], civ, ["battering-ram", "ribauldequin"], excludeClasses),
-      civ
-    );
+    const unit =
+      difficulty > 30
+        ? Random.pick([...(await getRandomItem("straight-up-fight", [ITEMS.UNITS], civ, ["battering-ram", "ribauldequin"], excludeClasses)).variations])
+        : getMostAppropriateVariation<Unit>(
+            await getRandomItem("straight-up-fight", [ITEMS.UNITS], civ, ["battering-ram", "ribauldequin"], excludeClasses),
+            civ
+          );
     if (unit.weapons.filter((w) => w.type != "fire")?.length !== 1) continue;
     units.push(unit);
   }
@@ -224,8 +310,8 @@ async function getStraightUpFightQuestion(i?: number, civ?: civConfig): Promise<
   const winner = battleUnits(options[0], options[1]);
 
   return {
-    question: `Which unit wins in a straight up fight?`,
-    note: `Without any upgrades, kiting or special attacks or influences. Last one standing wins.`,
+    question: `Which unit wins in a fight?`,
+    note: `Without any upgrades, in range, no kiting, charges or special attacks and influences. Last one standing wins.`,
     answers: [
       ...options.map((u) => (
         <>
@@ -303,57 +389,68 @@ const formatCosts = (costs: Record<ResourceType, number>) =>
     ) : undefined
   );
 
+// Todo: This should return two answers generated with the same logic to make it less easy to deduce the correct answer
 const getIncorrectCosts = (correct: Record<ResourceType, number>) => {
   const costs = Object.fromEntries(Object.entries(correct).filter(([k, v]) => v > 0)) as Record<ResourceType, number>;
   const { gold, food, wood, stone } = costs;
 
-  let resourcesWithValues = 0;
-  [gold, food, wood, stone].forEach((r) => (resourcesWithValues += r > 0 ? 1 : 0));
+  const resourcesWithValues = ["gold", "food", "wood", "stone"].filter((r) => costs[r] > 0);
 
-  const fuckitUps = [
-    () =>
-      // Double all cost
-      ["food", "wood", "stone", "gold"].forEach((r) => (costs[r] = (costs[r] || 0) * 2)),
-    () => {
-      const key = Random.key(costs);
-      costs[key] = Math.floor((costs[key] || 0) * Random.pick(0.05, 0.02)) * 10;
-    },
-    () => (costs[Random.key(costs)] = 0),
-    () => {
-      // Realistic cost adding if just one resource
-      if (!gold && !food && !stone) costs.wood = (wood || 30) + 20;
-      else if (!gold && !food && !wood) costs.stone = (stone || 50) * 2;
-      else if (!gold && !wood && !stone) costs.food = (food || 30) + 25;
-      else if (!food && !wood && !stone) costs.gold = (gold || 0) + 50;
-    },
-    () => {
-      if (wood && food) {
-        costs.wood = food;
-        costs.food = wood;
-      }
-      if (food && gold) {
-        costs.food = gold;
-        costs.gold = food;
-      }
-    },
-    () => {
-      if (resourcesWithValues === 1) return;
-      // Flip resources
-      if (wood && !gold) {
-        costs.gold = wood;
-        costs.wood = 0;
-      } else if (gold && !wood) {
-        costs.wood = (gold || 50) * 2;
-        costs.gold = 0;
-      } else if (stone && !wood) {
-        costs.wood = (stone || 50) * 2;
-        costs.stone = 0;
-      } else {
-        costs[Random.key(costs)] = 0;
-        costs[Random.pick(["stone", "gold"])] = Math.max(food, wood, gold, stone);
-      }
-    },
-  ];
+  const fuckitUps =
+    resourcesWithValues.length > 1
+      ? [
+          () =>
+            // Double all cost
+            resourcesWithValues.forEach((r) => (costs[r] = costs[r] * 2)),
+          () => {
+            // Change one of the values randmonly
+            const key = Random.pick(resourcesWithValues);
+            costs[key] = Math.floor((costs[key] || 0) * Random.pick(0.05, 0.08)) * 10;
+          },
+          () => (costs[Random.key(costs)] = 0),
+          () => {
+            // Flip resources
+            if (wood && food) {
+              costs.wood = food;
+              costs.food = wood;
+            }
+            if (food && gold) {
+              costs.food = gold;
+              costs.gold = food;
+            }
+          },
+          () => {
+            // Set all costs to same high value
+            const max = Math.max(...Object.values(costs));
+            resourcesWithValues.forEach((r) => (costs[r] = max));
+          },
+          () => {
+            // Set all costs to same low value
+            const min = Math.min(...Object.values(costs));
+            resourcesWithValues.forEach((r) => (costs[r] = min));
+          },
+        ]
+      : [
+          () => {
+            const value = Math.max(...Object.values(costs));
+            const resource = resourcesWithValues[0];
+            [
+              [100, 150, 200],
+              [15, 25, 35],
+              [10, 20, 30],
+              [5, 10, 15],
+            ].forEach((arr) => {
+              if (arr.includes(value)) costs[resource] = Random.pick(arr);
+            });
+          },
+          () => {
+            // Realistic cost adding if just one resource
+            if (wood) costs.wood = (wood || 30) + Random.pick(25, 50, -25);
+            else if (stone) costs.stone = (stone || 50) * Random.pick(2, 1.5, 0.5);
+            else if (food) costs.food = (food || 30) + Random.pick(25, 50, -25);
+            else if (gold) costs.gold = (gold || 0) + Random.pick(30, 50, -30);
+          },
+        ];
 
   Random.pick(fuckitUps)();
   if (Random.coinflip()) Random.pick(fuckitUps)();
@@ -424,4 +521,15 @@ async function getRandomItem<T extends ITEMS>(
   }
   history.add(item.id);
   return item;
+}
+
+// Saving 2kB here 💪 🤓 https://bundlephobia.com/package/pluralize@8.0.0
+const ignorePlural = ["nest of bees", "man-at-arms", "barracks"];
+function plural(word: string) {
+  if (ignorePlural.includes(word.toLowerCase())) return word;
+  if (word.endsWith("man") && word.toLowerCase() != "shaman") return word.replace("man", "men");
+  return (word.replace(/(?:s|x|z|ch|sh)$/i, "$&e").replace(/([^aeiou])y$/i, "$1ie") + "s").replace(/i?e?s$/i, (match) => {
+    const isTailLowerCase = word.slice(-1) === word.slice(-1).toLowerCase();
+    return isTailLowerCase ? match.toLowerCase() : match.toUpperCase();
+  });
 }
