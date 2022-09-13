@@ -1,5 +1,6 @@
-import { Link } from "solid-app-router";
+import { Link, useLocation } from "solid-app-router";
 import { Component, createSignal, onCleanup, Show } from "solid-js";
+import { setActivePage } from "../../App";
 import { Icon } from "../../components/Icon";
 import { Quiz } from "../../components/quiz/Quiz";
 import { hideNav, setHideNav } from "../../components/Toolbar";
@@ -10,6 +11,7 @@ export const QuizRoute: Component = () => {
 
   setHideNav(true);
   onCleanup(() => setHideNav(false));
+  setActivePage({ title: "Quiz", description: "Test your game knowledge through randomly generated multiple questions.", location: useLocation() });
 
   return (
     <div class="max-w-screen-lg p-4 mx-auto gap-4 mb-4 mt-8">
@@ -21,8 +23,8 @@ export const QuizRoute: Component = () => {
               <div class="max-w-lg mx-auto">
                 <h1 class="font-bold text-white text-2xl my-3">Test your game knowledge</h1>
                 <p class="text-gray-200 mt-1 max-w-prose">
-                  Play the multiple choise quiz and (im)prove what you know about Age of Empires 4. The difficulty of questions increases if you get more
-                  answers correct.
+                  Play the multiple choice quiz and (im)prove what you know about Age of Empires 4. The difficulty of randomly generated questions increases if
+                  you get more answers correct.
                 </p>
                 <ul class="list-disc text-gray-200 max-w-prose flex flex-col gap-2 pl-6 my-4">
                   <li>Landmarks and civivilization bonuses.</li>

@@ -1,8 +1,9 @@
-import { Link, useParams } from "solid-app-router";
+import { Link, useLocation, useParams } from "solid-app-router";
 import { Component, createSignal, onCleanup, Show } from "solid-js";
 import { Icon } from "../../components/Icon";
 import { TwitchQuiz } from "../../components/quiz/TwitchQuiz";
 import { setHideNav } from "../../components/Toolbar";
+import { setActivePage } from "../../App";
 
 export const QuizRoute: Component = () => {
   const [show, setShow] = createSignal(false);
@@ -11,6 +12,11 @@ export const QuizRoute: Component = () => {
 
   setHideNav(true);
   onCleanup(() => setHideNav(false));
+  setActivePage({
+    title: `Quiz ${useParams().channel ? `(${useParams().channel})` : ""}`,
+    description: "Test your game knowledge through randomly generated multiple questions.",
+    location: useLocation(),
+  });
 
   return (
     <div class="max-w-screen-lg p-4 mx-auto gap-4 mb-4 mt-8">

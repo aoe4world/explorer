@@ -202,7 +202,7 @@ async function getCostQuestion(difficulty?: number, civ?: civConfig): Promise<Qu
 
   const correctAnswer = costs;
   let question = variation.type == "technology" ? `What does it cost to research ${variation.name}` : `What is the cost of a ${variation.name}?`,
-    note = `Standard cost, without any civ or landmark discounts`,
+    note = `Standard cost, without any civ or landmark discounts. "${variation.description}"`,
     answers = [costs];
 
   // Add incorrect answers until there are 3, and ensure there are no duplicates
@@ -253,7 +253,7 @@ async function getTimeQuestion(difficulty?: number, civ?: civConfig, item?: Unif
 
   const correctAnswer = time;
   let question = `How long does it take to ${itemProduceVerb[variation.type]} ${variation.name}`,
-    note = `Standard duration, without any civ or landmark discounts`,
+    note = `Standard duration, without any civ or landmark discounts. "${variation.description}"`,
     answers = [time];
 
   answers.push(
