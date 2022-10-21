@@ -9,13 +9,14 @@ import { getItemCssClass, itemGridCSSClass, mainIntroductionCSSClass, mainItemTi
 import { civAbbr, civConfig, UnifiedItem } from "../types/data";
 import { Icon } from "./Icon";
 import { civBackdrops } from "../data/civData";
+import { ItemIcon } from "./ItemIcon";
 
 const Header: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
   const itemCssClass = getItemCssClass(props.item);
   return (
     <div class="flex gap-4 items-center mb-4">
       <div class={`flex-none self-start rounded-md bg-${itemCssClass} h-24 w-24 p-2`}>
-        <img src={props.item.icon} />
+        <ItemIcon url={props.item.icon} />
       </div>
       <div>
         <span class={`text-${itemCssClass}-light`}>{props.item.displayClasses.join(", ")}</span>
@@ -66,7 +67,7 @@ const ProducedAt: Component<{ item: UnifiedItem; civ: civConfig; title?: string 
           {(building) => (
             <Link href={`${props.civ ? `/civs/${props.civ.slug}` : ""}/buildings/${building.id}`} class="flex flex-row items-center mb-2 group ">
               <div class="flex-none  rounded bg-item-building/80 group-hover:bg-item-building/100 w-10 h-10 p-0.5 mr-2 transition">
-                <img src={building.icon} />
+                <ItemIcon url={building.icon} />
               </div>
               <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{building.name}</span>
             </Link>
@@ -119,7 +120,7 @@ const UnavailableForCiv: Component<{ item: UnifiedItem; civ: civConfig }> = (pro
     <div>
       <div class="flex gap-4 items-center mb-4 mt-4">
         <div class={`flex-none self-start rounded-md bg-${itemCssClass} h-24 w-24 p-2`}>
-          <img src={props.item.icon} />
+          <ItemIcon url={props.item.icon} />
         </div>
         <div>
           <span class={`text-${itemCssClass}-light`}>{props.item.displayClasses}</span>

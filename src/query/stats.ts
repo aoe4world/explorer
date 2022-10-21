@@ -21,6 +21,7 @@ export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
         if (!lazelyPickJustTheFirst) continue;
         if (tech.civs.length > 1) lazelyPickJustTheFirst.unique = false;
         // if (modifier.type == "influence") continue;
+        if (!modifierMatches(modifier.select, unit).any) continue;
         if (SUPPORTED_MODIFIER_PROPERTIES.includes(modifier.property as any)) {
           combatStats[modifier.property] ??= { category: modifier.property, parts: [], modifiers: [], bonus: [] };
 
@@ -45,6 +46,7 @@ function mergeVariationsToStats(variations: (Unit | Building)[]) {
   return variations
     .sort(
       firstBy<Unit>((a, b) => a.age - b.age) // Sort by age
+        .thenBy<Unit>((a, b) => b.civs.length - a.civs.length) // Sort by civs
         .thenBy((a, b) => a.id.length - b.id.length) // Sort by id length, putting basic varations first
     )
     .filter((v, i, a) => a.findIndex((x) => x.age == v.age) >= i) // Drop variation if there's already one for the same age
@@ -59,13 +61,17 @@ function mergeVariationsToStats(variations: (Unit | Building)[]) {
       const bonus: Modifier[] = [];
 
       for (const w of variation.weapons) {
+        const burst = 1; //w.burst?.count ?? 1;
         // We assume there's only one weapon per type per variation, for now.
-        if (w.type == "melee") stats.meleeAttack = w.damage;
-        else if (w.type == "ranged") stats.rangedAttack = w.damage;
-        else if (w.type == "siege") stats.siegeAttack = w.damage;
-        else if (w.type == "fire") stats.fireAttack = w.damage;
+        // Edit 11-10-2022: Oh boy was I wrong.
+        if (w.type == "melee") stats.meleeAttack = w.damage * burst;
+        else if (w.type == "ranged") stats.rangedAttack = w.damage * burst;
+        else if (w.type == "siege") stats.siegeAttack = w.damage * burst;
+        else if (w.type == "fire") stats.fireAttack = w.damage * burst;
 
         if (w.type != "fire" || variation.weapons.length == 1) stats.attackSpeed = w.speed;
+
+        if (w.burst) stats.burst = w.burst.count;
 
         if (w.type == "siege" || w.type == "ranged") {
           stats.maxRange = w.range.max;
@@ -117,7 +123,7 @@ export function round(number: number, decimals: number) {
 export function calculateStatParts(
   stat: Stat,
   maxAge: number,
-  { decimals, target }: { decimals?: number; target?: UnifiedItem | Item } = { decimals: 0 }
+  { decimals, target, item }: { decimals?: number; target?: UnifiedItem | Item; item?: UnifiedItem | Item } = { decimals: 0 }
 ): CalculatedStats {
   if (!stat) return { total: 0, base: 0, upgrades: 0, technologies: 0, bonus: 0, parts: [], max: 0 };
   if (!decimals) decimals = 0;
@@ -134,11 +140,12 @@ export function calculateStatParts(
           else if (b[0].effect == "multiply") return -1;
           else return a[0].value - b[0].value;
         })
-          .thenBy((a, b) => a[2] - b[2])
           .thenBy((a, b) => (a[3].unique ? 1 : b[3].unique ? -1 : 0))
+          .thenBy((a, b) => a[2] - b[2])
       )
       .reduce((parts, [modifier, id, age, variation]) => {
         if (modifier.property != stat.category) return parts;
+        if (item && !modifierMatches(modifier.select, item).any) return parts;
         if (modifier.type == "ability" || modifier.type == "influence") return parts;
         let value = 0;
         if (age <= maxAge) {
@@ -152,6 +159,12 @@ export function calculateStatParts(
       }, [] as StatPart<number>[])
   );
 
+  let maxBonusInAge = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+  };
   let bonus = 0;
   if (stat.bonus)
     parts.push(
@@ -164,13 +177,17 @@ export function calculateStatParts(
           if (modifier.effect == "multiply") value = Math.round((modifier.value - 1) * (base + upgrades));
           else if (modifier.effect == "change") value = modifier.value;
         }
-        bonus += value;
-        const tryCreateVsBonusName = [...(modifier.target.id ?? []), ...(modifier.target.class ?? []).map((c) => c.map((x) => x).join(" "))].join(", ");
+        if (value > maxBonusInAge[age]) maxBonusInAge[age] = value;
+        const tryCreateVsBonusName = [
+          ...(modifier.target.id ?? []),
+          ...(modifier.target.class ?? []).map((c) => c.flatMap((x) => x.split("_")).join(" ")),
+        ].join(", ");
         parts.push([round(value, decimals), id, age, variation, "bonus", `Bonus damage vs ${tryCreateVsBonusName}`]);
         return parts;
       }, [] as StatPart<number>[])
     );
 
+  bonus = Object.values(maxBonusInAge).reduce((a, b) => a + b, 0);
   base = round(base, decimals);
   upgrades = round(upgrades, decimals);
   technologies = round(technologies, decimals);

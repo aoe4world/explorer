@@ -1,9 +1,9 @@
-import { Component, createEffect, createSignal, Index, on, Show } from "solid-js";
+import { Component, createEffect, createMemo, createSignal, Index, on, Show } from "solid-js";
 import { RESOURCES } from "../../assets";
 import { CIVILIZATIONS, PRETTY_AGE_MAP } from "../config";
 import { calculateStatParts, round } from "../query/stats";
 import { statLabelCSSClass, tooltipCSSClass } from "../styles";
-import { Item } from "../types/data";
+import { Item, UnifiedItem } from "../types/data";
 import { CalculatedStats, Stat, StatPart } from "../types/stats";
 import { Icon } from "./Icon";
 import { globalAgeFilter, globalCivFilter } from "./Toolbar";
@@ -12,11 +12,13 @@ import { Tooltip } from "./Tooltip";
 export const StatBar: Component<{
   label: string;
   icon?: string;
+  item: UnifiedItem<Item>;
   stat: Stat;
   /** Event when the total value is zero, display the graph,
    * useful for i.e. armor or other properties that will always be present in a
    * later age or after upgrades */
   displayAlways?: boolean;
+  multiplier?: Stat;
   max: number;
 }> = (props) => {
   let totalEl;
@@ -25,11 +27,13 @@ export const StatBar: Component<{
   const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
   createEffect(
     on([globalAgeFilter, globalCivFilter], () => {
-      const { parts, ...rest } = calculateStatParts(props.stat, globalAgeFilter());
-      setParts(parts);
-      setValues(rest);
+      const { parts, ...rest } = calculateStatParts(props.stat, globalAgeFilter(), { item: props.item });
+      setParts(parts.map(([v, ...p]) => [v * multiplier(), ...p]));
+      setValues(Object.fromEntries(Object.entries(rest).map(([k, v]) => [k, v * multiplier()])) as any);
     })
   );
+  const multiplier = createMemo(() => props.multiplier?.parts?.reduce((sum, [v]) => sum + v, 0) ?? 1);
+  const formattedMultiplier = () => (props.multiplier ? `${multiplier()}× ` : "");
   return (
     <Show when={parts().length > 0 || props.displayAlways}>
       <div classList={{ "opacity-20": !values().total }}>
@@ -37,51 +41,128 @@ export const StatBar: Component<{
           <span class="text-white text-[14px] flex-auto flex items-center" ref={totalEl}>
             {props.icon && <Icon icon={props.icon} class="mr-1.5 text-[12px]" />}
             {values().base}
+            {props.multiplier && <>*</>}
             {values().total > values().base && (
               <span class="text-white/60 ml-3">
-                <Icon icon="arrow-up-right" class="text-xs mr-0.5" /> {values().total}
+                <Icon icon="arrow-up-right" class="text-xs mr-0.5" />
+                {values().total}
               </span>
             )}
             {values().bonus && (
               <span class="text-white/40 ml-2">
                 {" "}
-                <Icon icon="plus" class="text-xs" /> {values().bonus}
+                <Icon icon="plus" class="text-xs" />
+                {values().bonus}
               </span>
             )}
           </span>
+          {/* {props.multiplier && (
+            <span class="text-gray-200 font-bold  text-[14px] mr-2">
+              &divide; {multiplier()}
+              <Icon icon="ball-pile" class="ml-1 mr-1 text-xs " />
+            </span>
+          )} */}
           <span class={statLabelCSSClass}> {props.label}</span>
         </div>
-        <Tooltip attachTo={totalEl}>
-          <div class={tooltipCSSClass}>
-            Base <span class="float-right ml-4">{values().base}</span>
-            <br />
-            {values().upgrades && (
-              <>
-                <Icon icon="arrow-up-right" class="text-sm mr-1" />
-                Upgrades
-                <span class="text-item-unit-light float-right ml-4"> + {values().upgrades}</span>
-                <br />
-              </>
-            )}
-            {values().technologies && (
-              <>
-                <Icon icon="arrow-up-right" class="text-sm mr-1" />
-                Technologies
-                <span class="text-item-tech-light float-right ml-4"> + {values().technologies}</span>
-                <br />
-              </>
-            )}
-            <hr class="my-3" />
-            Total <span class="float-right ml-4">{values().total}</span>
-            {values().bonus && (
-              <div class="opacity-50">
-                <Icon icon="plus" class="text-xs mr-1" />
-                Bonus <span class="float-right ml-4">+ {values().bonus}</span>
-              </div>
-            )}
-          </div>
-        </Tooltip>
+        {values().total && (
+          <Tooltip attachTo={totalEl}>
+            <div class={tooltipCSSClass}>
+              {props.multiplier && <p class="text-[12px] mb-4">*Total of {multiplier()} projectiles</p>}
+              Base
+              <span class="float-right ml-4">
+                {props.multiplier && (
+                  <span class="opacity-50 mr-2">
+                    {formattedMultiplier()}
+                    {values().base / multiplier()} =
+                  </span>
+                )}
+                {values().base}
+              </span>
+              <br />
+              {values().upgrades && (
+                <>
+                  <Icon icon="arrow-up-right" class="text-sm mr-1" />
+                  Upgrades
+                  <span class="text-item-unit-light float-right ml-4">
+                    {props.multiplier && (
+                      <span class="opacity-50 mr-2">
+                        {formattedMultiplier()}
+                        {values().upgrades / multiplier()} =
+                      </span>
+                    )}
+                    + {values().upgrades}
+                  </span>
+                  <br />
+                </>
+              )}
+              {values().technologies && (
+                <>
+                  <Icon icon="arrow-up-right" class="text-sm mr-1" />
+                  Technologies
+                  <span class="text-item-tech-light float-right ml-4">
+                    {props.multiplier && (
+                      <span class="opacity-50 mr-2">
+                        {formattedMultiplier()}
+                        {values().technologies / multiplier()} =
+                      </span>
+                    )}
+                    + {values().technologies}
+                  </span>
+                  <br />
+                </>
+              )}
+              <hr class="my-3" />
+              Total <span class="float-right ml-4">{values().total}</span>
+              {values().bonus && (
+                <div class="opacity-50">
+                  <Icon icon="plus" class="text-xs mr-1" />
+                  Bonus{" "}
+                  <span class="float-right ml-4">
+                    {props.multiplier && (
+                      <span class="opacity-50 mr-2">
+                        {formattedMultiplier()}
+                        {values().bonus / multiplier()} =
+                      </span>
+                    )}
+                    + {values().bonus}
+                  </span>
+                </div>
+              )}
+              <Show when={multiplier() > 1}>
+                {() => {
+                  const projectiles = multiplier();
+                  const base = values().base / projectiles;
+                  return (
+                    <div class="bg-gray-500 rounded-sm p-2 flex gap-2 items-center mt-4">
+                      <p class="text-xl px-2">{projectiles}×</p>
+                      <div class="text-sm text-gray-200">
+                        <p class="font-bold mb-1 text-xs">Every volley has {projectiles} projectiles</p>
+                        <p class="text-xs text-gray-200">Target armor has effect on each individual projectile</p>
+                        <div class="uppercase text-gray-50 text-[10px] mt-2">Example</div>
+                        <div class="py-1">
+                          (<span class="bg-lime-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-lime-200">projectile damage</span>
+                          {` - `}
+                          <span class="bg-pink-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-pink-200">target armor</span>) ×{" "}
+                          <span class="bg-teal-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-teal-200">projectiles</span> ={" "}
+                          <span class="bg-blue-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-blue-200">total damage</span>
+                        </div>
+                        <div class="py-1">
+                          (<span class="bg-lime-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-lime-200">{base}</span>
+                          {` - `}
+                          <span class="bg-pink-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-pink-200">2</span>) ×{" "}
+                          <span class="bg-teal-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-teal-200">{projectiles}</span> ={" "}
+                          <span class="bg-blue-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-blue-200">{(base - 2) * projectiles}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }}
+              </Show>
+            </div>
+          </Tooltip>
+        )}
         <div class="h-4 md:h-3 bg-gray-50/10 flex flex-row relative">
+          {/* {formattedMultiplier()} */}
           <Index each={parts()}>
             {(part, i) => {
               const [value, id, age, variation, type, label] = part();
@@ -150,6 +231,7 @@ export const StatNumber: Component<{
   displayAlways?: boolean;
   helper?: string;
   unitLabel?: string;
+  multiplier?: number;
   stat: Stat;
 }> = (props) => {
   const [parts, setParts] = createSignal<StatPart<number>[]>([]);
@@ -189,6 +271,7 @@ export const StatNumber: Component<{
           )}
           {props.unitLabel && <span class="text-white/60 text-sm ml-1">{props.unitLabel}</span>}
           {values().bonus && <span class="text-white/40 text-sm">(+ {values().bonus})</span>}
+          {props.multiplier && <span class="text- text-sm">&times; {props.multiplier}</span>}
         </span>
         <Tooltip attachTo={el}>
           <div class={tooltipCSSClass}>
