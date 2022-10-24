@@ -69,18 +69,24 @@ const UnitSidebar: Component<{ item?: UnifiedItem<Unit>; civ: civConfig }> = (pr
           <>
             {" "}
             <div class="flex flex-col gap-5 bg-black/70 rounded-2xl p-6 ">
-              <StatBar label="Hitpoints" icon="heart" stat={stats.hitpoints} max={1000} />
-              <StatBar label="Siege Attack" icon="meteor" stat={stats.siegeAttack} max={500} />
-              <StatBar label="Melee Attack" icon="swords" stat={stats.meleeAttack} max={50} />
-              <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats.rangedAttack} max={50} />
-              <StatBar label={props.item.classes.includes("incendiary") ? "Fire Attack" : "Torch Attack"} icon="fire" stat={stats.fireAttack} max={50} />
-              <StatBar label="Melee Armor" icon="shield-blank" stat={stats.meleeArmor} max={20} displayAlways={true} />
-              <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats.rangedArmor} max={20} displayAlways={true} />
+              <StatBar label="Hitpoints" icon="heart" stat={stats.hitpoints} max={1000} item={props.item} />
+              <StatBar label="Siege Attack" icon="meteor" stat={stats.siegeAttack} max={500} multiplier={stats.burst} item={props.item} />
+              <StatBar label="Melee Attack" icon="swords" stat={stats.meleeAttack} max={50} item={props.item} />
+              <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats.rangedAttack} max={50} multiplier={stats.burst} item={props.item} />
+              <StatBar
+                label={props.item.classes.includes("incendiary") ? "Fire Attack" : "Torch Attack"}
+                icon="fire"
+                stat={stats.fireAttack}
+                max={50}
+                item={props.item}
+              />
+              <StatBar label="Melee Armor" icon="shield-blank" stat={stats.meleeArmor} max={20} displayAlways={true} item={props.item} />
+              <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats.rangedArmor} max={20} displayAlways={true} item={props.item} />
             </div>
             <div class="flex gap-5 flex-wrap bg-black/70 rounded-2xl p-6 ">
               {stats.attackSpeed && (
                 <div class="w-full">
-                  <StatDps label="Damage" speed={stats.attackSpeed} attacks={[stats.rangedAttack, stats.meleeAttack, stats.siegeAttack]}></StatDps>
+                  <StatDps label="Damage" speed={stats.attackSpeed} attacks={[stats.rangedAttack || stats.meleeAttack || stats.siegeAttack]}></StatDps>
                 </div>
               )}
               <StatNumber label="Move Speed" stat={stats.moveSpeed} unitLabel="T/S"></StatNumber>

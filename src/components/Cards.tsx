@@ -4,6 +4,7 @@ import { CIVILIZATIONS, PRETTY_AGE_MAP } from "../config";
 import { civConfig, UnifiedItem } from "../types/data";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
+import { ItemIcon } from "./ItemIcon";
 import { globalAgeFilter } from "./Toolbar";
 
 const typeToPathMap = {
@@ -68,7 +69,7 @@ export const CardHeader: Component<{ item: UnifiedItem; civ?: civConfig; minAge:
   return (
     <div class="flex gap-4 items-center mb-4">
       <div class="flex-none self-start rounded-md w-16 h-16 p-1" className={`bg-item-${props.item.type}`}>
-        <img src={props.item.icon} />
+        <ItemIcon url={props.item.icon} />
       </div>
       <div class="flex-auto">
         <div class="flex flex-row items-center">

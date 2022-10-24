@@ -9,5 +9,7 @@ export default defineConfig({
   },
   define: {
     "import.meta.env.DATA_URL": '"http://localhost:3000/data"',
+    "import.meta.env.IMG_BASE_URL": '"/"',
   },
+  publicDir: "data/images",
 });

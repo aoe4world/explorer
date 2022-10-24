@@ -4,6 +4,7 @@ import { setActivePage } from "../../App";
 import { getItemHref } from "../../components/Cards";
 import { CivFlag } from "../../components/CivFlag";
 import { Icon } from "../../components/Icon";
+import { ItemIcon } from "../../components/ItemIcon";
 import { scrollIntoViewIfNeeded, TableOfContents, useTableOfContents } from "../../components/TableOfContents";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG } from "../../config";
 import { capitlize, getItemByCanonicalName, sortPatchDiff } from "../../query/utils";
@@ -174,7 +175,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
                           class="inline-flex flex-row items-center"
                         >
                           <div class={`flex-none rounded bg-${itemCssClass} w-8 h-8 p-0.5 mr-2`}>
-                            <img src={item.icon} />
+                            <ItemIcon url={item.icon} />
                           </div>
                           <span class="font-bold">{item.name}</span>
                         </Link>

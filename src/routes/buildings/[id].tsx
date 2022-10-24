@@ -2,6 +2,7 @@ import { Link, useParams } from "solid-app-router";
 import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { getItemHref } from "../../components/Cards";
+import { ItemIcon } from "../../components/ItemIcon";
 import { ItemPage } from "../../components/ItemPage";
 import { PatchHistory } from "../../components/PatchHistory";
 import { ReportButton } from "../../components/ReportButton";
@@ -31,7 +32,7 @@ export function BuildingDetailRoute() {
   });
 
   const [units] = createResource(async () => (await SDK).units.where({ producedAt: params.id, civilization: civ?.abbr }));
-  const [research] = createResource(async () => (await SDK).technologies.where({ producedAt: params.id, civilization: civ?.abbr }));
+  const [research] = createResource(async () => (await SDK).technologies.where({ producedAt: params.id, civilization: civ?.abbr }).order("age"));
 
   return (
     <ItemPage.Wrapper civ={civ}>
@@ -57,7 +58,7 @@ export function BuildingDetailRoute() {
                       return (
                         <Link href={`${civ ? `/civs/${civ.slug}` : ""}/units/${unit.id}`} class="flex flex-row items-center mb-2 group " ref={el}>
                           <div class="flex-none  rounded bg-item-unit/80 group-hover:bg-item-unit/100 w-10 h-10 p-0.5 mr-2 transition">
-                            <img src={unit.icon} />
+                            <ItemIcon url={unit.icon} />
                           </div>
                           <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
                           <Tooltip attachTo={el}>
@@ -81,7 +82,7 @@ export function BuildingDetailRoute() {
                       return (
                         <Link class="flex flex-row items-center mb-2 group " ref={el} href={getItemHref(tech, civ)}>
                           <div class="flex-none  rounded bg-item-technology/80 group-hover:bg-item-technology/100 w-10 h-10 p-0.5 mr-2 transition">
-                            <img src={tech.icon} />
+                            <ItemIcon url={tech.icon} />
                           </div>
                           <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{tech.name}</span>
                           <Tooltip attachTo={el}>
@@ -143,17 +144,17 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
           <>
             {" "}
             <div class="flex flex-col gap-5 bg-black/70 rounded-2xl p-6 ">
-              <StatBar label="Hitpoints" icon="heart" stat={stats.hitpoints} max={1000} />
-              <StatBar label="Siege Attack" icon="meteor" stat={stats.siegeAttack} max={500} />
-              <StatBar label="Melee Attack" icon="swords" stat={stats.meleeAttack} max={50} />
-              <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats.rangedAttack} max={50} />
-              <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats.fireArmor} max={20} displayAlways={true} />
-              <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats.rangedArmor} max={60} displayAlways={true} />
+              <StatBar label="Hitpoints" icon="heart" stat={stats.hitpoints} max={10000} item={props.item} />
+              <StatBar label="Siege Attack" icon="meteor" stat={stats.siegeAttack} max={500} multiplier={stats.burst} item={props.item} />
+              <StatBar label="Melee Attack" icon="swords" stat={stats.meleeAttack} max={50} item={props.item} />
+              <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats.rangedAttack} max={50} multiplier={stats.burst} item={props.item} />
+              <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats.fireArmor} max={20} displayAlways={true} item={props.item} />
+              <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats.rangedArmor} max={60} displayAlways={true} item={props.item} />
             </div>
             <div class="flex gap-5 flex-wrap bg-black/70 rounded-2xl p-6 ">
               {stats.attackSpeed && (
                 <div class="w-full">
-                  <StatDps label="Damage" speed={stats.attackSpeed} attacks={[stats.rangedAttack, stats.meleeAttack, stats.siegeAttack]}></StatDps>
+                  <StatDps label="Damage" speed={stats.attackSpeed} attacks={[stats.rangedAttack || stats.meleeAttack || stats.siegeAttack]}></StatDps>
                 </div>
               )}
               <StatNumber label="Move Speed" stat={stats.moveSpeed} unitLabel="T/S"></StatNumber>

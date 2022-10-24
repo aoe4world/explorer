@@ -6,6 +6,7 @@ import { CivFlag } from "../../components/CivFlag";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
 import { getMostAppropriateVariation, modifierMatches } from "../../query/utils";
 import { civConfig, Unit } from "../../types/data";
+import { ItemIcon } from "../ItemIcon";
 import { formatSecondsToTime } from "../Stats";
 import { Random } from "./random";
 const SDK = import("../../../data/src/sdk");
@@ -68,7 +69,7 @@ async function getCivLandmarkQuestion(i?: number, civ?: civConfig): Promise<Ques
     note: `"${correctLandmark.description.replace(correctLandmark.name, "landmark")}"`,
     answers: options.map((l) => (
       <>
-        <img src={/*@once*/ l.icon} class="w-8 bg-item-building rounded-sm" /> {/*@once*/ l.name}
+        <ItemIcon url={/*@once*/ l.icon} class="w-8 bg-item-building rounded-sm" /> {/*@once*/ l.name}
       </>
     )),
     correctAnswer: options.indexOf(correctLandmark),

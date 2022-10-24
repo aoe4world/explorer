@@ -4,6 +4,7 @@ import { ITEMS, SIMILAIR_ITEMS } from "../config";
 import { UnifiedItem } from "../types/data";
 import { getItemHref } from "./Cards";
 import { Icon } from "./Icon";
+import { ItemIcon } from "./ItemIcon";
 
 const isMac = /mac/i.test(navigator.userAgent);
 
@@ -132,7 +133,7 @@ export const Search: Component<{ class?: string }> = (props) => {
                 class={`flex items-center p-2 rounded hover:bg-gray-500/50 ${selected() == i() ? "!bg-gray-400/40 selected" : ""}`}
               >
                 <div class="flex-none self-start rounded w-8 h-8 p-0 mr-2" className={`bg-item-${item.type}`}>
-                  <img src={item.icon} />
+                  <ItemIcon url={item.icon} />
                 </div>
                 <span class="font-bold text-sm">{item.name}</span>
                 {/* <span class="ml-2">{score}</span> */}

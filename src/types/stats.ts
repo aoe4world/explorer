@@ -12,6 +12,7 @@ export type StatProperty =
   | "fireAttack"
   | "hitpoints"
   | "dps"
+  | "burst"
   | "attackSpeed"
   | "moveSpeed"
   | "minRange"

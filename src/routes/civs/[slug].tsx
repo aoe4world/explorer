@@ -3,6 +3,7 @@ import { createEffect, createResource, For, on, Show, Suspense } from "solid-js"
 import { setActivePage } from "../../App";
 import { BuildingCard } from "../../components/BuildingCard";
 import { CivFlag } from "../../components/CivFlag";
+import { ItemIcon } from "../../components/ItemIcon";
 import { ReportButton } from "../../components/ReportButton";
 import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATION_BY_SLUG } from "../../config";
@@ -52,7 +53,7 @@ export const CivDetailRoute = () => {
               {(unit) => (
                 <Link href={`./units/${unit.id}`} class="flex flex-row items-center mb-2 group ">
                   <div class="flex-none  rounded bg-item-unit/80 group-hover:bg-item-unit/100 w-10 h-10 p-0.5 mr-2 transition">
-                    <img src={unit.icon} />
+                    <ItemIcon url={unit.icon} />
                   </div>
                   <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
                 </Link>
@@ -65,7 +66,7 @@ export const CivDetailRoute = () => {
                 building.unique && (
                   <Link href={`./buildings/${building.id}`} class="flex flex-row items-center mb-2 group ">
                     <div class="flex-none  rounded bg-item-building/80 group-hover:bg-item-building/100 w-10 h-10 p-0.5 mr-2 transition">
-                      <img src={building.icon} />
+                      <ItemIcon url={building.icon} />
                     </div>
                     <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{building.name}</span>
                   </Link>
@@ -79,7 +80,7 @@ export const CivDetailRoute = () => {
                 tech.unique && (
                   <Link href={`./technologies/${tech.id}`} class="flex flex-row items-center mb-2 group ">
                     <div class="flex-none  rounded bg-item-technology/80 group-hover:bg-item-technology/100 w-10 h-10 p-0.5 mr-2 transition">
-                      <img src={tech.icon} />
+                      <ItemIcon url={tech.icon} />
                     </div>
                     <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{tech.name}</span>
                   </Link>

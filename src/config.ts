@@ -11,6 +11,7 @@ export const SUPPORTED_MODIFIER_PROPERTIES: ModifyableProperty[] = [
   "fireAttack",
   "fireArmor",
   "siegeAttack",
+  "burst",
   "hitpoints",
   "moveSpeed",
   "attackSpeed",

@@ -15,17 +15,17 @@ export const BuildingCard: Component<{ item: UnifiedItem<Building>; civ?: civCon
       <Show when={stats()}>
         <>
           <div class="flex flex-col gap-4 mb-8">
-            <StatBar label="Hitpoints" icon="heart" stat={stats().hitpoints} max={8000} />
-            <StatBar label="Siege Attack" icon="meteor" stat={stats().siegeAttack} max={500} />
-            <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats().rangedAttack} max={100} />
-            <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats().rangedArmor} max={60} displayAlways={true} />
-            <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats().fireArmor} max={20} displayAlways={true} />
+            <StatBar label="Hitpoints" icon="heart" stat={stats().hitpoints} max={10000} item={props.item} />
+            <StatBar label="Siege Attack" icon="meteor" stat={stats().siegeAttack} max={500} multiplier={stats().burst} item={props.item} />
+            <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats().rangedAttack} max={100} multiplier={stats().burst} item={props.item} />
+            <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats().rangedArmor} max={60} displayAlways={true} item={props.item} />
+            <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats().fireArmor} max={20} displayAlways={true} item={props.item} />
           </div>
           <div class="flex flex-col gap-4 mt-auto">
             <div class="flex gap-4  flex-wrap">
               <StatNumber label="Atck Spd" stat={stats().attackSpeed} unitLabel="S"></StatNumber>
             </div>
-            <StatDps label="Damage" speed={stats().attackSpeed} attacks={[stats().rangedAttack, stats().meleeAttack, stats().siegeAttack]}></StatDps>
+            <StatDps label="Damage" speed={stats().attackSpeed} attacks={[stats().rangedAttack || stats().meleeAttack || stats().siegeAttack]}></StatDps>
             <StatCosts costs={variation()?.costs} />
           </div>
         </>
