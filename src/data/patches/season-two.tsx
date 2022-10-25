@@ -1009,7 +1009,7 @@ Of course, we still want there to be multiple counter play options to siege weap
         //     * English now has a global discount to Naval units of 10%.
         // > It was a pretty big tempo loss to spend all the time and resources to get Shipwrights, so we rolled it into the base stats for the civ. This should also help English on water maps as their main economic advantage is extra Food.
         {
-          items: ["technologies/shipwrights", "technologies/admiralty"],
+          items: ["technologies/admiralty"],
           civs: [],
           diff: [
             ["fix", "Shipwrights renamed to Admiralty"],

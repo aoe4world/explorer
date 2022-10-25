@@ -95,7 +95,7 @@ export const CivDetailRoute = () => {
               {(x) => (
                 <div class="break-inside-avoid max-w-prose">
                   <h2 class="text-lg text-white/40 font-bold mt-2 mb-3 ">{x.title}</h2>
-                  {x.description && <p>{x.description}</p>}
+                  {x.description && <p class=" whitespace-pre-wrap">{x.description}</p>}
                   {x.list && (
                     <ul class="list-disc list-inside marker:text-white/30 space-y-2">
                       <For each={x.list}>{(y) => <li class="-indent-5 pl-5">{y}</li>}</For>
