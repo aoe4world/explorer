@@ -53,3 +53,5 @@ export const MUTED_UNITS = ["wynguard-army", "khaganate-units"];
 
 export const PRETTY_AGE_MAP = ["", "Age I", "Age II", "Age III", "Age IV"];
 export const PRETTY_AGE_MAP_LONG = ["", "Dark Age (I)", "Feudal Age (II)", "Castle Age (III)", "Imperial Age (IV)"];
+
+export const CURATED_CONTENT_API = "https://raw.githubusercontent.com/aoe4world/curated/main/Content.json";

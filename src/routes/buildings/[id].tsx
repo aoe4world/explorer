@@ -5,6 +5,7 @@ import { getItemHref } from "../../components/Cards";
 import { ItemIcon } from "../../components/ItemIcon";
 import { ItemPage } from "../../components/ItemPage";
 import { PatchHistory } from "../../components/PatchHistory";
+import { RelatedContent } from "../../components/RelatedContent";
 import { ReportButton } from "../../components/ReportButton";
 import { StatNumber, StatBar, StatDps, StatCosts } from "../../components/Stats";
 import { TechnologyCard } from "../../components/TechnologyCard";
@@ -44,6 +45,8 @@ export function BuildingDetailRoute() {
               <div class={mainIntroductionCSSClass}>{item?.description}</div>
 
               {!civ && <ItemPage.CivPicker item={item} />}
+
+              <RelatedContent item={item} />
 
               <div class="my-8">
                 <ReportButton />

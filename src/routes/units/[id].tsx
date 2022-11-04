@@ -10,6 +10,7 @@ import { Building, civConfig, UnifiedItem, Unit } from "../../types/data";
 import { ItemPage } from "../../components/ItemPage";
 import { PatchHistory } from "../../components/PatchHistory";
 import { getMostAppropriateVariation } from "../../query/utils";
+import { RelatedContent } from "../../components/RelatedContent";
 export function UnitDetailRoute() {
   const itemType = ITEMS.UNITS;
   const params = useParams();
@@ -36,6 +37,8 @@ export function UnitDetailRoute() {
               {!civ && <ItemPage.CivPicker item={item} />}
 
               <PatchHistory item={item} civ={civ} />
+
+              <RelatedContent item={item} />
 
               <div class="my-8">
                 <ReportButton />
