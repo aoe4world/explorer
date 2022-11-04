@@ -23,7 +23,7 @@ function mergeSearchableData(item: UnifiedItem) {
 }
 
 let allItems: [match: string, keywords: string[], item: UnifiedItem][];
-async function search(q: string = "") {
+export async function search(q: string = "") {
   q = q.trim().toLowerCase();
   if (!q.length) return [];
 

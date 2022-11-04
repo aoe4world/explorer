@@ -17,6 +17,7 @@ import { ITEMS, SIMILAIR_ITEMS } from "./config";
 import { getItemHref } from "./components/Cards";
 import { PatchDetailRoute } from "./routes/patches/[id]";
 import { findClosestMatch } from "./query/utils";
+import { SearchRoute } from "./routes/search";
 
 const routes: RouteDefinition[] = [
   {
@@ -105,6 +106,10 @@ const routes: RouteDefinition[] = [
   {
     path: "civs/:civ/patches/:id",
     component: () => PatchDetailRoute,
+  },
+  {
+    path: "/search",
+    component: () => SearchRoute,
   },
 ];
 
