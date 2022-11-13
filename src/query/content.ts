@@ -1,3 +1,4 @@
+import { Random } from "../components/quiz/random";
 import { CURATED_CONTENT_API } from "../config";
 import { civConfig, Item, UnifiedItem } from "../types/data";
 
@@ -29,10 +30,12 @@ export async function getRelatedContent(
 ) {
   if (featured) featuredContent ??= await fetchContent(true);
   else content ??= await fetchContent(false);
-  return (featured ? featuredContent : content).filter(
-    (c) =>
-      (item && c.relatedItems?.some((i) => i.includes("baseId" in item ? item.baseId : item.id))) ||
-      (civilization && c.civilizations.some((civ) => civ.toLowerCase() === civilization.slug))
+  return Random.order(
+    (featured ? featuredContent : content).filter(
+      (c) =>
+        (item && c.relatedItems?.some((i) => i.includes("baseId" in item ? item.baseId : item.id))) ||
+        (civilization && c.civilizations.some((civ) => civ.toLowerCase() === civilization.slug))
+    )
   );
 }
 
