@@ -46,7 +46,7 @@ export function BuildingDetailRoute() {
 
               {!civ && <ItemPage.CivPicker item={item} />}
 
-              <RelatedContent item={item} />
+              <RelatedContent item={item} title={`Recommended content`} />
 
               <div class="my-8">
                 <ReportButton />

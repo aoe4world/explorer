@@ -9,12 +9,19 @@ import { ItemIcon } from "./ItemIcon";
 
 const defaultLimit = 3;
 export const RelatedContent: Component<{ item?: Item | UnifiedItem; civ?: civConfig; title?: string }> = (props) => {
-  const [related] = createResource(() => ({ item: props.item, civilization: props.civ }), getRelatedContent);
+  const [related] = createResource(() => ({ item: props.item, civilization: props.civ, featured: true }), getRelatedContent);
   const [limit, setLimit] = createSignal(defaultLimit);
   return (
     <div class="flex flex-col gap-6">
       <Suspense>
-        {props.title && related()?.length && <h3 class="text-xl font-bold">{props.title}</h3>}
+        {props.title && related()?.length && (
+          <div class="flex">
+            <h3 class="text-xl font-bold flex-auto">{props.title}</h3>
+            <a href="https://airtable.com/shraFjFgC03xmCgZj" target="_blank" class="text-gray-400 hover:text-gray-300 text-sm">
+              <Icon icon="plus" /> Suggest
+            </a>
+          </div>
+        )}
         <For each={related()?.slice(0, limit())}>
           {(content) => {
             const [relatedItems] = createResource(() => content.relatedItems?.filter((x) => !props.item || !x.endsWith(props.item.id)), getRelatedItems);
@@ -45,8 +52,8 @@ export const RelatedContent: Component<{ item?: Item | UnifiedItem; civ?: civCon
                     {content.title}
                   </a>
                   <p class="hidden md:line-clamp-2 text-gray-300 text-sm leading-relaxed  max-w-prose">{content.description}</p>
-                  <small class="text-gray-400 mt-1 text-sm flex flex-wrap gap-4">
-                    <div>
+                  <small class="text-gray-400 mt-1 text-sm flex flex-wrap gap-x-4 gap-y-1">
+                    <div class="text-gray-200">
                       {content.creator_url ? (
                         <Link href={content.creator_url} class="hover:underline" target="_blank" rel="noopener ugc nofollow">
                           {content.creator}
@@ -59,9 +66,9 @@ export const RelatedContent: Component<{ item?: Item | UnifiedItem; civ?: civCon
                     <Suspense>
                       <For each={relatedItems()}>
                         {(item) => (
-                          <Link href={getItemHref(item, props.civ)} class={`flex items-center text-${getItemCssClass(item)}-light`}>
+                          <Link href={getItemHref(item, props.civ)} class={`inline-flex min-w-0 items-center  text-${getItemCssClass(item)}-light`}>
                             <ItemIcon url={item.icon} class="w-5 h-5 mr-1" />
-                            {item.name}
+                            <span class="truncate max-w-[100px]">{item.name}</span>
                           </Link>
                         )}
                       </For>

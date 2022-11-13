@@ -38,7 +38,7 @@ export function UnitDetailRoute() {
 
               <PatchHistory item={item} civ={civ} />
 
-              <RelatedContent item={item} />
+              <RelatedContent item={item} title={`Recommended content`} />
 
               <div class="my-8">
                 <ReportButton />

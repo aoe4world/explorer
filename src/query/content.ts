@@ -23,18 +23,22 @@ interface Youtubedata {
 }
 
 let content: ContentItem[];
-export async function getRelatedContent({ item, civilization }: { item?: Item | UnifiedItem; civilization?: civConfig }) {
-  content ??= await fetchContent();
-  return content.filter(
+let featuredContent: ContentItem[];
+export async function getRelatedContent(
+  { item, civilization, featured }: { item?: Item | UnifiedItem; civilization?: civConfig; featured?: boolean } = { featured: true }
+) {
+  if (featured) featuredContent ??= await fetchContent(true);
+  else content ??= await fetchContent(false);
+  return (featured ? featuredContent : content).filter(
     (c) =>
       (item && c.relatedItems?.some((i) => i.includes("baseId" in item ? item.baseId : item.id))) ||
       (civilization && c.civilizations.some((civ) => civ.toLowerCase() === civilization.slug))
   );
 }
 
-async function fetchContent(): Promise<ContentItem[]> {
+async function fetchContent(featured: boolean): Promise<ContentItem[]> {
   try {
-    const res = await fetch(CURATED_CONTENT_API);
+    const res = await fetch(CURATED_CONTENT_API + (featured ? "featured.json" : "content.json"));
     const items = await res.json();
     if (!items[0].url || !items[0].title) throw "Response not in expected format";
     return items;

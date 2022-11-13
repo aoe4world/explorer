@@ -41,7 +41,7 @@ export function TechnologyDetailRoute() {
 
               <PatchHistory item={item} civ={civ} />
 
-              <RelatedContent item={item} />
+              <RelatedContent item={item} title={`Recommended content`} />
 
               <div class="mt-12">
                 <ReportButton />
