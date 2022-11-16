@@ -81,6 +81,13 @@ export const ContentOverviewRoute = () => {
               <p class={mainIntroductionCSSClass}>
                 Useful guides, build orders, tips and tricks created by the AOE IV community, carefully curated by AoE4 World.
               </p>
+              <p class="max-w-prose text-gray-300 mb-6">
+                Are you a content creator or know of great additions to this list? Make sure to{" "}
+                <a href="https://airtable.com/shraFjFgC03xmCgZj" target="_blank" class="underline font-bold">
+                  submit
+                </a>{" "}
+                your suggestions.
+              </p>
               <div class="flex flex-row gap-4">
                 <button class={secondaryButtonClass + (showFilter() ? " hidden" : " lg:hidden")} onClick={() => setShowFilter(true)}>
                   <Icon icon="filter" /> Filter...
@@ -91,12 +98,14 @@ export const ContentOverviewRoute = () => {
               </div>
             </div>
             <Suspense>
-              <For each={filtered()?.slice(0, limit())}>{(content) => <ContentRow content={content} civ={civ} />}</For>
-              {filtered()?.length > limit() && (
-                <button onClick={() => setLimit(limit() * 2)} class="text-gray-300 hover:text-gray-100 font-bold bg-gray-500 p-4 roudned-lg">
-                  Load more
-                </button>
-              )}
+              <div class="flex flex-col gap-8">
+                <For each={filtered()?.slice(0, limit())}>{(content) => <ContentRow content={content} civ={civ} />}</For>
+                {filtered()?.length > limit() && (
+                  <button onClick={() => setLimit(limit() * 2)} class="text-gray-300 hover:text-gray-100 font-bold bg-gray-500 p-4 roudned-lg">
+                    Load more
+                  </button>
+                )}
+              </div>
             </Suspense>
           </div>
         </div>
