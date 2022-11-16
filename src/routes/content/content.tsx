@@ -144,30 +144,35 @@ function getFilterableProperties(content: ContentItem[]): ContentFilter[] {
     return content.filter((c) => c[key] === value).length;
   }
 
+  // Sort all sets by count and turn them into an object
+  function getValues(map: Map<string, number>) {
+    return Object.fromEntries([...map.entries()].sort((a, b) => b[1] - a[1]));
+  }
+
   return [
     {
       key: "tags",
       filter: (value, item) => value.every((v) => item.tags.includes(v)),
       label: "Tag",
-      values: Object.fromEntries(tags),
+      values: getValues(tags),
     },
     {
       key: "civilizations",
       filter: (value, item) => value.every((v) => item.civilizations.includes(v)),
       label: "Civilization",
-      values: Object.fromEntries(civilizations),
+      values: getValues(civilizations),
     },
     {
       key: "creator",
       filter: (value, item) => value.some((v) => item.creator === v),
       label: "Creator",
-      values: Object.fromEntries(creators),
+      values: getValues(creators),
     },
     {
       key: "type",
       filter: (value, item) => value.some((v) => item.type === v),
       label: "Type",
-      values: Object.fromEntries(types),
+      values: getValues(types),
     },
   ];
 }
