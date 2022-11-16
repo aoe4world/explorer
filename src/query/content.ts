@@ -2,7 +2,7 @@ import { Random } from "../components/quiz/random";
 import { CURATED_CONTENT_API } from "../config";
 import { civConfig, Item, UnifiedItem } from "../types/data";
 
-interface ContentItem {
+export interface ContentItem {
   title: string;
   type: string;
   relatedItems?: string[];
@@ -21,6 +21,7 @@ interface Youtubedata {
   title: string;
   videoId: string;
   channelId: string;
+  videoDuration: string;
 }
 
 let content: ContentItem[];
@@ -30,12 +31,11 @@ export async function getRelatedContent(
 ) {
   if (featured) featuredContent ??= await fetchContent(true);
   else content ??= await fetchContent(false);
-  return Random.order(
-    (featured ? featuredContent : content).filter(
-      (c) =>
-        (item && c.relatedItems?.some((i) => i.includes("baseId" in item ? item.baseId : item.id))) ||
-        (civilization && c.civilizations.some((civ) => civ.toLowerCase() === civilization.slug))
-    )
+  return Random.order(featured ? featuredContent : content).filter(
+    (c) =>
+      (item && c.relatedItems?.some((i) => i.includes("baseId" in item ? item.baseId : item.id))) ||
+      (civilization && c.civilizations.some((civ) => civ.toLowerCase() === civilization.slug)) ||
+      (!item && !civilization)
   );
 }
 
