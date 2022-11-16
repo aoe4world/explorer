@@ -13,7 +13,6 @@ const defaultLimit = 3;
 export const RelatedContent: Component<{ item?: Item | UnifiedItem; civ?: civConfig; title?: string }> = (props) => {
   const [related] = createResource(() => ({ item: props.item, civilization: props.civ, featured: true }), getRelatedContent);
   const [limit, setLimit] = createSignal(defaultLimit);
-  const randomized = () => related()?.length && Random.order(related());
   return (
     <div class="flex flex-col gap-6">
       <Suspense>
@@ -25,7 +24,7 @@ export const RelatedContent: Component<{ item?: Item | UnifiedItem; civ?: civCon
             </a>
           </div>
         )}
-        <For each={randomized()?.slice(0, limit())}>{(content) => <ContentRow content={content} item={props.item} civ={props.civ} />}</For>
+        <For each={related()?.slice(0, limit())}>{(content) => <ContentRow content={content} item={props.item} civ={props.civ} />}</For>
         {related()?.length > limit() && (
           <button onClick={() => setLimit(limit() + 10)} class="text-gray-300 hover:text-gray-100 font-bold inline-block">
             Show more
