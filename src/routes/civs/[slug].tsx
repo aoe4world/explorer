@@ -4,6 +4,7 @@ import { setActivePage } from "../../App";
 import { BuildingCard } from "../../components/BuildingCard";
 import { CivFlag } from "../../components/CivFlag";
 import { ItemIcon } from "../../components/ItemIcon";
+import { RelatedContent } from "../../components/RelatedContent";
 import { ReportButton } from "../../components/ReportButton";
 import { UnitCard } from "../../components/UnitCard";
 import { CIVILIZATION_BY_SLUG } from "../../config";
@@ -106,9 +107,10 @@ export const CivDetailRoute = () => {
             </For>
           </div>
         </div>
-        <div class="my-8">
+        <div class="my-12">
           <ReportButton />
         </div>
+        <RelatedContent civ={civConfig} title={`Learn about ${civConfig.name}`} />
       </div>
       <div class="max-w-screen-2xl mx-auto p-4 md:p-8">
         <Show

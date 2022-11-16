@@ -68,6 +68,6 @@ module.exports = {
     },
   },
   corePlugins: {},
-  plugins: [],
+  plugins: [require("@tailwindcss/line-clamp")],
   safeList: ["opacity-95"],
 };

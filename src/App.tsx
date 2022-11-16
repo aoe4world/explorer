@@ -111,6 +111,10 @@ const routes: RouteDefinition[] = [
     path: "/search",
     component: () => SearchRoute,
   },
+  {
+    path: "/content",
+    component: lazy(() => import("./routes/content/content")),
+  },
 ];
 
 export const [activePage, setActivePage] = createSignal<{ title?: string; description?: string; location: ReturnType<typeof useLocation> }>();

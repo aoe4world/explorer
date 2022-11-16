@@ -405,6 +405,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@tailwindcss/line-clamp@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@tailwindcss/line-clamp/-/line-clamp-0.4.2.tgz#f353c5a8ab2c939c6267ac5b907f012e5ee130f9"
+  integrity sha512-HFzAQuqYCjyy/SX9sLGB1lroPzmcnWv1FHkIpmypte10hptf4oPUfucryMKovZh2u0uiS9U5Ty3GghWfEJGwVw==
+
 "@twurple/api-call@^5.2.3":
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/@twurple/api-call/-/api-call-5.2.3.tgz#7195891ea880a5499f4e635658453184e5466082"

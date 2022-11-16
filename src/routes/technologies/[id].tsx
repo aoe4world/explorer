@@ -3,6 +3,7 @@ import { createEffect, createMemo, createResource, createSignal, Show } from "so
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { ItemPage } from "../../components/ItemPage";
 import { PatchHistory } from "../../components/PatchHistory";
+import { RelatedContent } from "../../components/RelatedContent";
 import { ReportButton } from "../../components/ReportButton";
 import { StatCosts } from "../../components/Stats";
 import { CIVILIZATION_BY_SLUG, ITEMS, PRETTY_AGE_MAP_LONG } from "../../config";
@@ -40,7 +41,9 @@ export function TechnologyDetailRoute() {
 
               <PatchHistory item={item} civ={civ} />
 
-              <div class="my-8">
+              <RelatedContent item={item} title={`Recommended content`} />
+
+              <div class="mt-12">
                 <ReportButton />
               </div>
             </div>
