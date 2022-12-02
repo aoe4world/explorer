@@ -161,7 +161,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
       <For each={props.section.changes}>
         {(c) => (
           <div class="mb-8">
-            {c.items.length && (
+            {(c.items.length || c.title) && (
               <div class="flex flex-wrap gap-x-4 gap-y-2 my-3">
                 <For each={c.items}>
                   {(ci) => {
@@ -186,6 +186,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
                     return <span class="font-bold">{capitlize(unmapped[1])}</span>;
                   }}
                 </For>
+                {c.title && <span class="font-bold">{c.title}</span>}
               </div>
             )}
             <DiffList diff={c.diff.sort(sortPatchDiff)} />
@@ -255,6 +256,10 @@ const DirtSimpleMd: Component<{ md: string }> = (props) => {
         if (line.startsWith("##")) return <h4 class="text-lg font-bold mb-2 mt-4">{line.slice(3)}</h4>;
         if (line.startsWith("#")) return <h3 class="text-xl text-white font-bold  mb-2 mt-4">{line.slice(2)}</h3>;
         if (line.startsWith("> ")) return <DevNote note={line.slice(2)} />;
+        if (line.startsWith("![") && line.endsWith(")")) {
+          const [_, alt, url] = line.match(/!\[(.*)\]\((.*)\)/);
+          return <img src={url} alt={alt} class="w-full my-8 rounded-md" />;
+        }
         if (line.startsWith("* "))
           return (
             <p class="text-gray-100 pl-4 text-base before:content-['•'] before:text-gray-200 before:-ml-4 before:inline-block before:w-4 ">{line.slice(2)}</p>
