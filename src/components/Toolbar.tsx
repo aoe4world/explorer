@@ -2,7 +2,7 @@ import { Link, NavLink, useIsRouting, useLocation } from "solid-app-router";
 import { Component, createMemo, createSignal, For, Show } from "solid-js";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG } from "../config";
 import { tooltipCSSClass } from "../styles";
-import { civAbbr } from "../types/data";
+import { civAbbr, civConfig } from "../types/data";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { Search } from "./Search";
@@ -19,6 +19,12 @@ export const Toolbar: Component = () => {
     const [route, civ, subroute] = location.pathname.match(/\/civs\/([a-z]+)\/?([\w/-]*)/i) ?? [];
     return { route, civ, subroute };
   });
+
+  const smartCivLink = (civ: civConfig) => {
+    const subroute = [`/civs/${civ.slug}`, current().subroute].join("/");
+    if (location.pathname.includes(subroute)) return `/civs/${civ.slug}`;
+    return subroute;
+  };
 
   const navButtonClass =
     "w-12 h-10 md:w-10 lg:h-8 md:hover:bg-white md:hover:text-black bg-gray-900 text-white/70text-lg px-3 grid rounded-md flex-none transition";
@@ -40,7 +46,7 @@ export const Toolbar: Component = () => {
             <For each={Object.values(CIVILIZATIONS)}>
               {(civ) => (
                 <NavLink
-                  href={[`/civs/${civ.slug}`, current().subroute].join("/")}
+                  href={smartCivLink(civ)}
                   class="h-full relative w-14 rounded-md overflow-hidden border-2 shadow-inner opacity-50 hover:opacity-100  border-transparent hidden lg:block transition"
                   activeClass="opacity-90 border-white"
                   aria-label={civ.name}

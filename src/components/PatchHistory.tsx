@@ -32,8 +32,8 @@ export const PatchHistory: Component<{ item: UnifiedItem; civ?: civConfig }> = (
               )}
               <For each={history.diff.filter((_, i) => i < 6 || expanded())}>
                 {([type, change]) => (
-                  <div class="flex items-center py-0.5">
-                    <div class="text-xs mr-2">
+                  <div class="flex  py-0.5">
+                    <div class="text-xs mr-3 mt-1 ">
                       {type == "buff" && <Icon icon="circle-plus" class="text-green-700" />}
                       {type == "nerf" && <Icon icon="circle-minus" class="text-red-700" />}
                       {type == "fix" && <Icon icon="circle-check" class="text-gray-300" />}

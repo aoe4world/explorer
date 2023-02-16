@@ -238,7 +238,7 @@ export const StatNumber: Component<{
   const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
   createEffect(
     on(globalAgeFilter, () => {
-      const { parts, ...rest } = calculateStatParts(props.stat, globalAgeFilter(), { decimals: 2 });
+      const { parts, ...rest } = calculateStatParts(props.stat, globalAgeFilter(), { decimals: 3 });
       setValues(rest);
       setParts(parts);
     })
@@ -342,7 +342,7 @@ export const StatDps: Component<{
 
   createEffect(
     on(globalAgeFilter, () => {
-      const attackSpeed = calculateStatParts(props.speed, globalAgeFilter(), { decimals: 2 });
+      const attackSpeed = calculateStatParts(props.speed, globalAgeFilter(), { decimals: 3 });
       const attacks = props.attacks.map((attack) => calculateStatParts(attack, globalAgeFilter(), { decimals: 0 }));
       setValues(calculateDpsParts(attackSpeed, attacks));
     })
