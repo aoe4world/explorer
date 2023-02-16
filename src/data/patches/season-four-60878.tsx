@@ -38,7 +38,7 @@ export const season4: PatchNotes = {
       </div>
     </div>
   ),
-  date: new Date("2023-02-16 12:00:00 UTC"),
+  date: new Date("2023-02-16T12:00:00Z"),
   sections: [
     {
       title: "Balance & Gameplay",
