@@ -1,5 +1,5 @@
 import { Link } from "solid-app-router";
-import { Component, createResource, For, Show, useTransition } from "solid-js";
+import { Component, createResource, For, Match, Show, Switch, useTransition } from "solid-js";
 import { getItemHref } from "./Cards";
 import { CivFlag } from "./CivFlag";
 import { TechnologyCard } from "./TechnologyCard";
@@ -78,14 +78,14 @@ const ProducedAt: Component<{ item: UnifiedItem; civ: civConfig; title?: string 
   );
 };
 
-function getUnitType(item: UnifiedItem) {
+function getItemType(item: UnifiedItem) {
   return item.type === "unit" ? ITEMS.UNITS : item.type === "building" ? ITEMS.BUILDINGS : ITEMS.TECHNOLOGIES;
 }
 
 const AvailableUpgrades: Component<{ item: UnifiedItem; civ: civConfig }> = (props) => {
   const [technologies] = createResource(
     () => ({ item: props.item, civ: props.civ }),
-    async ({ item, civ }) => item && (await getItemTechnologies(getUnitType(item), item, civ, true))
+    async ({ item, civ }) => item && (await getItemTechnologies(getItemType(item), item, civ, true))
     //.flatMap((x) => x.variations)
     // We're not really picking up the variations right now
   );
@@ -139,21 +139,32 @@ const UnavailableForCiv: Component<{ item: UnifiedItem; civ: civConfig }> = (pro
       <p class={mainIntroductionCSSClass}>
         The {props.item.name} is unique, and not available for <strong>{props.civ.name}</strong>.
       </p>
-      <CivOptionsForItem item={props.item} civs={props.item.civs} />
+
+      <CivOptionsForItem item={props.item} civs={props.item.civs} prefix="Show for">
+        <Link
+          href={["/civs", props.civ.slug, getItemType(props.item)].join("/")}
+          class="flex gap-2 items-center font-bold text-base  mr-3 bg-gray-900 p-2 rounded-md hover:text-white text-gray-100 hover:bg-black"
+        >
+          <CivFlag abbr={props.civ.abbr} class="h-3 w-4.5 rounded-sm " />
+          {props.civ.name}'s {getItemType(props.item)}
+          <Icon icon="arrow-right" class="ml-auto mr-2" />
+        </Link>
+      </CivOptionsForItem>
     </div>
   );
 };
 
-const CivOptionsForItem: Component<{ item: UnifiedItem; civs: civAbbr[] }> = (props) => (
+const CivOptionsForItem: Component<{ item: UnifiedItem; civs: civAbbr[]; prefix?: string }> = (props) => (
   <>
     <div class="md:grid-cols-2 grid gap-6 mb-4 mt-2">
+      {props.children}
       <For each={props.civs}>
         {(civ) => (
           <Link
             href={getItemHref(props.item, CIVILIZATIONS[civ])}
             class="flex gap-2 items-center font-bold text-base  mr-3 bg-gray-900 p-2 rounded-md hover:text-white text-gray-100 hover:bg-black"
           >
-            <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {CIVILIZATIONS[civ].name}
+            <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {props.prefix} {CIVILIZATIONS[civ].name}
             <Icon icon="arrow-right" class="ml-auto mr-2" />
           </Link>
         )}

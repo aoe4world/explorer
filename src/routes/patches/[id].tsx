@@ -155,7 +155,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
       <TableOfContents.Anchor label={props.section.title ?? props.section.subtitle} level={props.section.subtitle ? 2 : 1} />
 
       {props.section.title && <h2 class="text-4xl font-bold mb-4 mt-20  border-b pb-3 border-white/20">{props.section.title}</h2>}
-      {props.section.subtitle && <h2 class="text-xl font-bold mb-4">{props.section.subtitle}</h2>}
+      {props.section.subtitle && <h3 class="text-2xl font-bold mb-4 border-b pb-3 border-white/20">{props.section.subtitle}</h3>}
       {props.section.description && <p class="leading-6 text-white/80 my-8 max-w-prose whitespace-pre-wrap">{props.section.description}</p>}
       {props.section.md && <DirtSimpleMd md={props.section.md} />}
       <For each={props.section.changes}>
@@ -163,6 +163,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
           <div class="mb-8">
             {(c.items.length || c.title) && (
               <div class="flex flex-wrap gap-x-4 gap-y-2 my-3">
+                {c.title && <h4 class="font-bold w-full flex-none">{c.title}</h4>}
                 <For each={c.items}>
                   {(ci) => {
                     const item = props.items?.get(ci);
@@ -186,7 +187,6 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
                     return <span class="font-bold">{capitlize(unmapped[1])}</span>;
                   }}
                 </For>
-                {c.title && <span class="font-bold">{c.title}</span>}
               </div>
             )}
             <DiffList diff={c.diff.sort(sortPatchDiff)} />
@@ -213,7 +213,7 @@ const DiffList: Component<{ diff: PatchLine[] }> = (props) => (
     <For each={props.diff}>
       {([type, change]) => (
         <li class="flex py-1 ml-2">
-          <div class="text-xs mr-3 mt-1">
+          <div class="text-xs mr-3 mt-1 ">
             {type == "buff" && <Icon icon="circle-plus" class="text-green-700" />}
             {type == "nerf" && <Icon icon="circle-minus" class="text-red-700" />}
             {type == "fix" && <Icon icon="circle-check" class="text-gray-300" />}
@@ -249,23 +249,32 @@ const Sidebar = () => {
 
 const DirtSimpleMd: Component<{ md: string }> = (props) => {
   return (
-    <>
+    <div class="mb-8">
       {...(props.md ?? "").split("\n").map((line) => {
-        line = line.trim();
-        if (line.startsWith("###")) return <h5 class="text-md font-bold mb-2 mt-4">{line.slice(4)}</h5>;
-        if (line.startsWith("##")) return <h4 class="text-lg font-bold mb-2 mt-4">{line.slice(3)}</h4>;
-        if (line.startsWith("#")) return <h3 class="text-xl text-white font-bold  mb-2 mt-4">{line.slice(2)}</h3>;
-        if (line.startsWith("> ")) return <DevNote note={line.slice(2)} />;
-        if (line.startsWith("![") && line.endsWith(")")) {
-          const [_, alt, url] = line.match(/!\[(.*)\]\((.*)\)/);
+        const l = line.trim();
+        if (l.startsWith("###")) return <h5 class="text-md font-bold mb-2 mt-4">{l.slice(4)}</h5>;
+        if (l.startsWith("##")) return <h4 class="text-lg font-bold mb-2 mt-4">{l.slice(3)}</h4>;
+        if (l.startsWith("#")) return <h3 class="text-xl text-white font-bold  mb-2 mt-4">{l.slice(2)}</h3>;
+        if (l.startsWith("> ")) return <DevNote note={l.slice(2)} />;
+        if (l.startsWith("![") && l.endsWith(")")) {
+          const [_, alt, url] = l.match(/!\[(.*)\]\((.*)\)/);
           return <img src={url} alt={alt} class="w-full my-8 rounded-md" />;
         }
-        if (line.startsWith("* "))
+        if (line.startsWith("    * "))
           return (
-            <p class="text-gray-100 pl-4 text-base before:content-['•'] before:text-gray-200 before:-ml-4 before:inline-block before:w-4 ">{line.slice(2)}</p>
+            <p class="text-gray-100 pl-12 mb-1 text-base before:content-['●'] before:text-gray-400 before:-ml-4 before:text-xs before:inline-block before:w-6 leading-normal ">
+              {line.slice(6)}
+            </p>
           );
-        return <p class="text-gray-100 text-base my-2">{line}</p>;
+        if (l.startsWith("* "))
+          return (
+            <p class="text-gray-100 pl-8 mb-2 text-base before:content-['●'] before:text-gray-400 before:text-xs before:-ml-6 before:inline-block before:w-6 leading-normal">
+              {l.slice(2)}
+            </p>
+          );
+
+        return <p class="text-gray-100 text-base my-2">{l}</p>;
       })}
-    </>
+    </div>
   );
 };
