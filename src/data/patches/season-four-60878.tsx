@@ -122,7 +122,7 @@ export const season4: PatchNotes = {
           items: ["buildings/fortified-palisade-wall"],
           diff: [
             ["nerf", "Health reduced from 3000 to 2500"],
-            ["nerf", "Build time reduced from 7 to 3 seconds"],
+            ["buff", "Build time reduced from 7 to 3 seconds"],
           ],
         },
         {
@@ -286,11 +286,11 @@ export const season4: PatchNotes = {
           civs: ["ch"],
           diff: [["fix", "Fixed a bug where Granaries wouldn’t generate taxes when technologies were researched there."]],
         },
-        {
-          items: ["buildings/town-center", "units/villager"],
-          civs: ["ch"],
-          diff: [["nerf", "Song Dynasty Villager production speed bonus reduced from +35% to +25%"]],
-        },
+        // {
+        //   items: ["buildings/town-center", "units/villager"],
+        //   civs: ["ch"],
+        //   diff: [["nerf", "Song Dynasty Villager production speed bonus reduced from +35% to +25%"]],
+        // },
         {
           items: ["units/nest-of-bees"],
           civs: ["ch"],
