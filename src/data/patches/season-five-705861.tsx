@@ -1347,5 +1347,208 @@ The “Set a Home Market” button has been removed and replaced with a “Resta
         },
       ],
     },
+    {
+      title: "Ranked Season 5",
+      civs: [],
+      changes: [],
+      md: `
+
+
+![Ships going into a cave filled with treasure](https://www.ageofempires.com/wp-content/uploads/2023/06/s5_keyart_rankedseason-1080x608.png)
+
+### Ranked Play
+
+To arms! Ranked play kicks off Season Five on June 16th at 10:00 am PDT (17:00 UTC)! Age up through the ranks and earn your rewards before the season ends October 23rd at 11:59 pm PDT (Oct 24th at 06:59 UTC)! 
+
+![Rewards for ranked and multiplayer ranked play](https://www.ageofempires.com/wp-content/uploads/2023/06/S5_RankedRewards_Showcase_Template_1920X1020.jpg)
+
+## Season Five Map Pools
+
+
+We're refreshing the ranked map pools once again with a new rotation including the first appearance of Marshland and bringing back some maps we haven't seen for a while such as The Pit. 
+
+> Your feedback in action! We listened to lots of community feedback during our last Public Update Preview (PUP) and have implemented changes to our map rotation from what was previewed in the PUP. Notably, we heard you loved the new maps Golden Heights and Volcanic Island so much, we're bringing them directly into the pool! 
+
+We're also trying something a little different this season. Now through July 20th, our two Map Monsters will be visible on select maps. For the first time, our Map Monsters will also be included on Ranked maps!  
+
+### 1v1 Ranked Map Pool for Season Five 
+
+* Boulder Bay  (+ Map Monster) 
+* Dry Arabia 
+* Golden Heights (New Map) 
+* Hideout 
+* High View 
+* Hill & Dale 
+* Marshland  (+ Map Monster) 
+* The Pit  
+* Volcanic Island (New Map) 
+
+### Team Ranked Map Pool for Season Five
+
+* Boulder Bay  (+ Map Monster) 
+* Danube River 
+* Dry Arabia 
+* French Pass 
+* High View  
+* Hill & Dale 
+* Lipany  
+* Marshland (+ Map Monster) 
+* Volcanic Island (New Map)
+`,
+    },
+    {
+      title: "Gameplay",
+      civs: [],
+      md: `
+### AI Updates
+* Fixed multiple bugs and tuning that would sometimes allow the Easy AI to be more aggressive or produce more military than intended. 
+* Fixed AI siege weapons sometimes being stuck in a loop of setting up, tearing down, and repositioning. 
+* Made AI siege weapons “smarter” during a siege of an enemy base, they spend less time standing around doing nothing if they can’t reach the selected target. 
+* Fixed a bug where sometimes the AI could send villagers to farm allied player farms. 
+* Improved positioning of AI’s early resource drop-off camps to favor being on the side of a deposit that is closer to the AI’s town center, instead of positioning them farther away and being harder to defend. 
+* Improved the AI’s placement and frequency of building lumber yards to improve wood gathering efficiency. 
+* Fixed an issue where the AI would sometimes fail to build farms on naval maps. 
+* Fixed a bug where AI villagers could temporarily go idle when dropped off on an island. 
+* AI players will now correctly begin scouting on Four Lakes and Continental maps. 
+* AI resource exchange via market has been optimized, so that AI will only go for resource exchanges that make sense. 
+* AI will not send its villagers into dangerous areas to fix allied Landmarks anymore. 
+* Fixed a bug that sometimes caused the AI to not research tier upgrades (veteran/elite unit upgrades). 
+* Pathfinding improvements allow AI to handle walls more intelligently on campaign maps. 
+* Fixed an issue where the AI’s archers would sometimes move closer to the enemy between attacks instead of standing in place. 
+* Fixed a bug that would cause AI archers to sometimes briefly stand idle after attempting to reposition during a fight. 
+* Fixed a bug that could sometimes cause the AI’s military ships to fail to retreat from a fight. 
+* Fixed a bug where the AI would not produce the Tithe Barns research. 
+* AI’s scouts will now ignore wolves unless they are from the Rus civilization. They will also not enter in this combat if they are low on health. 
+* In Nomad mode, if a player tries to build their Town Center near where the AI is planning their Town Center the AI should now reposition to a safer location. 
+
+### Hotkeys
+* Hotkey improvement: double-press hotkey combos are now triggered after the second press of two single-press hotkey combo presses using the same key. Previously the double-press would in some cases trigger between the triggering of the two single-presses. This enables certain scenarios where both single-press and double-press of the same key are bound to commands which modify the selection. 
+* Added a new hotkey to cycle through individual Landmarks. 
+* Mouse wheel scroll up/down can now be used as a key for any other hotkey binding. 
+* Camera zoom in/out can now be bound to a key instead of, or in addition to, the mouse wheel. 
+* A bug that prevented key combos assigned to a modifier without any other key from working without a restart of the game has been fixed. 
+  * When using Alt, Ctrl or Shift as a bound key or as a key combo modifier, the right-hand-side modifier keys will now work the same as the left-hand-side ones. 
+  * With the improvements to fully remappable hotkeys that allow modifiers to be used as bound keys, and in order to allow for future improvements to combo modifiers, the “Swap Shift and Alt Modifier Keys” configuration setting has been removed. 
+
+### Masteries
+* Fixed the localization text of the Training Masteries to include any campaign mission. 
+* Changed English Mastery “Gather Round” to “Setup 5 simultaneous camps, with at least one unit gaining benefit from each camp.” 
+* Fixed a bug where Malian Mastery “Commune of Wealth” could be completed on the Malians Art of War Mission. 
+* Fixed the Malian Mastery “Barrage” by adding Tower War Elephants to list of potential targets. 
+* Fixed the Malian Mastery “Grazing Herds” to include the effect of Grand Fulani Corral landmark into the progression of the mastery. 
+* Fixed the description text of Malian Mastery “Healing Around” to include any Musofadi units.   
+* Reduced difficulty of Mongol Mastery “Wolves and Rain”. Players can now complete the mastery by defeating 20 units with the Ortoo bonus (from outposts) rather than 30. 
+* Fixed the Ottoman mastery “On the Move” so that destroyed keeps do not count for completion. 
+* The Rus Mastery “Black Powder” was changed to “Research Chemistry and defeat 30 enemies using Streltsy units.” 
+* The Rus Mastery “Mount the Attack” was changed to “Research Boyars Fortitude and then defeat 30 enemies with cavalry units.” 
+
+### UX/UI & Menus
+* You can now exit villager’s sub build menus by: 
+  * Hitting Esc key, 
+  * Hitting right-click, 
+  * Hitting a dedicated custom hotkey (available under the Game tab). 
+* Instead of displaying “No Result” for matches going through an arbitration process, we now display the final result in the Match History screen when established. 
+* Fixed an issue where starting units are counted as double in the post-game timeline. 
+* Units defeated count in the post-match screen will exclude player deleted units. 
+* We’ve updated the frequency at which the UI will calculate resources gained per minute, leading to more accurate values. 
+* Standardized language of many technologies to use “attack speed” instead of reduced reload duration so it’s easier to compare their effects and understand the bonuses provided. 
+* The UI command card tooltip will now properly update the names and stats of new upgrades.  
+  * i.e. Lancers and Man-at-arm units will display the correct weapon being used after researching the Kilij weapon upgrade: Honed Blades. 
+* An improvement has been made to the observable games browser to make it easier to find the games you want. 
+* Coat of Arms patterns now fill the entire space of their associated banner. 
+* Coat of Arms patterns now extend the length of the banner. 
+* Players can now easily view other players’ profiles directly via the match history tab of the player profile. 
+* Players can no longer leave a party while in a match lobby or while searching for a match. 
+* Notifications are now displayed in front of modal menus. 
+* Added a new option to control the overall shadow quality of units and buildings. 
+* Fixed an issue where enemy AI’s Age Up notifications will not always display properly. 
+* Converted the text “OR” in the Age Up Modal to an image to address translation issues. 
+* Fixed a bug that prevented movie titles from displaying when the user has subtitles turned off. 
+* Increased the font size of the campaign in-game subtitles. 
+* Fixed an issue where background music sometimes was not playing after watching a full campaign video. 
+* Alert pop ups in the introductory scenario can now be dismissed properly.
+            
+      `,
+      changes: [],
+    },
+    {
+      title: "Maps",
+      civs: [],
+      changes: [],
+      md: `
+## General Map Changes
+* The variation of different trees has increased in some biomes. 
+* Added missing straggler trees on Hideout, Wetlands, Waterholes, Mountain Clearing and Forests Ponds. 
+
+## Map-Specific Changes
+### Archipelago 
+* Fixed a bug on Archipelago that caused islands to generate too far apart on smaller map sizes, creating too much water and not enough land for objects to generate appropriately. 
+* Fixed a bug that caused islands on Archipelago to generate incorrectly on the small map size, often resulting in resources and Sacred Sites not generating. 
+
+### Black Forest 
+* Boars on Black Forest should now get distributed more evenly across the map, instead of being clumped up in one area. 
+
+### Four Lakes 
+* (1v1) Corner Islands were removed.
+* (1v1) Two Sacred Sites will spawn at the mainland.
+* Player’s starting forest size has been decreased and tuned to spawn closer to the player’s base.
+* Total amount of small forests around the map has been increased.
+* Fixed an issue where shore-fish would not spawn on the shore near the player’s base.
+
+### Hill & Dale 
+* The large gold and the large stone at the player’s base have been removed. 
+### Prairie 
+* Adjusted the Sacred Sites on Prairie in an attempt to have them generate more evenly between teams and players. 
+### Warring Islands 
+* Fixed an issue that caused neutral resources to not always generate correctly on Warring Islands with specific team configurations. 
+* Relics have been redistributed on Warring Islands. Four relics now always generate on the two central islands, while each player has one nearby relic. 
+### Waterholes 
+* Updated Waterholes to have a minimum number of forests spawn in close proximity to all players. 
+### Wetlands 
+* Fixed animals and other objects sometimes getting trapped inside forests on Wetlands. 
+* Fixed relics sometimes not generating in the appropriate number on Wetlands. 
+
+      
+      `,
+    },
+    {
+      title: "Mods",
+      civs: [],
+      changes: [],
+      md: `
+### Mod Download Update for Custom Lobbies 
+We made it easier to see the status of modded matches in the lobby by adding indicators on the left side of a player’s name. This shows the status in the lobby for the mods required, whether they have blocked user-generated content (UGC), are pending consent to download a missing mod, or if they have all the required mods. 
+Players can now open a mod’s details page and subscribe to it without leaving the lobby screen. 
+Additionally, the mod’s creator will now be listed while loading into a modded match. 
+
+`,
+    },
+    {
+      title: "Ongoing",
+      civs: [],
+      changes: [],
+      md: `
+### Ranked Rewards 
+We’ve heard your feedback regarding the Ranked Rewards system. Currently, rewards are based upon your final standing at the end of the season, which incentivizes some players to stop competing after they have reached a certain rank in fear that they might lose their rewards. Our team is working to change this, such that a player’s Ranked Rewards for a season are based upon the highest rank achieved at any point in the season. This means that players can continue to push themselves towards greater heights without fear of losing out on seasonal rewards. 
+
+We hope to land this change before the end of Season Five, however we have ongoing work to complete and test to ensure full confidence in delivery of this feature. We will plan for further updates to confirm when this much-requested change will land.  
+
+### Queue Dodging 
+We have heard reports of excessive queue dodging in Ranked play, where some players will force a disconnect and take a cooldown penalty rather than play a match against their assigned opponent. As we’ve been monitoring the situation, we noticed a variety of reasons why players might opt to abuse the current system. As such, we are working on a multi-pronged approach to addressing the problem. We won’t be letting the cat out of the bag just yet but want to communicate some of the avenues we are pursuing. 
+
+Firstly, we are making the above changes to the Ranked Rewards system to remove rank-loss as an incentive for dodging relatively even matchups. 
+
+Next, while the ranked system does an adequate job of finding timely and even matches for the majority of players, it has difficulty finding such matches for players at the far top and far bottom of ELO scores. This has resulted in some uneven matchups where one player has a vastly higher ELO score, due to one player maxing out their queue timer. We are looking at future changes to the matchmaking system for just the players in these high and low extremes, which will prioritize matchmaking near leaderboard position rather than just ELO score. This should address many of the queue dodging reasons related to highly uneven matchups. 
+
+Lastly, we will also be looking at increasing the penalties related to queue dodging from their current settings. While we would prefer to lure action with incentives and removed barriers, we realize that some players may choose to still dodge their matchup unless we also disincentivize that action. 
+
+Right now we are in the investigation phase for several of these efforts and will look to provide more information regarding timeline and approach in the future.  
+
+### Ranked Teams Cheating 
+We have also noticed an increase in brazen cheating going on in Ranked Team matches. Our work in this area is ongoing, but please continue to report cheaters either in-game, or by reporting them to Customer Support. These reports are most helpful while we are investigating back-end solutions. 
+
+As part of user privacy, we do not normally comment on enforcement action taken against specific cheaters, but do know that cheating in Ranked can lead up to a permanent ban from multiplayer aspects of the game. 
+`,
+    },
   ],
 };
