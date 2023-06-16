@@ -89,11 +89,12 @@ export function splitUnitsIntoGroups(units: UnifiedItem<Unit>[]) {
       else if (unit.classes.some((c) => c === "infantry")) acc.infantry.push(unit);
       else if (unit.classes.some((c) => c === "cavalry")) acc.cavalry.push(unit);
       else if (unit.classes.some((c) => c === "siege")) acc.siege.push(unit);
+      else if (unit.classes.some((c) => c === "mixed")) acc.misc.push(unit);
       else acc.workers.push(unit);
 
       return acc;
     },
-    { workers: [], infantry: [], cavalry: [], siege: [], ships: [] } as GroupedUnits
+    { workers: [], infantry: [], cavalry: [], siege: [], ships: [], misc: [] } as GroupedUnits
   );
 }
 

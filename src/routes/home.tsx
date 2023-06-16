@@ -16,8 +16,8 @@ export const CivOverviewRoute = () => {
         <div class="mx-2 sm:mx-6">
           <div class="flex flex-wrap items-center">
             <h1 class="text-3xl font-bold mr-6">AoE4 Explorer</h1>
-            <Link href="/patches/patch-61130" class="text-xs px-3 uppercase font-bold py-1 rounded-full text-gray-100 bg-black border border-gray-300" ref={el}>
-              <i class="fas fa-asterisk mr-1"></i> Patch 6.1.130
+            <Link href="/patches/season-5" class="text-xs px-3 uppercase font-bold py-1 rounded-full text-gray-100 bg-black border border-gray-300" ref={el}>
+              <i class="fas fa-asterisk mr-1"></i> Season 5
             </Link>
             <Tooltip attachTo={el}>
               <div class={tooltipCSSClass}>The Explorer includes all changes introduced with Season 4</div>
