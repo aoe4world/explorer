@@ -116,8 +116,13 @@ function mergeVariationsToStats(variations: (Unit | Building)[]) {
     }, {} as Partial<Record<StatProperty, Stat>>);
 }
 
-export function round(number: number, decimals: number) {
+export function roundToDecimals(number: number, decimals: number) {
   return Math.round(number * Math.pow(10, decimals)) / Math.pow(10, decimals);
+}
+
+export function roundToGameTicks(number: number) {
+  const tick = 0.125;
+  return Math.round(number / tick) * tick;
 }
 
 export function calculateStatParts(
@@ -127,7 +132,8 @@ export function calculateStatParts(
 ): CalculatedStats {
   if (!stat) return { total: 0, base: 0, upgrades: 0, technologies: 0, bonus: 0, parts: [], max: 0 };
   if (!decimals) decimals = 0;
-  const parts = stat.parts.sort((a, b) => a[2] - b[2]).map(([v, i, a, ...r]) => [a > maxAge ? 0 : round(v, decimals), i, a, ...r] as StatPart<number>);
+  const round = (val) => (stat.category == "attackSpeed" ? roundToGameTicks(val) : roundToDecimals(val, decimals));
+  const parts = stat.parts.sort((a, b) => a[2] - b[2]).map(([v, i, a, ...r]) => [a > maxAge ? 0 : round(v), i, a, ...r] as StatPart<number>);
 
   let base = parts[0]?.[0] ?? 0;
   let upgrades = parts.reduce((total, [value]) => total + value, 0) - base;
@@ -154,7 +160,7 @@ export function calculateStatParts(
           } else if (modifier.effect == "change") value = modifier.value;
         }
         technologies += value;
-        parts.push([round(value, decimals), id, age, variation, "technology"]);
+        parts.push([round(value), id, age, variation, "technology"]);
         return parts;
       }, [] as StatPart<number>[])
   );
@@ -182,17 +188,17 @@ export function calculateStatParts(
           ...(modifier.target.id ?? []),
           ...(modifier.target.class ?? []).map((c) => c.flatMap((x) => x.split("_")).join(" ")),
         ].join(", ");
-        parts.push([round(value, decimals), id, age, variation, "bonus", `Bonus damage vs ${tryCreateVsBonusName}`]);
+        parts.push([round(value), id, age, variation, "bonus", `Bonus damage vs ${tryCreateVsBonusName}`]);
         return parts;
       }, [] as StatPart<number>[])
     );
 
   bonus = Object.values(maxBonusInAge).reduce((a, b) => a + b, 0);
-  base = round(base, decimals);
-  upgrades = round(upgrades, decimals);
-  technologies = round(technologies, decimals);
-  bonus = round(bonus, decimals);
-  const total = round(base + upgrades + technologies, decimals);
+  base = round(base);
+  upgrades = round(upgrades);
+  technologies = round(technologies);
+  bonus = round(bonus);
+  const total = round(base + upgrades + technologies);
   const max = total + bonus;
 
   return { total, base, upgrades, technologies, bonus, parts, max };

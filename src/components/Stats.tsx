@@ -1,7 +1,7 @@
 import { Component, createEffect, createMemo, createSignal, Index, on, Show } from "solid-js";
 import { RESOURCES } from "../../assets";
 import { CIVILIZATIONS, PRETTY_AGE_MAP } from "../config";
-import { calculateStatParts, round } from "../query/stats";
+import { calculateStatParts, roundToDecimals } from "../query/stats";
 import { statLabelCSSClass, tooltipCSSClass } from "../styles";
 import { Item, UnifiedItem } from "../types/data";
 import { CalculatedStats, Stat, StatPart } from "../types/stats";
@@ -314,7 +314,7 @@ export const StatNumber: Component<{
 };
 
 function dps(attackDuration: number, damage: number) {
-  return attackDuration && damage ? round(damage / attackDuration, 2) : 0;
+  return attackDuration && damage ? roundToDecimals(damage / attackDuration, 2) : 0;
 }
 
 function calculateDpsParts(speed: CalculatedStats, attacks: CalculatedStats[]) {

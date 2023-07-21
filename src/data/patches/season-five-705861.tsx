@@ -40,7 +40,7 @@ export const season5: PatchNotes = {
       </div>
     </div>
   ),
-  date: new Date("2023-02-16T12:00:00Z"),
+  date: new Date("2023-05-16T12:00:00Z"),
   sections: [
     {
       title: "Build Spotlight",
