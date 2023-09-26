@@ -4,8 +4,10 @@ export const patch61130: PatchNotes = {
   id: "patch-61130",
   buildId: 61130,
   name: "Patch 6.1.130",
+  season: 4,
+  type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-four-patch-6-1-130/",
-  summary: `"Our Enchanted Grove event comes to a close with the release of Patch 6.1.130. We hope you had an enchanting time in the biome but now both the biome and the Enchanted Stag have trotted off to parts unknown.
+  introduction: `"Our Enchanted Grove event comes to a close with the release of Patch 6.1.130. We hope you had an enchanting time in the biome but now both the biome and the Enchanted Stag have trotted off to parts unknown.
 
   In this new patch we have listened to your feedback and reverted the resource-gathering boost which was added to the Hardest AI. Instead, we have added multiple additional new levels of AI difficulty beyond the Hardest setting making use of the boosted resource-gathering in those difficulties. We can’t wait to hear your feedback on the new AI Difficulty levels! There are also improvements to in-game balance, fixes to known issues, and slight tweaks to trade as our team previews some of our larger goals with that mechanic – read more below! Thanks again to our amazing community members, all of whom have helped to make Age of Empires what it is today!
   

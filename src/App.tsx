@@ -18,6 +18,7 @@ import { getItemHref } from "./components/Cards";
 import { PatchDetailRoute } from "./routes/patches/[id]";
 import { findClosestMatch } from "./query/utils";
 import { SearchRoute } from "./routes/search";
+import { PatchListRoute } from "./routes/patches";
 
 const routes: RouteDefinition[] = [
   {
@@ -98,6 +99,10 @@ const routes: RouteDefinition[] = [
   {
     path: "/quiz/twitch/:channel",
     component: lazy(() => import("./routes/quiz/twitch")),
+  },
+  {
+    path: "/patches/",
+    component: () => PatchListRoute,
   },
   {
     path: "/patches/:id",

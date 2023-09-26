@@ -55,7 +55,11 @@ export const PatchDetailRoute = () => {
   createEffect(
     () =>
       patch() &&
-      setActivePage({ title: `${patch()?.name} ${civ() ? `– ${CIVILIZATIONS[civ()]?.name}` : ""}`, description: patch()?.summary, location: useLocation() })
+      setActivePage({
+        title: `${patch()?.name} ${civ() ? `– ${CIVILIZATIONS[civ()]?.name}` : ""}`,
+        description: patch()?.introduction,
+        location: useLocation(),
+      })
   );
 
   return (
@@ -64,14 +68,17 @@ export const PatchDetailRoute = () => {
         <div class="mb-6 text-gray-300 space-x-4">
           <Show when={pagination()?.previous}>
             {(prev) => (
-              <Link href={`/patches/${prev.id}`}>
+              <Link href={`/patches/${prev.id}`} class="hover:text-white">
                 <Icon icon="arrow-left-long" class="mr-1"></Icon> {prev.name}
               </Link>
             )}
           </Show>
+          <Link href={"/patches/"} class="hover:text-white">
+            All
+          </Link>
           <Show when={pagination()?.next}>
             {(next) => (
-              <Link href={`/patches/${next.id}`}>
+              <Link href={`/patches/${next.id}`} class="hover:text-white">
                 {next.name} <Icon icon="arrow-right-long" class="ml-1"></Icon>
               </Link>
             )}
@@ -82,9 +89,12 @@ export const PatchDetailRoute = () => {
         </h1>
         <div class="text-gray-300 mt-1">
           {patch()?.date.toLocaleDateString("en-US", { dateStyle: "full" })} {patch()?.buildId && <span class="ml-2">#{patch().buildId}</span>}
+          <span class="ml-2">
+            Season {patch()?.season} {patch()?.type}
+          </span>
         </div>
         <div class={mainIntroductionCSSClass}>
-          <DirtSimpleMd md={patch()?.summary} />
+          <DirtSimpleMd md={patch()?.introduction} />
         </div>
 
         {patch()?.officialUrl && (
@@ -258,7 +268,15 @@ const DirtSimpleMd: Component<{ md: string }> = (props) => {
         if (l.startsWith("> ")) return <DevNote note={l.slice(2)} />;
         if (l.startsWith("![") && l.endsWith(")")) {
           const [_, alt, url] = l.match(/!\[(.*)\]\((.*)\)/);
-          return <img src={url} alt={alt} class="w-full my-8 rounded-md" />;
+          return <img src={url} alt={alt} class="max-w-full my-8 rounded-md" />;
+        }
+        if (l.startsWith("[") && l.includes("](") && l.endsWith(")")) {
+          const [_, label, url] = l.match(/\[(.*)\]\((.*)\)/);
+          return (
+            <a href={url} class="bg-white my-2 inline-block font-bold text-black rounded-full px-4 py-2 hover:bg-white/70" target="_blank">
+              {label}
+            </a>
+          );
         }
         if (line.startsWith("    * "))
           return (

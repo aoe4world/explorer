@@ -4,8 +4,10 @@ export const patch20249: PatchNotes = {
   id: "patch-20249",
   buildId: 20249,
   name: "Patch 20249",
+  season: 2,
+  type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-20249/",
-  summary: `"Welcome back to an exciting patch for Age of Empires IV! Starting tomorrow, August 4th, we’ll be rolling out balance changes, bug fixes, and more. And yes, that means we’re also including the Prelate Attack move bug you’ve reported! We’re also adding more improvements to hotkey features, including the ability to batch-queue units properly when using shift, mapping more hotkeys for civ-specific commands. Here are a few highlights that you can look forward to in tomorrow’s update!" 
+  introduction: `"Welcome back to an exciting patch for Age of Empires IV! Starting tomorrow, August 4th, we’ll be rolling out balance changes, bug fixes, and more. And yes, that means we’re also including the Prelate Attack move bug you’ve reported! We’re also adding more improvements to hotkey features, including the ability to batch-queue units properly when using shift, mapping more hotkeys for civ-specific commands. Here are a few highlights that you can look forward to in tomorrow’s update!" 
 
 * Remappable Hotkey Fixes
 * Map Balance Changes

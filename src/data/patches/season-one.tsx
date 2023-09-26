@@ -8,7 +8,9 @@ export const season1: PatchNotes = {
   id: "season-one",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-one-update-release-notes/",
   name: "Season One Update",
-  summary: `The first major update of 2022 brings Ranked Seasons, the Content Editor beta (and Mods!), Seasonal Events, Major Balance changes, as well as a ton of quality-of-life changes to Age of Empires IV.   
+  season: 1,
+  type: "update",
+  introduction: `The first major update of 2022 brings Ranked Seasons, the Content Editor beta (and Mods!), Seasonal Events, Major Balance changes, as well as a ton of quality-of-life changes to Age of Empires IV.   
       `,
   buildId: 12793,
   date: new Date("2022-04-07"),

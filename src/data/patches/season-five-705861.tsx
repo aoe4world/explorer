@@ -5,7 +5,11 @@ export const season5: PatchNotes = {
   buildId: 705861,
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-five-update-7-0-5861/",
   name: "Season Five Update",
-  summary: `"We’re turning up the heat in Season Five with Map Monsters: Summer Party Edition! Scout the land and scour the sea in search for the elusive Wild Man and mysterious Dragon Turtle in our Summer Party event! Start a match off strong in Empire Wars – a new, quick-to-action game mode where players start with a burgeoning empire of pre-built buildings and villagers already tasked to resources. But that’s not all: We’ve packed this update with loads of new content and features, ready for you to dive in starting June 15th!"
+  season: 5,
+  type: "update",
+  summary:
+    "Trade adjustments. Introduction of Empire Wards Mode. New unique units: Ghulam, Ghazi Raider, Keshik. Hunting Cabin rework. Nerfs to Malian Farimba Garrison + Warrior Scout, buffs to Abbasid. Lots of technology changes.",
+  introduction: `"We’re turning up the heat in Season Five with Map Monsters: Summer Party Edition! Scout the land and scour the sea in search for the elusive Wild Man and mysterious Dragon Turtle in our Summer Party event! Start a match off strong in Empire Wars – a new, quick-to-action game mode where players start with a burgeoning empire of pre-built buildings and villagers already tasked to resources. But that’s not all: We’ve packed this update with loads of new content and features, ready for you to dive in starting June 15th!"
 
   A few highlights include:
 

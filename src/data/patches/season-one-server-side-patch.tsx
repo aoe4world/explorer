@@ -2,9 +2,11 @@ import { PatchNotes } from "../../types/patches";
 
 export const s1ServerSide1: PatchNotes = {
   id: "season-one-server-side-patch",
-  name: "Season One Server Side Patch",
+  name: "Server Side Patch 12793",
+  season: 1,
+  type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-server-side-patch-12973/",
-  summary: `"Following on the heels of the Season One update, we’re excited to introduce a brand new path for bringing you smaller, more pointed changes with Server-Side Patches."   
+  introduction: `"Following on the heels of the Season One update, we’re excited to introduce a brand new path for bringing you smaller, more pointed changes with Server-Side Patches."   
       `,
   buildId: 12793,
   date: new Date("2022-04-11"),

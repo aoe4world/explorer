@@ -2,11 +2,14 @@ import { JSX } from "solid-js/jsx-runtime";
 import { civAbbr } from "./data";
 export type PatchNotes = {
   id: string;
+  season: number;
+  type: "update" | "patch";
   name: string;
   date: Date;
   buildId?: number;
   officialUrl?: string;
-  summary: string;
+  introduction: string;
+  summary?: string;
   html?: JSX.Element;
   sections: PatchSection[];
 };

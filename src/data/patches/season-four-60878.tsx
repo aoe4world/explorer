@@ -5,7 +5,9 @@ export const season4: PatchNotes = {
   buildId: 60878,
   officialUrl: "https://www.ageofempires.com/news/ageiv_seasonfour_update_60878/",
   name: "Season Four Update",
-  summary: `"Join us in the Enchanted Grove for Season Four, starting on February 16th! In this update, you can optimize your strategy on three new maps, start from scratch with only a few villagers and no starting Town Center in the new Nomad game mode, build new or improved Landmarks, and more! You’ll also get to explore the new Enchanted Grove Biome as we round out this update with a new season of events, rewards and ranked, as well as quality-of-life updates." 
+  season: 4,
+  type: "update",
+  introduction: `"Join us in the Enchanted Grove for Season Four, starting on February 16th! In this update, you can optimize your strategy on three new maps, start from scratch with only a few villagers and no starting Town Center in the new Nomad game mode, build new or improved Landmarks, and more! You’ll also get to explore the new Enchanted Grove Biome as we round out this update with a new season of events, rewards and ranked, as well as quality-of-life updates." 
 
 * New Event and Biome: Enchanted Grove 
 * Season Four Ranked 1v1 and Team Ranked 

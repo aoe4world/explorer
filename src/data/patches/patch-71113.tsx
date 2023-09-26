@@ -4,8 +4,11 @@ export const patch71113: PatchNotes = {
   id: "patch-71113",
   buildId: 71113,
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-five-update-7-1-113/",
-  name: "Season Five Patch 7.1.113",
-  summary: `"Plenty of changes are coming with the release of our latest minor patch. The Wild Man and Dragon Turtle have faded back into legend, and we hope you enjoyed the monstrous start to Season Five! Here is a peak at what is included":
+  name: "Patch 7.1.113",
+  season: 5,
+  type: "patch",
+  summary: "Nerfs to Keep costs, range and boiling oil. Nerfs to Levy Militia, Rus, Chinese. Buffs for Musofadi Warriors, Sipahi and Delhi Landmarks.",
+  introduction: `"Plenty of changes are coming with the release of our latest minor patch. The Wild Man and Dragon Turtle have faded back into legend, and we hope you enjoyed the monstrous start to Season Five! Here is a peak at what is included":
 
 
 *  Updates to Ranked Season Rewards! 
