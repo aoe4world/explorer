@@ -220,7 +220,7 @@ export async function getPatchHistory(item: UnifiedItem, civs?: civConfig[]) {
       history.push({ patch, diff });
     }
   }
-  return history.sort((a, b) => b.patch.date.valueOf() - a.patch.date.valueOf());
+  return history.sort((a, b) => patches.indexOf(b.patch) - patches.indexOf(a.patch));
 }
 
 function civOverlap(filter: civAbbr[], value: civAbbr[]) {
