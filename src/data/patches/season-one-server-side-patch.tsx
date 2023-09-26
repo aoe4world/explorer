@@ -6,6 +6,7 @@ export const s1ServerSide1: PatchNotes = {
   season: 1,
   type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-server-side-patch-12973/",
+  summary: "Nerfs to Mangonels, Khan, and Camel Archers. Buffs to Rams. Monks walk slower with relics.",
   introduction: `"Following on the heels of the Season One update, we’re excited to introduce a brand new path for bringing you smaller, more pointed changes with Server-Side Patches."   
       `,
   buildId: 12793,

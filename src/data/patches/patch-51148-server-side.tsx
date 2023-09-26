@@ -7,6 +7,7 @@ export const serverSidePatch51148: PatchNotes = {
   season: 3,
   type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-server-side-patch-5-1-148-1/",
+  summary: "Nerfs to Stone Walls, Cattle, Pastures, Chinese' build speed, Song and Barbican of the Sun.",
   introduction: `"To help keep the meta fresh, we're making tweaks to some of the top-performing civilizations. In this patch, you’ll find that it will take more time to build walls and defensive structures, you'll see a few adjustments to the Chinese civilization, and other balance changes to the Malians and Mongol civilizations. Read on to learn more!"`,
   date: new Date("2022-12-08T20:00:00.000Z"),
   sections: [

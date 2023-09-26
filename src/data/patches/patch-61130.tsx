@@ -6,6 +6,7 @@ export const patch61130: PatchNotes = {
   name: "Patch 6.1.130",
   season: 4,
   type: "patch",
+  summary: "Trebuchet changes, reintroduction of Hardest AI. Sofa, Abbasid and French buffs, nerfs to trade, Delhi, Mongols and Ottomans.",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-four-patch-6-1-130/",
   introduction: `"Our Enchanted Grove event comes to a close with the release of Patch 6.1.130. We hope you had an enchanting time in the biome but now both the biome and the Enchanted Stag have trotted off to parts unknown.
 

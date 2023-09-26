@@ -7,6 +7,8 @@ export const season3: PatchNotes = {
   name: "Season Three Update",
   season: 3,
   type: "update",
+  summary:
+    "Introduction of 2 new civilizations: the Malians and Ottomans. Major Naval rework. Buffs to trade, eco techs and several units. Town Center cost increase. No more sheep-bounty for Rus or stone income from French and Abbasid Trade.",
   introduction: `"We’re excited to celebrate with you all and thought we’d get the party started with an early and in-depth view of everything you can expect from Season Three, including new civilizations, challenges, achievements, features and more. Whether you’re interested in honing new strategies with the Malians and Ottomans, building your skillset with Art of War challenges, competing in 1v1 Solo Ranked or competing with friends in the all-new Team Ranked, or earning a set of Age-themed rewards, we’ve got a little bit of something for every play-style coming your way with the Season Three: Anniversary.  
   
  * Two new civilizations, the Ottomans and Malians, along with corresponding Art of War challenges, Masteries and Achievements! 

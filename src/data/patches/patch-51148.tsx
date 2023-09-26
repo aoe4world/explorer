@@ -7,6 +7,7 @@ export const patch51148: PatchNotes = {
   season: 3,
   type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-51148/",
+  summary: "Buffs to Springald Ships and Malian Cattle and Pit Mines + misc fixes.",
   introduction: `"Welcome to our first minor patch of Season Three, Patch 5.1.148! In this patch, we’re making some balance changes to Forest Ponds, Hideout, and Waterholes according to your feedback from our Season Three Public Update Preview, you’ll see some new UI improvements, and you’ll also see better general stability and performance of the game! Thia time, we’re mixing up the Season Three Map Pool, we’re giving some visual updates to the unit healthbar settings, as well as more balance work on the Malian and Ottoman Civilizations.  
 
   In addition to all of the above, we’re also taking some time to address some of the feedback we’ve heard from you. Special thanks as well to those of you who filled out our Season Three Survey – your feedback is incredibly helpful to us, so please keep sharing your thoughts!"

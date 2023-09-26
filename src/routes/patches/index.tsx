@@ -52,12 +52,12 @@ export const PatchListRoute = () => {
               </Link>
 
               <div class="basis-2/3 shrink-0">
+                <p class="mb-3 text-gray-100">{patch.notes.summary}</p>
                 <div class="max-w-2xl h-2 w-[300px] flex rounded-full overflow-hidden">
                   <div class="bg-green-500 flex-shrink" style={{ "flex-basis": patch.buffed * 1.5 + "px" }}></div>
                   <div class="bg-red-500 flex-shrink" style={{ "flex-basis": patch.nerfed * 1.5 + "px" }}></div>
                   <div class="bg-white/20 flex-shrink" style={{ "flex-basis": patch.fixed * 1.5 + "px" }}></div>
                 </div>
-                <p>{patch.notes.summary}</p>
               </div>
             </div>
 

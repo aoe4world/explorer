@@ -10,6 +10,8 @@ export const season1: PatchNotes = {
   name: "Season One Update",
   season: 1,
   type: "update",
+  summary:
+    "Start of Ranked Seasons, Content Editor beta. Several balance changes to naval play and landmarks such as the Burgrave Palace, House of Wisdom and Chinese Dynasty unlocks.",
   introduction: `The first major update of 2022 brings Ranked Seasons, the Content Editor beta (and Mods!), Seasonal Events, Major Balance changes, as well as a ton of quality-of-life changes to Age of Empires IV.   
       `,
   buildId: 12793,

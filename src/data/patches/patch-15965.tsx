@@ -7,6 +7,7 @@ export const patch15965: PatchNotes = {
   season: 1,
   type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-15965/",
+  summary: "Shift-queue bug fix.",
   introduction: `"In Patch 15965, we’re bringing you fixes to the shift-queue bug that we know you’ve been asking for. Villagers are putting away their sheep shears and will now be using the correct weapons against enemy troops, and you can now queue as many buildings as your pockets allow."`,
   date: new Date("2022-05-25"),
   sections: [

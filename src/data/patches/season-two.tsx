@@ -6,6 +6,8 @@ export const season2: PatchNotes = {
   name: "Season Two Update",
   season: 2,
   type: "update",
+  summary:
+    "Major rework of Siege torching into melee damage. Introduction of Map Vetoes. Stone deposit nerfs and stone buildings cost stone to repair. A nerf to Regnitz Cathedral and buffs to the Kurultai, Great Wall Gatehouse, Spirit Way, Meinwerk Palace, Royal Institute and others.",
   introduction: `Welcome to an exciting Season Two starting tomorrow, July 12th! We’re kicking off with an update full of new key features, quality of life improvements, more customization options, and even more say in how you play – you won’t want to miss out! No matter how you choose to play Age IV, be it single player, campaign, or ranked, we’ve got you covered. Here are a few highlights that you can look forward to in tomorrow’s update!
 
   * Map Preference System

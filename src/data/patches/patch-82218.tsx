@@ -272,7 +272,7 @@ Today’s build invalidates some common forms of Queue Dodging that exploited th
           civs: ["mo"],
           diff: [
             ["buff", "New technology: Outposts gain +3 fire armor and +30% HP."],
-            ["buff", "Costs 350 Gold/150 Stone."],
+            ["buff", "Costs 700 Gold/300 Stone."],
             ["fix", "Outpost changed to Stone Outpost visual."],
             ["fix", "Available at the Ovoo in Imperial Age."],
           ],

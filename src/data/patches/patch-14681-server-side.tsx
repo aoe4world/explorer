@@ -7,6 +7,7 @@ export const serverSidePatch14681: PatchNotes = {
   season: 1,
   type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-server-side-patch-14681/",
+  summary: "Mangonel buff, House of Wisdom tier 1 tech research time reduced, HRE starting gold removed in favor of a free prelate, and more.",
   introduction: `"In Server-Side Patch 14681, we’re bringing you changes to Mangonels! We recognize there’s been a lot of discussion around Mangonels, and we believe these changes build upon the unit’s uniqueness. We’re always open to more feedback, however! You may also be excited to know that the HRE’s Prelates have remembered how to shuffle their feet and no longer get stuck when inspiring their allies. "`,
   date: new Date("2022-05-16T20:00:00.000Z"),
   sections: [
