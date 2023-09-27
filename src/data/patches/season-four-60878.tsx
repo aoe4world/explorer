@@ -782,7 +782,7 @@ export const season4: PatchNotes = {
             ["nerf", "Move from the Barracks to the Meinwerk Palace."],
             ["nerf", "Spearmen gain +2 melee armor instead of +3"],
             ["buff", "Now applies +2 melee armor to Horsemen as well."],
-            ["buff", "Cost reduced from 150 food 350 gold to 75 food 175 gold."],
+            ["buff", "Cost reduced from 150 food 350 gold to 75 food 175 gold (45 food 105 gold with Meinwerk bonus)"],
           ],
         },
         // Steel Barding: Knights gain +2 armor, costs 200 food 500 gold.

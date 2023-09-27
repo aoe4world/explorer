@@ -221,7 +221,7 @@ Today’s build invalidates some common forms of Queue Dodging that exploited th
           // Riveted Chain Mail technology cost reduced from 45 Food/105 Gold to 30 Food/75 Gold.
           items: ["technologies/riveted-chain-mail"],
           civs: ["hr"],
-          diff: [["buff", "Cost reduced from 45 Food/105 Gold to 30 Food/75 Gold."]],
+          diff: [["buff", "Cost reduced from 45 Food/105 Gold to 30 Food/75 Gold (Meinwerk bonus included)."]],
         },
         {
           // Steel Barding technology cost reduced from 120 Food/300 Gold to 90 Food/210 Gold.
@@ -266,12 +266,12 @@ Today’s build invalidates some common forms of Queue Dodging that exploited th
         {
           // New technology: Pax Mongolica
           // 350 Gold/150 Stone.
-          // Outposts gain +3 fire armor and +30% HP. Outpost changed to Stone Outpost visual.
+          // Outposts gain +3 fire armor and +30% HP (incorrect, it's 750+300 hp). Outpost changed to Stone Outpost visual.
           // Available at the Ovoo in Imperial Age.
           items: ["technologies/pax-mongolica"],
           civs: ["mo"],
           diff: [
-            ["buff", "New technology: Outposts gain +3 fire armor and +30% HP."],
+            ["buff", "New technology: Outposts gain +3 fire armor and +300 HP."],
             ["buff", "Costs 700 Gold/300 Stone."],
             ["fix", "Outpost changed to Stone Outpost visual."],
             ["fix", "Available at the Ovoo in Imperial Age."],
@@ -340,6 +340,19 @@ Today’s build invalidates some common forms of Queue Dodging that exploited th
           items: ["units/scout"],
           civs: ["ru"],
           diff: [["nerf", "Line of sight reduced by 1 tile to be normalized with all other civilizations."]],
+        },
+        {
+          // Kremlin changes:
+          // Castle Age Kremlin Militia health reduced from 125 to 115.
+          // Castle Age Kremlin Militia damage reduced from 12 to 10.
+          // Militia cost increased from 40 to 55 Food per ticket.
+          items: ["buildings/kremlin"],
+          civs: ["ru"],
+          diff: [
+            ["nerf", "Castle Age Kremlin Militia health reduced from 125 to 115."],
+            ["nerf", "Castle Age Kremlin Militia damage reduced from 12 to 10."],
+            ["nerf", "Militia cost increased from 40 to 55 Food per ticket."],
+          ],
         },
       ],
     },
