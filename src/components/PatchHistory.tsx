@@ -6,11 +6,11 @@ import { Icon } from "./Icon";
 
 export const PatchHistory: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
   const [patchHistory] = createResource(() => getPatchHistory(props.item, props.civ ? [props.civ] : undefined));
-
+  const [patchesExpanded, setPatchesExpanded] = createSignal(false);
   return (
     <div class="my-8">
       {patchHistory()?.length && <h3 class="text-lg text-white font-bold mb-4">Patch History</h3>}
-      <For each={patchHistory()}>
+      <For each={patchHistory()?.slice(0, patchesExpanded() ? undefined : 2)}>
         {(history) => {
           const [expanded, setExpanded] = createSignal(false);
           return (
@@ -51,6 +51,11 @@ export const PatchHistory: Component<{ item: UnifiedItem; civ?: civConfig }> = (
           );
         }}
       </For>
+      {patchHistory()?.length > 2 && !patchesExpanded() && (
+        <button onClick={() => setPatchesExpanded(true)} class="text-gray-100 font-bold hover:underline">
+          + Show {patchHistory().length - 2} more patches
+        </button>
+      )}
     </div>
   );
 };
