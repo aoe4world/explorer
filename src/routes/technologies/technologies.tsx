@@ -33,7 +33,7 @@ export const TechnologoiesOverviewRoute = () => {
               <div>
                 <h2 class="text-2xl font-bold text-white mt-16 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
                 <div class={itemGridCSSClass + " xl:grid-cols-4"}>
-                  <For each={v}>{(unit) => <TechnologyCard item={unit}></TechnologyCard>}</For>
+                  <For each={v}>{(unit) => <TechnologyCard item={unit} civ={civ}></TechnologyCard>}</For>
                 </div>
               </div>
             ) : (

@@ -34,7 +34,7 @@ export const UnitOverviewRoute = () => {
               <div>
                 <h2 class="text-2xl font-bold text-white mt-16 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
                 <div class={itemGridCSSClass + " xl:grid-cols-4"}>
-                  <For each={v}>{(unit) => <UnitCard unit={unit}></UnitCard>}</For>
+                  <For each={v}>{(unit) => <UnitCard unit={unit} civ={civ}></UnitCard>}</For>
                 </div>
               </div>
             ) : (
