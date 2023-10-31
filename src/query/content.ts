@@ -1,4 +1,4 @@
-import { Random } from "../components/quiz/random";
+import { Random } from "@components/quiz/random";
 import { CURATED_CONTENT_API } from "../config";
 import { civConfig, Item, UnifiedItem } from "../types/data";
 

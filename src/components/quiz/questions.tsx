@@ -1,15 +1,15 @@
 import { JSX } from "solid-js";
 import { RESOURCES } from "../../../assets";
-import { civilizations } from "../../../data/src/sdk";
-import { Item, ItemClass, UnifiedItem } from "../../../data/src/types/items";
-import { CivFlag } from "../../components/CivFlag";
+import { civilizations } from "@data/sdk";
+import { Item, ItemClass, UnifiedItem } from "@data/types/items";
+import { CivFlag } from "@components/CivFlag";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
 import { getMostAppropriateVariation, modifierMatches } from "../../query/utils";
 import { civConfig, Unit } from "../../types/data";
 import { ItemIcon } from "../ItemIcon";
 import { formatSecondsToTime } from "../Stats";
 import { Random } from "./random";
-const SDK = import("../../../data/src/sdk");
+const SDK = import("@data/sdk");
 
 export type Question = {
   question: string;

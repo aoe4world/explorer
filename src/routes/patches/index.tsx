@@ -1,9 +1,9 @@
 import { Link, useLocation } from "solid-app-router";
 import { createResource } from "solid-js";
 import { setActivePage } from "../../App";
-import { Icon } from "../../components/Icon";
+import { Icon } from "@components/Icon";
 import { PatchNotes } from "../../types/patches";
-import { CivAbbr } from "../../../data/src/sdk/utils";
+import { CivAbbr } from "@data/sdk/utils";
 import { mainIntroductionCSSClass } from "../../styles";
 
 export const PatchListRoute = () => {

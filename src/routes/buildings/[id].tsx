@@ -1,23 +1,23 @@
 import { Link, useParams } from "solid-app-router";
 import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
-import { getItemHref } from "../../components/Cards";
-import { ItemIcon } from "../../components/ItemIcon";
-import { ItemPage } from "../../components/ItemPage";
-import { PatchHistory } from "../../components/PatchHistory";
-import { RelatedContent } from "../../components/RelatedContent";
-import { ReportButton } from "../../components/ReportButton";
-import { StatNumber, StatBar, StatDps, StatCosts } from "../../components/Stats";
-import { TechnologyCard } from "../../components/TechnologyCard";
-import { Tooltip } from "../../components/Tooltip";
-import { UnitCard } from "../../components/UnitCard";
+import { getItemHref } from "@components/Cards";
+import { ItemIcon } from "@components/ItemIcon";
+import { ItemPage } from "@components/ItemPage";
+import { PatchHistory } from "@components/PatchHistory";
+import { RelatedContent } from "@components/RelatedContent";
+import { ReportButton } from "@components/ReportButton";
+import { StatNumber, StatBar, StatDps, StatCosts } from "@components/Stats";
+import { TechnologyCard } from "@components/TechnologyCard";
+import { Tooltip } from "@components/Tooltip";
+import { UnitCard } from "@components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getUnitStats } from "../../query/stats";
 import { getMostAppropriateVariation } from "../../query/utils";
 import { mainIntroductionCSSClass } from "../../styles";
 import { Building, civAbbr, civConfig, UnifiedItem } from "../../types/data";
 
-const SDK = import("../../../data/src/sdk/index");
+const SDK = import("@data/sdk/index");
 
 export function BuildingDetailRoute() {
   const itemType = ITEMS.BUILDINGS;

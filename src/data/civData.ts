@@ -1,4 +1,4 @@
-import { CivAbbr } from "../../data/src/sdk/utils";
+import { CivAbbr } from "@data/sdk/utils";
 
 export const civBackdrops: Record<CivAbbr, string> = {
   ab: "https://www.ageofempires.com/wp-content/uploads/2021/06/bg-age4-civ-abb-splash-right-desk.webp",

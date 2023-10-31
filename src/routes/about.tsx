@@ -1,9 +1,9 @@
 import { useLocation } from "solid-app-router";
 import { createSignal, For } from "solid-js";
 import { setActivePage } from "../App";
-import { CivFlag } from "../components/CivFlag";
-import { Icon } from "../components/Icon";
-import { ReportButton } from "../components/ReportButton";
+import { CivFlag } from "@components/CivFlag";
+import { Icon } from "@components/Icon";
+import { ReportButton } from "@components/ReportButton";
 import { mainIntroductionCSSClass } from "../styles";
 
 export const AboutRoute = () => {

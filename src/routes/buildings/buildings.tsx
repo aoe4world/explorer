@@ -1,7 +1,7 @@
 import { useLocation, useParams } from "solid-app-router";
 import { createResource, For, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
-import { BuildingCard } from "../../components/BuildingCard";
+import { BuildingCard } from "@components/BuildingCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { splitBuildingsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass } from "../../styles";
@@ -10,7 +10,7 @@ export const BuildingOverviewRoute = () => {
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [buildings] = createResource(async () =>
-    splitBuildingsIntoGroups((await import("../../../data/src/sdk")).buildings.where({ civilization: civ?.abbr }).order("age"))
+    splitBuildingsIntoGroups((await import("@data/sdk")).buildings.where({ civilization: civ?.abbr }).order("age"))
   );
 
   setActivePage({ title: `Buildings ${civ ? ` — ${civ?.name}` : ""}`, location: useLocation() });

@@ -1,9 +1,9 @@
 import { Link, useLocation } from "solid-app-router";
 import { Component, createSignal, onCleanup, Show } from "solid-js";
 import { setActivePage } from "../../App";
-import { Icon } from "../../components/Icon";
-import { Quiz } from "../../components/quiz/Quiz";
-import { hideNav, setHideNav } from "../../components/Toolbar";
+import { Icon } from "@components/Icon";
+import { Quiz } from "@components/quiz/Quiz";
+import { hideNav, setHideNav } from "@components/Toolbar";
 
 export const QuizRoute: Component = () => {
   const [show, setShow] = createSignal(false);

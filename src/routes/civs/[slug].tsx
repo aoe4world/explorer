@@ -1,12 +1,12 @@
 import { Link, useIsRouting, useLocation, useParams } from "solid-app-router";
 import { createEffect, createResource, For, on, Show, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
-import { BuildingCard } from "../../components/BuildingCard";
-import { CivFlag } from "../../components/CivFlag";
-import { ItemIcon } from "../../components/ItemIcon";
-import { RelatedContent } from "../../components/RelatedContent";
-import { ReportButton } from "../../components/ReportButton";
-import { UnitCard } from "../../components/UnitCard";
+import { BuildingCard } from "@components/BuildingCard";
+import { CivFlag } from "@components/CivFlag";
+import { ItemIcon } from "@components/ItemIcon";
+import { RelatedContent } from "@components/RelatedContent";
+import { ReportButton } from "@components/ReportButton";
+import { UnitCard } from "@components/UnitCard";
 import { CIVILIZATION_BY_SLUG } from "../../config";
 import { civBackdrops } from "../../data/civData";
 import { splitBuildingsIntoGroups, splitTechnologiesIntroGroups, splitUnitsIntoGroups } from "../../query/utils";
@@ -17,12 +17,12 @@ export const CivDetailRoute = () => {
   const params = useParams();
   const civConfig = CIVILIZATION_BY_SLUG[params.slug];
   const [data] = createResource(async () => {
-    const civ = (await import("../../../data/src/sdk")).civilizations.Get(civConfig.abbr);
+    const civ = (await import("@data/sdk")).civilizations.Get(civConfig.abbr);
     return {
       civ,
-      units: splitUnitsIntoGroups(civ.Units.order("hitpoints", "age")),
-      buildings: splitBuildingsIntoGroups(civ.Buildings.order("hitpoints", "age")),
-      technologies: splitTechnologiesIntroGroups(civ.Technologies.order("age")),
+      units: splitUnitsIntoGroups(civ.units.order("hitpoints", "age")),
+      buildings: splitBuildingsIntoGroups(civ.buildings.order("hitpoints", "age")),
+      technologies: splitTechnologiesIntroGroups(civ.technologies.order("age")),
     };
   });
 

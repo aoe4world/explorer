@@ -1,5 +1,5 @@
 import { Component, createMemo, createResource, Show } from "solid-js";
-import { ITEMS } from "../../data/src/types/items";
+import { ITEMS } from "@data/types/items";
 import { getUnitStats } from "../query/stats";
 import { getMostAppropriateVariation } from "../query/utils";
 import { Building, civConfig, UnifiedItem } from "../types/data";

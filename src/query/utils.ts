@@ -1,10 +1,11 @@
-import { Building, Item, Modifier, PhysicalItem } from "../../data/src/types/items";
+import { getAbbr, getSlug } from "@data/sdk/utils";
+import { Ability, Building, Item, Modifier, PhysicalItem } from "@data/types/items";
 import { CIVILIZATIONS, ITEMS, SIMILAIR_ITEMS } from "../config";
 import { staticMaps } from "../data/maps";
 import { civAbbr, civConfig, GroupedBuildings, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
 import { PatchLine, PatchNotes } from "../types/patches";
 
-const SDK = import("../../data/src/sdk");
+const SDK = import("@data/sdk");
 
 /** Map any of civAbbr | civConfig | civConfig[] | civAbbr[] to a single array */
 export type civFilterParam = Parameters<typeof mapCivsArgument>[0];
@@ -155,6 +156,7 @@ export function splitTechnologiesIntroGroups(buildings: UnifiedItem<Technology>[
 }
 
 export function modifierMatches(matcher: Modifier["select"], item: Item | UnifiedItem) {
+  if (!matcher) return { id: false, class: false, any: false };
   const matchesId = matcher.id?.includes(item.id) || matcher.id?.includes((item as Item).baseId);
   const matchesClass = matcher.class?.some((cl) => cl?.every((c) => item.classes.includes(c)));
   return { id: matchesId, class: matchesClass, any: matchesId || matchesClass };

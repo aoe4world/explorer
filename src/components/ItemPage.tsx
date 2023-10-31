@@ -53,7 +53,7 @@ const ProducedAt: Component<{ item: UnifiedItem; civ: civConfig; title?: string 
     () => ({ item: props.item, civ: props.civ?.abbr }),
     async ({ item, civ }) => {
       const producedBy = [...new Set(item.variations.filter((v) => !civ || v.civs.includes(civ)).flatMap((v) => v.producedBy))];
-      const items = await Promise.all(producedBy.map(async (b) => (await import("../../data/src/sdk")).buildings.get(b)));
+      const items = await Promise.all(producedBy.map(async (b) => (await import("@data/sdk")).buildings.get(b)));
       if (items.length != producedBy.length) console.warn("Some buildings were not found", producedBy, items);
       return (civ ? items.filter((i) => !!i && i.civs.includes(civ)) : items).filter(Boolean).sort((a, b) => b.civs?.length - a.civs?.length);
     }

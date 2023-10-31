@@ -1,8 +1,8 @@
 import { useParams, useLocation } from "solid-app-router";
 import { createResource, createSignal, For, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
-import { Icon } from "../../components/Icon";
-import { ContentRow } from "../../components/RelatedContent";
+import { Icon } from "@components/Icon";
+import { ContentRow } from "@components/RelatedContent";
 import { CIVILIZATION_BY_SLUG } from "../../config";
 import { ContentItem, getRelatedContent } from "../../query/content";
 import { mainIntroductionCSSClass, mainItemTitleCSSClass, secondaryButtonClass } from "../../styles";

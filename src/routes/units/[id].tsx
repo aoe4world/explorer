@@ -1,23 +1,22 @@
 import { Link, useParams } from "solid-app-router";
 import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
-import { ReportButton } from "../../components/ReportButton";
-import { StatNumber, StatBar, StatDps, StatCosts } from "../../components/Stats";
+import { ReportButton } from "@components/ReportButton";
+import { StatNumber, StatBar, StatDps, StatCosts } from "@components/Stats";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getUnitStats } from "../../query/stats";
 import { mainIntroductionCSSClass } from "../../styles";
 import { Building, civConfig, UnifiedItem, Unit } from "../../types/data";
-import { ItemPage } from "../../components/ItemPage";
-import { PatchHistory } from "../../components/PatchHistory";
+import { ItemPage } from "@components/ItemPage";
+import { PatchHistory } from "@components/PatchHistory";
 import { getMostAppropriateVariation } from "../../query/utils";
-import { RelatedContent } from "../../components/RelatedContent";
+import { RelatedContent } from "@components/RelatedContent";
 export function UnitDetailRoute() {
   const itemType = ITEMS.UNITS;
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
-  const [item] = createResource(params.id, async (id) => (await import("../../../data/src/sdk/index")).units.get(id));
-
+  const [item] = createResource(params.id, async (id) => (await SDK).units.get(id));
   createEffect(() => {
     if (!item()) return;
     if (civ && !item()?.civs.includes(civ.abbr)) tryRedirectToClosestMatch(itemType, params.id, civ, () => setUnmatched(true));

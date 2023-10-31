@@ -1,5 +1,5 @@
 import { firstBy } from "thenby";
-import { ITEMS } from "../../data/src/types/items";
+import { ITEMS } from "@data/types/items";
 import { SUPPORTED_MODIFIER_PROPERTIES } from "../config";
 import { Building, civAbbr, civConfig, Item, Modifier, Technology, UnifiedItem, Unit } from "../types/data";
 import { CalculatedStats, Stat, StatPart, StatProperty } from "../types/stats";
@@ -38,7 +38,7 @@ export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
     return combatStats;
   };
 
-  if (typeof unit == "string") return getStats((await import("../../data/src/sdk"))[type].get(unit));
+  if (typeof unit == "string") return getStats((await import("@data/sdk"))[type].get(unit));
   else return getStats(unit);
 }
 
@@ -185,8 +185,8 @@ export function calculateStatParts(
         }
         if (value > maxBonusInAge[age]) maxBonusInAge[age] = value;
         const tryCreateVsBonusName = [
-          ...(modifier.target.id ?? []),
-          ...(modifier.target.class ?? []).map((c) => c.flatMap((x) => x.split("_")).join(" ")),
+          ...(modifier.target?.id ?? []),
+          ...(modifier.target?.class ?? []).map((c) => c.flatMap((x) => x.split("_")).join(" ")),
         ].join(", ");
         parts.push([round(value), id, age, variation, "bonus", `Bonus damage vs ${tryCreateVsBonusName}`]);
         return parts;

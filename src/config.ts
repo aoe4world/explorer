@@ -1,7 +1,7 @@
-import { ModifyableProperty } from "../data/src/types/items";
-export { CIVILIZATIONS, CIV_ABBR, CIVILIZATION_BY_SLUG } from "../data/src/lib/config/civs";
-export { ITEMS } from "../data/src/types/items";
-export type { Building, ModifyableProperty, Technology, Unit, Upgrade, ItemTypes } from "../data/src/types/items";
+import { ModifyableProperty } from "@data/types/items";
+export { CIVILIZATIONS, CIV_ABBR, CIVILIZATION_BY_SLUG } from "@data/lib/config/civs";
+export { ITEMS } from "@data/types/items";
+export type { Building, ModifyableProperty, Technology, Unit, Upgrade, ItemTypes } from "@data/types/items";
 
 export const SUPPORTED_MODIFIER_PROPERTIES: ModifyableProperty[] = [
   "meleeArmor",

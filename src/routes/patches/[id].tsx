@@ -1,11 +1,11 @@
 import { Link, useLocation, useParams } from "solid-app-router";
 import { Component, createMemo, onMount, createResource, createSignal, For, Index, Resource, createEffect, Show } from "solid-js";
 import { setActivePage } from "../../App";
-import { getItemHref } from "../../components/Cards";
-import { CivFlag } from "../../components/CivFlag";
-import { Icon } from "../../components/Icon";
-import { ItemIcon } from "../../components/ItemIcon";
-import { scrollIntoViewIfNeeded, TableOfContents, useTableOfContents } from "../../components/TableOfContents";
+import { getItemHref } from "@components/Cards";
+import { CivFlag } from "@components/CivFlag";
+import { Icon } from "@components/Icon";
+import { ItemIcon } from "@components/ItemIcon";
+import { scrollIntoViewIfNeeded, TableOfContents, useTableOfContents } from "@components/TableOfContents";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG } from "../../config";
 import { capitlize, getItemByCanonicalName, sortPatchDiff } from "../../query/utils";
 import { getItemCssClass, mainIntroductionCSSClass } from "../../styles";

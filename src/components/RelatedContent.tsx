@@ -94,7 +94,7 @@ export const ContentRow: Component<{ content: ContentItem; item?: Item | Unified
 };
 
 async function getRelatedItems(ids: string[]) {
-  const sdk = await import("../../data/src/sdk/index");
+  const sdk = await import("@data/sdk/index");
   let Get = sdk.Get;
 
   const items: UnifiedItem[] = [];

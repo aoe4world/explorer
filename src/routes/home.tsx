@@ -1,9 +1,9 @@
 import { Link, useLocation } from "solid-app-router";
 import { For } from "solid-js";
 import { setActivePage } from "../App";
-import { CivFlag } from "../components/CivFlag";
-import { Icon } from "../components/Icon";
-import { Tooltip } from "../components/Tooltip";
+import { CivFlag } from "@components/CivFlag";
+import { Icon } from "@components/Icon";
+import { Tooltip } from "@components/Tooltip";
 import { CIVILIZATIONS } from "../config";
 import { mainIntroductionCSSClass, tooltipCSSClass } from "../styles";
 const buttonClass = `block font-bold px-7 py-2 rounded-full transition hover:opacity-70`;

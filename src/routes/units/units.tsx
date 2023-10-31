@@ -1,7 +1,7 @@
 import { useLocation, useParams } from "solid-app-router";
 import { createResource, For, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
-import { UnitCard } from "../../components/UnitCard";
+import { UnitCard } from "@components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass } from "../../styles";
@@ -10,7 +10,7 @@ export const UnitOverviewRoute = () => {
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [units] = createResource(async () => {
-    const SDK = await import("../../../data/src/sdk");
+    const SDK = await import("@data/sdk");
     return splitUnitsIntoGroups(SDK.units.where({ civilization: civ?.abbr }).order("hitpoints", "age"));
   });
 

@@ -9,6 +9,11 @@
     "jsxImportSource": "solid-js",
     "types": ["vite/client"],
     "isolatedModules": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@data/*": ["./data/src/*"],
+      "@components/*": ["./src/components/*"]
+    }
   }
 }

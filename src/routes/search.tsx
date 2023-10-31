@@ -1,8 +1,8 @@
 import { useNavigate } from "solid-app-router";
 import { Component, createSignal } from "solid-js";
-import { getItemHref } from "../components/Cards";
-import { Icon } from "../components/Icon";
-import { search, Search } from "../components/Search";
+import { getItemHref } from "@components/Cards";
+import { Icon } from "@components/Icon";
+import { search, Search } from "@components/Search";
 import { mainIntroductionCSSClass } from "../styles";
 
 export const SearchRoute: Component = () => {

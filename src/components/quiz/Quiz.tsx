@@ -1,5 +1,5 @@
 import { Component, createResource, createSignal, For, onCleanup, onMount } from "solid-js";
-import { Icon } from "../../components/Icon";
+import { Icon } from "@components/Icon";
 import { getRandomQuestion } from "./questions";
 
 export const Quiz: Component<{ difficulty?: number }> = (props) => {

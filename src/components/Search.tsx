@@ -9,7 +9,7 @@ import { ItemIcon } from "./ItemIcon";
 const isMac = /mac/i.test(navigator.userAgent);
 
 async function getEverything() {
-  const SDK = await import("../../data/src/sdk");
+  const SDK = await import("@data/sdk");
   return [SDK.buildings, SDK.technologies, SDK.units].flat();
 }
 
