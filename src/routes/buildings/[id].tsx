@@ -16,6 +16,9 @@ import { getUnitStats } from "../../query/stats";
 import { getMostAppropriateVariation } from "../../query/utils";
 import { mainIntroductionCSSClass } from "../../styles";
 import { Building, civAbbr, civConfig, UnifiedItem } from "../../types/data";
+import { ItemList } from "@data/sdk/utils";
+import { Ability } from "@data/types/items";
+import { Abilities } from "@components/Abilities";
 
 const SDK = import("@data/sdk/index");
 
@@ -25,6 +28,7 @@ export function BuildingDetailRoute() {
   const civ: civConfig = CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
   const [item] = createResource(params.id, async (id) => (await SDK).buildings.get(id));
+  const variation = createMemo(() => getMostAppropriateVariation<Building>(item(), civ));
 
   createEffect(() => {
     if (!item()) return;
@@ -34,6 +38,9 @@ export function BuildingDetailRoute() {
 
   const [units] = createResource(async () => (await SDK).units.where({ producedAt: params.id, civilization: civ?.abbr }));
   const [research] = createResource(async () => (await SDK).technologies.where({ producedAt: params.id, civilization: civ?.abbr }).order("age"));
+  const [abilities] = createResource(async () =>
+    !civ ? ([] as ItemList<Ability>) : (await SDK).abilities.where({ civilization: civ.abbr, affects: `buildings/${params.id}` }).order("age")
+  );
 
   return (
     <ItemPage.Wrapper civ={civ}>
@@ -46,7 +53,7 @@ export function BuildingDetailRoute() {
 
               {!civ && <ItemPage.CivPicker item={item} />}
 
-              <RelatedContent item={item} title={`Recommended content`} />
+              <Abilities abilities={abilities()} civ={civ} />
 
               <div class="my-8">
                 <ReportButton />
@@ -99,6 +106,8 @@ export function BuildingDetailRoute() {
                   </For>
                 </div>
               </Show>
+
+              <RelatedContent item={item} title={`Recommended content`} />
 
               <PatchHistory item={item} civ={civ} />
             </div>

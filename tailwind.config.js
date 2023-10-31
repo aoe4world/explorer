@@ -46,6 +46,8 @@ module.exports = {
           "technology-light": "#08A67B",
           building: "#345469",
           "building-light": "#477899",
+          ability: "#20263D",
+          "ability-light": "#6571A1",
         },
         bar: {
           upgrade: "#B16239",
@@ -55,6 +57,7 @@ module.exports = {
           unique: "#AF944E",
           building: "#477899",
           bonus: "#5B5B5B",
+          ability: "#20263D",
         },
       },
       fontFamily: {

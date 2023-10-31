@@ -406,6 +406,14 @@ export function formatSecondsToTime(seconds: number) {
   const s = Math.round(seconds % 60);
   return `${h > 0 ? `${h}:` : ""}${h && m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`;
 }
+
+export function formatSecondsToPhrase(seconds: number) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.round(seconds % 60);
+  // 1 hour 2 minutes 3 seconds
+  return `${h > 0 ? `${h} hr${h > 1 ? "s" : ""} ` : ""}${m > 0 ? `${m} min${m > 1 ? "s" : ""} ` : ""}${s > 0 ? `${s} sec${s > 1 ? "s" : ""}` : ""}`;
+}
 function formatCurreny(number: number) {
   return number > 2500 ? `${number / 1000}k` : number;
 }

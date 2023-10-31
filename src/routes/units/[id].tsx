@@ -11,12 +11,19 @@ import { ItemPage } from "@components/ItemPage";
 import { PatchHistory } from "@components/PatchHistory";
 import { getMostAppropriateVariation } from "../../query/utils";
 import { RelatedContent } from "@components/RelatedContent";
+import { ItemList } from "@data/sdk/utils";
+import { Ability } from "@data/types/items";
+import { Abilities } from "@components/Abilities";
+const SDK = import("@data/sdk/index");
 export function UnitDetailRoute() {
   const itemType = ITEMS.UNITS;
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
   const [item] = createResource(params.id, async (id) => (await SDK).units.get(id));
+  const [abilities] = createResource(async () =>
+    !civ ? ([] as ItemList<Ability>) : (await SDK).abilities.where({ civilization: civ.abbr, affects: `units/${params.id}` }).order("age")
+  );
   createEffect(() => {
     if (!item()) return;
     if (civ && !item()?.civs.includes(civ.abbr)) tryRedirectToClosestMatch(itemType, params.id, civ, () => setUnmatched(true));
@@ -31,6 +38,9 @@ export function UnitDetailRoute() {
             <div class="basis-2/3 py-4 shrink-0">
               <ItemPage.Header item={item} civ={civ} />
               <div class={mainIntroductionCSSClass}>{item.description}</div>
+
+              <Abilities abilities={abilities()} civ={civ} />
+
               <ItemPage.ProducedAt item={item} civ={civ} />
               {/* {item().name && <Fandom query={item().name} />} */}
               {!civ && <ItemPage.CivPicker item={item} />}
