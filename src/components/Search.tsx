@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "solid-app-router";
+import { Link, useLocation, useNavigate } from "@solidjs/router";
 import { Component, createEffect, createResource, createSignal, For, onCleanup, onMount, Show } from "solid-js";
 import { ITEMS, SIMILAIR_ITEMS } from "../config";
 import { UnifiedItem } from "../types/data";

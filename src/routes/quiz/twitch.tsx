@@ -1,8 +1,8 @@
-import { Link, useLocation, useParams } from "solid-app-router";
+import { Link, useLocation, useParams } from "@solidjs/router";
 import { Component, createSignal, onCleanup, Show } from "solid-js";
 import { Icon } from "@components/Icon";
 import { TwitchQuiz } from "@components/quiz/TwitchQuiz";
-import { setHideNav } from "@components/Toolbar";
+import { setHideNav } from "../../global";
 import { setActivePage } from "../../App";
 
 export const QuizRoute: Component = () => {

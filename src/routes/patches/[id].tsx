@@ -1,4 +1,4 @@
-import { Link, useLocation, useParams } from "solid-app-router";
+import { Link, useLocation, useParams } from "@solidjs/router";
 import { Component, createMemo, onMount, createResource, createSignal, For, Index, Resource, createEffect, Show } from "solid-js";
 import { setActivePage } from "../../App";
 import { getItemHref } from "@components/Cards";

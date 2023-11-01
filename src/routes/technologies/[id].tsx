@@ -1,4 +1,4 @@
-import { useParams } from "solid-app-router";
+import { useParams } from "@solidjs/router";
 import { createEffect, createMemo, createResource, createSignal, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { ItemPage } from "@components/ItemPage";
@@ -28,7 +28,7 @@ export function TechnologyDetailRoute() {
 
   return (
     <ItemPage.Wrapper civ={civ}>
-      <Show when={!unmatched() && item()}>
+      <Show when={!unmatched() && item()} keyed>
         {(item) => (
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">

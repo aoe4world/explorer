@@ -1,4 +1,4 @@
-import { Link } from "solid-app-router";
+import { Link } from "@solidjs/router";
 import { Component, createResource, createSignal, For } from "solid-js";
 import { getPatchHistory } from "../query/utils";
 import { UnifiedItem, civConfig } from "../types/data";

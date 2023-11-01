@@ -6,7 +6,7 @@ import { statLabelCSSClass, tooltipCSSClass } from "../styles";
 import { Item, UnifiedItem } from "../types/data";
 import { CalculatedStats, Stat, StatPart } from "../types/stats";
 import { Icon } from "./Icon";
-import { globalAgeFilter, globalCivFilter } from "./Toolbar";
+import { globalAgeFilter, globalCivFilter } from "../global";
 import { Tooltip } from "./Tooltip";
 
 export const StatBar: Component<{

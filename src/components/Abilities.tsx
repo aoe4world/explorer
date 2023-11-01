@@ -4,7 +4,7 @@ import { formatSecondsToPhrase, formatSecondsToTime } from "./Stats";
 import { Component, Show, For, createResource } from "solid-js";
 import { ItemIcon } from "./ItemIcon";
 import { ITEM_TYPES } from "@data/lib/config";
-import { Link } from "solid-app-router";
+import { Link } from "@solidjs/router";
 import { civConfig } from "@data/types/civs";
 import { getItemHref } from "./Cards";
 
@@ -82,7 +82,7 @@ const InlineItemLink: Component<{ itemId: ItemSlug; civ: civConfig }> = (props) 
   const [item] = createResource(props.itemId, async (id) => (await SDK).civilizations.Get(props.civ).Get(id));
 
   return (
-    <Show when={item()}>
+    <Show when={item()} keyed>
       {(item) => (
         <Link href={getItemHref(item, props.civ)}>
           <div class="inline-block w-[1.2em] h-[1.2em] mb-[-0.2em] p-0 mx-[0.3em]" className={`bg-item-${item.type}`}>

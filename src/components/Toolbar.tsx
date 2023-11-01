@@ -1,4 +1,4 @@
-import { Link, NavLink, useIsRouting, useLocation } from "solid-app-router";
+import { Link, NavLink, useIsRouting, useLocation } from "@solidjs/router";
 import { Component, createMemo, createSignal, For, Show } from "solid-js";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG } from "../config";
 import { tooltipCSSClass } from "../styles";
@@ -7,10 +7,8 @@ import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { Search } from "./Search";
 import { Tooltip } from "./Tooltip";
+import { globalAgeFilter, hideNav, setGlobalAgeFilter } from "../global";
 
-export const [hideNav, setHideNav] = createSignal(false);
-export const [globalAgeFilter, setGlobalAgeFilter] = createSignal(4);
-export const [globalCivFilter, setGlobalCivsFilter] = createSignal<civAbbr>(null);
 export const Toolbar: Component = () => {
   const pending = useIsRouting();
 

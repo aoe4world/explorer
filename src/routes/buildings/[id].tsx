@@ -1,4 +1,4 @@
-import { Link, useParams } from "solid-app-router";
+import { Link, useParams } from "@solidjs/router";
 import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { getItemHref } from "@components/Cards";
@@ -44,7 +44,7 @@ export function BuildingDetailRoute() {
 
   return (
     <ItemPage.Wrapper civ={civ}>
-      <Show when={!unmatched() && item()}>
+      <Show when={!unmatched() && item()} keyed>
         {(item) => (
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
@@ -134,7 +134,7 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
     <div class="flex-auto flex flex-col gap-8">
       <div class=" bg-black/70 rounded-2xl p-6 ">
         <StatCosts costs={variation().costs} />
-        <Show when={variation().popcapIncrease}>
+        <Show when={variation().popcapIncrease} keyed>
           {(amount) => (
             <div class="mt-4">
               <div class="text-white/50 uppercase text-xs font-bold tracking-widest">Effects</div>
@@ -142,7 +142,7 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
             </div>
           )}
         </Show>
-        <Show when={variation().garrison}>
+        <Show when={variation().garrison} keyed>
           {(g) => (
             <div class="mt-4">
               <div class="text-white/50 uppercase text-xs font-bold tracking-widest">Garrison</div>
@@ -151,7 +151,7 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
           )}
         </Show>
       </div>
-      <Show when={stats()}>
+      <Show when={stats()} keyed>
         {(stats) => (
           <>
             {" "}

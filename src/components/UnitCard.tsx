@@ -1,5 +1,5 @@
-import { Link } from "solid-app-router";
-import { RouterUtils } from "solid-app-router";
+import { Link } from "@solidjs/router";
+import { RouterUtils } from "@solidjs/router";
 import { Component, createEffect, createMemo, createResource, Show } from "solid-js";
 import { ITEMS, PRETTY_AGE_MAP } from "../config";
 import { getUnitStats } from "../query/stats";

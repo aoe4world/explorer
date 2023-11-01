@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "solid-app-router";
+import { Outlet, useLocation } from "@solidjs/router";
 import { Component, createSignal, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 import { tooltipCSSClass } from "../styles";

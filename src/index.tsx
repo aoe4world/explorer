@@ -1,7 +1,7 @@
 import "./index.css";
 import { render } from "solid-js/web";
-import { Router } from "solid-app-router";
-import { Path } from "solid-app-router/dist/types";
+import { Router } from "@solidjs/router";
+import { Path } from "@solidjs/router/dist/types";
 
 import App, { activePage } from "./App";
 import { createEffect, on } from "solid-js";

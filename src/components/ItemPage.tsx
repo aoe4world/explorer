@@ -1,5 +1,5 @@
-import { Link } from "solid-app-router";
-import { Component, createResource, For, Match, Show, Switch, useTransition } from "solid-js";
+import { Link } from "@solidjs/router";
+import { Component, createResource, For, Match, ParentComponent, Show, Switch, useTransition } from "solid-js";
 import { getItemHref } from "./Cards";
 import { CivFlag } from "./CivFlag";
 import { TechnologyCard } from "./TechnologyCard";
@@ -99,7 +99,7 @@ const AvailableUpgrades: Component<{ item: UnifiedItem; civ: civConfig }> = (pro
   );
 };
 
-const Wrapper: Component<{ civ?: civConfig }> = (props) => {
+const Wrapper: ParentComponent<{ civ?: civConfig }> = (props) => {
   const [pending] = useTransition();
   return (
     <>
@@ -154,7 +154,7 @@ const UnavailableForCiv: Component<{ item: UnifiedItem; civ: civConfig }> = (pro
   );
 };
 
-const CivOptionsForItem: Component<{ item: UnifiedItem; civs: civAbbr[]; prefix?: string }> = (props) => (
+const CivOptionsForItem: ParentComponent<{ item: UnifiedItem; civs: civAbbr[]; prefix?: string }> = (props) => (
   <>
     <div class="md:grid-cols-2 grid gap-6 mb-4 mt-2">
       {props.children}

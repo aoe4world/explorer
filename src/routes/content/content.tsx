@@ -1,4 +1,4 @@
-import { useParams, useLocation } from "solid-app-router";
+import { useParams, useLocation } from "@solidjs/router";
 import { createResource, createSignal, For, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
 import { Icon } from "@components/Icon";

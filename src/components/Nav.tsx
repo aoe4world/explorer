@@ -1,4 +1,4 @@
-import { Link, useLocation, useMatch } from "solid-app-router";
+import { Link, useLocation, useMatch } from "@solidjs/router";
 import { Component, createEffect, For } from "solid-js";
 
 const MenuLink: Component<{ href: string; children: any }> = (props) => {

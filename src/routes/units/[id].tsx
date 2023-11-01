@@ -1,4 +1,4 @@
-import { Link, useParams } from "solid-app-router";
+import { Link, useParams } from "@solidjs/router";
 import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { ReportButton } from "@components/ReportButton";
@@ -32,7 +32,7 @@ export function UnitDetailRoute() {
 
   return (
     <ItemPage.Wrapper civ={civ}>
-      <Show when={!unmatched() && item()}>
+      <Show when={!unmatched() && item()} keyed>
         {(item) => (
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
@@ -76,7 +76,7 @@ const UnitSidebar: Component<{ item?: UnifiedItem<Unit>; civ: civConfig }> = (pr
       <div class=" bg-black/70 rounded-2xl p-6 ">
         <StatCosts costs={variation().costs} />
       </div>
-      <Show when={stats()}>
+      <Show when={stats()} keyed>
         {(stats) => (
           <>
             {" "}

@@ -1,11 +1,11 @@
-import { Link } from "solid-app-router";
+import { Link } from "@solidjs/router";
 import { Component, For } from "solid-js";
 import { CIVILIZATIONS, PRETTY_AGE_MAP } from "../config";
 import { civConfig, UnifiedItem } from "../types/data";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
-import { globalAgeFilter } from "./Toolbar";
+import { globalAgeFilter } from "../global";
 
 const typeToPathMap = {
   building: "buildings",

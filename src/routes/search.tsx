@@ -1,4 +1,4 @@
-import { useNavigate } from "solid-app-router";
+import { useNavigate } from "@solidjs/router";
 import { Component, createSignal } from "solid-js";
 import { getItemHref } from "@components/Cards";
 import { Icon } from "@components/Icon";

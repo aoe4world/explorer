@@ -1,4 +1,4 @@
-import { Link } from "solid-app-router";
+import { Link } from "@solidjs/router";
 import { Component, createResource, createSignal, For, Suspense } from "solid-js";
 import { getRelatedContent, ContentItem } from "../query/content";
 import { getItemCssClass } from "../styles";

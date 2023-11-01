@@ -1,4 +1,4 @@
-import { Link, useLocation } from "solid-app-router";
+import { Link, useLocation } from "@solidjs/router";
 import { createResource } from "solid-js";
 import { setActivePage } from "../../App";
 import { Icon } from "@components/Icon";

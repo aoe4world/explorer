@@ -1,4 +1,4 @@
-import { Link, RouteDefinition, useLocation, useNavigate, useRoutes } from "solid-app-router";
+import { Link, RouteDefinition, useLocation, useNavigate, useRoutes } from "@solidjs/router";
 import { Component, createEffect, createSignal, ErrorBoundary, lazy, on } from "solid-js";
 import { Toolbar } from "./components/Toolbar";
 import { Nav } from "./components/Nav";

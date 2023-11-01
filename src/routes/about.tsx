@@ -1,4 +1,4 @@
-import { useLocation } from "solid-app-router";
+import { useLocation } from "@solidjs/router";
 import { createSignal, For } from "solid-js";
 import { setActivePage } from "../App";
 import { CivFlag } from "@components/CivFlag";
