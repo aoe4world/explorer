@@ -19,6 +19,7 @@ import { PatchDetailRoute } from "./routes/patches/[id]";
 import { findClosestMatch } from "./query/utils";
 import { SearchRoute } from "./routes/search";
 import { PatchListRoute } from "./routes/patches";
+import { SidebarNav } from "@components/SidebarNav";
 
 const routes: RouteDefinition[] = [
   {
@@ -203,7 +204,16 @@ const App: Component = () => {
           );
         }}
       >
-        <Routes />
+        <div class="max-w-screen-2xl mx-auto flex">
+          <div class="w-full max-w-xs pl-8 hidden lg:block">
+            <div class="p-4 mx-auto gap-4 mb-4 mt-10 sticky bottom-0 top-16 max-h-[calc(100vh-80px)] overflow-y-auto">
+              <SidebarNav />
+            </div>
+          </div>
+          <div class="flex-auto">
+            <Routes />
+          </div>
+        </div>
       </ErrorBoundary>
     </>
   );

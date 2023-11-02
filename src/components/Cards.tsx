@@ -1,5 +1,5 @@
 import { Link } from "@solidjs/router";
-import { Component, For } from "solid-js";
+import { Component, For, ParentComponent } from "solid-js";
 import { CIVILIZATIONS, PRETTY_AGE_MAP } from "../config";
 import { civConfig, UnifiedItem } from "../types/data";
 import { CivFlag } from "./CivFlag";
@@ -18,13 +18,12 @@ export function getItemHref(item: UnifiedItem, civ?: civConfig) {
   return `${civ ? `/civs/${civ.slug}` : ""}/${typeToPathMap[item.type]}/${item.id}`;
 }
 
-export const Card: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
+export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
   const minAge = () => (!props.civ ? props.item.minAge : props.item.variations.reduce((a, v) => (v.civs.includes(props.civ.abbr) ? Math.min(a, v.age) : a), 4));
 
   return (
     <div
-      class="text-white rounded-2xl p-4 z-0  transition-all flex flex-col bg-opacity-10 hover:bg-opacity-20 group"
-      className={`bg-item-${props.item.type}`}
+      class={`bg-item-${props.item.type} text-white rounded-2xl p-4 z-0  transition-all flex flex-col bg-opacity-10 hover:bg-opacity-20 group`}
       style={{ opacity: globalAgeFilter() >= minAge() ? 1 : 0.5 }}
     >
       <Link href={getItemHref(props.item, props.civ)}>
@@ -68,19 +67,15 @@ export const Card: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) =
 export const CardHeader: Component<{ item: UnifiedItem; civ?: civConfig; minAge: number }> = (props) => {
   return (
     <div class="flex gap-4 items-center mb-4">
-      <div class="flex-none self-start rounded-md w-16 h-16 p-1" className={`bg-item-${props.item.type}`}>
+      <div class={`flex-none self-start rounded-md w-16 h-16 p-1 bg-item-${props.item.type}`}>
         <ItemIcon url={props.item.icon} />
       </div>
       <div class="flex-auto">
         <div class="flex flex-row items-center">
           <h2 class="text-lg font-bold flex-auto leading-tight ">{props.item.name}</h2>
-          <span class="text-sm uppercase whitespace-nowrap text-opacity-50" className={`text-item-${props.item.type}-light`}>
-            {PRETTY_AGE_MAP[props.minAge]}
-          </span>
+          <span class={`text-sm uppercase whitespace-nowrap text-opacity-50text-item-${props.item.type}-light`}>{PRETTY_AGE_MAP[props.minAge]}</span>
         </div>
-        <p class="text-sm leading-relaxed" className={`text-item-${props.item.type}-light`}>
-          {props.item.displayClasses.join(", ")}
-        </p>
+        <p class={`text-item-${props.item.type}-light text-sm leading-relaxed`}>{props.item.displayClasses.join(", ")}</p>
       </div>
     </div>
   );

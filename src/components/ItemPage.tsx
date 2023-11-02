@@ -105,7 +105,7 @@ const Wrapper: ParentComponent<{ civ?: civConfig }> = (props) => {
     <>
       {" "}
       <div
-        class="absolute top-28 w-screen h-screen opacity-20 saturate-0 -z-10 bg-right-top bg-contain bg-no-repeat transition-[background-image] duration-400"
+        class="fixed top-10 left-0 right-0 h-screen opacity-20 saturate-0 -z-10 bg-right-top bg-contain bg-no-repeat transition-[background-image] duration-400"
         style={{ "background-image": `url(${civBackdrops[props.civ?.abbr]})` }}
         classList={{ "opacity-0": pending() }}
       ></div>
