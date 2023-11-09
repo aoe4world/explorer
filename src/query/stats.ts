@@ -60,11 +60,16 @@ function mergeVariationsToStats(variations: (Unit | Building)[]) {
 
       const bonus: Modifier[] = [];
 
-      for (const w of variation.weapons) {
+      const melee = variation.weapons.find((w) => w.type == "melee");
+      // Only take the first Melee weapon
+      const weapons = variation.weapons.filter((w) => w.type != "melee" || w === melee);
+
+      for (const w of weapons) {
         if (!w) continue;
         const burst = 1; //w.burst?.count ?? 1;
         // We assume there's only one weapon per type per variation, for now.
         // Edit 11-10-2022: Oh boy was I wrong.
+        // Edit 9-11-2023: Yep.
         if (w.type == "melee") stats.meleeAttack = w.damage * burst;
         else if (w.type == "ranged") stats.rangedAttack = w.damage * burst;
         else if (w.type == "siege") stats.siegeAttack = w.damage * burst;
