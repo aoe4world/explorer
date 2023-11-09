@@ -1,11 +1,22 @@
 import { Component, createResource, createSignal, For, onCleanup, onMount } from "solid-js";
 import { Icon } from "@components/Icon";
 import { getRandomQuestion } from "./questions";
+import { CIVILIZATION_BY_SLUG } from "../../config";
+import { Random } from "./random";
+
+const DLC_CIVS = [
+  CIVILIZATION_BY_SLUG.byzantines,
+  CIVILIZATION_BY_SLUG.japanese,
+  CIVILIZATION_BY_SLUG.orderofthedragon,
+  CIVILIZATION_BY_SLUG.zhuxi,
+  CIVILIZATION_BY_SLUG.ayyubids,
+  CIVILIZATION_BY_SLUG.jeannedarc,
+];
 
 export const Quiz: Component<{ difficulty?: number }> = (props) => {
   const [score, setScore] = createSignal({ correct: 0, incorrect: 0, total: 0, streak: 0 });
   const [pending, setPending] = createSignal(false);
-  const [question, { refetch }] = createResource(() => getRandomQuestion(score().correct - score().incorrect + (props.difficulty ?? 0)));
+  const [question, { refetch }] = createResource(() => getRandomQuestion(score().correct - score().incorrect + (props.difficulty ?? 0), Random.pick(DLC_CIVS)));
   const [choice, setChoice] = createSignal<number>(undefined);
 
   let pendingTimer = 0;

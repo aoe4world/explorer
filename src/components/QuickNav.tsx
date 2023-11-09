@@ -106,7 +106,7 @@ export const QuickNav: Component = () => {
         <Show when={show()}>
           <div class="xl:hidden fixed w-full z-50 bg-gray-700 [-webkit-tap-highlight-color:transparent]" ref={(el) => positionPopup(el)}>
             <div class="h-full flex flex-col max-w-screen-xl mx-auto pb-4 lg:px-3">
-              <div class="overflow-auto flex-none pb-4 mb-2 pt-1 px-4">
+              <div class="overflow-auto flex-none pb-4 mb-2 pt-1 px-4 scrollbar-hide">
                 <div class="whitespace-nowrap space-x-2">
                   <For each={Object.values(CIVILIZATIONS)}>
                     {(civ) => (

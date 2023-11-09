@@ -1,5 +1,5 @@
 import { Link, RouteDefinition, useLocation, useNavigate, useRoutes } from "@solidjs/router";
-import { Component, createEffect, createSignal, ErrorBoundary, lazy, on } from "solid-js";
+import { Component, createEffect, createSignal, ErrorBoundary, lazy, on, Show } from "solid-js";
 import { Toolbar } from "./components/Toolbar";
 import { Nav } from "./components/Nav";
 import { CivDetailRoute } from "./routes/civs/[slug]";
@@ -20,6 +20,7 @@ import { findClosestMatch } from "./query/utils";
 import { SearchRoute } from "./routes/search";
 import { PatchListRoute } from "./routes/patches";
 import { SidebarNav } from "@components/SidebarNav";
+import { hideNav } from "./global";
 
 const routes: RouteDefinition[] = [
   {
@@ -205,11 +206,13 @@ const App: Component = () => {
         }}
       >
         <div class="max-w-screen-2xl mx-auto flex">
-          <div class="w-full max-w-xs pl-8 hidden lg:block">
-            <div class="p-4 mx-auto gap-4 mb-4 mt-10 sticky bottom-0 top-16 max-h-[calc(100vh-80px)] overflow-y-auto">
-              <SidebarNav />
+          <Show when={!hideNav()}>
+            <div class="w-full max-w-xs pl-8 hidden lg:block">
+              <div class="p-4 mx-auto gap-4 mb-4 mt-10 sticky bottom-0 top-16 max-h-[calc(100vh-80px)] overflow-y-auto scrollbar-hide">
+                <SidebarNav />
+              </div>
             </div>
-          </div>
+          </Show>
           <div class="flex-auto">
             <Routes />
           </div>

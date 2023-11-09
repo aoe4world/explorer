@@ -1,5 +1,5 @@
 import { Link, useLocation, useParams } from "@solidjs/router";
-import { Component, createMemo, onMount, createResource, createSignal, For, Index, Resource, createEffect, Show } from "solid-js";
+import { Component, createMemo, onMount, createResource, createSignal, For, Index, Resource, createEffect, Show, onCleanup } from "solid-js";
 import { setActivePage } from "../../App";
 import { getItemHref } from "@components/Cards";
 import { CivFlag } from "@components/CivFlag";
@@ -11,8 +11,11 @@ import { capitlize, getItemByCanonicalName, sortPatchDiff } from "../../query/ut
 import { getItemCssClass, mainIntroductionCSSClass } from "../../styles";
 import { civAbbr, Item, UnifiedItem } from "../../types/data";
 import { PatchLine, PatchSection, PatchSet } from "../../types/patches";
+import { setHideNav } from "../../global";
 
 export const PatchDetailRoute = () => {
+  setHideNav(true);
+  onCleanup(() => setHideNav(false));
   const params = useParams();
   const [patch] = createResource(async () => (await import("../../data/patches/patch")).patches.find((patch) => patch.id === params.id));
   const [civ, setCiv] = createSignal<civAbbr>(CIVILIZATION_BY_SLUG[params.civ]?.abbr);

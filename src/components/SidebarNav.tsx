@@ -22,6 +22,7 @@ import { ItemIcon } from "./ItemIcon";
 import { CivConfig } from "@data/types/civs";
 import { getStructuredItems, parseCurrentLocation } from "../global";
 import { CivFlag } from "./CivFlag";
+import { Icon } from "./Icon";
 const SDK = import("@data/sdk");
 
 export const SidebarNav: Component = (props) => {
@@ -151,7 +152,7 @@ const TreeGroupToggle: ParentComponent<JSX.HTMLAttributes<HTMLButtonElement> & {
   };
   return (
     <button role="treeitem" aria-expanded={isOpen()} aria-owns={id} onClick={toggle} tabIndex={0} {...props} onKeyDown={onKeyDown}>
-      <span class={props.toggleClass}>{isOpen() ? "▼" : "▶"}</span>
+      <span class={props.toggleClass}>{isOpen() ? <Icon icon="caret-down" /> : <Icon icon="caret-right" />}</span>
       {props.children}
     </button>
   );

@@ -85,6 +85,8 @@ export function splitUnitsIntoGroups(units: UnifiedItem<Unit>[]) {
   const grouped = units?.reduce(
     (acc, unit) => {
       if (unit.classes.some((c) => c === "ship")) acc.ships.push(unit);
+      else if (unit.variations.some((v) => v.producedBy.includes("mercenary-house") || v.producedBy.includes("foreign-engineering-company")))
+        acc.mercenaries.push(unit);
       else if (unit.classes.some((c) => c === "warship")) acc.ships.push(unit);
       else if (unit.classes.some((c) => c === "worker")) acc.workers.push(unit);
       else if (unit.classes.some((c) => c === "infantry")) acc.infantry.push(unit);

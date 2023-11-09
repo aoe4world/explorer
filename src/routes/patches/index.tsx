@@ -1,12 +1,15 @@
 import { Link, useLocation } from "@solidjs/router";
-import { createResource } from "solid-js";
+import { createResource, onCleanup } from "solid-js";
 import { setActivePage } from "../../App";
 import { Icon } from "@components/Icon";
 import { PatchNotes } from "../../types/patches";
 import { CivAbbr } from "@data/sdk/utils";
 import { mainIntroductionCSSClass } from "../../styles";
+import { setHideNav } from "../../global";
 
 export const PatchListRoute = () => {
+  setHideNav(true);
+  onCleanup(() => setHideNav(false));
   const [patches] = createResource(async () => [...(await import("../../data/patches/patch")).patches].reverse().map(patchSummary));
 
   setActivePage({ title: "Patches", location: useLocation() });

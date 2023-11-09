@@ -20,7 +20,7 @@ export const Abilities: Component<{ abilities: ItemList<Ability>; civ: civConfig
             <div class="flex flex-row items-start mb-2 group ">
               <div
                 class={`flex-none rounded w-10 my-1.5 p-0 h-10 mr-4 ${
-                  ability.active == "manual" ? "bg-gradient-to-b from-purple-700 to-violet-900 border border-item-ability" : ""
+                  ability.active == "manual" ? "bg-gradient-to-b from-[#5C457B] to-[#4D366E] border border-[#493B65]" : ""
                   // ability.active == "manual" ? "bg-gradient-to-b from-[#3D4E68] to-[#222535] border border-item-ability" : ""
                 }`}
               >

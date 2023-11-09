@@ -51,7 +51,7 @@ async function getCivLandmarkQuestion(i?: number, civ?: civConfig): Promise<Ques
   const historyId = `landmark-${civ.abbr}`;
   const history = randomPickedHistory.get(historyId) ?? randomPickedHistory.set(historyId, new Set()).get(historyId);
   const buildings = (await SDK).buildings.where({ civilization: civ?.abbr });
-  const landmarks = buildings.filter((b) => b.classes.includes("landmark") && !["wynguard-palace"].includes(b.id));
+  const landmarks = buildings.filter((b) => b.classes.includes("landmark") && !["wynguard-palace", "capital-town-center"].includes(b.id));
 
   const correctOptions = landmarks.filter((l) => !history.has(l.id));
   if (!correctOptions.length) {
