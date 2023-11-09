@@ -49,7 +49,9 @@ export function BuildingDetailRoute() {
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
               <ItemPage.Header item={item} civ={civ} />
-              <div class={mainIntroductionCSSClass}>{item?.description}</div>
+              <div class={mainIntroductionCSSClass}>{variation()?.description}</div>
+
+              <ItemPage.ExpansionInfo civ={civ} />
 
               {!civ && <ItemPage.CivPicker item={item} />}
 

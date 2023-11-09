@@ -34,7 +34,10 @@ export function TechnologyDetailRoute() {
             <div class="basis-2/3 py-4 shrink-0">
               <ItemPage.Header item={item} civ={civ} />
               <div class={mainIntroductionCSSClass}>{item?.description}</div>
-              <div class={mainIntroductionCSSClass}>Available in the {PRETTY_AGE_MAP_LONG[item?.minAge]}</div>
+              {item?.minAge > 0 ? <div class={mainIntroductionCSSClass}>Available in the {PRETTY_AGE_MAP_LONG[item?.minAge]}</div> : <></>}
+
+              <ItemPage.ExpansionInfo civ={civ} />
+
               <ItemPage.ProducedAt item={item} civ={civ} title="Researched at" />
 
               {!civ && <ItemPage.CivPicker item={item} />}

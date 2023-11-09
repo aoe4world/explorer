@@ -1,11 +1,12 @@
-import { useParams, useLocation } from "@solidjs/router";
-import { createResource, createSignal, For, Suspense } from "solid-js";
+import { createResource, createSignal, For, onCleanup, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
 import { Icon } from "@components/Icon";
 import { ContentRow } from "@components/RelatedContent";
 import { CIVILIZATION_BY_SLUG } from "../../config";
 import { ContentItem, getRelatedContent } from "../../query/content";
 import { mainIntroductionCSSClass, mainItemTitleCSSClass, secondaryButtonClass } from "../../styles";
+import { hideNav, setHideNav } from "../../global";
+import { useParams } from "@solidjs/router";
 
 const defaultLimit = 12;
 export const ContentOverviewRoute = () => {
@@ -14,8 +15,9 @@ export const ContentOverviewRoute = () => {
   const [content] = createResource(() => ({ civilization: civ, featured: false }), getRelatedContent);
   const [limit, setLimit] = createSignal(defaultLimit);
   const [showFilter, setShowFilter] = createSignal(false);
-
   const [filters, setFilters] = createSignal<{ [key: string]: string[] }>({});
+  setHideNav(true);
+  onCleanup(() => setHideNav(false));
 
   const toggleFilter = (key: string, value: string) => {
     const current = filters()[key] || [];

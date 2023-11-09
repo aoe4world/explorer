@@ -42,6 +42,8 @@ export function UnitDetailRoute() {
               <ItemPage.Header item={item} civ={civ} />
               <div class={mainIntroductionCSSClass}>{variation()?.description}</div>
 
+              <ItemPage.ExpansionInfo civ={civ} />
+
               <Abilities abilities={abilities()} civ={civ} />
 
               <ItemPage.ProducedAt item={item} civ={civ} />
