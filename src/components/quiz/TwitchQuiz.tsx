@@ -2,7 +2,7 @@ import { Component, createResource, createSignal, For, onCleanup, onMount } from
 import { createStore, produce } from "solid-js/store";
 import { Icon } from "../Icon";
 import { getRandomQuestion } from "./questions";
-import { MultipleChoiceOption } from "./Quiz";
+import { DLC_CIVS, MultipleChoiceOption } from "./Quiz";
 import { ChatClient } from "@twurple/chat";
 import { Random } from "./random";
 
@@ -21,7 +21,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
   const [questionCount, setQuestionCount] = createSignal(0);
   const [submissionsClosed, setSubmissionsClosed] = createSignal(false);
   const [pendingSubmissionsClosed, setPendingSubmissionsClosed] = createSignal(false);
-  const [question, { refetch }] = createResource(() => getRandomQuestion(questionCount() + (props.difficulty ?? 0)));
+  const [question, { refetch }] = createResource(() => getRandomQuestion(questionCount() + (props.difficulty ?? 0), Random.pick(DLC_CIVS)));
   const [secondsLeft, setSecondsLeft] = createSignal(0);
   let progressBar: HTMLDivElement;
 

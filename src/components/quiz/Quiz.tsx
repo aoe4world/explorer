@@ -4,7 +4,7 @@ import { getRandomQuestion } from "./questions";
 import { CIVILIZATION_BY_SLUG } from "../../config";
 import { Random } from "./random";
 
-const DLC_CIVS = [
+export const DLC_CIVS = [
   CIVILIZATION_BY_SLUG.byzantines,
   CIVILIZATION_BY_SLUG.japanese,
   CIVILIZATION_BY_SLUG.orderofthedragon,
