@@ -65,11 +65,15 @@ export const CivOverviewRoute = () => {
         style={{
           "background-image": `url(https://www.ageofempires.com/wp-content/themes/ageOfEmpires/dist/images/defaults/default-news-section-bg-right-desk.png)`,
         }}
-      ></div>
+      >
+        <div class="bg-gradient-to-r from-gray-800 to-transparent w-full h-full"></div>
+      </div>
       <div
         class="fixed top-0 w-screen h-screen opacity-20 saturate-0	-z-10 bg-left-bottom bg-contain bg-no-repeat"
         style={{ "background-image": `url(https://www.ageofempires.com/wp-content/themes/ageOfEmpires/dist/images/bgs/bg-insider-signup-desk.png)` }}
-      ></div>
+      >
+        <div class="bg-gradient-to-r from-gray-800 to-transparent w-full h-full"></div>
+      </div>
     </>
   );
 };

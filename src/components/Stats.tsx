@@ -20,14 +20,15 @@ export const StatBar: Component<{
   displayAlways?: boolean;
   multiplier?: Stat;
   max: number;
+  age?: () => number;
 }> = (props) => {
   let totalEl;
 
   const [parts, setParts] = createSignal([] as StatPart<number>[]);
   const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
   createEffect(
-    on([globalAgeFilter, globalCivFilter], () => {
-      const { parts, ...rest } = calculateStatParts(props.stat, globalAgeFilter(), { item: props.item });
+    on([globalAgeFilter, globalCivFilter, () => props.age?.()], () => {
+      const { parts, ...rest } = calculateStatParts(props.stat, props.age?.() ?? globalAgeFilter(), { item: props.item });
       setParts(parts.map(([v, ...p]) => [v * multiplier(), ...p]));
       setValues(Object.fromEntries(Object.entries(rest).map(([k, v]) => [k, v * multiplier()])) as any);
     })
@@ -233,12 +234,13 @@ export const StatNumber: Component<{
   unitLabel?: string;
   multiplier?: number;
   stat: Stat;
+  age?: () => number;
 }> = (props) => {
   const [parts, setParts] = createSignal<StatPart<number>[]>([]);
   const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
   createEffect(
-    on(globalAgeFilter, () => {
-      const { parts, ...rest } = calculateStatParts(props.stat, globalAgeFilter(), { decimals: 3 });
+    on([globalAgeFilter, () => props.age?.()], () => {
+      const { parts, ...rest } = calculateStatParts(props.stat, props.age?.() ?? globalAgeFilter(), { decimals: 3 });
       setValues(rest);
       setParts(parts);
     })
@@ -337,13 +339,14 @@ export const StatDps: Component<{
   helper?: string;
   speed: Stat;
   attacks: Stat[];
+  stat: Stat;
+  age?: () => number;
 }> = (props) => {
   const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
-
   createEffect(
-    on(globalAgeFilter, () => {
-      const attackSpeed = calculateStatParts(props.speed, globalAgeFilter(), { decimals: 3 });
-      const attacks = props.attacks.map((attack) => calculateStatParts(attack, globalAgeFilter(), { decimals: 0 }));
+    on([globalAgeFilter, () => props.age?.()], () => {
+      const attackSpeed = calculateStatParts(props.speed, props.age?.() ?? globalAgeFilter(), { decimals: 3 });
+      const attacks = props.attacks.map((attack) => calculateStatParts(attack, props.age?.() ?? globalAgeFilter(), { decimals: 0 }));
       setValues(calculateDpsParts(attackSpeed, attacks));
     })
   );
@@ -412,7 +415,7 @@ export function formatSecondsToPhrase(seconds: number) {
   const m = Math.floor((seconds % 3600) / 60);
   const s = Math.round(seconds % 60);
   // 1 hour 2 minutes 3 seconds
-  return `${h > 0 ? `${h} hr${h > 1 ? "s" : ""} ` : ""}${m > 0 ? `${m} min${m > 1 ? "s" : ""} ` : ""}${s > 0 ? `${s} sec${s > 1 ? "s" : ""}` : ""}`;
+  return `${h > 0 ? `${h} hr${h > 1 ? "s" : ""} ` : ""}${m > 0 ? `${m} min${m > 1 ? "s" : ""} ` : ""}${s > 0 ? `${s} sec${s > 1 ? "s" : ""}` : ""}`.trim();
 }
 function formatCurreny(number: number) {
   return number > 2500 ? `${number / 1000}k` : number;

@@ -61,6 +61,7 @@ function mergeVariationsToStats(variations: (Unit | Building)[]) {
       const bonus: Modifier[] = [];
 
       for (const w of variation.weapons) {
+        if (!w) continue;
         const burst = 1; //w.burst?.count ?? 1;
         // We assume there's only one weapon per type per variation, for now.
         // Edit 11-10-2022: Oh boy was I wrong.

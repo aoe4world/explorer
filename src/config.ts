@@ -1,5 +1,6 @@
 import { ModifyableProperty } from "@data/types/items";
-export { CIVILIZATIONS, CIV_ABBR, CIVILIZATION_BY_SLUG } from "@data/lib/config/civs";
+export { CIVILIZATIONS } from "@data/lib/config/civs";
+export { CIVILIZATION_BY_SLUG } from "@data/types/civs";
 export { ITEMS } from "@data/types/items";
 export type { Building, ModifyableProperty, Technology, Unit, Upgrade, ItemTypes } from "@data/types/items";
 
@@ -55,5 +56,6 @@ export const MUTED_UNITS = ["wynguard-army", "khaganate-units"];
 
 export const PRETTY_AGE_MAP = ["", "Age I", "Age II", "Age III", "Age IV"];
 export const PRETTY_AGE_MAP_LONG = ["", "Dark Age (I)", "Feudal Age (II)", "Castle Age (III)", "Imperial Age (IV)"];
+export const PRETTY_AGE_MAP_SHORT = ["", "I", "II", "III", "IV"];
 
 export const CURATED_CONTENT_API = "https://curated.aoe4world.com/";

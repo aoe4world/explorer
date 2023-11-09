@@ -17,13 +17,14 @@ export const Abilities: Component<{ abilities: ItemList<Ability>; civ: civConfig
       <div class="flex gap-4 flex-col mb-8">
         <For each={sortedMappedAbilities()}>
           {(ability) => (
-            <div class="flex flex-row items-center mb-2 group ">
+            <div class="flex flex-row items-start mb-2 group ">
               <div
-                class={`flex-none rounded w-10 p-0 h-10 mr-4 ${
-                  ability.active == "manual" ? "bg-gradient-to-b from-[#3D4E68] to-[#222535] border border-item-ability" : ""
+                class={`flex-none rounded w-10 my-1.5 p-0 h-10 mr-4 ${
+                  ability.active == "manual" ? "bg-gradient-to-b from-purple-700 to-violet-900 border border-item-ability" : ""
+                  // ability.active == "manual" ? "bg-gradient-to-b from-[#3D4E68] to-[#222535] border border-item-ability" : ""
                 }`}
               >
-                <ItemIcon url={ability.icon ?? ""} class="scale-110" />
+                <ItemIcon url={ability.icon ?? ""} class="scale-100" />
               </div>
               <div>
                 <p class="text-base font-bold text-white w-full">{ability.name}</p>
@@ -32,8 +33,11 @@ export const Abilities: Component<{ abilities: ItemList<Ability>; civ: civConfig
 
                   {ability.activatedOn?.length && (
                     <>
-                      {" "}
-                      When {ability.auraRange >= 1 ? `in ${ability.auraRange} tiles range of` : "near"}
+                      {ability.active === "toggle"
+                        ? " Toggle on "
+                        : ability.auraRange === 0
+                        ? " Activate on "
+                        : ` When ${ability.auraRange >= 1 ? `in ${ability.auraRange} tiles range of` : `near`}`}
                       {ability.activatedOn?.map((id, i, l) => (
                         <>
                           <InlineItemLink itemId={id} civ={props.civ} />
@@ -58,13 +62,13 @@ export const Abilities: Component<{ abilities: ItemList<Ability>; civ: civConfig
                     <>
                       {" "}
                       {formatSecondsToPhrase(ability.cooldown)} cooldown
-                      {ability.active == "manual"
+                      {/* {ability.active == "manual"
                         ? " when activated. "
                         : ability.active == "toggle"
                         ? " when toggled."
                         : ability.active == "always"
                         ? " after triggering"
-                        : ""}
+                        : ""} */}
                     </>
                   )}
                 </p>
@@ -84,8 +88,8 @@ const InlineItemLink: Component<{ itemId: ItemSlug; civ: civConfig }> = (props) 
   return (
     <Show when={item()} keyed>
       {(item) => (
-        <Link href={getItemHref(item, props.civ)}>
-          <div class="inline-block w-[1.2em] h-[1.2em] mb-[-0.2em] p-0 mx-[0.3em]" className={`bg-item-${item.type}`}>
+        <Link href={getItemHref(item, props.civ)} class="whitespace-nowrap">
+          <div class={`inline-block w-[1.2em] h-[1.2em] mb-[-0.2em] p-0 mx-[0.3em] bg-item-${item.type}`}>
             <ItemIcon url={item.icon} />
           </div>
           <span class="font-bold">{item.name}</span>

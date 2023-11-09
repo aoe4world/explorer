@@ -49,19 +49,21 @@ export const CivDetailRoute = () => {
 
         <h2 class="text-lg text-white/40 font-bold  mb-3">Jump to</h2>
         <Suspense fallback={<p>Loading</p>}>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-2 flex-wrap mb-2">
+          <div class="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-5 gap-y-2 flex-wrap mb-2">
             <For each={data() && Object.values(data().units).flat()}>
-              {(unit) => (
-                <Link href={`./units/${unit.id}`} class="flex flex-row items-center mb-2 group ">
-                  <div class="flex-none  rounded bg-item-unit/80 group-hover:bg-item-unit/100 w-10 h-10 p-0.5 mr-2 transition">
-                    <ItemIcon url={unit.icon} />
-                  </div>
-                  <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
-                </Link>
-              )}
+              {(unit) =>
+                unit.unique && (
+                  <Link href={`./units/${unit.id}`} class="flex flex-row items-center mb-2 group ">
+                    <div class="flex-none  rounded bg-item-unit/80 group-hover:bg-item-unit/100 w-10 h-10 p-0.5 mr-2 transition">
+                      <ItemIcon url={unit.icon} />
+                    </div>
+                    <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
+                  </Link>
+                )
+              }
             </For>
           </div>
-          <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-2 flex-wrap mb-2">
+          <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-5 gap-y-2 flex-wrap mb-2">
             <For each={data() && Object.values(data().buildings).flat()}>
               {(building) =>
                 building.unique && (
@@ -75,7 +77,7 @@ export const CivDetailRoute = () => {
               }
             </For>
           </div>
-          <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-2 flex-wrap mb-2">
+          <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-5 gap-y-2 flex-wrap mb-2">
             <For each={data() && Object.values(data().technologies).flat()}>
               {(tech) =>
                 tech.unique && (
@@ -171,9 +173,11 @@ export const CivDetailRoute = () => {
         </Show>
       </div>
       <div
-        class="absolute top-28 w-screen h-screen opacity-20 saturate-0	-z-10 bg-right-top bg-contain bg-no-repeat transition-all duration-400"
+        class="fixed top-10 w-screen h-screen opacity-20 saturate-0	-z-10 bg-right-top bg-cover bg-no-repeat transition-all duration-400"
         style={{ "background-image": `url(${civBackdrops[civConfig.abbr]})` }}
-      ></div>
+      >
+        <div class="bg-gradient-to-r from-gray-800 to-transparent w-full h-full"></div>
+      </div>
     </>
   );
 };

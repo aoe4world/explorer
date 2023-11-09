@@ -7,7 +7,6 @@ import { getMostAppropriateVariation } from "../query/utils";
 import { civAbbr, civConfig, UnifiedItem, Unit } from "../types/data";
 import { Card, CardHeader } from "./Cards";
 import { StatBar, StatCosts, StatDps, StatNumber } from "./Stats";
-import { globalAgeFilter } from "./Toolbar";
 
 const increaseBarSizeForClass = ["siege", "elephant", "incendiary"];
 function getBarSize(unit: UnifiedItem<Unit>, baseSize: number, increasedSize: number) {

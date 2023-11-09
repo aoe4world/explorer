@@ -94,7 +94,10 @@ export function BuildingDetailRoute() {
                           <div class="flex-none  rounded bg-item-technology/80 group-hover:bg-item-technology/100 w-10 h-10 p-0.5 mr-2 transition">
                             <ItemIcon url={tech.icon} />
                           </div>
-                          <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{tech.name}</span>
+                          <span
+                            class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100 whitespace-pre-wrap"
+                            innerHTML={tech.name.replace(/(.*?)\((.*?)\)/, '$1<span class="opacity-50">$2</span>')}
+                          />
                           <Tooltip attachTo={el}>
                             <div class="max-w-md bg-gray-800 rounded-2xl border border-item-technology">
                               <TechnologyCard item={tech} civ={civ} />
@@ -129,6 +132,7 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
   );
 
   const variation = createMemo(() => getMostAppropriateVariation<Building>(props.item, props.civ));
+  const [age, setAge] = createSignal(4);
 
   return (
     <div class="flex-auto flex flex-col gap-8">
@@ -154,30 +158,38 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
       <Show when={stats()} keyed>
         {(stats) => (
           <>
-            {" "}
-            <div class="flex flex-col gap-5 bg-black/70 rounded-2xl p-6 ">
-              <StatBar label="Hitpoints" icon="heart" stat={stats.hitpoints} max={10000} item={props.item} />
-              <StatBar label="Siege Attack" icon="meteor" stat={stats.siegeAttack} max={500} multiplier={stats.burst} item={props.item} />
-              <StatBar label="Melee Attack" icon="swords" stat={stats.meleeAttack} max={50} item={props.item} />
-              <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats.rangedAttack} max={50} multiplier={stats.burst} item={props.item} />
-              <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats.fireArmor} max={20} displayAlways={true} item={props.item} />
-              <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats.rangedArmor} max={60} displayAlways={true} item={props.item} />
+            <div class=" bg-black/70 rounded-2xl">
+              <ItemPage.AgeTabs age={age} setAge={setAge} />
+              <div class="flex flex-col gap-5 p-6">
+                <StatBar label="Hitpoints" icon="heart" stat={stats.hitpoints} max={10000} item={props.item} age={age} />
+                <StatBar label="Siege Attack" icon="meteor" stat={stats.siegeAttack} max={500} multiplier={stats.burst} item={props.item} age={age} />
+                <StatBar label="Melee Attack" icon="swords" stat={stats.meleeAttack} max={50} item={props.item} age={age} />
+                <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats.rangedAttack} max={50} multiplier={stats.burst} item={props.item} age={age} />
+                <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats.fireArmor} max={20} displayAlways={true} item={props.item} age={age} />
+                <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats.rangedArmor} max={60} displayAlways={true} item={props.item} age={age} />
+              </div>
             </div>
             <div class="flex gap-5 flex-wrap bg-black/70 rounded-2xl p-6 ">
               {stats.attackSpeed && (
                 <div class="w-full">
-                  <StatDps label="Damage" speed={stats.attackSpeed} attacks={[stats.rangedAttack || stats.meleeAttack || stats.siegeAttack]}></StatDps>
+                  <StatDps
+                    label="Damage"
+                    speed={stats.attackSpeed}
+                    attacks={[stats.rangedAttack || stats.meleeAttack || stats.siegeAttack]}
+                    age={age}
+                  ></StatDps>
                 </div>
               )}
-              <StatNumber label="Move Speed" stat={stats.moveSpeed} unitLabel="T/S"></StatNumber>
-              <StatNumber label="Attack Speed" stat={stats.attackSpeed} unitLabel="S"></StatNumber>
-              <StatNumber label="Min Range" stat={stats.minRange} unitLabel="TILES"></StatNumber>
-              <StatNumber label="Range" stat={stats.maxRange} unitLabel="TILES"></StatNumber>
+              <StatNumber label="Move Speed" stat={stats.moveSpeed} unitLabel="T/S" age={age}></StatNumber>
+              <StatNumber label="Attack Speed" stat={stats.attackSpeed} unitLabel="S" age={age}></StatNumber>
+              <StatNumber label="Min Range" stat={stats.minRange} unitLabel="TILES" age={age}></StatNumber>
+              <StatNumber label="Range" stat={stats.maxRange} unitLabel="TILES" age={age}></StatNumber>
               <StatNumber
                 label="Line of Sight"
                 stat={stats.lineOfSight}
                 unitLabel="TILES"
                 helper="Maximum line of sight for a unit, only reached when on elevation"
+                age={age}
               ></StatNumber>
             </div>
           </>

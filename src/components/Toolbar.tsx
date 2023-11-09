@@ -8,6 +8,7 @@ import { Icon } from "./Icon";
 import { Search } from "./Search";
 import { Tooltip } from "./Tooltip";
 import { globalAgeFilter, hideNav, setGlobalAgeFilter } from "../global";
+import { QuickNav } from "./QuickNav";
 
 export const Toolbar: Component = () => {
   const pending = useIsRouting();
@@ -25,13 +26,13 @@ export const Toolbar: Component = () => {
   };
 
   const navButtonClass =
-    "w-12 h-10 md:w-10 lg:h-8 md:hover:bg-white md:hover:text-black bg-gray-900 text-white/70text-lg px-3 grid rounded-md flex-none transition";
+    "w-12 h-7 md:w-10 lg:h-7 md:hover:bg-white md:hover:text-black bg-gray-900 text-white/70text-lg px-3 grid rounded-md flex-none transition";
 
   return (
     <Show when={!hideNav()}>
-      <div class="bg-gray-700 z-10 border-bottom border border-gray-500  sticky mt-25 top-0" classList={{ "opacity-20": pending() }}>
-        <div class="max-w-screen-2xl py-2 px-4 lg:px-8 h-auto text-base lg:p-3 mx-auto flex flex-row flex-wrap sm:flex-nowrap gap-2 lg:gap-5">
-          <div class="flex flex-row gap-2 h-10 lg:h-8 ">
+      <div class="bg-gray-700 z-10 border-bottom border border-gray-500 sticky mt-25 top-0" classList={{ "opacity-20": pending() }}>
+        <div class="max-w-screen-2xl py-2 px-4 lg:px-8 h-auto text-base lg:p-3 mx-auto flex flex-row items-center flex-wrap sm:flex-nowrap gap-2 lg:gap-5">
+          <div class="hidden lg:flex flex-row gap-2 h-10 lg:h-8 items-center">
             {current().subroute ? (
               <Link href={`/civs/${current().civ}/`} class={navButtonClass} noScroll={true}>
                 <Icon icon="grid-horizontal" class="place-self-center" />
@@ -41,11 +42,12 @@ export const Toolbar: Component = () => {
                 <Icon icon="home" class="place-self-center" />
               </Link>
             )}
+
             <For each={Object.values(CIVILIZATIONS)}>
               {(civ) => (
                 <NavLink
                   href={smartCivLink(civ)}
-                  class="h-full relative w-14 rounded-md overflow-hidden border-2 shadow-inner opacity-50 hover:opacity-100  border-transparent hidden lg:block transition"
+                  class="relative w-12 h-7 rounded-md overflow-hidden border-2 shadow-inner opacity-50 hover:opacity-100  border-transparent hidden xl:block transition"
                   activeClass="opacity-90 border-white"
                   aria-label={civ.name}
                   noScroll={true}
@@ -55,22 +57,25 @@ export const Toolbar: Component = () => {
               )}
             </For>
           </div>
+          <QuickNav />
           <Show when={CIVILIZATION_BY_SLUG[current()?.civ]}>
             {(civ) => (
-              <div class="group flex-auto lg:hidden">
-                <button class="flex items-center gap-2 bg-gray-900 h-10 px-3 rounded-md">
-                  <CivFlag abbr={civ.abbr} class="h-6 w-10 rounded object-cover" />
-                  <span class="truncate hidden sm:inline">{civ.name}</span>
-                  <Icon icon="caret-down" class=" ml-4 mr-2" />
-                </button>
-                <div class="hidden group-hover:block group-focus-within:block z-10 rounded-md absolute bg-gray-900 w-60 mt-0 ">
-                  <For each={Object.values(CIVILIZATIONS)}>
-                    {(civ) => (
-                      <NavLink href={[`/civs/${civ.slug}`, current().subroute].join("/")} noScroll={true} class="flex p-3 hover:bg-gray-700">
-                        <CivFlag abbr={civ.abbr} class="h-6 w-10 mr-3 rounded object-cover" /> {civ.name}
-                      </NavLink>
-                    )}
-                  </For>
+              <div class="flex-auto hidden lg:block xl:hidden">
+                <div class="group inline-block">
+                  <button class="flex items-center gap-2 bg-gray-900 h-8 px-1 rounded-md">
+                    <CivFlag abbr={civ().abbr} class="h-6 w-10 rounded object-cover" />
+                    <span class="truncate hidden sm:inline">{civ().name}</span>
+                    <Icon icon="caret-down" class=" ml-4 mr-2" />
+                  </button>
+                  <div class="hidden max-h-[80vh] overflow-y-auto group-hover:block group-focus-within:block z-10 rounded-md absolute bg-gray-900 w-60 mt-0 ">
+                    <For each={Object.values(CIVILIZATIONS)}>
+                      {(civ) => (
+                        <NavLink href={[`/civs/${civ.slug}`, current().subroute].join("/")} noScroll={true} class="flex p-3 hover:bg-gray-700">
+                          <CivFlag abbr={civ.abbr} class="h-6 w-10 mr-3 rounded object-cover" /> {civ.name}
+                        </NavLink>
+                      )}
+                    </For>
+                  </div>
                 </div>
               </div>
             )}
@@ -80,8 +85,8 @@ export const Toolbar: Component = () => {
             let el;
             return (
               <>
-                <Link href={`/about`} ref={el} class={`${navButtonClass} ml-auto`} noScroll={true}>
-                  <Icon icon="circle-question" class="place-self-center" />
+                <Link href={`/about`} ref={el} class={`${navButtonClass} ml-auto hidden sm:block`} noScroll={true}>
+                  <Icon icon="circle-question" class="place-self-center text-gray-300" />
                 </Link>
                 <Tooltip attachTo={el}>
                   <div class={tooltipCSSClass}>
@@ -108,26 +113,7 @@ export const Toolbar: Component = () => {
               </>
             );
           }}
-          <div class="flex items-center text-center bg-gray-900 h-10 lg:h-8 rounded-md">
-            <button
-              class="w-8 h-full z-2 -mr-4 disabled:opacity-50"
-              onClick={() => setGlobalAgeFilter(Math.max(1, globalAgeFilter() - 1))}
-              disabled={globalAgeFilter() == 1}
-            >
-              <Icon icon="angle-left" />
-            </button>
-            <span class="w-12 md:w-24 pointer-events-none">
-              <span class="hidden md:inline">Age </span>
-              {["I", "II", "III", "IV"][globalAgeFilter() - 1]}
-            </span>
-            <button
-              class="w-8 h-full z-2 -ml-4 disabled:opacity-50"
-              onClick={() => setGlobalAgeFilter(Math.min(4, globalAgeFilter() + 1))}
-              disabled={globalAgeFilter() == 4}
-            >
-              <Icon icon="angle-right" />
-            </button>
-          </div>
+
           <Search class="basis-full my-2 sm:my-0 sm:basis-48 lg:basis-96" />
         </div>
       </div>

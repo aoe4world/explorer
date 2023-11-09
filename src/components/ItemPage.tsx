@@ -3,7 +3,7 @@ import { Component, createResource, For, Match, ParentComponent, Show, Switch, u
 import { getItemHref } from "./Cards";
 import { CivFlag } from "./CivFlag";
 import { TechnologyCard } from "./TechnologyCard";
-import { CIVILIZATIONS, ITEMS } from "../config";
+import { CIVILIZATIONS, ITEMS, PRETTY_AGE_MAP, PRETTY_AGE_MAP_SHORT } from "../config";
 import { getItemTechnologies } from "../query/utils";
 import { getItemCssClass, itemGridCSSClass, mainIntroductionCSSClass, mainItemTitleCSSClass } from "../styles";
 import { civAbbr, civConfig, UnifiedItem } from "../types/data";
@@ -103,13 +103,20 @@ const Wrapper: ParentComponent<{ civ?: civConfig }> = (props) => {
   const [pending] = useTransition();
   return (
     <>
-      {" "}
-      <div
+      {/* <div
         class="fixed top-10 left-0 right-0 h-screen opacity-20 saturate-0 -z-10 bg-right-top bg-contain bg-no-repeat transition-[background-image] duration-400"
         style={{ "background-image": `url(${civBackdrops[props.civ?.abbr]})` }}
         classList={{ "opacity-0": pending() }}
-      ></div>
-      <div class="max-w-screen-lg p-4 mx-auto gap-4 mb-4 mt-8">{props.children}</div>
+      ></div> */}
+      <div class="max-w-screen-lg p-4 mx-auto gap-4 mb-4 mt-8">
+        {props.children}
+        <div
+          class="fixed top-10 w-screen h-screen opacity-20 saturate-0	-z-10 bg-top bg-cover bg-no-repeat transition-all duration-400"
+          style={{ "background-image": `url(${civBackdrops[props.civ?.abbr]})`, opacity: pending() ? "0" : "0.4" }}
+        >
+          <div class="bg-gradient-to-r from-gray-800 to-transparent w-full h-full"></div>
+        </div>
+      </div>
     </>
   );
 };
@@ -191,6 +198,26 @@ const CivOptionsForItem: ParentComponent<{ item: UnifiedItem; civs: civAbbr[]; p
 //   );
 // };
 
+const AgeTabs: Component<{ age: () => number; setAge: (age: number) => void; minAge?: number }> = (props) => (
+  <div class="flex w-full gap-px rounded-t-2xl overflow-hidden">
+    {[1, 2, 3, 4].map((a) => (
+      <button
+        onClick={() => props.setAge(a)}
+        class={`basis-1/4 p-2  ${
+          props.minAge && a >= props.minAge
+            ? props.age() == a
+              ? "cursor-default text-white"
+              : "bg-gray-400/30 hover:bg-gray-500/50 text-gray-100"
+            : "bg-gray-400/30 text-gray-400"
+        }`}
+        disabled={props.minAge && a < props.minAge}
+      >
+        {PRETTY_AGE_MAP_SHORT[a]}
+      </button>
+    ))}
+  </div>
+);
+
 export const ItemPage = {
   Wrapper,
   Header,
@@ -198,4 +225,5 @@ export const ItemPage = {
   UnavailableForCiv,
   AvailableUpgrades,
   CivPicker,
+  AgeTabs,
 };

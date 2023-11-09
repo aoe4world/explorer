@@ -19,48 +19,37 @@ import { CIVILIZATION_BY_SLUG } from "../config";
 import { splitUnitsIntoGroups, splitBuildingsIntoGroups, splitTechnologiesIntroGroups } from "../query/utils";
 import { getItemHref } from "./Cards";
 import { ItemIcon } from "./ItemIcon";
+import { CivConfig } from "@data/types/civs";
+import { getStructuredItems, parseCurrentLocation } from "../global";
+import { CivFlag } from "./CivFlag";
 const SDK = import("@data/sdk");
+
 export const SidebarNav: Component = (props) => {
   const location = useLocation();
-  const current = createMemo(() => {
-    const path = location.pathname.toLowerCase();
-    const [route, civ, subroute] = path.match(/\/civs\/([a-z]+)\/?([\w/-]*)/i) ?? [];
-    const itemType = subroute?.split("/")[0] || (civ?.length ? "units" : path.match(/(units|buildings|technologies)/i)?.[0] ?? "units");
-    return { route, civ, subroute, itemType };
-  });
-
+  const current = createMemo(() => parseCurrentLocation(location.pathname));
   const civilization = () => CIVILIZATION_BY_SLUG[current().civ as CivSlug] ?? undefined;
-  const [data] = createResource(civilization, async (c) => {
-    const civ = (await SDK).civilizations.Get(c);
-    if (!civ.info) return;
-    return {
-      civ,
-      units: splitUnitsIntoGroups(civ.units.order("hitpoints", "age")),
-      buildings: splitBuildingsIntoGroups(civ.buildings.order("hitpoints", "age")),
-      technologies: splitTechnologiesIntroGroups(civ.technologies.order("age")),
-    };
-  });
-  const [allData] = createResource(async () => {
-    const sdk = await SDK;
-    return {
-      civ: undefined,
-      units: splitUnitsIntoGroups(sdk.units.order("hitpoints", "age")),
-      buildings: splitBuildingsIntoGroups(sdk.buildings.order("hitpoints", "age")),
-      technologies: splitTechnologiesIntroGroups(sdk.technologies.order("age")),
-    };
-  });
+  const [data] = createResource(civilization, getStructuredItems);
+  const [allData] = createResource(() => getStructuredItems());
+  const currentItemType = () => current().itemType || "units";
   return (
     <div class="">
       <Show when={civilization() ? data() : allData()} keyed>
         {(data) => (
           <nav>
-            <p class="text-xl font-bold white mb-2">{data.civ?.info.name ?? "All Civilizations"}</p>
+            {civilization() ? (
+              <Link href={`/civs/${civilization().slug}/`} class="text-xl font-bold white mb-2 flex items-center">
+                {civilization() && <CivFlag abbr={civilization().abbr} class="w-auto h-6 mr-2 inline-block rounded" />}
+                <span>{data.civ?.info.name}</span>
+              </Link>
+            ) : (
+              <p>All Civilizations</p>
+            )}
 
             <TreeMenu>
               <For each={Object.entries({ units: "Units", buildings: "Buildings", technologies: "Technologies" })}>
                 {([type, label]) => (
                   <TreeItem>
-                    <TreeGroup label={type} isOpen={current().itemType == type}>
+                    <TreeGroup label={type} isOpen={currentItemType() == type}>
                       <div class="flex items-center py-2 sticky -top-6 bg-gray-800 z-10">
                         <TreeGroupToggle class="text-sm w-4 outline-none group" toggleClass="block w-3 mr-1" />
                         <Link
@@ -91,11 +80,15 @@ export const SidebarNav: Component = (props) => {
                                             role="treeitem"
                                             class={`flex items-center p-1 rounded gap-2 text-white/90 hover:text-white bg-item-${item.type} bg-opacity-0 hover:bg-opacity-30 transition-all outline-none border border-transparent focus-visible:border-white`}
                                             activeClass={`!bg-opacity-40 font-bold !text-white`}
+                                            end
                                           >
-                                            <div class={`w-6 h-6 bg-item-${item.type} rounded-sm`}>
+                                            <div class={`w-6 h-6 bg-item-${item.type} rounded-sm flex-none`}>
                                               <ItemIcon url={item.icon} />
                                             </div>
-                                            <span>{item.name}</span>
+                                            <p
+                                              class="whitespace-pre-wrap"
+                                              innerHTML={item.name.replace(/(.*?)\((.*?)\)/, '$1<span class="opacity-50">$2</span>')}
+                                            ></p>
                                           </Link>
                                         </TreeItem>
                                       )}

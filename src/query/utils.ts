@@ -82,21 +82,24 @@ export function getMostAppropriateVariation<T extends Item = Item>(item: Unified
 }
 
 export function splitUnitsIntoGroups(units: UnifiedItem<Unit>[]) {
-  return units?.reduce(
+  const grouped = units?.reduce(
     (acc, unit) => {
       if (unit.classes.some((c) => c === "ship")) acc.ships.push(unit);
       else if (unit.classes.some((c) => c === "warship")) acc.ships.push(unit);
       else if (unit.classes.some((c) => c === "worker")) acc.workers.push(unit);
       else if (unit.classes.some((c) => c === "infantry")) acc.infantry.push(unit);
       else if (unit.classes.some((c) => c === "cavalry")) acc.cavalry.push(unit);
+      else if (unit.classes.some((c) => c === "camel")) acc.cavalry.push(unit);
       else if (unit.classes.some((c) => c === "siege")) acc.siege.push(unit);
       else if (unit.classes.some((c) => c === "mixed")) acc.misc.push(unit);
       else acc.workers.push(unit);
 
       return acc;
     },
-    { workers: [], infantry: [], cavalry: [], siege: [], ships: [], misc: [] } as GroupedUnits
+    { workers: [], infantry: [], cavalry: [], siege: [], ships: [], misc: [], mercenaries: [] } as GroupedUnits
   );
+  grouped.mercenaries.sort((b, a) => b.variations[0].costs.total - a.variations[0].costs.total);
+  return grouped;
 }
 
 export function splitBuildingsIntoGroups(buildings: UnifiedItem<Building>[]) {
@@ -118,11 +121,13 @@ export function splitBuildingsIntoGroups(buildings: UnifiedItem<Building>[]) {
 
 export function splitTechnologiesIntroGroups(buildings: UnifiedItem<Technology>[]) {
   return buildings?.reduce(
-    (acc, unit) => {
-      if (unit.classes.some((c) => ["advance"].includes(c))) return acc;
-      else if (unit.classes.some((c) => ["ship", "naval", "warship"].includes(c))) acc.naval.push(unit);
+    (acc, tech) => {
+      if (tech.classes.some((c) => ["advance"].includes(c) && tech.civs[0] == "ab")) return acc;
+      else if (tech.classes.some((c) => tech.civs[0] == "ay" && tech.id.includes("wing"))) acc.wings.push(tech);
+      else if (tech.classes.some((c) => c === "level-up-choice") && tech.civs[0] == "je") acc.leveling.push(tech);
+      else if (tech.classes.some((c) => ["ship", "naval", "warship"].includes(c))) acc.naval.push(tech);
       else if (
-        unit.classes.some((c) =>
+        tech.classes.some((c) =>
           [
             "mining",
             "gathering",
@@ -142,16 +147,16 @@ export function splitTechnologiesIntroGroups(buildings: UnifiedItem<Technology>[
           ].includes(c)
         )
       )
-        acc.economy.push(unit);
-      else if (unit.classes.some((c) => ["defensive", "emplacement", "building", "outpost", "keep"].includes(c))) acc.defensive.push(unit);
-      else if (unit.classes.some((c) => ["religious", "healing"].includes(c))) acc.religious.push(unit);
-      else if (unit.classes.some((c) => ["Production", "siege", "melee", "cavalry", "infantry", "ranged", "production", "gunpowder"].includes(c)))
-        acc.military.push(unit);
-      else acc.units.push(unit);
+        acc.economy.push(tech);
+      else if (tech.classes.some((c) => ["defensive", "emplacement", "building", "outpost", "keep"].includes(c))) acc.defensive.push(tech);
+      else if (tech.classes.some((c) => ["religious", "healing"].includes(c))) acc.religious.push(tech);
+      else if (tech.classes.some((c) => ["Production", "siege", "melee", "cavalry", "infantry", "ranged", "production", "gunpowder"].includes(c)))
+        acc.military.push(tech);
+      else acc.units.push(tech);
 
       return acc;
     },
-    { economy: [], naval: [], defensive: [], religious: [], military: [], units: [] } as Record<string, UnifiedItem<Technology>[]>
+    { wings: [], leveling: [], economy: [], naval: [], defensive: [], religious: [], military: [], units: [] } as Record<string, UnifiedItem<Technology>[]>
   );
 }
 
