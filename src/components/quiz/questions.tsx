@@ -506,7 +506,7 @@ function getOrCreateHistory(key: string) {
 async function getRandomItem<T extends ITEMS>(
   historyKey: string,
   types: T[],
-  civ: civConfig,
+  civ?: civConfig,
   excludeIds: string[] = [],
   excludeClasses: ItemClass[] = []
 ): Promise<UnifiedItem<ItemTypes[T]>> {
@@ -514,7 +514,9 @@ async function getRandomItem<T extends ITEMS>(
   const history = getOrCreateHistory(historyKey);
   const items = Sdk[Random.pick(types)].where({ civilization: civ?.abbr });
   const item = Random.pick(
-    items.filter((i) => !excludeIds.includes(i.id) && !history.has(i.id) && !i.classes.some((c) => excludeClasses.includes(c)))
+    items.filter(
+      (i) => !excludeIds.includes(i.id) && !history.has(i.id) && !i.classes.some((c) => excludeClasses.includes(c) && (!civ || i.unique || i.civs.length <= 2))
+    )
   ) as UnifiedItem<ItemTypes[T]>;
   if (!item) {
     history.clear();

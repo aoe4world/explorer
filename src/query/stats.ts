@@ -60,9 +60,9 @@ function mergeVariationsToStats(variations: (Unit | Building)[]) {
 
       const bonus: Modifier[] = [];
 
-      const melee = variation.weapons.find((w) => w.type == "melee");
+      const melee = variation.weapons.find((w) => w?.type == "melee");
       // Only take the first Melee weapon
-      const weapons = variation.weapons.filter((w) => w.type != "melee" || w === melee);
+      const weapons = variation.weapons.filter((w) => w?.type != "melee" || w === melee);
 
       for (const w of weapons) {
         if (!w) continue;
