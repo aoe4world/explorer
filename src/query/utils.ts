@@ -84,7 +84,8 @@ export function getMostAppropriateVariation<T extends Item = Item>(item: Unified
 export function splitUnitsIntoGroups(units: UnifiedItem<Unit>[]) {
   const grouped = units?.reduce(
     (acc, unit) => {
-      if (unit.classes.some((c) => c === "ship")) acc.ships.push(unit);
+      if (unit.classes.some((c) => c === "hero")) acc.hero.push(unit);
+      else if (unit.classes.some((c) => c === "ship")) acc.ships.push(unit);
       else if (unit.variations.some((v) => v.producedBy.includes("mercenary-house") || v.producedBy.includes("foreign-engineering-company")))
         acc.mercenaries.push(unit);
       else if (unit.classes.some((c) => c === "warship")) acc.ships.push(unit);
@@ -98,14 +99,14 @@ export function splitUnitsIntoGroups(units: UnifiedItem<Unit>[]) {
 
       return acc;
     },
-    { workers: [], infantry: [], cavalry: [], siege: [], ships: [], misc: [], mercenaries: [] } as GroupedUnits
+    { hero: [], workers: [], infantry: [], cavalry: [], siege: [], ships: [], misc: [], mercenaries: [] } as GroupedUnits
   );
   grouped.mercenaries.sort((b, a) => b.variations[0].costs.total - a.variations[0].costs.total);
   return grouped;
 }
 
 export function splitBuildingsIntoGroups(buildings: UnifiedItem<Building>[]) {
-  return buildings?.reduce(
+  const grouped = buildings?.reduce(
     (acc, unit) => {
       if (unit.classes.some((c) => c === "landmark")) acc.landmarks.push(unit);
       else if (unit.classes.some((c) => c === "wonder")) acc.wonders.push(unit);
@@ -117,8 +118,10 @@ export function splitBuildingsIntoGroups(buildings: UnifiedItem<Building>[]) {
 
       return acc;
     },
-    { economy: [], military: [], defensive: [], religious: [], technology: [], landmarks: [], wonders: [] } as GroupedBuildings
+    { landmarks: [], economy: [], military: [], defensive: [], religious: [], technology: [], wonders: [] } as GroupedBuildings
   );
+  grouped.landmarks.sort((b, a) => b.variations[0].costs.total - a.variations[0].costs.total);
+  return grouped;
 }
 
 export function splitTechnologiesIntroGroups(buildings: UnifiedItem<Technology>[]) {
