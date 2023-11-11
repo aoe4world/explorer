@@ -6,7 +6,7 @@ import { CIVILIZATION_BY_SLUG } from "../../config";
 import { ContentItem, getRelatedContent } from "../../query/content";
 import { mainIntroductionCSSClass, mainItemTitleCSSClass, secondaryButtonClass } from "../../styles";
 import { hideNav, setHideNav } from "../../global";
-import { useParams } from "@solidjs/router";
+import { useLocation, useParams } from "@solidjs/router";
 
 const defaultLimit = 12;
 export const ContentOverviewRoute = () => {
