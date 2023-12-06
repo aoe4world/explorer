@@ -13,6 +13,7 @@ import { patch61130 } from "./patch-61130";
 import { season5 } from "./season-five-705861";
 import { patch71113 } from "./patch-71113";
 import { patch82218 } from "./patch-82218";
+import { patch91370 } from "./patch-91370";
 
 export const patches = [
   season1,
@@ -30,4 +31,5 @@ export const patches = [
   season5,
   patch71113,
   patch82218,
+  patch91370,
 ];

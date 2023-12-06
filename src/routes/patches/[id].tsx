@@ -71,8 +71,8 @@ export const PatchDetailRoute = () => {
         <div class="mb-6 text-gray-300 space-x-4">
           <Show when={pagination()?.previous}>
             {(prev) => (
-              <Link href={`/patches/${prev.id}`} class="hover:text-white">
-                <Icon icon="arrow-left-long" class="mr-1"></Icon> {prev.name}
+              <Link href={`/patches/${prev().id}`} class="hover:text-white">
+                <Icon icon="arrow-left-long" class="mr-1"></Icon> {prev().name}
               </Link>
             )}
           </Show>
@@ -81,8 +81,8 @@ export const PatchDetailRoute = () => {
           </Link>
           <Show when={pagination()?.next}>
             {(next) => (
-              <Link href={`/patches/${next.id}`} class="hover:text-white">
-                {next.name} <Icon icon="arrow-right-long" class="ml-1"></Icon>
+              <Link href={`/patches/${next().id}`} class="hover:text-white">
+                {next().name} <Icon icon="arrow-right-long" class="ml-1"></Icon>
               </Link>
             )}
           </Show>
@@ -281,13 +281,13 @@ const DirtSimpleMd: Component<{ md: string }> = (props) => {
             </a>
           );
         }
-        if (line.startsWith("    * "))
+        if (line.startsWith("    * ") || line.startsWith("    - "))
           return (
             <p class="text-gray-100 pl-12 mb-1 text-base before:content-['●'] before:text-gray-400 before:-ml-4 before:text-xs before:inline-block before:w-6 leading-normal ">
               {line.slice(6)}
             </p>
           );
-        if (l.startsWith("* "))
+        if (l.startsWith("* ") || l.startsWith("- "))
           return (
             <p class="text-gray-100 pl-8 mb-2 text-base before:content-['●'] before:text-gray-400 before:text-xs before:-ml-6 before:inline-block before:w-6 leading-normal">
               {l.slice(2)}
