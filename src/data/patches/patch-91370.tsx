@@ -216,7 +216,7 @@ With the introduction of 2 new civilizations and 4 variant civilizations, most o
         },
         {
           // Culverin ranged armor reduced from 20 to 10.
-          items: ["units/culverin"],
+          items: ["units/culverin", "units/royal-culverin"],
           civs: [],
           diff: [["nerf", "Ranged armor reduced from 20 to 10."]],
         },
@@ -513,9 +513,9 @@ With the introduction of 2 new civilizations and 4 variant civilizations, most o
           // Removed initial delay on training Desert Raiders.
           // Fixed an issue on Xbox where field siege units could not be constructed by Cavalry after building the Military Wing: Reinforcements.
           items: [
-            "technologies/feudal-military-wing-reinforcements",
-            "technologies/castle-military-wing-reinforcements",
-            "technologies/imperial-military-wing-reinforcements",
+            "technologies/feudal-military-wing-reinforcement",
+            "technologies/castle-military-wing-reinforcement",
+            "technologies/imperial-military-wing-reinforcement",
           ],
           civs: ["ay"],
           diff: [
