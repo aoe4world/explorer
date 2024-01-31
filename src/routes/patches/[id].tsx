@@ -12,6 +12,7 @@ import { getItemCssClass, mainIntroductionCSSClass } from "../../styles";
 import { civAbbr, Item, UnifiedItem } from "../../types/data";
 import { PatchLine, PatchSection, PatchSet } from "../../types/patches";
 import { setHideNav } from "../../global";
+import { ItemGroup, ItemSlug } from "@data/sdk/utils";
 
 export const PatchDetailRoute = () => {
   setHideNav(true);
@@ -20,11 +21,9 @@ export const PatchDetailRoute = () => {
   const [patch] = createResource(async () => (await import("../../data/patches/patch")).patches.find((patch) => patch.id === params.id));
   const [civ, setCiv] = createSignal<civAbbr>(CIVILIZATION_BY_SLUG[params.civ]?.abbr);
   const [items] = createResource(patch, async (patch) => {
-    const items = patch.sections
-      .flatMap((s) => s.changes)
-      .flatMap((c) => c.items.map((ci) => [ci, getItemByCanonicalName(ci)] as [string, Promise<UnifiedItem>]));
-    const awaitedItems = await Promise.all(items.map(([ci, item]) => item));
-    return new Map(awaitedItems.map((item, i) => [items[i][0], item]));
+    const SDK = await import("@data/sdk/index");
+    const items = patch.sections.flatMap((s) => s.changes).flatMap((c) => c.items.map((ci) => [ci, SDK.Get(ci as ItemSlug)] as [string, ItemGroup<Item>]));
+    return new Map(items);
   });
 
   const [filteredPatchNotes] = createResource(
