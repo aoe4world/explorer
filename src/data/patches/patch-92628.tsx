@@ -708,133 +708,565 @@ export const patch92628: PatchNotes = {
           diff: [["fix", "The Shinto Shrine and Buddhist Temple now each contain 3 new technologies which replace Herbal Medicine, Piety, and Tithe Barns."]],
           note: `We want the sacred choice for the Japanese to be far more meaningful than your Landmark selection and which Monk skin you get. While providing a needed buff to the Japanese, we hope that this rework offers more distinction between the two choices and more strategic options in the Castle Age and beyond.`,
         },
+
+        // Shinto Shrine:
+        {
+          // Shinto Rituals: Increases the Shinto Priest’s healing rate by +60%, health by +40, and move speed by +15%.
+          items: ["technologies/shinto-rituals", "buildings/shinto-shrine"],
+          civs: ["ja"],
+          diff: [["buff", "New Technology 'Shinto Rituals': Increases the Shinto Priest’s healing rate by +60%, health by +40, and move speed by +15%."]],
+        },
+        {
+          // Gion Festival: All buildings gain +2 Line of Sight. Every 3 minutes all economic units heal for 100% of their max health over 3 seconds.
+          items: ["technologies/gion-festival", "buildings/shinto-shrine"],
+          civs: ["ja"],
+          diff: [
+            [
+              "buff",
+              "New Technology 'Gion Festival': All buildings gain +2 Line of Sight. Every 3 minutes all economic units heal for 100% of their max health over 3 seconds.",
+            ],
+          ],
+        },
+        {
+          // Bunrei: Increases the maximum number of Yorishiro by +2. Immediately spawns 2 Yorishiro at the Floating Gate.
+          items: ["technologies/bunrei", "buildings/shinto-shrine"],
+          civs: ["ja"],
+          diff: [["buff", "New Technology 'Bunrei': Increases the maximum number of Yorishiro by +2. Immediately spawns 2 Yorishiro at the Floating Gate."]],
+        },
+
+        // Buddhist Temple:
+        {
+          // Zen: Buddhist Monks generate +25 gold every 60 seconds.
+          items: ["technologies/zen", "buildings/buddhist-temple"],
+          civs: ["ja"],
+          diff: [["buff", "New Technology 'Zen': Buddhist Monks generate +25 gold every 60 seconds."]],
+        },
+        {
+          // Nehan: Upgrades Buddhist Conversion to Nehan Conversion, which has 25% shorter cooldown and additional improves nearby allied units’ movement speed by +25% when cast.1
+          items: ["technologies/nehan", "buildings/buddhist-temple"],
+          civs: ["ja"],
+          diff: [
+            [
+              "buff",
+              "New Technology 'Nehan': Upgrades Buddhist Conversion to Nehan Conversion, which has 25% shorter cooldown and additional improves nearby allied units’ movement speed by +25% when cast.",
+            ],
+          ],
+        },
+        // Five Mountain Ministries: Buddhist Temples automatically cast Sohai’s Sutra on a nearby enemy every 6 seconds.
+        {
+          items: ["technologies/five-mountain-ministries", "buildings/buddhist-temple"],
+          civs: ["ja"],
+          diff: [["buff", "New Technology 'Five Mountain Ministries': Buddhist Temples automatically cast Sohai’s Sutra on a nearby enemy every 6 seconds."]],
+        },
+
+        {
+          // Buddhist Monk: The Conversion ability has been renamed to Buddhist Conversion and the description has been updated to properly indicate that nearby allies gain +20% damage for 20 seconds when Buddhist Conversion is cast.
+          items: ["units/buddhist-monk"],
+          civs: ["ja"],
+          diff: [
+            [
+              "fix",
+              "The Conversion ability has been renamed to Buddhist Conversion and the description has been updated to properly indicate that nearby allies gain +20% damage for 20 seconds when Buddhist Conversion is cast.",
+            ],
+          ],
+        },
+
+        // Buddhist Temple: Now has a built limit of 5 (including the Temple of Equality landmark).
+        {
+          items: ["buildings/buddhist-temple"],
+          civs: ["ja"],
+          diff: [["nerf", "Now has a built limit of 5 (including the Temple of Equality landmark)."]],
+        },
+
+        // Town Center Rockets range decreased from 9 to 8 tiles.
+        {
+          items: ["buildings/town-center"],
+          civs: ["ja"],
+          diff: [["nerf", "Rocket Range decreased from 9 to 8 tiles."]],
+        },
+
+        // Handcannoneer renamed to Handcannon Ashigaru.
+        {
+          items: ["units/handcannon-ashigaru"],
+          civs: ["ja"],
+          diff: [["fix", "Handcannoneer renamed to Handcannon Ashigaru."]],
+        },
+        {
+          // Koka Township will no longer instantly spawn a Shinobi but instead queue it in production for free when the landmark completes construction.
+          // Developer Note: On hybrid maps, the Shinobi timing doesn’t give other civilizations reasonable time to establish an answer when scouting the Landmark and responding to Shinobi’s sabotage ability.
+          // Koka Township: Corrected an issue where the free Shinobi would not travel to rally points.
+
+          items: ["buildings/koka-township"],
+          civs: ["ja"],
+          diff: [
+            [
+              "nerf",
+              "Koka Township will no longer instantly spawn a Shinobi but instead queue it in production for free when the landmark completes construction.",
+            ],
+            ["fix", "Corrected an issue where the free Shinobi would not travel to rally points."],
+          ],
+          note: `On hybrid maps, the Shinobi timing doesn’t give other civilizations reasonable time to establish an answer when scouting the Landmark and responding to Shinobi’s sabotage ability.`,
+        },
+
+        // Tanegashima Gunsmith: Updated the UI to show the current number of stockpiles available to spend.
+        {
+          items: ["buildings/tanegashima-gunsmith"],
+          civs: ["ja"],
+          diff: [["fix", "Updated the UI to show the current number of stockpiles available to spend."]],
+        },
+        // Buddhist Monks will no longer leave their Stand Ground state when casting Sohei’s Sutra.
+        // Corrected issue where Sohei’s Sutra would be cast on enemy naval units, breaking its animations.
+        {
+          items: ["units/buddhist-monk"],
+          civs: ["ja"],
+          diff: [
+            ["fix", "Buddhist Monks will no longer leave their Stand Ground state when casting Sohei’s Sutra."],
+            ["fix", "Corrected issue where Sohei’s Sutra would be cast on enemy naval units, breaking its animations."],
+          ],
+        },
+        // Copper Plating technology: Corrected an issue where the bonus was displayed +2% instead of +2 fire and ranged armor.
+        {
+          items: ["technologies/copper-plating"],
+          civs: ["ja"],
+          diff: [["fix", "Corrected an issue where the bonus was displayed +2% instead of +2 fire and ranged armor."]],
+        },
+        // The Floating Gate: Will no longer fail to create a Shinto Priest if players are population blocked. The Shinto Priest is now stays in the production queue until population room becomes available.
+        {
+          items: ["buildings/floating-gate"],
+          civs: ["ja"],
+          diff: [
+            [
+              "fix",
+              "Will no longer fail to create a Shinto Priest if players are population blocked. The Shinto Priest is now stays in the production queue until population room becomes available.",
+            ],
+          ],
+        },
+
+        // Corrected an issue where ranged Cavalry were not benefitting from Uma Bannermen auras.
+        {
+          items: ["units/uma-bannerman"],
+          civs: ["ja"],
+          diff: [["fix", "Corrected an issue where ranged Cavalry were not benefitting from Uma Bannermen auras."]],
+        },
+
+        // Corrected an issue where melee infantry & cavalry charge attack was not benefiting from Katana banners.
+        {
+          items: ["units/katana-bannerman"],
+          civs: ["ja"],
+          diff: [["fix", "Corrected an issue where melee infantry & cavalry charge attack was not benefiting from Katana banners."]],
+        },
+        // Onna-Bugeisha no longer share formations with Man-at-Arms and are now ranked behind.
+        {
+          items: ["units/onna-bugeisha"],
+          civs: ["ja"],
+          diff: [["fix", "No longer share formations with Man-at-Arms and are now ranked behind"]],
+        },
+
+        // Shinobi now shares a formation with Onna-Bugeisha instead of Man-at-Arms.
+        {
+          items: ["units/shinobi"],
+          civs: ["ja"],
+          diff: [["fix", "Now shares a formation with Onna-Bugeisha instead of Man-at-Arms."]],
+        },
+        // Castle of the Crow Treasure Caravan is no longer selected with the “Select All Units” hotkey.
+        {
+          items: ["buildings/castle-of-the-crow"],
+          civs: ["ja"],
+          diff: [["fix", "Castle of the Crow Treasure Caravan is no longer selected with the “Select All Units” hotkey."]],
+        },
+
+        // Fixed an issue where free Villagers from Daimyo upgrades wouldn’t benefit from upgrades.
+        {
+          items: ["units/villager"],
+          civs: ["ja"],
+          diff: [["fix", "Fixed an issue where free Villagers from Daimyo upgrades wouldn’t benefit from upgrades."]],
+        },
+        // Transport Ships loaded with Bannermen will now properly reduce their maximum count when the ship is destroyed.
+        {
+          items: ["units/transport-ship"],
+          civs: ["ja"],
+          diff: [["fix", "Transport Ships loaded with Bannermen will now properly reduce their maximum count when the ship is destroyed."]],
+        },
+        // Corrected issue where researching Odachi would increase the weapon range of Samurai.
+        {
+          items: ["technologies/odachi"],
+          civs: ["ja"],
+          diff: [["fix", "Corrected issue where researching Odachi would increase the weapon range of Samurai."]],
+        },
+        // Shinobi: Updated text to reflect health regeneration bonus and what can detect Shinobi disguises.
+        {
+          items: ["units/shinobi"],
+          civs: ["ja"],
+          diff: [["fix", "Updated text to reflect health regeneration bonus and what can detect Shinobi disguises."]],
+        },
       ],
     },
+    {
+      // Jeanne d'Arc
+      // (Variant Civilization: French)
+      subtitle: "Jeanne d'Arc",
+      civs: ["je"],
+      changes: [
+        // Changes to hero Jeanne d’Arc
+        // Jeanne d’Arc no longer gains experience from Wolves.
+        // Jeanne d’Arc will no longer lose ability charge progress or cooldown progress when levelled up, garrisoned, or killed.
+        // Jeanne d’Arc abilities can no longer be interrupted by auto-attacks during casting.
+        // Corrected an issue where Jeanne d’Arc would gain experience from Sheep.
+        // Divine Restoration no longer heals units in garrisons.
+        // Honorable Heart damage reduction reduced from 50%/66% to 45%/60%.
+
+        // Developer Note: We’re aiming to reduce Jeanne d’Arc’s effectiveness in the Feudal Age:
+        // Slowing down Tier 3 by reducing exp gain from Wolves.
+        // Reducing the base stats of Jeanne d’Arc in Tier 3 and 4
+        // Changing Companion Equipment (Castle Age) to restore the lost stats.
+        // Additionally, we’re tuning down the damage reduction from Honorable Heart to help with ridiculous situations where she can solo a Keep. We have plans to rework the damage reduction mechanic in a later update as well.
+
+        {
+          items: [
+            "units/jeanne-darc-peasant",
+            "units/jeanne-darc-hunter",
+            "units/jeanne-darc-woman-at-arms",
+            "units/jeanne-darc-mounted-archer",
+            "units/jeanne-darc-knight",
+            "units/jeanne-darc-markswoman",
+            "units/jeanne-darc-blast-cannon",
+          ],
+          civs: ["je"],
+          diff: [
+            ["nerf", "Jeanne d’Arc no longer gains experience from Wolves."],
+            ["fix", "Jeanne d’Arc will no longer lose ability charge progress or cooldown progress when levelled up, garrisoned, or killed."],
+            ["fix", "Jeanne d’Arc abilities can no longer be interrupted by auto-attacks during casting."],
+            ["fix", "Corrected an issue where Jeanne d’Arc would gain experience from Sheep."],
+            ["fix", "Divine Restoration no longer heals units in garrisons."],
+            ["nerf", "Honorable Heart damage reduction reduced from 50%/66% to 45%/60%."],
+          ],
+          note: `We’re aiming to reduce Jeanne d’Arc’s effectiveness in the Feudal Age: Slowing down Tier 3 by reducing exp gain from Wolves. Reducing the base stats of Jeanne d’Arc in Tier 3 and 4. Changing Companion Equipment (Castle Age) to restore the lost stats. Additionally, we’re tuning down the damage reduction from Honorable Heart to help with ridiculous situations where she can solo a Keep. We have plans to rework the damage reduction mechanic in a later update as well.`,
+        },
+
+        // Tier 2 Archer Jeanne d’Arc health increased from 200 to 225.
+        // Tier 2 Archer Jeanne d’Arc move speed increased from 5 to 5.5.
+        {
+          items: ["units/jeanne-darc-hunter"],
+          civs: ["je"],
+          diff: [
+            ["buff", "Health increased from 200 to 225."],
+            ["buff", "Move speed increased from 5 to 5.5."],
+          ],
+        },
+
+        // Tier 3 Holy Wrath damage reduced from 35 to 30
+        {
+          items: ["abilities/ability-holy-wrath", "units/jeanne-darc-knight"],
+          civs: ["je"],
+          diff: [["nerf", "Holy Wrath damage reduced from 35 to 30"]],
+        },
+
+        // Tier 3 Melee Jeanne d’Arc health reduced from 450 to 360.
+        // Tier 3 Melee Jeanne d’Arc armor reduced from 5 to 4.
+        // Tier 3 Melee Jeanne d’Arc damage reduced from 20 to 16 — charge damage reduced from 30 to 24.
+        {
+          items: ["units/jeanne-darc-knight"],
+          civs: ["je"],
+          diff: [
+            ["nerf", "Health reduced from 450 to 360."],
+            ["nerf", "Armor reduced from 5 to 4."],
+            ["nerf", "Damage reduced from 20 to 16 — charge damage reduced from 30 to 24."],
+          ],
+        },
+        // Tier 3 Ranged Jeanne d’Arc health reduced from 350 to 280.
+        // Tier 3 Ranged Jeanne d’Arc damage reduced from 18 to 15.
+        {
+          items: ["units/jeanne-darc-mounted-archer"],
+          civs: ["je"],
+          diff: [
+            ["nerf", "Health reduced from 350 to 280."],
+            ["nerf", "Damage reduced from 18 to 15."],
+          ],
+        },
+
+        // Tier 4 Melee Jeanne d’Arc damage reduced from 50 to 40.
+        // Tier 4 Melee Jeanne d’Arc armor reduced from 6 to 5.
+        {
+          items: ["units/jeanne-darc-blast-cannon"],
+          civs: ["je"],
+          diff: [
+            ["nerf", "Damage reduced from 50 to 40."],
+            ["nerf", "Armor reduced from 6 to 5."],
+          ],
+        },
+
+        // Tier 4 Ranged Jeanne d’Arc damage reduced from 35 to 28.
+        {
+          items: ["units/jeanne-darc-markswoman"],
+          civs: ["je"],
+          diff: [["nerf", "Damage reduced from 35 to 28."]],
+        },
+
+        // Companion Equipment (Castle Age):
+        // Cost increased from 175 to 500.
+        // Moved from the Keep to the Blacksmith.
+        // Increases health and damage of Jeanne d’Arc by +25% at tier 3 and 4.
+        // Increases Jeanne d’Arc armor by +1.
+        {
+          items: ["technologies/companion-equipment"],
+          civs: ["je"],
+          diff: [
+            ["nerf", "Cost increased from 175 to 500."],
+            ["buff", "Moved from the Keep to the Blacksmith."],
+            ["buff", "Increases health and damage of Jeanne d’Arc by +25% at tier 3 and 4."],
+            ["buff", "Increases Jeanne d’Arc armor by +1."],
+          ],
+        },
+
+        // Divine Arrow ability shows an improved error message when trying to target Gaia.
+        {
+          items: ["abilities/ability-divine-arrow"],
+          civs: ["je"],
+          diff: [["fix", "Divine Arrow ability shows an improved error message when trying to target Gaia."]],
+        },
+        // Holy Wrath no longer damages units in garrisons.
+        {
+          items: ["abilities/ability-holy-wrath"],
+          civs: ["je"],
+          diff: [["fix", "Holy Wrath no longer damages units in garrisons."]],
+        },
+        // Included the damage tiering information of Jeanne d’Arc’s Holy Wrath and Divine Arrow abilities in the tech tree.
+        {
+          items: ["abilities/ability-holy-wrath", "abilities/ability-divine-arrow"],
+          civs: ["je"],
+          diff: [["fix", "Included the damage tiering information of Jeanne d’Arc’s Holy Wrath and Divine Arrow abilities in the tech tree."]],
+        },
+        // Keeps are now selected with Select All Military Buildings to make Jeanne d’Arc’s Companions easier to train.
+        {
+          items: ["buildings/keep"],
+          civs: ["je"],
+          diff: [["fix", "Keeps are now selected with Select All Military Buildings to make Jeanne d’Arc’s Companions easier to train."]],
+        },
+      ],
+    },
+    {
+      //                            Mongols
+      // Improved Wheelbarrow: Maximum number of resources carried increased from +7 to +9.
+      subtitle: "Mongols",
+      civs: ["mo"],
+      changes: [
+        {
+          items: ["technologies/wheelbarrow-improved"],
+          civs: ["mo"],
+          diff: [["buff", "Maximum number of resources carried increased from +7 to +9."]],
+        },
+      ],
+    },
+    {
+      //                      Order of the Dragon
+      // (Variant Civilization: Holy Roman Empire)
+      subtitle: "Order of the Dragon",
+      civs: ["od"],
+      changes: [
+        // Dragon Villager gather rate bonus increased from +25% to +28%.
+        {
+          items: ["units/dragon-villager"],
+          civs: ["od"],
+          diff: [["buff", "Gather rate bonus increased from +25% to +28%."]],
+        },
+
+        // Gilded Landsknecht
+        // Health increased in the Castle Age from 170 to 180.
+        // Health increased in the Imperial Age from 200 to 210.
+        {
+          items: ["units/gilded-landsknecht"],
+          civs: ["od"],
+          diff: [
+            ["buff", "Health increased in the Castle Age from 170 to 180."],
+            ["buff", "Health increased in the Imperial Age from 200 to 210."],
+          ],
+        },
+        // Bodkin Bolts damage bonus vs Siege increased from +10 to +20.
+        {
+          items: ["technologies/bodkin-bolts"],
+          civs: ["od"],
+          diff: [["buff", "Damage bonus vs Siege increased from +10 to +20."]],
+        },
+        // The Elzbach Palace damage reduction buff is now behaving as intended.
+        {
+          items: ["buildings/elzbach-palace"],
+          civs: ["od"],
+          diff: [["fix", "The Elzbach Palace damage reduction buff is now behaving as intended."]],
+        },
+        // Spearmen with the Dragon Fire upgrade no longer deal damage to nearby allied buildings when attacking.
+        {
+          items: ["units/spearman"],
+          civs: ["od"],
+          diff: [["fix", "Spearmen with the Dragon Fire upgrade no longer deal damage to nearby allied buildings when attacking."]],
+        },
+
+        // Corrected an issue where Elite Gilded Knights would lose War Horses enhancement when tiering up from Veteran Gilded Knights.
+        {
+          items: ["units/gilded-knight"],
+          civs: ["od"],
+          diff: [["fix", "Elite Gilded Knights would lose War Horses enhancement when tiering up from Veteran Gilded Knights."]],
+        },
+      ],
+    },
+    {
+      //                               Ottomans
+      subtitle: "Ottomans",
+      civs: ["ot"],
+      changes: [
+        // Sultanhani Trade Network
+        // Free Traders increased from 2 to 3.
+        // Increased Trader garrison slots from 6 to 10.
+        // Reduced income of each Trader from 28 to 24 Gold per minute.
+        {
+          items: ["buildings/sultanhani-trade-network"],
+          civs: ["ot"],
+          diff: [
+            ["buff", "Free Traders increased from 2 to 3."],
+            ["buff", "Increased Trader garrison slots from 6 to 10."],
+            ["nerf", "Reduced income of each Trader from 28 to 24 Gold per minute."],
+          ],
+        },
+
+        // Fixed an issue where the Elite Sipahi Upgrade was taking longer than intended to research, reduced from 90 to 60 seconds to match other Elite upgrades.
+        {
+          items: ["units/sipahi"],
+          civs: ["ot"],
+          diff: [
+            [
+              "fix",
+              "Fixed an issue where the Elite Sipahi Upgrade was taking longer than intended to research, reduced from 90 to 60 seconds to match other Elite upgrades.",
+            ],
+          ],
+        },
+      ],
+    },
+    {
+      //                                 Rus
+      // Wandering Town Ram damage increase reduced from 50% to 25%.
+
+      subtitle: "Rus",
+      civs: ["ru"],
+      changes: [
+        {
+          items: ["technologies/wandering-town"],
+          civs: ["ru"],
+          diff: [["nerf", "Wandering Town Ram damage increase reduced from 50% to 25%."]],
+        },
+      ],
+    },
+    {
+      //                        Zhu Xi's Legacy
+      // (Variant Civilization: Chinese)
+      subtitle: "Zhu Xi's Legacy",
+      civs: ["zx"],
+      changes: [
+        // Song Dynasty building wood discount reduced from 40% to 30%.
+        // Song Dynasty bonus changed from affecting Non-military buildings to affecting Economic and Population buildings.
+        // The discount now applies to the following buildings: Lumber Camp, Mill, Mining Camp, Granaries, Farms, Town Centers, Houses, Villages, and Markets.
+        {
+          items: [],
+          title: "Song Dynasty",
+          civs: ["zx"],
+          diff: [
+            ["nerf", "Building wood discount reduced from 40% to 30%."],
+            ["buff", "Bonus changed from affecting Non-military buildings to affecting Economic and Population buildings."],
+            [
+              "buff",
+              "The discount now applies to the following buildings: Lumber Camp, Mill, Mining Camp, Granaries, Farms, Town Centers, Houses, Villages, and Markets.",
+            ],
+          ],
+        },
+
+        // Meditation Gardens range reduced from 9 to 8 tiles.
+        // Meditation Gardens: Resource generation reduced as follows:
+        // Berry food per minute reduced from 8 to 6.
+        // Stone mine resources per minute reduced from 30 to 25.
+        // Gold mine resources per minute reduced from 30 to 25.
+        {
+          items: ["buildings/meditation-gardens"],
+          civs: ["zx"],
+          diff: [
+            ["nerf", "Range reduced from 9 to 8 tiles."],
+            ["nerf", "Berry food per minute reduced from 8 to 6."],
+            ["nerf", "Stone mine resources per minute reduced from 30 to 25."],
+            ["nerf", "Gold mine resources per minute reduced from 30 to 25."],
+          ],
+        },
+        // Zhu Xi’s Library: Cloud of Terror area of effect reduced by 0.125 tiles and increased the damage fall-off.
+        {
+          items: ["technologies/cloud-of-terror"],
+          civs: ["zx"],
+          diff: [["nerf", "Cloud of Terror area of effect reduced by 0.125 tiles and increased the damage fall-off."]],
+        },
+        // Dock work rate bonus decreased from 20% to 10%.
+        {
+          items: ["buildings/dock"],
+          civs: ["zx"],
+          diff: [["nerf", "Dock work rate bonus decreased from 20% to 10%."]],
+        },
+
+        // Zhu Xi’s Library: It is no longer possible to queue more than two technologies at the Zhu Xi’s Library.
+        {
+          items: ["buildings/zhu-xis-library"],
+          civs: ["zx"],
+          diff: [["fix", "It is no longer possible to queue more than two technologies at the Zhu Xi’s Library."]],
+        },
+
+        // Tang Dynasty no longer reduces the Wonder cost.
+        {
+          title: "Tang Dynasty",
+          items: [],
+          civs: ["zx"],
+          diff: [["nerf", "Tang Dynasty no longer reduces the Wonder cost."]],
+        },
+
+        // Corrected an issue where the Yuan Dynasty discount did not apply to the Yuan Raider.
+        {
+          items: ["units/yuan-raider"],
+          civs: ["zx"],
+          diff: [["fix", "Corrected an issue where the Yuan Dynasty discount did not apply to the Yuan Raider."]],
+        },
+
+        // Shaolin Monks are now able to pick up and deposit Relics reliably.
+        {
+          items: ["units/shaolin-monk"],
+          civs: ["zx"],
+          diff: [["fix", "Shaolin Monks are now able to pick up and deposit Relics reliably."]],
+        },
+        // Corrected an issue where Imperial Officials could Supervise Markets.
+        {
+          items: ["units/imperial-official"],
+          civs: ["zx"],
+          diff: [["fix", "Corrected an issue where Imperial Officials could Supervise Markets."]],
+        },
+        // 10000 Bolts: Updated help text to clarify that the additional bolt from Crossbowmen is 40% as effective as the main weapon.
+        {
+          items: ["technologies/10000-bolts"],
+          civs: ["zx"],
+          diff: [["fix", "Updated help text to clarify that the additional bolt from Crossbowmen is 40% as effective as the main weapon."]],
+        },
+      ],
+    },
+    {
+      title: "Ongoing…",
+      civs: [],
+      changes: [],
+      md: `
+        ## Known Issues
+        Known Issue with Byzantine Rain of Fire Mastery: It is possible for buildings to be destroyed by normal fire (from taking damage) before either the trebuchet or Greek Fire damage can deliver the final blow. This can result in buildings not counting towards the mastery. Try using more trebuchets against single buildings to increase the odds of that building counting towards the mastery. Additionally, landmarks do not count as destroyed (as they can be rebuilt)
+        ##  Investigation
+        ### Community-Reported Issues:
+        Your reports continue being crucial to our prioritization and implementation of fixes and features in the game. Keep them coming!
+        For other known issues, please visit this page to see what’s being tracked!`,
+    },
+    {
+      title: "What's on the Horizon",
+      civs: [],
+      changes: [],
+      md: `
+        ## Coming Up…
+        Following on from the Lunar Faire event that’s set to begin in a few short days, we’ll be celebrating International Women’s Day with our next seasonal event, set to kick off in early March! We’re also cooking up our next major update and look forward to sharing more soo
+    `,
+    },
   ],
-  // --- todo ---
-  // Shinto Shrine:
-  // Shinto Rituals: Increases the Shinto Priest’s healing rate by +60%, health by +40, and move speed by +15%.
-  // Gion Festival: All buildings gain +2 Line of Sight. Every 3 minutes all economic units heal for 100% of their max health over 3 seconds.
-  // Bunrei: Increases the maximum number of Yorishiro by +2. Immediately spawns 2 Yorishiro at the Floating Gate.
-  // Buddhist Temple:
-  // Zen: Buddhist Monks generate +25 gold every 60 seconds.
-  // Nehan: Upgrades Buddhist Conversion to Nehan Conversion, which has 25% shorter cooldown and additional improves nearby allied units’ movement speed by +25% when cast.1
-  // Five Mountain Ministries: Buddhist Temples automatically cast Sohai’s Sutra on a nearby enemy every 6 seconds.
-  // Buddhist Monk: The Conversion ability has been renamed to Buddhist Conversion and the description has been updated to properly indicate that nearby allies gain +20% damage for 20 seconds when Buddhist Conversion is cast.
-  // Buddhist Temple: Now has a built limit of 5 (including the Temple of Equality landmark).
-  // Town Center Rockets range decreased from 9 to 8 tiles.
-  // Handcannoneer renamed to Handcannon Ashigaru.
-  // Koka Township will no longer instantly spawn a Shinobi but instead queue it in production for free when the landmark completes construction.
-  // Developer Note: On hybrid maps, the Shinobi timing doesn’t give other civilizations reasonable time to establish an answer when scouting the Landmark and responding to Shinobi’s sabotage ability.
-
-  // Tanegashima Gunsmith: Updated the UI to show the current number of stockpiles available to spend.
-  // Buddhist Monks will no longer leave their Stand Ground state when casting Sohei’s Sutra.
-  // Corrected issue where Sohei’s Sutra would be cast on enemy naval units, breaking its animations.
-  // Koka Township: Corrected an issue where the free Shinobi would not travel to rally points.
-  // Copper Plating technology: Corrected an issue where the bonus was displayed +2% instead of +2 fire and ranged armor.
-  // The Floating Gate: Will no longer fail to create a Shinto Priest if players are population blocked. The Shinto Priest is now stays in the production queue until population room becomes available.
-  // Corrected an issue where ranged Cavalry were not benefitting from Uma Bannermen auras.
-  // Corrected an issue where melee infantry & cavalry charge attack was not benefiting from Katana banners.
-  // Onna-Bugeisha no longer share formations with Man-at-Arms and are now ranked behind.
-  // Shinobi now shares a formation with Onna-Bugeisha instead of Man-at-Arms.
-  // Castle of the Crow Treasure Caravan is no longer selected with the “Select All Units” hotkey.
-  // Fixed an issue where free Villagers from Daimyo upgrades wouldn’t benefit from upgrades.
-  // Transport Ships loaded with Bannermen will now properly reduce their maximum count when the ship is destroyed.
-  // Corrected issue where researching Odachi would increase the weapon range of Samurai.
-  // Shinobi: Updated text to reflect health regeneration bonus and what can detect Shinobi disguises.
-
-  // Jeanne d'Arc
-  // (Variant Civilization: French)
-
-  // Changes to hero Jeanne d’Arc
-  // Jeanne d’Arc no longer gains experience from Wolves.
-  // Honorable Heart damage reduction reduced from 50%/66% to 45%/60%.
-  // Tier 2 Archer Jeanne d’Arc health increased from 200 to 225.
-  // Tier 2 Archer Jeanne d’Arc move speed increased from 5 to 5.5.
-  // Tier 3 Holy Wrath damage reduced from 35 to 30
-  // Tier 3 Melee Jeanne d’Arc health reduced from 450 to 360.
-  // Tier 3 Melee Jeanne d’Arc armor reduced from 5 to 4.
-  // Tier 3 Melee Jeanne d’Arc damage reduced from 20 to 16 — charge damage reduced from 30 to 24.
-  // Tier 3 Ranged Jeanne d’Arc health reduced from 350 to 280.
-  // Tier 3 Ranged Jeanne d’Arc damage reduced from 18 to 15.
-  // Tier 4 Melee Jeanne d’Arc damage reduced from 50 to 40.
-  // Tier 4 Ranged Jeanne d’Arc damage reduced from 35 to 28.
-  // Tier 4 Melee Jeanne d’Arc armor reduced from 6 to 5.
-  // Companion Equipment (Castle Age):
-  // Cost increased from 175 to 500.
-  // Moved from the Keep to the Blacksmith.
-  // Increases health and damage of Jeanne d’Arc by +25% at tier 3 and 4.
-  // Increases Jeanne d’Arc armor by +1.
-  // Developer Note: We’re aiming to reduce Jeanne d’Arc’s effectiveness in the Feudal Age:
-
-  // Slowing down Tier 3 by reducing exp gain from Wolves.
-  // Reducing the base stats of Jeanne d’Arc in Tier 3 and 4
-  // Changing Companion Equipment (Castle Age) to restore the lost stats.
-  // Additionally, we’re tuning down the damage reduction from Honorable Heart to help with ridiculous situations where she can solo a Keep. We have plans to rework the damage reduction mechanic in a later update as well.
-
-  // Jeanne d’Arc will no longer lose ability charge progress or cooldown progress when levelled up, garrisoned, or killed.
-  // Jeanne d’Arc abilities can no longer be interrupted by auto-attacks during casting.
-  // Divine Arrow ability shows an improved error message when trying to target Gaia.
-  // Holy Wrath no longer damages units in garrisons.
-  // Divine Restoration no longer heals units in garrisons.
-  // Corrected an issue where Jeanne d’Arc would gain experience from Sheep.
-  // Included the damage tiering information of Jeanne d’Arc’s Holy Wrath and Divine Arrow abilities in the tech tree.
-  // Keeps are now selected with Select All Military Buildings to make Jeanne d’Arc’s Companions easier to train.
-
-  //                            Mongols
-  // Improved Wheelbarrow: Maximum number of resources carried increased from +7 to +9.
-
-  //                      Order of the Dragon
-  // (Variant Civilization: Holy Roman Empire)
-
-  // Dragon Villager gather rate bonus increased from +25% to +28%.
-  // Gilded Landsknecht
-  // Health increased in the Castle Age from 170 to 180.
-  // Health increased in the Imperial Age from 200 to 210.
-  // Bodkin Bolts damage bonus vs Siege increased from +10 to +20.
-  // The Elzbach Palace damage reduction buff is now behaving as intended.
-  // Spearmen with the Dragon Fire upgrade no longer deal damage to nearby allied buildings when attacking.
-  // Corrected an issue where Elite Gilded Knights would lose War Horses enhancement when tiering up from Veteran Gilded Knights.
-
-  //                               Ottomans
-  // Sultanhani Trade Network
-  // Free Traders increased from 2 to 3.
-  // Increased Trader garrison slots from 6 to 10.
-  // Reduced income of each Trader from 28 to 24 Gold per minute.
-  // Fixed an issue where the Elite Sipahi Upgrade was taking longer than intended to research, reduced from 90 to 60 seconds to match other Elite upgrades.
-
-  //                                 Rus
-  // Wandering Town Ram damage increase reduced from 50% to 25%.
-
-  //                        Zhu Xi's Legacy
-  // (Variant Civilization: Chinese)
-
-  // Song Dynasty building wood discount reduced from 40% to 30%.
-  // Song Dynasty bonus changed from affecting Non-military buildings to affecting Economic and Population buildings.
-  // The discount now applies to the following buildings: Lumber Camp, Mill, Mining Camp, Granaries, Farms, Town Centers, Houses, Villages, and Markets.
-  // Meditation Gardens range reduced from 9 to 8 tiles.
-  // Meditation Gardens: Resource generation reduced as follows:
-  // Berry food per minute reduced from 8 to 6.
-  // Stone mine resources per minute reduced from 30 to 25.
-  // Gold mine resources per minute reduced from 30 to 25.
-  // Zhu Xi’s Library: Cloud of Terror area of effect reduced by 0.125 tiles and increased the damage fall-off.
-  // Dock work rate bonus decreased from 20% to 10%.
-  // Zhu Xi’s Library: It is no longer possible to queue more than two technologies at the Zhu Xi’s Library.
-  // Tang Dynasty no longer reduces the Wonder cost.
-  // Corrected an issue where the Yuan Dynasty discount did not apply to the Yuan Raider.
-  // Shaolin Monks are now able to pick up and deposit Relics reliably.
-  // Corrected an issue where Imperial Officials could Supervise Markets.
-  // 10000 Bolts: Updated help text to clarify that the additional bolt from Crossbowmen is 40% as effective as the main weapon.
-
-  // Ongoing…
-  // Known Issues
-  // Known Issue with Byzantine Rain of Fire Mastery: It is possible for buildings to be destroyed by normal fire (from taking damage) before either the trebuchet or Greek Fire damage can deliver the final blow. This can result in buildings not counting towards the mastery. Try using more trebuchets against single buildings to increase the odds of that building counting towards the mastery. Additionally, landmarks do not count as destroyed (as they can be rebuilt)
-  // Investigation
-  // Community-Reported Issues:
-  // Your reports continue being crucial to our prioritization and implementation of fixes and features in the game. Keep them coming!
-  // For other known issues, please visit this page to see what’s being tracked!
-
-  // What's on the Horizon
-  // Coming Up…
-  // Following on from the Lunar Faire event that’s set to begin in a few short days, we’ll be celebrating International Women’s Day with our next seasonal event, set to kick off in early March! We’re also cooking up our next major update and look forward to sharing more soo
 };
