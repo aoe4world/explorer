@@ -1088,7 +1088,7 @@ export const season4: PatchNotes = {
           civs: ["mo"],
           diff: [
             ["nerf", "Decreased move speed from 1.62 to 1.56."],
-            ["nerf", "Damage decreased from 7 9/10 to 5/6/8 (Feudal/Castle/Imperial)."],
+            ["nerf", "Damage decreased from 7/9/10 to 5/6/8 (Feudal/Castle/Imperial)."],
             ["buff", "Attack speed increased from 1.25 to 0.88"],
             ["fix", "DPS should remain relatively unchanged against unarmored targets"],
           ],
