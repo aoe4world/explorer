@@ -23,7 +23,7 @@ export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig }> = (pr
 
   return (
     <div
-      class={`bg-item-${props.item.type} text-white rounded-2xl p-4 z-0  transition-all flex flex-col bg-opacity-10 hover:bg-opacity-20 group`}
+      class={`bg-item-${props.item.type} text-white rounded-2xl p-4 z-0  transition-all flex flex-col bg-opacity-10 relative hover:bg-opacity-20 group`}
       style={{ opacity: globalAgeFilter() >= minAge() ? 1 : 0.5 }}
     >
       <Link href={getItemHref(props.item, props.civ)}>
@@ -41,7 +41,7 @@ export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig }> = (pr
           </div>
         )
       ) : (
-        <div class="flex h-6 mt-5  items-center gap-2">
+        <div class="flex h-auto mt-5  items-center gap-2 w-full flex-wrap">
           <For each={props.item.civs}>
             {(civ) =>
               props.item.type != "technology" ? (

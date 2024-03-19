@@ -7,7 +7,7 @@ export const patch91370: PatchNotes = {
   name: "Patch 9.1.370",
   season: 6,
   type: "patch",
-  summary: "Changes to repair rate, nerfs to Rams and Lightweight Beams, buffs to Bombards and Ribauldequins, HRE, Malians and Mongols + several fixes.",
+  summary: "Balance changes to the new civilizations and landmarks, including the Floating Gate, Bazaar Trade Wing and Imperial Hippodrome",
   introduction: `
 ![](https://www.ageofempires.com/wp-content/uploads/2023/11/TonsOToys_Patch_1920x1080.webp)  
 "The festive season is in the air in Age of Empires IV with today's minor patch (December 6th) -- join in the fun with our upcoming Tons o' Toys seasonal event, chill out in our seasonal Winter biome, or bring the heat to your opponent with the updates to the new civilizations introduced in our recent expansion! Changes introduced today include:

@@ -60,8 +60,8 @@ export async function getItemTechnologies<T extends ITEMS>(
       (filteringByCiv
         ? techMatchesItemId || techMatchesItemClass
         : // If we're not looking at techs for a specific civ & unit combo
-          // we show only techs that match by id, or those that match by class and have multiple civs
-          (techMatchesItemId && itemIsUnique) || (techMatchesItemId && includeAllCivsUnitSpecificTech) || (techMatchesItemClass && appliesToMultipleCivs))
+        // we show only techs that match by id, or those that match by class and have multiple civs
+        (techMatchesItemId && itemIsUnique) || (techMatchesItemId && includeAllCivsUnitSpecificTech) || (techMatchesItemClass && appliesToMultipleCivs))
     ) {
       if (techMatchesItemId) acc.unshift({ ...t, variations });
       else acc.push({ ...t, variations });
@@ -222,7 +222,7 @@ export async function getPatchHistory(item: UnifiedItem, civs?: civConfig[]) {
       if (!civOverlap(civAbbrs, section.civs)) continue;
       diff.push(
         ...section.changes.reduce(
-          (acc, c) => (c.items.includes(cid) && civOverlap(civAbbrs, c.civs) ? [...acc, ...c.diff.filter(([t, l, lc]) => civOverlap(civAbbrs, lc))] : acc),
+          (acc, c) => (c.items.includes(cid) && civOverlap(civAbbrs, c.civs) ? [...acc, ...c.diff.filter(([t, l, lc]) => civOverlap(civAbbrs, lc)).map(([t, l, lc = []]) => [t, l, [...lc, section.civs]])] : acc),
           [] as PatchLine[]
         )
       );

@@ -3,6 +3,7 @@ import { Component, createResource, createSignal, For } from "solid-js";
 import { getPatchHistory } from "../query/utils";
 import { UnifiedItem, civConfig } from "../types/data";
 import { Icon } from "./Icon";
+import { CivFlag } from "./CivFlag";
 
 export const PatchHistory: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
   const [patchHistory] = createResource(() => getPatchHistory(props.item, props.civ ? [props.civ] : undefined));
@@ -31,14 +32,17 @@ export const PatchHistory: Component<{ item: UnifiedItem; civ?: civConfig }> = (
                 </p>
               )}
               <For each={history.diff.filter((_, i) => i < 6 || expanded())}>
-                {([type, change]) => (
+                {([type, change, civs]) => (
                   <div class="flex  py-0.5">
                     <div class="text-xs mr-3 mt-1 ">
                       {type == "buff" && <Icon icon="circle-plus" class="text-green-700" />}
                       {type == "nerf" && <Icon icon="circle-minus" class="text-red-700" />}
                       {type == "fix" && <Icon icon="circle-check" class="text-gray-300" />}
                     </div>
-                    <p class="text-gray-100 text-base max-w-prose">{change}</p>
+                    <p class="text-gray-100 text-base max-w-prose white">
+                      {!props.civ && civs?.length >= 1 ? civs.map((c) => <CivFlag abbr={c} class="h-3 rounded-sm mr-1.5 mb-0.5 inline" />) : <></>}
+                      {change}
+                    </p>
                   </div>
                 )}
               </For>

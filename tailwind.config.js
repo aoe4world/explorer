@@ -7,17 +7,17 @@ module.exports = {
     "text-2xl",
     "text-3xl",
     {
-      pattern: /bg-item-(unit|technology|tech|building|upgrade)/,
+      pattern: /bg-item-(unit|technology|tech|building|upgrade|ability)/,
       variants: ["hover"],
     },
     {
-      pattern: /text-item-(unit|technology|tech|building|upgrade)/,
+      pattern: /text-item-(unit|technology|tech|building|upgrade|ability)/,
     },
     {
-      pattern: /bg-bar-(unit|technology|tech|building|unique|bonus|upgrade)/,
+      pattern: /bg-bar-(unit|technology|tech|building|unique|bonus|upgrade|ability)/,
     },
     {
-      pattern: /text-item-(unit|technology|tech|building|upgrade)-light/,
+      pattern: /text-item-(unit|technology|tech|building|upgrade|ability)-light/,
     },
   ],
   theme: {
@@ -48,7 +48,7 @@ module.exports = {
           "technology-light": "#08A67B",
           building: "#345469",
           "building-light": "#477899",
-          ability: "#20263D",
+          ability: "#5C457B",
           "ability-light": "#6571A1",
         },
         bar: {

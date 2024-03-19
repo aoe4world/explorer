@@ -7,7 +7,7 @@ export const patch92628: PatchNotes = {
   name: "Patch 9.2.628",
   season: 6,
   type: "patch",
-  summary: "Changes to repair rate, nerfs to Rams and Lightweight Beams, buffs to Bombards and Ribauldequins, HRE, Malians and Mongols + several fixes.",
+  summary: "Changes to late-game siege stalemates, buffs for Byzantines, rework of Japanese Religious landmarks and other balance changes.",
   introduction: `
 ![](https://cdn.ageofempires.com/aoe/wp-content/uploads/2024/01/Lunar-Faire-Patch-1920x1080-1.webp)  
 "Happy Patch Day! We’ve got our first update of 2024 loaded with balance improvements for our awesome line up of new and variant civilizations released with The Sultans Ascend expansion last year. Not only that, but we’re bringing a whole host of AI improvements, map fixes, and a stellar seasonal event to the mix."`,
