@@ -147,7 +147,7 @@ export const AboutRoute = () => {
             by joining the project, we're coding in TypeScript and SolidJs
           </li>
           <li>
-            <a href="https://ko-fi.com/reneklacan" class="underline font-bold underline-offset-2" target="_blank">
+            <a href="https://ko-fi.com/aoe4world" class="underline font-bold underline-offset-2" target="_blank">
               Donate Sheep
             </a>{" "}
             to AoE4 World to help with hosting.
