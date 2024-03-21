@@ -3,7 +3,9 @@
 An useful visualization and UI to explore units, their stats and abilities and all possible upgrades and technologies for Age Of Empires 4.
 
 #### Setup
-
+First get the data repository: \
+`git submodule init && git submodule update` \
+Run the project: \
 `yarn install && yarn serve`
 
 #### Stack

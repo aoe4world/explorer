@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "cd ./data && yarn install && cd ../ && vite build",
-    "serve": "vite preview",
+    "serve": "yarn build && vite preview",
     "format": "prettier --write ./src"
   },
   "license": "MIT",
