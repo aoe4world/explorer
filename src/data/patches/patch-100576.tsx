@@ -11,7 +11,7 @@ export const patch100576: PatchNotes = {
   introduction: `
 ![](https://cdn.ageofempires.com/aoe/wp-content/uploads/2024/03/S7-Spring-Tournies-Update-1920x1080-1.webp)  
 "Spring is here at last! We’re kicking off the Season Seven update preview with Cross-Play so you will be able join your console and PC friends and adversaries on the battlefield, including in Team Ranked! Of course, we’re also rotating the map pool and delivering new events, fixes, and balance updates to keep life interesting!"`,
-  date: new Date("2024-01-30T18:00:00Z"),
+  date: new Date("2024-03-19T18:00:00Z"),
   sections: [
     {
       title: "Season Seven Update",
