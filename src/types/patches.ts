@@ -6,7 +6,7 @@ export type PatchNotes = {
   type: "update" | "patch";
   name: string;
   date: Date;
-  buildId?: number;
+  buildId?: number | string;
   officialUrl?: string;
   introduction: string;
   summary?: string;

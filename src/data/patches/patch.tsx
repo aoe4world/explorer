@@ -17,6 +17,9 @@ import { patch91370 } from "./patch-91370";
 import { patch92628 } from "./patch-92628";
 import { patch100576 } from "./patch-100576";
 import { patch10148 } from "./patch-101048";
+import { patch_11_0_782 } from "./patch-11.0.782";
+import { patch_11_0_1201 } from "./patch-11.0.1201";
+import { patch_12_0_1974 } from "./patch-12.0.1974";
 
 export const patches = [
   season1,
@@ -38,4 +41,11 @@ export const patches = [
   patch92628,
   patch100576,
   patch10148,
+
+  // Season 8
+  patch_11_0_782,
+  patch_11_0_1201,
+
+  // Season 9
+  patch_12_0_1974,
 ];

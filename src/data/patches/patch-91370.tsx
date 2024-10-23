@@ -2,11 +2,11 @@ import { PatchNotes } from "../../types/patches";
 
 export const patch91370: PatchNotes = {
   id: "patch-91370",
-  buildId: 91370,
+  buildId: '9.1.370',
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-9-1-370/",
-  name: "Patch 9.1.370",
+  name: "Season Six Update",
   season: 6,
-  type: "patch",
+  type: "update",
   summary: "Balance changes to the new civilizations and landmarks, including the Floating Gate, Bazaar Trade Wing and Imperial Hippodrome",
   introduction: `
 ![](https://www.ageofempires.com/wp-content/uploads/2023/11/TonsOToys_Patch_1920x1080.webp)  

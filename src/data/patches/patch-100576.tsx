@@ -2,12 +2,12 @@ import { PatchNotes } from "../../types/patches";
 
 export const patch100576: PatchNotes = {
   id: "patch-100576",
-  buildId: 100576,
+  buildId: '10.0.576',
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-seven-update-10-0-576/",
-  name: "Patch 10.0.576",
+  name: "Season Seven Update",
   season: 7,
   type: "update",
-  summary: "Introductiong Cross-Play, Quick Match Nomad and FFA. Buffs to Rams, French Keeps, Byzantine Mercenaries and HRE.",
+  summary: "Introducing Cross-Play, Quick Match Nomad and FFA. Buffs to Rams, French Keeps, Byzantine Mercenaries and HRE.",
   introduction: `
 ![](https://cdn.ageofempires.com/aoe/wp-content/uploads/2024/03/S7-Spring-Tournies-Update-1920x1080-1.webp)  
 "Spring is here at last! We’re kicking off the Season Seven update preview with Cross-Play so you will be able join your console and PC friends and adversaries on the battlefield, including in Team Ranked! Of course, we’re also rotating the map pool and delivering new events, fixes, and balance updates to keep life interesting!"`,
