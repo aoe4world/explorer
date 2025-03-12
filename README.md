@@ -6,7 +6,7 @@ An useful visualization and UI to explore units, their stats and abilities and a
 First get the data repository: \
 `git submodule init && git submodule update` \
 Run the project: \
-`yarn install && yarn serve`
+`yarn install && yarn dev`
 
 #### Stack
 
