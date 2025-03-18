@@ -1,9 +1,9 @@
-import { Link, useLocation } from "@solidjs/router";
-import { For } from "solid-js";
-import { setActivePage } from "../App";
 import { CivFlag } from "@components/CivFlag";
 import { Icon } from "@components/Icon";
 import { Tooltip } from "@components/Tooltip";
+import { Link, useLocation } from "@solidjs/router";
+import { For } from "solid-js";
+import { setActivePage } from "../App";
 import { CIVILIZATIONS } from "../config";
 import { mainIntroductionCSSClass, tooltipCSSClass } from "../styles";
 const buttonClass = `block font-bold px-7 py-2 rounded-full transition hover:opacity-70`;
@@ -16,7 +16,11 @@ export const CivOverviewRoute = () => {
         <div class="mx-2 sm:mx-6">
           <div class="flex flex-wrap items-center">
             <h1 class="text-3xl font-bold mr-6">AoE4 Explorer</h1>
-            <Link href="/patches/patch-10148" class="text-xs px-3 uppercase font-bold py-1 rounded-full text-gray-100 bg-black border border-gray-300" ref={el}>
+            <Link
+              href="/patches/patch-1223327"
+              class="text-xs px-3 uppercase font-bold py-1 rounded-full text-gray-100 bg-black border border-gray-300"
+              ref={el}
+            >
               <i class="fas fa-asterisk mr-1"></i> Patch 12.2.3327
             </Link>
             <Tooltip attachTo={el}>
