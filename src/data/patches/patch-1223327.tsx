@@ -8,9 +8,9 @@ export const patch1223327: PatchNotes = {
   type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-12-2-3327/",
   summary: "Scout and siege unit adjustments, civilization balance changes including Japanese barracks cost reduction and Malian buffs.",
-  introduction: `"Happy belated New Year, Age IV community! We shared some exciting news last week (read here if you haven’t already). And now we’re back with more of what you’re looking for: balance updates, bug fixes, plus a brand new seasonal event and game mode. 
+  introduction: `"Happy belated New Year, Age IV community! We shared some exciting news last week (read here if you haven’t already). And now we’re back with more of what you’re looking for: balance updates, bug fixes, plus a brand new seasonal event and game mode.
   `,
-  date: new Date("2024-02-13T18:00:00Z"),
+  date: new Date("2025-02-13T18:00:00Z"),
   sections: [
     {
       title: "Balance",
