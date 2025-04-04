@@ -11,6 +11,8 @@ export const DLC_CIVS = [
   CIVILIZATION_BY_SLUG.zhuxi,
   CIVILIZATION_BY_SLUG.ayyubids,
   CIVILIZATION_BY_SLUG.jeannedarc,
+  CIVILIZATION_BY_SLUG.lancaster,
+  CIVILIZATION_BY_SLUG.templar,
 ];
 
 export const Quiz: Component<{ difficulty?: number }> = (props) => {
@@ -110,8 +112,8 @@ export const Quiz: Component<{ difficulty?: number }> = (props) => {
 export const MultipleChoiceOption: Component<{ option: "A" | "B" | "C" | "D"; correct?: boolean; onPick: Function; class?: string }> = (props) => {
   return (
     <button
-      class={`whitespace-nowrap inline-flex items-center gap-2 bg-gray-500 p-2  
-    outline outline-gray-800 rounded-md 
+      class={`whitespace-nowrap inline-flex items-center gap-2 bg-gray-500 p-2
+    outline outline-gray-800 rounded-md
     ${props.correct === undefined ? "hover:outline-white/30 hover:bg-gray-400/50 active:bg-white active:text-black" : ""}
     ${props.correct === null ? "opacity-50" : ""}
     ${props.correct ? "bg-green-800 outline-green-500" : ""}

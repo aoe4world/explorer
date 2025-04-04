@@ -221,41 +221,78 @@ const AgeTabs: Component<{ age: () => number; setAge: (age: number) => void; min
 );
 
 const ExpansionInfo: Component<{ civ: CivConfig }> = (props) => (
-  <Show when={props.civ?.expansion.includes("sultans-ascend")}>
-    <div class="bg-purple-700/20 p-1 flex items-center gap-2 rounded-xl mb-8">
-      <img src={dlcFlag} class="w-6 ml-3 -my-2" />
-      <div class="p-2">
-        <p>
-          {props.civ.name} is part of the <strong>Sultans Ascend</strong> expansion
-        </p>
-        <p class="text-sm opacity-90 mt-1">
-          <span>Get it on</span>
-          <a
-            href="https://store.steampowered.com/app/1959430?utm_source=aoe4world"
-            target="_blank"
-            data-anal-event="buy_dlc_steam"
-            class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
-          >
-            <i class="fab fa-steam mx-1"></i> Steam
-          </a>
-          <a
-            href="https://www.xbox.com/en-us/games/store/age-of-empires-iv-the-sultans-ascend/9mvghsscmnsg"
-            data-anal-event="buy_dlc_xbox"
-            class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
-          >
-            <i class="fab fa-xbox mx-1 "></i> Xbox
-          </a>
-          <a
-            href="https://www.microsoft.com/store/productid/9NQMNQDS4QQL"
-            data-anal-event="buy_dlc_ms"
-            class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
-          >
-            <i class="fab fa-microsoft mx-1"></i> MS Store
-          </a>
-        </p>
+  <>
+    <Show when={props.civ?.expansion.includes("sultans-ascend")}>
+      <div class="bg-purple-700/20 p-1 flex items-center gap-2 rounded-xl mb-8">
+        <img src={dlcFlag} class="w-6 ml-3 -my-2" />
+        <div class="p-2">
+          <p>
+            {props.civ.name} is part of the <strong>Sultans Ascend</strong> expansion
+          </p>
+          <p class="text-sm opacity-90 mt-1">
+            <span>Get it on</span>
+            <a
+              href="https://store.steampowered.com/app/1959430?utm_source=aoe4world"
+              target="_blank"
+              data-anal-event="buy_dlc_steam"
+              class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
+            >
+              <i class="fab fa-steam mx-1"></i> Steam
+            </a>
+            <a
+              href="https://www.xbox.com/en-us/games/store/age-of-empires-iv-the-sultans-ascend/9mvghsscmnsg"
+              data-anal-event="buy_dlc_xbox"
+              class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
+            >
+              <i class="fab fa-xbox mx-1 "></i> Xbox
+            </a>
+            <a
+              href="https://www.microsoft.com/store/productid/9NQMNQDS4QQL"
+              data-anal-event="buy_dlc_ms"
+              class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
+            >
+              <i class="fab fa-microsoft mx-1"></i> MS Store
+            </a>
+          </p>
+        </div>
       </div>
-    </div>
-  </Show>
+    </Show>
+    <Show when={props.civ?.expansion.includes("knights-of-cross-and-rose")}>
+      <div class="bg-purple-700/20 p-1 flex items-center gap-2 rounded-xl mb-8">
+        <img src={dlcFlag} class="w-6 ml-3 -my-2" />
+        <div class="p-2">
+          <p>
+            {props.civ.name} is part of the <strong>Knights of Cross and Rose</strong> expansion
+          </p>
+          <p class="text-sm opacity-90 mt-1">
+            <span>Get it on</span>
+            <a
+              href="https://store.steampowered.com/app/3144890?utm_source=aoe4world"
+              target="_blank"
+              data-anal-event="buy_dlc_steam"
+              class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
+            >
+              <i class="fab fa-steam mx-1"></i> Steam
+            </a>
+            <a
+              href="https://www.xbox.com/en-us/games/store/age-of-empires-iv-knights-of-cross-and-rose/9p2gds0547jz"
+              data-anal-event="buy_dlc_xbox"
+              class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
+            >
+              <i class="fab fa-xbox mx-1 "></i> Xbox
+            </a>
+            <a
+              href="https://www.microsoft.com/store/productid/9p20k049mht5"
+              data-anal-event="buy_dlc_ms"
+              class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
+            >
+              <i class="fab fa-microsoft mx-1"></i> MS Store
+            </a>
+          </p>
+        </div>
+      </div>
+    </Show>
+  </>
 );
 
 export const ItemPage = {
