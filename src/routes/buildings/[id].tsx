@@ -161,7 +161,7 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
         {(stats) => (
           <>
             <div class=" bg-black/70 rounded-2xl">
-              <ItemPage.AgeTabs age={age} setAge={setAge} />
+              <ItemPage.AgeTabs age={age} setAge={setAge} minAge={props.item.minAge} />
               <div class="flex flex-col gap-5 p-6">
                 <StatBar label="Hitpoints" icon="heart" stat={stats.hitpoints} max={10000} item={props.item} age={age} />
                 <StatBar label="Siege Attack" icon="meteor" stat={stats.siegeAttack} max={500} multiplier={stats.burst} item={props.item} age={age} />
