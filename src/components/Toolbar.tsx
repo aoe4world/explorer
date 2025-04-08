@@ -26,7 +26,7 @@ export const Toolbar: Component = () => {
   };
 
   const navButtonClass =
-    "w-12 h-7 md:w-10 lg:h-7 md:hover:bg-white md:hover:text-black bg-gray-900 text-white/70text-lg px-3 grid rounded-md flex-none transition";
+    "w-12 h-7 md:w-10 lg:h-7 md:hover:bg-white md:hover:text-black bg-gray-900 text-white/70 text-lg px-3 grid rounded-md flex-none transition";
 
   return (
     <Show when={!hideNav()}>
@@ -116,6 +116,9 @@ export const Toolbar: Component = () => {
 
           <Search class="basis-full my-2 sm:my-0 sm:basis-48 lg:basis-96" />
         </div>
+      </div>
+      <div class="bg-blue-900/20 border-bottom border border-gray-500 p-3 text-white/70 text-center">
+        Work in Progress: The <CivFlag abbr="kt" class="inline-block h-5" /> Knights Templar and <CivFlag abbr="hl" class="inline-block h-5" /> House of Lancaster civilizations aren't fully updated and miss stats, abilities and upgrades.<br/>Explorer will continue to be updated over the next few weeks for both old and new civs.
       </div>
     </Show>
   );
