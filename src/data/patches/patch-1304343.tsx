@@ -53,22 +53,50 @@ export const patch1304343: PatchNotes = {
           diff: [["nerf", "Armor reduction effect decreased from -2/-2 to -1/-1."]],
         },
         {
-          items: ["technologies/synchronized-shot"],
+          items: ["technologies/synchronized-shot", "units/yeoman"],
           civs: ["hl"],
-          diff: [["nerf", "Damage decreased from 6/7/8 → 5/6/7 (Feudal/Veteran/Elite tiers)."]],
+          diff: [["nerf", "Synchronized Shot damage decreased from 6/7/8 → 5/6/7 (Feudal/Veteran/Elite tiers)."]],
         },
         {
           items: ["buildings/manor"],
           civs: ["hl"],
           diff: [
-            ["nerf", "Manor income decreased from 70 food and 45 wood → 60 food and 45 wood."],
+            ["nerf", "Manor income decreased from 70 food and 45 wood to 60 food and 45 wood."],
           ],
         },
         {
-          items: ["technologies/open-field-system"],
+          items: ["technologies/open-field-system", "buildings/manor"],
           civs: ["hl"],
           diff: [
-            ["nerf", "Cost increased from 150 wood and 350 gold to 200 wood and 400 gold."]
+            ["nerf", "Open Field System upgrade cost increased from 150 wood and 350 gold to 200 wood and 400 gold."]
+          ],
+        },
+        {
+          items: ["technologies/muster-the-nobles", "buildings/lancaster-castle"],
+          civs: ["hl"],
+          diff: [
+            ["nerf", "Muster the Nobles cost increased from 150 food and 250 gold to 200 food and 300 gold."]
+          ],
+        },
+        {
+          items: ["units/earls-retinue", "buildings/wynguard-palace"],
+          civs: ["hl"],
+          diff: [
+            ["nerf", "Earl’s Retinue train time increased from 45 to 50 seconds."]
+          ],
+        },
+        {
+          items: ["units/gunpowder-contingent", "buildings/wynguard-palace"],
+          civs: ["hl"],
+          diff: [
+            ["nerf", "Gunpowder Contingent cost increased from 800 wood and 850 gold to 850 wood and 1050 gold. "]
+          ],
+        },
+        {
+          items: ["units/garrison-command", "buildings/wynguard-palace"],
+          civs: ["hl"],
+          diff: [
+            ["nerf", "Garrison Command train time increased from 25 to 30 seconds. "]
           ],
         },
       ],
