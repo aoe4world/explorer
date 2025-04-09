@@ -3,6 +3,7 @@ import { patch10148 } from "./patch-101048";
 import { patch1212638 } from "./patch-1212638";
 import { patch1223327 } from "./patch-1223327";
 import { patch1304157 } from "./patch-1304157";
+import { patch1304343 } from "./patch-1304343";
 import { patch14681 } from "./patch-14681";
 import { serverSidePatch14681 } from "./patch-14681-server-side";
 import { patch15965 } from "./patch-15965";
@@ -44,4 +45,5 @@ export const patches = [
   patch1212638,
   patch1223327,
   patch1304157,
+  patch1304343,
 ];
