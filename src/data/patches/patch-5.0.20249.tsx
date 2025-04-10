@@ -1,20 +1,20 @@
 import { PatchNotes } from "../../types/patches";
 
-export const patch20249: PatchNotes = {
-  id: "patch-20249",
-  buildId: 20249,
+export const patch: PatchNotes = {
+  id: "patch-5.0.20249",
+  buildId: "5.0.20249",
+  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-20249/",
   name: "Patch 20249",
   season: 2,
   type: "patch",
-  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-20249/",
   summary: "Cost decrease for Rams, dark age unit upgrades and survival techniques. Nerf to Herbal Medicine, Town Center garrison attacks and Outposts.",
-  introduction: `"Welcome back to an exciting patch for Age of Empires IV! Starting tomorrow, August 4th, we’ll be rolling out balance changes, bug fixes, and more. And yes, that means we’re also including the Prelate Attack move bug you’ve reported! We’re also adding more improvements to hotkey features, including the ability to batch-queue units properly when using shift, mapping more hotkeys for civ-specific commands. Here are a few highlights that you can look forward to in tomorrow’s update!" 
+  introduction: `"Welcome back to an exciting patch for Age of Empires IV! Starting tomorrow, August 4th, we’ll be rolling out balance changes, bug fixes, and more. And yes, that means we’re also including the Prelate Attack move bug you’ve reported! We’re also adding more improvements to hotkey features, including the ability to batch-queue units properly when using shift, mapping more hotkeys for civ-specific commands. Here are a few highlights that you can look forward to in tomorrow’s update!"
 
 * Remappable Hotkey Fixes
 * Map Balance Changes
 * Other Balance Features
-* Quality-of-Life Bug Fixes 
-  
+* Quality-of-Life Bug Fixes
+
   `,
   date: new Date("2022-08-04 21:00:00 UTC"),
   sections: [
@@ -23,8 +23,8 @@ export const patch20249: PatchNotes = {
       civs: [],
       changes: [],
       md: `### Remappable Hotkeys
-      * When using the Fully Remappable hotkey layout, holding down a hotkey now correctly queues up multiple units in a production building, and buys/sells large quantities of resources at the market. 
-      
+      * When using the Fully Remappable hotkey layout, holding down a hotkey now correctly queues up multiple units in a production building, and buys/sells large quantities of resources at the market.
+
       * Cancel Construction hotkey is now remappable.
       * Wooden Fortresses now respect bindings made under the Outpost category.
       * Golden Gate keys are now properly mapped to match the Market.
@@ -262,9 +262,9 @@ export const patch20249: PatchNotes = {
       changes: [],
       md: `## Altai
         * The gold generation locations on Altai have been given a pass after seeing instances of both large and small gold spawns favoring one player. Now, to ensure that both starting small gold deposits don’t spawn forward for one player, the far starting gold deposit has been moved to the Accessible resources distribution and will spawn behind the player in a safer location. Additionally, the large gold deposits have been moved out of Balanced distribution and will now always spawn on the outside lanes, on opposite sides of the Sacred Sites. So, if the Sacred Sites spawn in the northwest and southeast corners, the large gold deposits will spawn in the northeast and southwest corners, ensuring that both players get equal access.
-        * Starting large forests should also no longer spawn in between the mountains and the edge of the map, which before could block one of the map lanes. 
+        * Starting large forests should also no longer spawn in between the mountains and the edge of the map, which before could block one of the map lanes.
         * Additionally, fixes for team game spawning (3v3 and 4v4) were put in that now should prevent players from spawning outside the mountain range in larger games.
-        
+
         ## Ancient Spires
         * We’ve put in a check in the Ancient Spires map script to fix an issue where a player’s starting pond could stomp out one of the trade posts. The map should always spawn 2 trade posts on opposing sides of the map.`,
     },
@@ -273,7 +273,7 @@ export const patch20249: PatchNotes = {
       title: "Bug Fixes",
       civs: [],
       changes: [],
-      md: `* Horse Archer Incendiary Arrows no longer loose attack speed when they are upgraded. 
+      md: `* Horse Archer Incendiary Arrows no longer loose attack speed when they are upgraded.
         * Fixed a crash that could occur when clicking on a match summary and attempting to view the replay immediately after loading the main menu.
         * Fixed a bug whereby it was possible to repair structures even when you don’t have the necessary resources.
         * Villagers will no longer T-pose while reloading after shooting Gaia. `,
@@ -282,7 +282,7 @@ export const patch20249: PatchNotes = {
       title: "UI/UX Changes",
       civs: [],
       changes: [],
-      md: `* New icons were created for the Abbasid Market – Toggle Secondary Trade Resource. 
+      md: `* New icons were created for the Abbasid Market – Toggle Secondary Trade Resource.
         * Post-Match Timeline UI French’s third and fourth Age-up markers will now be displayed properly on Post-Match Timeline UI.
         * Fixed an issue where the “Time To Age IV” column in the post-game Statistics tab under Technology was missing.
         * Player Color Mini-map Changes Adjusted the orange player color so that it’s easier to distinguish it from the red.
@@ -295,9 +295,9 @@ export const patch20249: PatchNotes = {
       changes: [],
       md: `### Coming Up…
         In future patches, we’ll be addressing other issues like Shift interfering with Grid Keys under the Grid Key Layout, as well as Shift queuing not resetting after releasing Shift.
-        
+
         Last month, we shared an early view of the Season Three roadmap including key features like Team Ranked, Taunts and Cheats that will launch with our next major update. We’ve heard since that some of you would like to hear an update on Naval Balance! Significant balance changes like this require time and a number of different steps and teams acting in unison. In short, it’s a bigger change than you’d expect, which touches balance, gameplay and our presentation team. It’s something we have been working on, but it’s something that needs to be presented in a completed package, so these are changes you might see in our Season Three Update.
-        
+
         Here’s some of what we have planned for Naval Balance:
         * Enhanced tactical RPS gameplay – Starting in the Feudal Age you’ll have access to three ships which have strong bonuses against each other, making for exciting tactical engagements.
         * Earlier Engagements – We’re making ships more affordable so expect to have bigger battles that start earlier in the game.

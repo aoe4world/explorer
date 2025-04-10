@@ -1,19 +1,18 @@
 import { PatchNotes } from "../../types/patches";
 
-export const season3: PatchNotes = {
-  id: "season-3",
-  buildId: 24916,
+export const patch: PatchNotes = {
+  id: "patch-5.0.24916-season-three",
+  buildId: "5.0.24916",
   officialUrl: "https://www.ageofempires.com/news/age_of_empires_iv_update_24916_season3/",
   name: "Season Three Update",
   season: 3,
   type: "update",
-  summary:
-    "Introduction of 2 new civilizations: the Malians and Ottomans. Major Naval rework. Buffs to trade, eco techs and several units. Town Center cost increase. No more sheep-bounty for Rus or stone income from French and Abbasid Trade.",
-  introduction: `"We’re excited to celebrate with you all and thought we’d get the party started with an early and in-depth view of everything you can expect from Season Three, including new civilizations, challenges, achievements, features and more. Whether you’re interested in honing new strategies with the Malians and Ottomans, building your skillset with Art of War challenges, competing in 1v1 Solo Ranked or competing with friends in the all-new Team Ranked, or earning a set of Age-themed rewards, we’ve got a little bit of something for every play-style coming your way with the Season Three: Anniversary.  
-  
- * Two new civilizations, the Ottomans and Malians, along with corresponding Art of War challenges, Masteries and Achievements! 
- * The start of Ranked Season Three, the introduction of Team Ranked and brand new rewards!  
- * Use Taunts against your opponents and spice up your games with Cheats! 
+  summary: "Introduction of 2 new civilizations: the Malians and Ottomans. Major Naval rework. Buffs to trade, eco techs and several units. Town Center cost increase. No more sheep-bounty for Rus or stone income from French and Abbasid Trade.",
+  introduction: `"We’re excited to celebrate with you all and thought we’d get the party started with an early and in-depth view of everything you can expect from Season Three, including new civilizations, challenges, achievements, features and more. Whether you’re interested in honing new strategies with the Malians and Ottomans, building your skillset with Art of War challenges, competing in 1v1 Solo Ranked or competing with friends in the all-new Team Ranked, or earning a set of Age-themed rewards, we’ve got a little bit of something for every play-style coming your way with the Season Three: Anniversary.
+
+ * Two new civilizations, the Ottomans and Malians, along with corresponding Art of War challenges, Masteries and Achievements!
+ * The start of Ranked Season Three, the introduction of Team Ranked and brand new rewards!
+ * Use Taunts against your opponents and spice up your games with Cheats!
  * Eight New Maps and Two New Biomes!
  * Naval Balance Rework brings new opportunity to Naval matches!
  * Waypoint Markers to set unit paths! `,
@@ -41,9 +40,9 @@ export const season3: PatchNotes = {
       civs: [],
       md: `
       "In this update we’re making sweeping changes to Naval, all of which are listed below. Naval changes specific to a civilization are included in their civilization-specific updates further on."
-      
+
       Here’s a summary of our largest changes and what they mean for Naval gameplay:
-      
+
       * Each class of ship now shares the same stats, this means that a Baouchuan and Carrack are both equal in cost and power. We intend to add ship variations back in the future as we look to refine Naval balance further, however, our goal with this update is to create a solid foundation that we can continue to build from.
       * We moved the Springald Ship and Incendiary Ship to the Feudal Age for all civilizations, this makes Naval combat far more exciting in the early stages of the game now that there’s a classic rock, paper, scissors counter system in place. We also made the counter system much stronger, making mixed army compositions far more important than before.
       * Archer Ship > Incendiary Ship > Springald Ship > Archer Ship.
@@ -54,16 +53,16 @@ export const season3: PatchNotes = {
       * Ships no longer cancel a garrison command upon colliding with another unit.
       * Ships can no longer go under bridges.
       * Fishing deposits can now be reliably selected.
-      
-      As part of our rework of how you would approach water maps and the naval experience overall, there have been numerous changes. Below are the changes which impact all civilizations collectively. Naval changes specific to a civilization are included in their civilization-specific updates further on.* 
-      
+
+      As part of our rework of how you would approach water maps and the naval experience overall, there have been numerous changes. Below are the changes which impact all civilizations collectively. Naval changes specific to a civilization are included in their civilization-specific updates further on.*
+
       * Ships no longer cancel a garrison command upon colliding with another unit.
       * Ships can no longer go under bridges.
       * Fishing deposits can now be reliably selected.
       * Springald Ship bonus damage vs Buildings increased from +40 to +45.
       * Naval Ship Deaths are now correctly confirmed for challenges.
       * Fire ships burning visual effects now display when the ship is built while off screen.
-      * Naval Traders return 40% less resources from trade routes.      
+      * Naval Traders return 40% less resources from trade routes.
       `,
       changes: [
         {

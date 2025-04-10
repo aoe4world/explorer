@@ -1,7 +1,8 @@
 import { PatchNotes } from "../../types/patches";
 
-export const season2: PatchNotes = {
-  id: "season-two",
+export const patch: PatchNotes = {
+  id: "patch-5.0.17718.0-season-two",
+  buildId: "5.0.17718",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-update-17718/",
   name: "Season Two Update",
   season: 2,
@@ -17,7 +18,6 @@ export const season2: PatchNotes = {
 
   ## Age of Discovery Event
   The wait is almost over for Ranked Season Two! You can jump into all the fun on July 14th! More information will be on its way then – so stay tuned! `,
-  buildId: 17718,
   date: new Date("2022-07-12 17:00:00 UTC"),
   sections: [
     {
@@ -26,11 +26,11 @@ export const season2: PatchNotes = {
       changes: [],
       md: `## Map Preference System
 For some time, we have heard community requests for a way to give you a say over the maps they play in Quick Play and Ranked multiplayer matches. With this update, we are adding our first version of a Map Preference system that will give you influence over the maps that you will encounter in ladder play.
-Each queue (Quick Play and Ranked) will provide you with a set of Downvotes that they can apply to maps that appear in the respective queues. In Quick Play, you will have up to 5 downvotes you can choose to apply, while in Ranked, you will have up to 3. Your downvote choices can be made in the search preference screen before you start your match search. 
+Each queue (Quick Play and Ranked) will provide you with a set of Downvotes that they can apply to maps that appear in the respective queues. In Quick Play, you will have up to 5 downvotes you can choose to apply, while in Ranked, you will have up to 3. Your downvote choices can be made in the search preference screen before you start your match search.
 The map that ends up being chosen for the match will be selected from the subset of maps that receives the lowest collective number of downvotes amongst players in the match. Due to how many votes can be present in larger Team Games (up to 40 votes in a 4v4!), you may sometimes still load into a map that you individually downvoted, since that map could be tied for lowest number of overall downvotes in the lobby.
 For example, in 1v1 Quickplay, if Player 1 decides they do not want to play any choke point maps during their play session, they can downvote maps like Black Forest, Mountain Pass, Confluence, Mongolian Heights and French Pass to be left with a selection of more open or hybrid maps.
 If player 2 decides to downvote only water and hybrid maps, the 2 players will be left with open maps having received no downvotes, and the final map selection will be chosen from those maps only.
-In order to help players quickly find maps that fit into various playstyles, we have added filter tabs to the Map Preference UI. These will allow you to quickly see things like all naval maps in your queue. Categories showing a blue dot indicate that a map within that category has been downvoted, for quick at-a-glance reference. 
+In order to help players quickly find maps that fit into various playstyles, we have added filter tabs to the Map Preference UI. These will allow you to quickly see things like all naval maps in your queue. Categories showing a blue dot indicate that a map within that category has been downvoted, for quick at-a-glance reference.
 If playing in a group for Team Games, the Map Preference selections of the group host will be used for the group search.
 
 ## Reorganization of Hotkey Menus
@@ -38,11 +38,11 @@ We’ve heard your request to play your way: hotkeys are now easier to find and 
 
 ## New Fully Remappable Hotkey Layout
 When switching into Fully Remappable mode for the first time, the default keys will be set to align with the default Grid Key layout.
-Once in the Fully Remappable layout you can now independently reassign any hotkey binding. 
+Once in the Fully Remappable layout you can now independently reassign any hotkey binding.
 
 ## Changes to how Hotkey Conflicts Work
-Previously, when a new hotkey conflict was created, any existing keys with the same binding would be unbound. As of this update, hotkey conflicts are allowed and creating a new conflict will provide you with an alert that lists all of the currently conflicting keys. 
-Pressing “Continue” on this alert will assign the conflicting keys, while “Cancel” will revert the newly assigned key to its previous state. 
+Previously, when a new hotkey conflict was created, any existing keys with the same binding would be unbound. As of this update, hotkey conflicts are allowed and creating a new conflict will provide you with an alert that lists all of the currently conflicting keys.
+Pressing “Continue” on this alert will assign the conflicting keys, while “Cancel” will revert the newly assigned key to its previous state.
 
 ## “Warn Conflicts” Toggle
 Should you wish to disable the conflict alerts, a new toggle has been added called “Warn conflicts”, which will prevent any new alerts from appearing when disabled.
@@ -54,10 +54,10 @@ While playing Age IV, we want you to feel like a battlefield general and city ar
 A new map, called The Pit, has been added to the game. This is an open map that features a stealth forest-filled valley housing one of the map’s 3 Sacred Sites right in the center, with small hills in each of the 4 corners that are home to the neutral markets and some of the few large resource deposits. You will spawn close to the opening of the central pit, so use the terrain to either an offensive or defensive advantage!
 
 ## Player Color Picker
-We know you’ve been requesting this one for a while now… and it’s here! You will now be able to choose a color for your civ in the following game modes: 
+We know you’ve been requesting this one for a while now… and it’s here! You will now be able to choose a color for your civ in the following game modes:
     * Single Player Skirmish
     * Multiplayer Custom Match
-    * Unranked Automatch 
+    * Unranked Automatch
     * Ranked Automatch
 
 You can either choose a color or have a color randomly assigned at the start of the match. In order to see the chosen color in-game, it will require you to set the Player Colors option to Unique. You can find this in Settings > Game > Player Colors
@@ -70,7 +70,7 @@ You can either choose a color or have a color randomly assigned at the start of 
     },
     {
       subtitle: "Melee vs Siege Rework",
-      description: `"We wanted to add more strategic considerations to army positioning around siege weapons while increasing realism in the interaction between siege and non-siege units. To accomplish this, we’ve made all units (except villagers) use their normal weapons vs siege units. This means the knight charge will be a powerful option vs siege if there aren’t any nearby spearman to brace. Units not using torches means they will have to get closer to their targets so it’s easier to block them and protect the siege. 
+      description: `"We wanted to add more strategic considerations to army positioning around siege weapons while increasing realism in the interaction between siege and non-siege units. To accomplish this, we’ve made all units (except villagers) use their normal weapons vs siege units. This means the knight charge will be a powerful option vs siege if there aren’t any nearby spearman to brace. Units not using torches means they will have to get closer to their targets so it’s easier to block them and protect the siege.
 
 Of course, we still want there to be multiple counter play options to siege weapons. To get the balance correct with this feature we’ve done a large readjustment. With torches, melee units were able to stack and push each other, allowing many units to all hit the same siege target. Now melee units obey normal pathing rules so there are only a few that can hit siege weapons at a time. To account for this, we reduced the health of siege weapons. Units like horsemen remain strong counters as we have   given their melee attacks bonus damage vs siege weapons."`,
       civs: [],
@@ -1289,7 +1289,7 @@ Of course, we still want there to be multiple counter play options to siege weap
       * Removed map ping on upgrade complete.
       * Ally under attack ping changed from red to blue.
       * Ally under attack ping triggers less frequently when multiple units are fighting near each other
-      
+
       ## UI/UX
       * Added an option in the settings menu to disable campaign missions from auto-saving.
       * Players can no longer complete masteries in matches that use custom game modes, custom maps, or tuning packs Note that players should still be able to complete masteries when mods are downloaded, installed, and enabled but are not active when loading into a multiplayer custom game or single player skirmish.
@@ -1311,7 +1311,7 @@ Of course, we still want there to be multiple counter play options to siege weap
       * Added camera zoom setting for default Camera Mode: Panoramic / Classic.
       * Fixed an issue where events can take several minutes to appear when idle on the main menu.
       * After failing to update a mod due to detected ill content the status in the notification is now “Unpublished” instead of “Published”.
-      
+
       ## Shortcuts & Remappable Keys
       * Council Hall Landmark can now be selected with Archery Range shortcuts.
       * The White Tower Landmark can now be selected with Keep shortcuts.
@@ -1343,7 +1343,7 @@ Of course, we still want there to be multiple counter play options to siege weap
       civs: [],
       changes: [],
       md: `
-       
+
       ## General
       * Fixed an issue where giving sheep the move command while near your scout could result in the sheep converting to neutral.
       * Fixed a bug that allowed you to withdraw and deposit Relics from Religious buildings in rapid succession and earn extra gold in the process.
@@ -1391,51 +1391,51 @@ Of course, we still want there to be multiple counter play options to siege weap
       civs: [],
       changes: [],
       md: `
-      ## General Changes 
+      ## General Changes
       * Improved how contested resources are spawned when the contested resource count doesn’t line up with team count. For example: If there are 2 teams and 3 sacred sites, each team may get 1 sacred site favoring them in the contested space. Before, the third site would also be favored towards one team. Now, the third site will spawn in a neutrally contested location.
           * Fixed a separate issue where contested spawns that are biased towards players would sometimes not alternate teams, resulting in one team having more contested resources favoring them than the other team. (a more optional note to add, may help explain cases where it seems “not fixed”
       > this only affects resources that are spawned by automatic balancing system, not ones spawned by the map script.
       * We’ve added some additional details to the Map Seed tooltip to more thoroughly explain how to recreate a map. In order to re-generate an identical map, you need to:
           * use the same seed
           * use the correct map layout (eg Lipany)
-          * use the same map size 
+          * use the same map size
           * use the same biome (some biomes distribute different visuals and decorations, which can cause resources to spawn differently)
           * use the same team configuration (same number of players, team sizes, and Teams Together/Random Positions setting)
       * Berry bush clusters and deer herds now require a bit more room when looking where to spawn, to avoid cases where they would spawn on rugged terrain with no room to place a mill.
       * Fixed a bug in the new Map Preference system where the blue pip did not appear on downvoted maps in the “High Resource” category.
       Fixed an issue where the map preview image in the Map Setup tab would be cropped for Crafted Maps.
-      
+
       ## Specific-Map Changes
       ### Black Forest
       * Resolved a former Known Issue with the spawn areas for the Black Forest map, where 1v1 matches on the micro map size could cause the Town Center to spawn underwater, as well as gold veins and stone outcroppings to not spawn near player start at all.
-      
+
       ### Boulder Bay and Megarandom
-      * On Boulder Bay and Megarandom, we have added a new special distribution of deepwater fish that are guaranteed to spawn within scout vision of the shoreline at consistent spacing. This is to ensure that players or teams do not get an economic advantage from having unequal access to deepwater fish, and to make the opening dock placement much less of a make or break decision. 
-      
+      * On Boulder Bay and Megarandom, we have added a new special distribution of deepwater fish that are guaranteed to spawn within scout vision of the shoreline at consistent spacing. This is to ensure that players or teams do not get an economic advantage from having unequal access to deepwater fish, and to make the opening dock placement much less of a make or break decision.
+
       ### Danube River
       * Danube River now will spawn teammates in a staggered line on each side of the river when using the Teams Together setting. This should fix instances where a single teammate in larger games could spawn on the enemy side of the river.
       * Danube River Map Misnamed in Some Menus
-      > We are aware that the Danube River map is misnamed as “Rolling Rivers” or “The Riverlands” in some menus. 
-      
+      > We are aware that the Danube River map is misnamed as “Rolling Rivers” or “The Riverlands” in some menus.
+
       ### Dry Arabia
       * Dry Arabia sheep have been adjusted to now spawn in 4 groups of 2, instead of 2 groups of 3. This should spread sheep out and not have such an early game swing for getting lucky when sending the scout on the first sheep collection pass.
-      
+
       ### French Pass
       * Fixed an issue on French Pass where in 2v2 matches on the Small map size, one Sacred Site would fail to spawn (and one player would spawn more forward than intended)
-      
+
       ### Mongolian Heights
       * Mongolian Heights has been updated to ensure that cliffs do not surround Sacred Sites and Trade Posts. The number of crossings on the map has been updated from 3 to 5, and each crossing is now wider. This should result in less turtle-y gameplay, as we often saw match stalemates when the 3 narrow crossings were heavily fortified. Defensive play on this map should still be possible, but it will require more investment, opening up different strategies.
-      
+
       ### Mountain Pass
       * Mountain Pass’ titular pass has received some tweaks - it will now scale up in size based on the map size. On larger sizes, expect to see a much longer opening, which will reinforce the need to use teamwork to defend the opening.
-      
+
       ### Nagari
-      * The water level of the central lake on Nagari was brought up slightly to improve dock placement ability on the shorelines. Sometimes, when the slope of the terrain going into the land is too steep, it can block the ability to place docks, so bringing up the water level should help alleviate this issue. 
-      
+      * The water level of the central lake on Nagari was brought up slightly to improve dock placement ability on the shorelines. Sometimes, when the slope of the terrain going into the land is too steep, it can block the ability to place docks, so bringing up the water level should help alleviate this issue.
+
       ### Ancient Spires
       * The Ancient Spires map has received an overhaul with the high level goal of distributing the small lakes evenly between teams.
       > Now, each lake will be placed in relation to the distance between teams. For example, if one lake is placed 10 tiles from player 1, a corresponding lake will be placed 10 tiles from player 2. Each lake contains 5 shore fish. The number of lakes increases with map size and number of teams.
-      
+
       ### Lipany
       * We’ve done a tuning pass on the distribution of Sacred Sites on Lipany. We have more robust changes coming in a future update that should help ensure that sites are placed fairly with even higher consistency, but we felt like this interim tuning has resulted in less clumped spawns than before.`,
     },
@@ -1470,7 +1470,7 @@ Of course, we still want there to be multiple counter play options to siege weap
       changes: [],
       md: `* Fixed an issue affecting mod authors where after publishing an update to an existing mod, the published version of the mod will remain out of date for the author’s client until a game restart. The Mod author publishes an update to a local mod in My Mods/Mod Publisher.
       * Fixed an issue affecting mod authors where mods always appear as out of date in the My Mods/Mod Publisher tab.
-        > In My Mods: Mod Manager, the corresponding published mod will be out-of-date with the old title, description, picture, etc. There will be no option to update the out-of-date mod until the mod author restarts their game client. 
+        > In My Mods: Mod Manager, the corresponding published mod will be out-of-date with the old title, description, picture, etc. There will be no option to update the out-of-date mod until the mod author restarts their game client.
       * After deleting a mod, it’s now possible to re-subscribe and download it.
       * You can now obtain debug information for generated maps.
       * Fixed a bug where you are no longer able to publish a mod after being asked to change its name.
@@ -1482,7 +1482,7 @@ Of course, we still want there to be multiple counter play options to siege weap
       * Fixed an issue with the winning condition templates where they were missing the event cues (Aging up UI).
       * Fixed a bug when selecting an unsubscribed mod in a Skirmish game automatically resubscribed to the mod.
       ## Crafted Maps
-      * When using the Intermediate Crafted Map mod option, painting ocean terrain with the Terrain Painter Tool will now automatically adjust ocean water height to ensure that crafted maps containing ocean terrain have water as expected. 
+      * When using the Intermediate Crafted Map mod option, painting ocean terrain with the Terrain Painter Tool will now automatically adjust ocean water height to ensure that crafted maps containing ocean terrain have water as expected.
       > if you manually override the ocean height, your specified ocean height will be used.
       * When creating a Crafted Map mod, the Random Scenario generator window now has additional descriptions on each of the Distribution Categories to help modders identify what kinds of objects are included with each toggleable distribution category.
       * We have added a large number of new terrain types for use in modded generated maps.`,

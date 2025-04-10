@@ -1,8 +1,8 @@
 import { PatchNotes } from "../../types/patches";
 
-export const patch15965: PatchNotes = {
-  id: "patch-15965",
-  buildId: 15965,
+export const patch: PatchNotes = {
+  id: "patch-5.0.15965",
+  buildId: "5.0.15965",
   name: "Patch 15965",
   season: 1,
   type: "patch",
@@ -46,11 +46,11 @@ export const patch15965: PatchNotes = {
     {
       title: "What’s Next",
       description: `We’ll be looking to bring the next Public Update Preview (PUP) your way in the next month or so!
-  
+
         During the PUP, you’ll be able to try out some of the new features planned for Season Two early. While the PUP is designed to help us lock down, catch any unexpected issues and ensure polish when we’re delivering major updates, this time around we’re also testing a new experimental camera angle and zoom option to determine how and when to best introduce it into the game. We’ll be relying on your feedback to make some important decisions about which game modes this option applies to and more, so keep an eye out for more news on the PUP in the future!
-        
+
         As well, the team is also investigating changes to Rank Point distribution for Season Two. We don’t have any specific details to share at this time, but we’re monitoring your feedback.
-        
+
         Finally, we’re also continuing to celebrate the Festival of Ages! Keep an eye out for more rewards coming soon. Have any feedback to share with us about this patch or other topics?`,
       civs: [],
       changes: [],

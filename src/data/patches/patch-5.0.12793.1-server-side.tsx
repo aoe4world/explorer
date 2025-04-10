@@ -1,15 +1,15 @@
 import { PatchNotes } from "../../types/patches";
 
-export const s1ServerSide1: PatchNotes = {
-  id: "season-one-server-side-patch",
+export const patch: PatchNotes = {
+  id: "patch-5.0.12793.1-server-side",
+  buildId: "5.0.12793.1",
   name: "Server Side Patch 12793",
   season: 1,
   type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-server-side-patch-12973/",
   summary: "Nerfs to Mangonels, Khan, and Camel Archers. Buffs to Rams. Monks walk slower with relics.",
-  introduction: `"Following on the heels of the Season One update, we’re excited to introduce a brand new path for bringing you smaller, more pointed changes with Server-Side Patches."   
+  introduction: `"Following on the heels of the Season One update, we’re excited to introduce a brand new path for bringing you smaller, more pointed changes with Server-Side Patches."
       `,
-  buildId: 12793,
   date: new Date("2022-04-11"),
   sections: [
     {

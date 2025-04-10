@@ -1,8 +1,8 @@
 import { PatchNotes } from "../../types/patches";
 
 export const patch1304343: PatchNotes = {
-  id: "patch-1304343",
-  buildId: 1304343,
+  id: "13.0.4343-hotpatch",
+  buildId: "13.0.4343",
   name: "Patch 13.0.4343",
   season: 10,
   type: "patch",

@@ -1,15 +1,15 @@
 import { PatchNotes } from "../../types/patches";
 
-export const patch91370: PatchNotes = {
-  id: "patch-91370",
-  buildId: 91370,
-  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-9-1-370/",
-  name: "Patch 9.1.370",
+export const patch: PatchNotes = {
+  id: "patch-9.1.370-season-six",
+  buildId: "9.1.370",
+  name: "Season Six Update",
   season: 6,
-  type: "patch",
+  type: "update",
+  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-9-1-370/",
   summary: "Balance changes to the new civilizations and landmarks, including the Floating Gate, Bazaar Trade Wing and Imperial Hippodrome",
   introduction: `
-![](https://www.ageofempires.com/wp-content/uploads/2023/11/TonsOToys_Patch_1920x1080.webp)  
+![](https://www.ageofempires.com/wp-content/uploads/2023/11/TonsOToys_Patch_1920x1080.webp)
 "The festive season is in the air in Age of Empires IV with today's minor patch (December 6th) -- join in the fun with our upcoming Tons o' Toys seasonal event, chill out in our seasonal Winter biome, or bring the heat to your opponent with the updates to the new civilizations introduced in our recent expansion! Changes introduced today include:
 
 - Stability fixes for campaign and multiplayer.
@@ -38,21 +38,21 @@ Read more below."`,
       changes: [],
       md: `
 ## Stability Fixes
-A number of compounding events led to server issues reported on November 18th and 19th. Since then, we’ve taken several steps to improve server latency and stability, including the previously communicated server maintenance windows on November 23rd and 29th. This patch also includes some game-side fixes meant to act in tandem with improvements already made to the server. Thank you all for the reports during this time.  
+A number of compounding events led to server issues reported on November 18th and 19th. Since then, we’ve taken several steps to improve server latency and stability, including the previously communicated server maintenance windows on November 23rd and 29th. This patch also includes some game-side fixes meant to act in tandem with improvements already made to the server. Thank you all for the reports during this time.
 
 ## Map Adjustments
-Our most recent major update introduced 3 new maps, while our expansion added an additional 10. Several balance changes and bug fixes have been made to some of these and existing maps, detailed in Maps section further on. 
+Our most recent major update introduced 3 new maps, while our expansion added an additional 10. Several balance changes and bug fixes have been made to some of these and existing maps, detailed in Maps section further on.
 
 ## Localization
-Several players have noted that some of the translations in our expansion were inconsistent with the quality of localization for Age of Empires IV. Thanks to community reporting, we have identified some of these mistranslations and today’s patch fixes many of them, especially with our Chinese localizations. 
+Several players have noted that some of the translations in our expansion were inconsistent with the quality of localization for Age of Empires IV. Thanks to community reporting, we have identified some of these mistranslations and today’s patch fixes many of them, especially with our Chinese localizations.
 
-We welcome further input and discussion on the Age Forums, where our community heroes have already been hard at work. Thank you! 
+We welcome further input and discussion on the Age Forums, where our community heroes have already been hard at work. Thank you!
 
 ## New Official Mod: Free Camera
-By popular request, we are introducing a new official mod to allow creators to freely move the camera for taking videos and screenshots. The “Free Camera” mod unlocks the camera from its default constraints and allows movement around without limit. 
+By popular request, we are introducing a new official mod to allow creators to freely move the camera for taking videos and screenshots. The “Free Camera” mod unlocks the camera from its default constraints and allows movement around without limit.
 
 ## Balance Changes
-With the introduction of 2 new civilizations and 4 variant civilizations, most of today’s balance changes are focused on the impact these new additions have had on recent gameplay and as such there are more balance changes than typical for our minor patches. You can read more about these in the Civilization-Specific Changes section below. 
+With the introduction of 2 new civilizations and 4 variant civilizations, most of today’s balance changes are focused on the impact these new additions have had on recent gameplay and as such there are more balance changes than typical for our minor patches. You can read more about these in the Civilization-Specific Changes section below.
 `,
     },
     {
@@ -62,35 +62,35 @@ With the introduction of 2 new civilizations and 4 variant civilizations, most o
       md: `
 ### AI Updates
 
--   Fixed issue that prevented AI armies from merging with reinforcements. The AI now forms bigger armies and is less likely to abandon half its units in a fight. 
--   Zhu Xi's Legacy AI players will now take advantage of the abilities provided by the Temple of the Sun Landmark. 
--   AI player's Scouts will not drop sheep off at docks on naval maps anymore. 
--   AI no longer uses half its army as trebuchet hype team that idly watches while the trebuchet tries its hardest to hit a moving target. AI now only uses a handful of units to guard its siege and the rest of the army continues to fight. 
+-   Fixed issue that prevented AI armies from merging with reinforcements. The AI now forms bigger armies and is less likely to abandon half its units in a fight.
+-   Zhu Xi's Legacy AI players will now take advantage of the abilities provided by the Temple of the Sun Landmark.
+-   AI player's Scouts will not drop sheep off at docks on naval maps anymore.
+-   AI no longer uses half its army as trebuchet hype team that idly watches while the trebuchet tries its hardest to hit a moving target. AI now only uses a handful of units to guard its siege and the rest of the army continues to fight.
 
 ### Art of War
 
--   Fixed a Fatal Scar error that could occur during the Art of War mission *Late Siege*. 
+-   Fixed a Fatal Scar error that could occur during the Art of War mission *Late Siege*.
 
 ### Campaign
 
--   Fixed a crash that could occur while loading into the tutorial. 
+-   Fixed a crash that could occur while loading into the tutorial.
 
 > This change has reset Dynamic Training Hints for all players.
 
--   Fixed a crash that could occur on the mission *The Battle of Mansurah* in *The Sultans Ascend* campaign if the player survived for 40 minutes on hard mode. 
--   Fixed a Fatal Scar error that could occur during the missions *Defense of Tyre* and *Raiders of the Red Sea* in *The Sultans Ascend* campaign. 
--   Fixed an error that could occur in the mission *Mansurah *in *The Sultans Ascend* campaign when the player killed enemy units engaged in idle activities. 
--   Fixed a rare error in the mission *Raiders of the Red Sea* in *The Sultans Ascend* campaign that could occur when destroying enemy fleets when you didn't have any docks. 
+-   Fixed a crash that could occur on the mission *The Battle of Mansurah* in *The Sultans Ascend* campaign if the player survived for 40 minutes on hard mode.
+-   Fixed a Fatal Scar error that could occur during the missions *Defense of Tyre* and *Raiders of the Red Sea* in *The Sultans Ascend* campaign.
+-   Fixed an error that could occur in the mission *Mansurah *in *The Sultans Ascend* campaign when the player killed enemy units engaged in idle activities.
+-   Fixed a rare error in the mission *Raiders of the Red Sea* in *The Sultans Ascend* campaign that could occur when destroying enemy fleets when you didn't have any docks.
 
 ### Quickmatch
 
--   Fixed an issue which prevented players from joining the Quickmatch queue due to their map downvote selections resetting when too many maps were selected. Players may now downvote the intended number of maps. 
+-   Fixed an issue which prevented players from joining the Quickmatch queue due to their map downvote selections resetting when too many maps were selected. Players may now downvote the intended number of maps.
 
-### UX/UI & Menus (All Platforms) 
+### UX/UI & Menus (All Platforms)
 
--   Fixed inconsistent codex naming conventions for new and variant civilizations. 
--   Fixed a number of inaccurate localizations in Chinese languages. 
--   Fixed several localizations in Spanish languages that cutoff at the first mathematical symbol. 
+-   Fixed inconsistent codex naming conventions for new and variant civilizations.
+-   Fixed a number of inaccurate localizations in Chinese languages.
+-   Fixed several localizations in Spanish languages that cutoff at the first mathematical symbol.
 -   The player's scoreboard now displays the player's civilization flag.
 `,
     },
@@ -101,49 +101,49 @@ With the introduction of 2 new civilizations and 4 variant civilizations, most o
       md: `
       ## General Map Changes
 
-      -   Fixed crash when trying to save/load a game while having save games from modded maps. 
-      -   Fixed a rare issue where neutral large gold deposits would spawn next to the player's base on small sized Dry Arabia and Forts maps. 
-      
+      -   Fixed crash when trying to save/load a game while having save games from modded maps.
+      -   Fixed a rare issue where neutral large gold deposits would spawn next to the player's base on small sized Dry Arabia and Forts maps.
+
       > We are tracking similar issues on additional maps.
-      
+
       ## Map-Specific Changes
-      
-      ### African Waters 
-      
-      -   Fixed an issue on African Waters map where large gold deposits failed to spawn on top of the elevated plateau. 
-      
-      ### Archipelago 
-      
-      -   Corrected an issue where Random Starting Locations on Archipelago were not randomizing correctly. 
-      
-      ### Baltic 
-      
-      -   Sacred sites should no longer spawn next to each other on Baltic. 
-      
-      ### Boulder Bay 
-      
-      -   Free for All games on Boulder Bay should no longer split player spawns into 2 groups as if it was a team vs team configuration. 
-      
-      ### Canal 
-      
-      -   Town Centers on Canal should no longer spawn submerged within the river's waters. 
-      
+
+      ### African Waters
+
+      -   Fixed an issue on African Waters map where large gold deposits failed to spawn on top of the elevated plateau.
+
+      ### Archipelago
+
+      -   Corrected an issue where Random Starting Locations on Archipelago were not randomizing correctly.
+
+      ### Baltic
+
+      -   Sacred sites should no longer spawn next to each other on Baltic.
+
+      ### Boulder Bay
+
+      -   Free for All games on Boulder Bay should no longer split player spawns into 2 groups as if it was a team vs team configuration.
+
+      ### Canal
+
+      -   Town Centers on Canal should no longer spawn submerged within the river's waters.
+
       ### Glade
-      
-      -   Units can no longer pass between sparse wood lines in Glade on large and gigantic maps. 
-      
-      ### Golden Pit 
-      
-      -   Fixed a rare issue on Golden Pit where large gold deposits were not spawning inside the pit. 
-      -   Removed Neutral Trade Post from Golden Pit and repositioned Sacred Sites to the outskirts of the pit. 
-      
-      ### Rocky River 
-      
-      -   On Rocky River, 5 Berries spawn per player in a more contested and balanced way, and 2 Fish spawn per pond instead of 4. 
-      
-      ### Thickets 
-      
-      -   Fixed an issue on Thickets map where stone deposits could spawn too close to wood lines, preventing Ovoo placement for Mongols players. 
+
+      -   Units can no longer pass between sparse wood lines in Glade on large and gigantic maps.
+
+      ### Golden Pit
+
+      -   Fixed a rare issue on Golden Pit where large gold deposits were not spawning inside the pit.
+      -   Removed Neutral Trade Post from Golden Pit and repositioned Sacred Sites to the outskirts of the pit.
+
+      ### Rocky River
+
+      -   On Rocky River, 5 Berries spawn per player in a more contested and balanced way, and 2 Fish spawn per pond instead of 4.
+
+      ### Thickets
+
+      -   Fixed an issue on Thickets map where stone deposits could spawn too close to wood lines, preventing Ovoo placement for Mongols players.
       -   Reduced Sacred Sites from 3 to 2 on Thickets, changed secondary site to spawn contested between the players.
       `,
     },
@@ -712,7 +712,7 @@ With the introduction of 2 new civilizations and 4 variant civilizations, most o
       changes: [],
       md: `
    ## Coming Up…
-Late January/Early February Patch 
+Late January/Early February Patch
 
 We are planning for our next minor patch to release in early 2024, with a target of late January or early February.`,
     },

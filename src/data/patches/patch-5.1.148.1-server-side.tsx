@@ -1,9 +1,9 @@
 import { PatchNotes } from "../../types/patches";
 
-export const serverSidePatch51148: PatchNotes = {
-  id: "server-side-patch-51148",
-  buildId: 14681,
-  name: "Server-Side Patch 5.1.148 ",
+export const patch: PatchNotes = {
+  id: "patch-5.1.148.1-server-side",
+  buildId: "5.1.148.1",
+  name: "Server-Side Patch 5.1.148",
   season: 3,
   type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-server-side-patch-5-1-148-1/",
@@ -109,7 +109,7 @@ export const serverSidePatch51148: PatchNotes = {
     {
       title: "What’s Next? ",
       civs: [],
-      md: `As we prepare to head into the Winter Holiday, we’ve got lots of plans up our sleeves for next year! You can read about some of what’s coming in Season Four in our community roadmap, and we’ll have more news to share with you about the next Public Update Preview (PUP) in January! 
+      md: `As we prepare to head into the Winter Holiday, we’ve got lots of plans up our sleeves for next year! You can read about some of what’s coming in Season Four in our community roadmap, and we’ll have more news to share with you about the next Public Update Preview (PUP) in January!
 
 January won’t just be PUP-focused, however. We’ll also have a new Season Three event kicking off late in the month! Our team has also heard your feedback on making the Hardest AI more difficult to play against, so you’ll see those adjustments in our next minor patch early next year as well. We hope you’re ready for a challenge -- our Balance Team is already breaking a sweat testing some early concepts of the Hardest AI update!`,
       changes: [],

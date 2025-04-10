@@ -1,17 +1,17 @@
 import { PatchNotes } from "../../types/patches";
 
 export const patch51148: PatchNotes = {
-  id: "patch-51148",
-  buildId: 51148,
+  id: "patch-5.1.148",
+  buildId: "5.1.148",
   name: "Patch 5.1.148",
   season: 3,
   type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-51148/",
   summary: "Buffs to Springald Ships and Malian Cattle and Pit Mines + misc fixes.",
-  introduction: `"Welcome to our first minor patch of Season Three, Patch 5.1.148! In this patch, we’re making some balance changes to Forest Ponds, Hideout, and Waterholes according to your feedback from our Season Three Public Update Preview, you’ll see some new UI improvements, and you’ll also see better general stability and performance of the game! Thia time, we’re mixing up the Season Three Map Pool, we’re giving some visual updates to the unit healthbar settings, as well as more balance work on the Malian and Ottoman Civilizations.  
+  introduction: `"Welcome to our first minor patch of Season Three, Patch 5.1.148! In this patch, we’re making some balance changes to Forest Ponds, Hideout, and Waterholes according to your feedback from our Season Three Public Update Preview, you’ll see some new UI improvements, and you’ll also see better general stability and performance of the game! Thia time, we’re mixing up the Season Three Map Pool, we’re giving some visual updates to the unit healthbar settings, as well as more balance work on the Malian and Ottoman Civilizations.
 
   In addition to all of the above, we’re also taking some time to address some of the feedback we’ve heard from you. Special thanks as well to those of you who filled out our Season Three Survey – your feedback is incredibly helpful to us, so please keep sharing your thoughts!"
-  
+
   `,
   date: new Date("2022-12-01 18:00:00 UTC"),
   sections: [
@@ -68,7 +68,7 @@ You’ve shared with us your thoughts on the Season Three Map pool, so we’re f
       title: "UX/UI",
       civs: [],
       changes: [],
-      md: `   
+      md: `
 * Fixed a bug where if the team ranked season ended while you were searching for a team ranked game, then the error message shown to the player would appear multiple times. Now the error message should only appear once.
 * Improved the spacing between the display of the unit name and its tag on the unit card.
 * Fixed an issue where clicking the “Play Again” button in the post match screen sometimes did not remember what civ you had chosen previously.
@@ -84,7 +84,7 @@ You’ve shared with us your thoughts on the Season Three Map pool, so we’re f
       title: "Gameplay",
       civs: [],
       changes: [],
-      md: `  
+      md: `
 ## General
 * Monks rallying to garrisonable mosques that contain relics will now garrison instead of retrieving relics.
 * Fixed war elephants, tower elephants, and certain siege units sometimes being unable to garrison into a hold that is near its garrison cap.

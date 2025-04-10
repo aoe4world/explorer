@@ -1,25 +1,24 @@
 import { PatchNotes } from "../../types/patches";
 
-export const season4: PatchNotes = {
-  id: "season-4",
-  buildId: 60878,
-  officialUrl: "https://www.ageofempires.com/news/ageiv_seasonfour_update_60878/",
+export const patch: PatchNotes = {
+  id: "patch-6.0.878-season-four",
+  buildId: "6.0.878",
   name: "Season Four Update",
   season: 4,
   type: "update",
-  summary:
-    "Major changes to Landmarks for most civs, introducing Militia, Wynguard units, English King. Nerfs to deap sea fish, trade and walls. Siege cost decrease, addition of lightweight beams and rams from Siege Workshop.",
-  introduction: `"Join us in the Enchanted Grove for Season Four, starting on February 16th! In this update, you can optimize your strategy on three new maps, start from scratch with only a few villagers and no starting Town Center in the new Nomad game mode, build new or improved Landmarks, and more! You’ll also get to explore the new Enchanted Grove Biome as we round out this update with a new season of events, rewards and ranked, as well as quality-of-life updates." 
+  officialUrl: "https://www.ageofempires.com/news/ageiv_seasonfour_update_60878/",
+  summary: "Major changes to Landmarks for most civs, introducing Militia, Wynguard units, English King. Nerfs to deap sea fish, trade and walls. Siege cost decrease, addition of lightweight beams and rams from Siege Workshop.",
+  introduction: `"Join us in the Enchanted Grove for Season Four, starting on February 16th! In this update, you can optimize your strategy on three new maps, start from scratch with only a few villagers and no starting Town Center in the new Nomad game mode, build new or improved Landmarks, and more! You’ll also get to explore the new Enchanted Grove Biome as we round out this update with a new season of events, rewards and ranked, as well as quality-of-life updates."
 
-* New Event and Biome: Enchanted Grove 
-* Season Four Ranked 1v1 and Team Ranked 
-* New Maps: Four Lakes, Continental, Marshland 
-* New Game Mode: Nomad 
-* Mod Browser Update 
-* UI Improvements 
-* Landmark Reworks 
-* Art of War Updates 
-* New Cheat Code 
+* New Event and Biome: Enchanted Grove
+* Season Four Ranked 1v1 and Team Ranked
+* New Maps: Four Lakes, Continental, Marshland
+* New Game Mode: Nomad
+* Mod Browser Update
+* UI Improvements
+* Landmark Reworks
+* Art of War Updates
+* New Cheat Code
 `,
   html: (
     <div>
@@ -53,17 +52,17 @@ export const season4: PatchNotes = {
       subtitle: "General Changes & Bugfixes",
       civs: [],
       md: `
-* When you are eliminated from a match, remaining units will stop attacking previous targets, villagers will stop gathering, and any other unit commands will also cease. 
-* Ability hotkeys that do not conflict with the selected build menu now remain active. 
-* Fixed an issue to ensure right click & drag only occurs when right click is held and then the mouse is dragged. 
-* Fixed a bug to ensure fishing boats contribute to the economic count. 
-* Units will play their voice lines when entering/garrisoning a building. 
-* Fixed a bug that prevents re-downloading subscribed mods when you already own the latest version. 
-* Destroyed Landmarks can now be repaired in the Ottoman Art of War. 
-* Fixed a bug where training Masteries could not be completed. 
-* Fixed the “Defend” daily quest to account for English Keeps being built only. 
-* Fixed an issue where the map preferences set for quick match may be shown when queueing for a ranked match after clicking the “Play Again” button on the post-game screen. 
-* Caster mode: stolen sheep no longer add to conversion counts. 
+* When you are eliminated from a match, remaining units will stop attacking previous targets, villagers will stop gathering, and any other unit commands will also cease.
+* Ability hotkeys that do not conflict with the selected build menu now remain active.
+* Fixed an issue to ensure right click & drag only occurs when right click is held and then the mouse is dragged.
+* Fixed a bug to ensure fishing boats contribute to the economic count.
+* Units will play their voice lines when entering/garrisoning a building.
+* Fixed a bug that prevents re-downloading subscribed mods when you already own the latest version.
+* Destroyed Landmarks can now be repaired in the Ottoman Art of War.
+* Fixed a bug where training Masteries could not be completed.
+* Fixed the “Defend” daily quest to account for English Keeps being built only.
+* Fixed an issue where the map preferences set for quick match may be shown when queueing for a ranked match after clicking the “Play Again” button on the post-game screen.
+* Caster mode: stolen sheep no longer add to conversion counts.
 * Fixed an issue where Crafted Map Beginner mode would not set the right number of players for Large and Gigantic maps.
 * Fixed an issue where hotkeys did not work with an active Asian language IME or third party input software (for example, Sougou).
 * Fixed localization issues with Royal Rumble mod in some languages.
@@ -75,28 +74,28 @@ export const season4: PatchNotes = {
       subtitle: "Gameplay Changes for All Civilizations",
       civs: [],
       md: `
-* Fixed a bug where melee units couldn’t attack on broken wall segments and would stand idle. 
-* Fixed a bug where placing a palisade gate sometimes create a gap in the wall. 
-* Fix a bug where landmarks could remain standing if destroyed while under construction. 
+* Fixed a bug where melee units couldn’t attack on broken wall segments and would stand idle.
+* Fixed a bug where placing a palisade gate sometimes create a gap in the wall.
+* Fix a bug where landmarks could remain standing if destroyed while under construction.
 * Fixed Fishing Ships temporarily stopping when they are re-ordered to garrison in a Dock.
 * Influence based effects such as the ones from the Abbasid’s House of Wisdom and Holy Roman Empire’s Emergency Repair influence can now only be extended with fully constructed buildings rather than building stamps.
-* Fixed an issue where units sometimes spawned on the wrong side of a unit production building if the rally point was placed too close to the building. 
-* Relics will now stay on top of bridges and walls when dropped 
-* Relic respawns on the nearest land after being lost in the ocean on a transport 
-* Changed the event-cycling behavior to now only focus on Attack notifications. 
-* Elite Army Tactics, Heavy Maces and Two-Handed weapons extra damage now properly apply to charge and spear wall weapons. 
-* Idle units will now do a better job of finding good targets to attack. This is especially improved when raiding farms as units will now continue to hunt farmers instead of torching farms. 
-* Unload Garrison ability can now be rebound to a different hotkey. 
-* After repairing a farm or resource drop-off building, villagers will now automatically gather from the farm or nearby resources. 
-* Reverted the change to Boar retaliation behavior with feedback from the PUP: the Boar no longer only chases the attacking unit and will instead target the closest unit nearby when attacked. 
-* Fixed an issue where the secondary UI panel isn’t accessible when selecting a group of mixed unit types. 
-* The villager’s build menu now correctly resets when clearing the selection. 
-* Fixed a bug where the UI would incorrectly tell you to repair an enemy’s landmark. 
-* Fixed cattle not dying when the “you monster” cheat is used. 
-* Fixed villagers restarting their build animation after re-issuing the same build command. 
-* Fixed villagers looking like they are gliding if spammed with attack orders to hunt a wolf. 
-* Fixed a rare case where defensive structures would stop firing at visible targets within range.   
-* Updated various tooltips for techs and landmarks to correct inaccuracies. 
+* Fixed an issue where units sometimes spawned on the wrong side of a unit production building if the rally point was placed too close to the building.
+* Relics will now stay on top of bridges and walls when dropped
+* Relic respawns on the nearest land after being lost in the ocean on a transport
+* Changed the event-cycling behavior to now only focus on Attack notifications.
+* Elite Army Tactics, Heavy Maces and Two-Handed weapons extra damage now properly apply to charge and spear wall weapons.
+* Idle units will now do a better job of finding good targets to attack. This is especially improved when raiding farms as units will now continue to hunt farmers instead of torching farms.
+* Unload Garrison ability can now be rebound to a different hotkey.
+* After repairing a farm or resource drop-off building, villagers will now automatically gather from the farm or nearby resources.
+* Reverted the change to Boar retaliation behavior with feedback from the PUP: the Boar no longer only chases the attacking unit and will instead target the closest unit nearby when attacked.
+* Fixed an issue where the secondary UI panel isn’t accessible when selecting a group of mixed unit types.
+* The villager’s build menu now correctly resets when clearing the selection.
+* Fixed a bug where the UI would incorrectly tell you to repair an enemy’s landmark.
+* Fixed cattle not dying when the “you monster” cheat is used.
+* Fixed villagers restarting their build animation after re-issuing the same build command.
+* Fixed villagers looking like they are gliding if spammed with attack orders to hunt a wolf.
+* Fixed a rare case where defensive structures would stop firing at visible targets within range.
+* Updated various tooltips for techs and landmarks to correct inaccuracies.
 * All units will no longer fire additional shots after hunting any harvestable Gaia. This means that Scouts will now correctly fire two arrows when hunting Deer, instead of three.`,
       changes: [
         {
@@ -1420,25 +1419,25 @@ export const season4: PatchNotes = {
       changes: [],
       md: `
 ## General
-* We’re changing the name of the Mediterranean map to Baltic. 
+* We’re changing the name of the Mediterranean map to Baltic.
 > The reason for this change is that we have a Biome by the name of Mediterranean and it’s causing confusion with the map that is called Mediterranean.
-* Maps are now alphabetically ordered in the map selection screen. 
-* Biomes are now alphabetically ordered in the biome selection dropdown menu. 
-* Made some map quality-of-life improvements: 
-    * Cliffs should not generate at corners and block sacred sites 
-    * Hills should not generate near shore, allowing dock placement. 
-    * Carcasses will no longer drop through bridges. 
-* Fixed a soft lock that would occur during the loading screen for Black Forest with certain Map Seeds. 
+* Maps are now alphabetically ordered in the map selection screen.
+* Biomes are now alphabetically ordered in the biome selection dropdown menu.
+* Made some map quality-of-life improvements:
+    * Cliffs should not generate at corners and block sacred sites
+    * Hills should not generate near shore, allowing dock placement.
+    * Carcasses will no longer drop through bridges.
+* Fixed a soft lock that would occur during the loading screen for Black Forest with certain Map Seeds.
 
 ## Map-Specific Changes
 ### Altai
-* Fixed a rare instance where one or more Trade Posts would fail to generate. 
+* Fixed a rare instance where one or more Trade Posts would fail to generate.
 ### Prairie
-* Players are pushed ever so slightly further apart from each other and closer to the edge of the map. 
+* Players are pushed ever so slightly further apart from each other and closer to the edge of the map.
 ### Mountain Clearing
-* The resources surrounding the players are now more spread out and don’t clump up as much. 
-* The amount of forest on the map has decreased, creating more space and allowing players more flanking opportunities. 
-* Players are moved slightly further away from each other. 
+* The resources surrounding the players are now more spread out and don’t clump up as much.
+* The amount of forest on the map has decreased, creating more space and allowing players more flanking opportunities.
+* Players are moved slightly further away from each other.
     `,
     },
     {
@@ -1447,31 +1446,31 @@ export const season4: PatchNotes = {
       changes: [],
       md: `
 ## General AI Updates
-The AI has had several improvements to how it handles its economy as well as its military and naval strategies. 
-* Fixed villagers harvesting sheep that are following a scout.   
-* Multiple AI fishing ships can now gather from the same deposit closer to their dock. 
-* AI now researches military upgrades more effectively.  
-> Military research used to heavily rely on knowing what units the enemy brings to a fight. Now it will get generally good upgrades based on it’s own army composition if it is unable to get enough information on the enemy forces./   
-* AI Villagers are now assigned to the Drop Off Building they have constructed. 
-* AI will now always try to build the first lumberyard near a forest. 
-* AI early game economy was optimized to improve its wood gathering while transitioning to the Feudal Age. 
-* When playing as the Abbasid Dynasty using ‘Hardest Difficulty’, the AI will prioritize researching the Fresh Foodstuffs upgrade as soon as it becomes available. 
-* Adjusted the AI to have trebuchets be higher priority during Castle age and lower in Imperial age. Less infantry/cavalry are required than before to prioritize siege weapons. 
-* After a drop-off building was built, the villagers who just built that drop-off should be prioritized to gather resources nearby. 
-* Malian AI was adjusted to no longer produce cattle at the start of the game to improve their age up speed. They can start aging up as early as 3-4 minutes into the game. It is permitted to produce cattle after 6 minutes. 
-* AI Ottoman war galley will now unload produced units on AI island to be used for future encounters. 
-* The Rus AI can activate the Levy Militia ability from the Kremlin when threatened by enemies. 
-* Fixed a bug where a scout could get stuck against a deer. 
-* Fixed a bug where the AI would ignore some enemy units and may end combat early. 
+The AI has had several improvements to how it handles its economy as well as its military and naval strategies.
+* Fixed villagers harvesting sheep that are following a scout.
+* Multiple AI fishing ships can now gather from the same deposit closer to their dock.
+* AI now researches military upgrades more effectively.
+> Military research used to heavily rely on knowing what units the enemy brings to a fight. Now it will get generally good upgrades based on it’s own army composition if it is unable to get enough information on the enemy forces./
+* AI Villagers are now assigned to the Drop Off Building they have constructed.
+* AI will now always try to build the first lumberyard near a forest.
+* AI early game economy was optimized to improve its wood gathering while transitioning to the Feudal Age.
+* When playing as the Abbasid Dynasty using ‘Hardest Difficulty’, the AI will prioritize researching the Fresh Foodstuffs upgrade as soon as it becomes available.
+* Adjusted the AI to have trebuchets be higher priority during Castle age and lower in Imperial age. Less infantry/cavalry are required than before to prioritize siege weapons.
+* After a drop-off building was built, the villagers who just built that drop-off should be prioritized to gather resources nearby.
+* Malian AI was adjusted to no longer produce cattle at the start of the game to improve their age up speed. They can start aging up as early as 3-4 minutes into the game. It is permitted to produce cattle after 6 minutes.
+* AI Ottoman war galley will now unload produced units on AI island to be used for future encounters.
+* The Rus AI can activate the Levy Militia ability from the Kremlin when threatened by enemies.
+* Fixed a bug where a scout could get stuck against a deer.
+* Fixed a bug where the AI would ignore some enemy units and may end combat early.
 
 ## AI Naval Updates
-* AI will prefer shore positions for building defensive fortification on naval maps. 
-* For the AI, we increased the production priority of Transport ships when land military units are available. 
-* AI transports will now avoid unloading their units at dangerous areas on enemy islands. 
-* Few issues fixed regarding AI army being stuck due to one of the transports getting destroyed during the army loading phase. 
+* AI will prefer shore positions for building defensive fortification on naval maps.
+* For the AI, we increased the production priority of Transport ships when land military units are available.
+* AI transports will now avoid unloading their units at dangerous areas on enemy islands.
+* Few issues fixed regarding AI army being stuck due to one of the transports getting destroyed during the army loading phase.
 * AI Fire ship targeting selection has been improved, and AI fire ships will attack the enemy ships that will try to attack them at their dock.
-* Fixed a bug where AI attempted to build docks and fishing ships on hybrid maps with small ponds. 
-* Fixed a bug where the AI would occasionally take breaks from constructing a Landmark building and would prioritize gathering resources before returning to Landmark construction. 
+* Fixed a bug where AI attempted to build docks and fishing ships on hybrid maps with small ponds.
+* Fixed a bug where the AI would occasionally take breaks from constructing a Landmark building and would prioritize gathering resources before returning to Landmark construction.
 `,
     },
     {
@@ -1507,36 +1506,36 @@ We’ve heard your feedback surrounding the recent changes to the Hardest AI dif
       changes: [],
       md: `
         ## Ranked Play
-        For those of you looking to test your mettle and seek glory, we’re excited to announce that ranked play starts right after Season Four begins. Get ready to gather your armies for Ranked Season Four starting on February 17th ! Age up through the ranks and earn your rewards when Ranked Season Four ends on June 7th. 
+        For those of you looking to test your mettle and seek glory, we’re excited to announce that ranked play starts right after Season Four begins. Get ready to gather your armies for Ranked Season Four starting on February 17th ! Age up through the ranks and earn your rewards when Ranked Season Four ends on June 7th.
         ![rewards](https://www.ageofempires.com/wp-content/uploads/2023/02/6.0_RankedRewards_Showcase_1920x1920-1600x1600.jpg)
-        
-        
+
+
         ## Season Four Map Pools
-We’re looking to keep things fresh with every new season and Season Four is no exception. We’re always aiming to include new maps a short while after they’re added into the game and mix in older maps when they haven’t been in the rotation for a while. To see which maps you like and know which tend to be popular, we’re always reading your feedback and looking at our data to inform which maps we want to include into our future rotations – so let us know your thoughts on Season Four’s new map rotation! To learn more about the new maps, read on below. 
+We’re looking to keep things fresh with every new season and Season Four is no exception. We’re always aiming to include new maps a short while after they’re added into the game and mix in older maps when they haven’t been in the rotation for a while. To see which maps you like and know which tend to be popular, we’re always reading your feedback and looking at our data to inform which maps we want to include into our future rotations – so let us know your thoughts on Season Four’s new map rotation! To learn more about the new maps, read on below.
 
-To keep things fair for competitive ranked play, the Enchanted Grove biome will not be available on ranked maps. 
+To keep things fair for competitive ranked play, the Enchanted Grove biome will not be available on ranked maps.
 
-### 1v1 Ranked Map Pool for Season Four 
-* Dry Arabia  
-* Prairie  
-* Lipany  
-* Ancient Spires  
-* Wetlands  
-* Oasis  
-* Altai  
-* Boulder Bay  
+### 1v1 Ranked Map Pool for Season Four
+* Dry Arabia
+* Prairie
+* Lipany
+* Ancient Spires
+* Wetlands
+* Oasis
+* Altai
+* Boulder Bay
 * Waterholes
 
 ### Team Ranked Map Pool for Season Four
-* Dry Arabia  
-* Lipany  
-* Hideout  
-* High View  
-* Mountain Clearing  
-* Hill and Dale  
-* Mongolian Heights  
-* Baltic  
-* Nagari 
+* Dry Arabia
+* Lipany
+* Hideout
+* High View
+* Mountain Clearing
+* Hill and Dale
+* Mongolian Heights
+* Baltic
+* Nagari
 
 `,
     },
@@ -1546,96 +1545,96 @@ To keep things fair for competitive ranked play, the Enchanted Grove biome will 
       changes: [],
       md: `
 ## New Maps
-In Season Four, we’re introducing three new maps you can play on: 
+In Season Four, we’re introducing three new maps you can play on:
 Four Lakes, Continental, and Marshland!
 
 ![Four Lakes](https://www.ageofempires.com/wp-content/uploads/2023/02/four_lakes_icon.png)
 ### Four Lakes
-A land surrounded by four lakes invites aggression from all sides, both on land and on water. Fight for control over the land and the lakes at the edge of the map! In this open map, action can happen anywhere and in every corner. Maintaining control over the lakes and islands at the edges of the map could be the key to victory at the center.   
+A land surrounded by four lakes invites aggression from all sides, both on land and on water. Fight for control over the land and the lakes at the edge of the map! In this open map, action can happen anywhere and in every corner. Maintaining control over the lakes and islands at the edges of the map could be the key to victory at the center.
 
 ![Continental](https://www.ageofempires.com/wp-content/uploads/2023/02/continental_icon.png)
 ### Continental
-Continental makes its return from the original _Age of Empires_! An extensive island surrounded by ocean — the water holds numerous fish and stealth areas to ambush your foes. With water restricting maneuverability, your Town Center will be in close proximity to others, so take strategic care to balance your military for both water and land!   
+Continental makes its return from the original _Age of Empires_! An extensive island surrounded by ocean — the water holds numerous fish and stealth areas to ambush your foes. With water restricting maneuverability, your Town Center will be in close proximity to others, so take strategic care to balance your military for both water and land!
 
 ![Marshland](https://www.ageofempires.com/wp-content/uploads/2023/02/marshland_icon.png)
 ### Marshland
-Marshland is an open and aggressive environment set deep into the jungle, surrounded by boggy grounds. There are vast amounts of forest you can hide in to surprise your opponents, and though there are plenty of resources scattered in the swamps, beware of the dangerous wildlife lurking in the woods.  
+Marshland is an open and aggressive environment set deep into the jungle, surrounded by boggy grounds. There are vast amounts of forest you can hide in to surprise your opponents, and though there are plenty of resources scattered in the swamps, beware of the dangerous wildlife lurking in the woods.
 
 ## New Game Mode: Nomad
-Start with a fresh slate in the Nomad game mode. Available in custom and skirmish games, Nomad gives you three scattered villagers to begin your rise through the Ages. 
-Build your Town Center quickly to get a jump on your opponents or search out the best positioning for better resourcing. Be careful – there are no guarantees an enemy isn’t building right outside your vision range! 
-Nomad has all the same options as Standard game mode, save that everyone always starts in random locations. Teams or no, your nomads are scattered across the map. 
+Start with a fresh slate in the Nomad game mode. Available in custom and skirmish games, Nomad gives you three scattered villagers to begin your rise through the Ages.
+Build your Town Center quickly to get a jump on your opponents or search out the best positioning for better resourcing. Be careful – there are no guarantees an enemy isn’t building right outside your vision range!
+Nomad has all the same options as Standard game mode, save that everyone always starts in random locations. Teams or no, your nomads are scattered across the map.
 
 ![Nomand](https://www.ageofempires.com/wp-content/uploads/2023/02/Screenshot_NomadMode_02-2048x1152.jpg)
 
 ### Choosing the Mode
-Select Nomad among the game modes in any Custom or Skirmish game setup.  
-Note that once Nomad is set as the mode, the option for Teams Together/Apart (in the Map Setup screen) is removed. Scattering is part of the fun in Nomad! 
+Select Nomad among the game modes in any Custom or Skirmish game setup.
+Note that once Nomad is set as the mode, the option for Teams Together/Apart (in the Map Setup screen) is removed. Scattering is part of the fun in Nomad!
 
 ![Choosing the mode](https://www.ageofempires.com/wp-content/uploads/2023/02/HowTo_NomadGameMode.gif)
 
 ### Start Conditions
-In Nomad, each player starts the game with three villagers spread around a broad section of the map. 
-These villagers can start building a first Town Center. This first Town Center will be your Landmark Town Center and costs no resources. You won’t be able to build additional Town Centers until allowed by your civilization’s normal tech tree. 
+In Nomad, each player starts the game with three villagers spread around a broad section of the map.
+These villagers can start building a first Town Center. This first Town Center will be your Landmark Town Center and costs no resources. You won’t be able to build additional Town Centers until allowed by your civilization’s normal tech tree.
 
 ![Start Conditions](https://www.ageofempires.com/wp-content/uploads/2023/02/Screenshot_NomadMode_03-2048x1152.jpg)
 
 ## Mod Browser Update
 In this update, we are making significant improvements to make the Mod Browser experience more intuitive and useful for mod enjoyers:
-* Dynamic search – Players can now see mods search results appear as soon as they start typing in the search input bar, without needing to click on a search button. 
-* More relevant search results – We’ve made changes in how the server returns search results based on player’s search criteria.   
-* Popular Search – Search results will now be sorted based on their “popularity” score which is calculated based on subscription numbers and ratings, so popular mods would appear first. 
-* Official mods toggle – Players can now filter mods using the new “official” toggle to find official mods, as well as see a new official label on them. 
-* Subscriber count display – We’ve added subscriber count on mod tiles to help players find popular mods quickly. 
+* Dynamic search – Players can now see mods search results appear as soon as they start typing in the search input bar, without needing to click on a search button.
+* More relevant search results – We’ve made changes in how the server returns search results based on player’s search criteria.
+* Popular Search – Search results will now be sorted based on their “popularity” score which is calculated based on subscription numbers and ratings, so popular mods would appear first.
+* Official mods toggle – Players can now filter mods using the new “official” toggle to find official mods, as well as see a new official label on them.
+* Subscriber count display – We’ve added subscriber count on mod tiles to help players find popular mods quickly.
 * Pagination system – Players can now view search results with a new paging system to view them page by page, jump to a specific page or the first/last page.
 
 ## UI/UX Updates
 ### Minimap Zooming
-You can now change the size of the minimap via the “Minimap Zoom Level” setting, by using the “Change Minimap Zoom Level” hotkey (default key: M), or the zoom button to the lower right of the minimap HUD. 
-* Three sizes are available: Normal, 125%, and 150%. 
-* The “Change Minimap Zoom Level” hotkey can be reassigned to a different key under Hotkey Settings. 
+You can now change the size of the minimap via the “Minimap Zoom Level” setting, by using the “Change Minimap Zoom Level” hotkey (default key: M), or the zoom button to the lower right of the minimap HUD.
+* Three sizes are available: Normal, 125%, and 150%.
+* The “Change Minimap Zoom Level” hotkey can be reassigned to a different key under Hotkey Settings.
 ![New minimap](https://www.ageofempires.com/wp-content/uploads/2023/02/Screenshot_Minimap_Zoom.jpg)
 
 ### Improved Unit HUD
-In this update, we are making an effort to improve the HUD’s unit stats panel with the following changes: 
+In this update, we are making an effort to improve the HUD’s unit stats panel with the following changes:
 * Movement speed will now be shown on the top level (previously shown in the detail stats overlay).
-* Additional weapons and their stats are now available in the detail stats overlay. (i.e. Primary and secondary weapons for units, as well as emplacement weapons for keeps, towers, etc.) 
+* Additional weapons and their stats are now available in the detail stats overlay. (i.e. Primary and secondary weapons for units, as well as emplacement weapons for keeps, towers, etc.)
 ![Improved Unit Hud](https://www.ageofempires.com/wp-content/uploads/2023/02/new_ui.png)
 
 * Duplicate weapons are now combined into one, and showing the number of times it repeats for better clarity.  (i.e. 12 Bow x 3 – Ranged)
 ![Improved Unit Hover](https://www.ageofempires.com/wp-content/uploads/2023/02/new_ui2.png)
 
-> While there are still a few bugs with duplicate weapons, we wanted to get this quality of life feature into your hands sooner to start enjoying!/  
+> While there are still a few bugs with duplicate weapons, we wanted to get this quality of life feature into your hands sooner to start enjoying!/
 
 ### Garrison UI Improvements
-We have improved the garrison UI to ensure that when selecting a garrisoned building you can see both the Building’s Information panel (previously missing) and the Garrisoned Units on the right side of the Building base stats. 
+We have improved the garrison UI to ensure that when selecting a garrisoned building you can see both the Building’s Information panel (previously missing) and the Garrisoned Units on the right side of the Building base stats.
 
 ![Improved Garrison UI](https://www.ageofempires.com/wp-content/uploads/2023/02/garrisonui.jpg)
 
 ### Improved Multiplayer Team UI
-We’ve heard your feedback that in multiplayer games, you’d like to see team members displayed as grouped together to help you quickly understand who’s on what team. With this update, we made the change to display team members together clearly in the gameplay HUD to improve quick legibility. You’ll see this change in UI areas such as the Post Match Summary UI, Player Score, and Match History. 
+We’ve heard your feedback that in multiplayer games, you’d like to see team members displayed as grouped together to help you quickly understand who’s on what team. With this update, we made the change to display team members together clearly in the gameplay HUD to improve quick legibility. You’ll see this change in UI areas such as the Post Match Summary UI, Player Score, and Match History.
 ### Tribute Changes*
-In addition to the UI improvements, you’ll also now have the ability to bulk-tribute your gathered resources to your teammates in the tribute menu. 
-* Hold down Shift key and click on resources to send x5 resources, Control key to send x10 resources. 
+In addition to the UI improvements, you’ll also now have the ability to bulk-tribute your gathered resources to your teammates in the tribute menu.
+* Hold down Shift key and click on resources to send x5 resources, Control key to send x10 resources.
 
 ![Tribute UI](https://www.ageofempires.com/wp-content/uploads/2023/02/tribute.jpg)
 
 ## Landmark Reworks
-Big changes here! We’ve taken a hard look at the landmark designs and changed some dramatically. Don’t worry, your favorites like the Golden Gate Landmark are untouched. We’ve looked at our data from the least used landmarks as well as many personal accounts from the community to target the underperformers. Our aims for these are to open up additional strategic options for the civilizations, create Landmarks that have more active and engaging strategies, and make the gameplay between Landmarks more unique. So we’ve buffed lesser used Landmarks and added more fun! 
-Full details on the Landmark changes can be found under each civilization’s Civ-Specific Changes below. 
+Big changes here! We’ve taken a hard look at the landmark designs and changed some dramatically. Don’t worry, your favorites like the Golden Gate Landmark are untouched. We’ve looked at our data from the least used landmarks as well as many personal accounts from the community to target the underperformers. Our aims for these are to open up additional strategic options for the civilizations, create Landmarks that have more active and engaging strategies, and make the gameplay between Landmarks more unique. So we’ve buffed lesser used Landmarks and added more fun!
+Full details on the Landmark changes can be found under each civilization’s Civ-Specific Changes below.
 
 ![Sultans Palace](https://www.ageofempires.com/wp-content/uploads/2023/02/Screenshot_Landmark_PalaceoftheSultan.jpg)
 
 ## Art of War Updates
-While we knew some of you would survive long enough to get gold easily, we were surprised to see just _how_long a few people managed to make it with the Ottoman Art of War Challenges! These changes are aimed at those that made gold look trivial. 
-* In the Ottoman Art of War challenge, enemy stone walls are now invulnerable. 
-* In the Ottoman Art of War challenge, enemy waves continue to scale up after the gold medal is achieved. 
+While we knew some of you would survive long enough to get gold easily, we were surprised to see just _how_long a few people managed to make it with the Ottoman Art of War Challenges! These changes are aimed at those that made gold look trivial.
+* In the Ottoman Art of War challenge, enemy stone walls are now invulnerable.
+* In the Ottoman Art of War challenge, enemy waves continue to scale up after the gold medal is achieved.
 
 ## Daily Challenges
-All civilizations have new Daily Quests for all civilizations specific-challenges! 
+All civilizations have new Daily Quests for all civilizations specific-challenges!
 
 ## New Cheat Code
-The newly-added cheat “minimally minimal” hides all UI. Perfect for screenshots, GIFs, villager selfies… whatever you want to capture! 
+The newly-added cheat “minimally minimal” hides all UI. Perfect for screenshots, GIFs, villager selfies… whatever you want to capture!
 
 ![wow](https://www.ageofempires.com/wp-content/uploads/2023/02/EnchantedBiome_02-Villager.gif)`,
     },

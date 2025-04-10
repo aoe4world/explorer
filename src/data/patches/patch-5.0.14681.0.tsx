@@ -1,15 +1,15 @@
 import { PatchNotes } from "../../types/patches";
 
-export const patch14681: PatchNotes = {
-  id: "patch-14681",
-  buildId: 14681,
+export const patch: PatchNotes = {
+  id: "patch-5.0.14681",
+  buildId: "5.0.14681",
   name: "Patch 14681",
   season: 1,
   type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-14681/",
   summary: "Decrease in Team Game Map Sizes, Chinese Extra Materials nerf, and stone walls under construction can now be attacked.",
-  introduction: `"In Patch 14681, we’re excited to share some changes we’ve made based on your feedback. To start, we know you’ve been asking for Team Game Map Size changes, and this patch introduces the option to choose smaller or larger maps in multiplayer – whatever your preference! We’ve also put some focus towards tuning specific maps to be better for all types of multiplayer and skirmish modes. While there’s still more we’d like to do for maps that we weren’t able to get to in this patch, we’d especially like to thank you for continuing to share your thoughts. Your map feedback has been incredibly helpful to us! 
-  
+  introduction: `"In Patch 14681, we’re excited to share some changes we’ve made based on your feedback. To start, we know you’ve been asking for Team Game Map Size changes, and this patch introduces the option to choose smaller or larger maps in multiplayer – whatever your preference! We’ve also put some focus towards tuning specific maps to be better for all types of multiplayer and skirmish modes. While there’s still more we’d like to do for maps that we weren’t able to get to in this patch, we’d especially like to thank you for continuing to share your thoughts. Your map feedback has been incredibly helpful to us!
+
   For balance, we know you’ve been wanting your units to be able to attack stone walls under construction… and now you can! We’re also making a few adjustments for Chinese Extra Materials, and while balance changes for Mangonels aren’t quite ready for Patch 14681, we’ll be looking at focusing their role so they aren’t as powerful in all situations and have a more defined place in the unit counter system in a future patch."`,
   date: new Date("2022-05-02"),
   sections: [

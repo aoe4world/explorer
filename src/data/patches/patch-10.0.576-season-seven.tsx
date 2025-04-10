@@ -1,15 +1,15 @@
 import { PatchNotes } from "../../types/patches";
 
 export const patch100576: PatchNotes = {
-  id: "patch-100576",
-  buildId: 100576,
-  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-seven-update-10-0-576/",
-  name: "Patch 10.0.576",
+  id: "patch-10.0.576-season-seven",
+  buildId: '10.0.576',
+  name: "Season Seven Update",
   season: 7,
   type: "update",
-  summary: "Introductiong Cross-Play, Quick Match Nomad and FFA. Buffs to Rams, French Keeps, Byzantine Mercenaries and HRE.",
+  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-seven-update-10-0-576/",
+  summary: "Introducing Cross-Play, Quick Match Nomad and FFA. Buffs to Rams, French Keeps, Byzantine Mercenaries and HRE.",
   introduction: `
-![](https://cdn.ageofempires.com/aoe/wp-content/uploads/2024/03/S7-Spring-Tournies-Update-1920x1080-1.webp)  
+![](https://cdn.ageofempires.com/aoe/wp-content/uploads/2024/03/S7-Spring-Tournies-Update-1920x1080-1.webp)
 "Spring is here at last! We’re kicking off the Season Seven update preview with Cross-Play so you will be able join your console and PC friends and adversaries on the battlefield, including in Team Ranked! Of course, we’re also rotating the map pool and delivering new events, fixes, and balance updates to keep life interesting!"`,
   date: new Date("2024-03-19T18:00:00Z"),
   sections: [
@@ -45,7 +45,7 @@ export const patch100576: PatchNotes = {
 
       See you on the ladder!
 
-        # 1v1 Ranked Map Pool 
+        # 1v1 Ranked Map Pool
         - Dry Arabia
         - Cliffside
         - Rocky River
@@ -54,32 +54,32 @@ export const patch100576: PatchNotes = {
         - High View
         - Danube River
         - Lipany
-        - Four Lakes        
-        
+        - Four Lakes
+
         # Team Ranked Map Pool
-        - Dry Arabia 
-        - Cliffside 
-        - Rocky River 
-        - Prairie 
-        - Gorge 
-        - Hill and Dale 
-        - Lipany 
-        - Migration 
-        - Waterholes 
+        - Dry Arabia
+        - Cliffside
+        - Rocky River
+        - Prairie
+        - Gorge
+        - Hill and Dale
+        - Lipany
+        - Migration
+        - Waterholes
   `,
     },
     {
       title: "Build Spotlight",
       civs: [],
       changes: [],
-      md: `     
+      md: `
 ## Cross-Play is Now Available on PC and Console
 
 You can join your console and PC friends and adversaries on the battlefield with cross-play!
 
 ## Team Ranked is Now Available on Console
 
-You can now jump into Team Ranked mode on console! 
+You can now jump into Team Ranked mode on console!
 
 ## Condensed Victory Objectives
 
@@ -89,9 +89,9 @@ We’ve created an alternate version of win conditions that take up as little sc
 
 ## Quick Match Updates
 
-- The Nomad Game Mode was added as a new option and comes with several improvements. 
-- A new Free for All option has been added, allowing you to queue for 8 Player free for all matches. 
-    - Quick match Free for All matches are played using the new “Dominion” win condition. 
+- The Nomad Game Mode was added as a new option and comes with several improvements.
+- A new Free for All option has been added, allowing you to queue for 8 Player free for all matches.
+    - Quick match Free for All matches are played using the new “Dominion” win condition.
 
 ### A Note on Leaderboards and Hidden Elo
 
@@ -144,9 +144,9 @@ Additionally, Nomad mode will share a leaderboard with Standard Mode. This means
       - Byzantine AI now place more cisterns.
       - Ottoman AI will no longer turn off military school production.
       - Easy AI no longer produces more than one Scout.
-      
+
       > We have found that Easy AI can sometimes be too efficient at using Scouts to explore and take Sheep at this difficulty. We hope this change allows players to have more chances at securing Sheep when exploring the map.
-      
+
       - Adjusted how the Easy and Intermediate AI chooses to advance to the next Age.
       - Easy AI is now adaptive, speeding up or slowing down its Age-up based on the other players in the match. The Easy AI will never surpass the Age of another player in the game.
       - Intermediate AI Ages up slower but can also adapt to faster Age-ups and catch up if needed.
@@ -156,63 +156,63 @@ Additionally, Nomad mode will share a leaderboard with Standard Mode. This means
       - Intermediate AI can now research tier 1 and 2 Blacksmith technologies.
       - Hard AI can now research all economy technologies.
       - Developer Note: Easy and Intermediate AI are being tuned to help players with ramp up in difficulty. The Easy AI would previously Age up too slow where the Intermediate AI would do so too fast. Additionally, Intermediate AI would research much more Blacksmith, economy, and other technologies compared to the Easy AI. These changes aim to create a more natural difficulty progression.
-      
+
       ### Audio
-      
-      - Improved Simplified Chinese voice overs in The Sultans Ascend cinematics. 
-      
+
+      - Improved Simplified Chinese voice overs in The Sultans Ascend cinematics.
+
       ### Xbox Console
-      
+
       - Manjaniq weapon toggles are now correctly displayed on the radial menu.
       - Fixed a bug where the lobby screen displayed other player’s scroll bars as interactable.
       - Fixed incorrect text that appeared when joining an existing custom match.
       - Fixed an issue where an emblem overlapped text on the ranked page.
-      
+
       ### General
-      
-      - Shore Fish can no longer be permanently removed when placing structures on them and will automatically return when the building is deleted or destroyed. 
-      - Fixed an issue where Villagers seeking shelter would sometimes fail to choose the nearest available Outpost for shelter. 
-      - When unloading units from a garrison, they now exit on the side closest to their destination. 
-      - It’s now easier to target a live animal with a Villager when the animal overlaps a construction plan. 
-      - Fixed an exploit where Monks could duplicate Relics when removing them from Monasteries. 
-      - Fixed an issue where Lightweight Beams would not reduce construction times for some civilizations. 
-      - Previously, if a siege unit lost sight of a building it was attacking, it would go idle. Now it will move closer to regain vision and resume its attack. 
-      - Fixed a bug where Deer would get stuck together after colliding. 
-      - Landmarks no longer retain their garrison arrows after being destroyed and repaired. 
-      - Now, if a Siege Tower or Ram containing units passes over a stamped building, it will not cancel the building. 
-      - When a player is defeated, their units will now fully cease their current actions when they turn neutral. 
-      - Monks ordered to capture a Sacred Site will now remain until it’s captured before executing queued commands. 
-      - Fixed a bug where Villagers would idle instead of returning to work when their previous job was gathering from a Boar. 
-      - Explosive Ship kills are now counted in post-game statistics. 
-      - The post-game statistics now correctly reflect units lost when a Transport Ship sinks.  
-      - Units inside a Ram or Siege Tower inside a Transport Ship will now die if the ship is destroyed. 
-      - Fixed a crash that could occur when exiting the Acre mission. 
-      - The Inna Jiffy cheat now applies to Ayyubid cavalry and Ghulam units. 
-      - Fixed a crash that could happen when playing on Canal with two teams of unequal player count. 
-      - Fixed an issue where water borders were harsh or jagged on some maps. 
-      - Fixed an issue with Forts where the wrong size of map was used for team games. This caused starting bases to overlap with enemies and allies in rare cases.  
-      - Fixed an issue with Black Forest where the wrong size was used for solo and team games. This caused the middle lanes to be generated incorrectly. 
-      - Fixed an issue with Migration where the wrong size was used for team games. This created a much smaller island to fight over once you have migrated to the main island. 
-      - Fixed a crash that could occur when entering a match. 
+
+      - Shore Fish can no longer be permanently removed when placing structures on them and will automatically return when the building is deleted or destroyed.
+      - Fixed an issue where Villagers seeking shelter would sometimes fail to choose the nearest available Outpost for shelter.
+      - When unloading units from a garrison, they now exit on the side closest to their destination.
+      - It’s now easier to target a live animal with a Villager when the animal overlaps a construction plan.
+      - Fixed an exploit where Monks could duplicate Relics when removing them from Monasteries.
+      - Fixed an issue where Lightweight Beams would not reduce construction times for some civilizations.
+      - Previously, if a siege unit lost sight of a building it was attacking, it would go idle. Now it will move closer to regain vision and resume its attack.
+      - Fixed a bug where Deer would get stuck together after colliding.
+      - Landmarks no longer retain their garrison arrows after being destroyed and repaired.
+      - Now, if a Siege Tower or Ram containing units passes over a stamped building, it will not cancel the building.
+      - When a player is defeated, their units will now fully cease their current actions when they turn neutral.
+      - Monks ordered to capture a Sacred Site will now remain until it’s captured before executing queued commands.
+      - Fixed a bug where Villagers would idle instead of returning to work when their previous job was gathering from a Boar.
+      - Explosive Ship kills are now counted in post-game statistics.
+      - The post-game statistics now correctly reflect units lost when a Transport Ship sinks.
+      - Units inside a Ram or Siege Tower inside a Transport Ship will now die if the ship is destroyed.
+      - Fixed a crash that could occur when exiting the Acre mission.
+      - The Inna Jiffy cheat now applies to Ayyubid cavalry and Ghulam units.
+      - Fixed a crash that could happen when playing on Canal with two teams of unequal player count.
+      - Fixed an issue where water borders were harsh or jagged on some maps.
+      - Fixed an issue with Forts where the wrong size of map was used for team games. This caused starting bases to overlap with enemies and allies in rare cases.
+      - Fixed an issue with Black Forest where the wrong size was used for solo and team games. This caused the middle lanes to be generated incorrectly.
+      - Fixed an issue with Migration where the wrong size was used for team games. This created a much smaller island to fight over once you have migrated to the main island.
+      - Fixed a crash that could occur when entering a match.
       - Fixed a crash that could occur when switching control groups quickly while mousing over the command card.
-      
+
       ### UI
-      
-      - Fixed a bug where if a party host leaves, the new host would not be able to invite new players to the party. 
-      - Fixed an issue where codex items were incorrectly clipped. 
-      - Added functionality for players to block chat communication and see who they have blocked. 
-      - Player stats can now be viewed on the Quick Match screen. 
-      - Fixed an issue that prevented players from scrolling the games list page under certain circumstances. 
-      - The Byzantine Selection Card background pattern is no longer missing. 
-      - Fixed an issue where using Shift + clicking on the idle / working villager buttons would not select all idle villagers or villagers working on the specific resource.  
-      
+
+      - Fixed a bug where if a party host leaves, the new host would not be able to invite new players to the party.
+      - Fixed an issue where codex items were incorrectly clipped.
+      - Added functionality for players to block chat communication and see who they have blocked.
+      - Player stats can now be viewed on the Quick Match screen.
+      - Fixed an issue that prevented players from scrolling the games list page under certain circumstances.
+      - The Byzantine Selection Card background pattern is no longer missing.
+      - Fixed an issue where using Shift + clicking on the idle / working villager buttons would not select all idle villagers or villagers working on the specific resource. 
+
       ### Achievements, Challenges & Masteries
-      
-      - Revamped Masteries to improve difficulty balance. 
-      - Changed “Test of Strength” challenges from requiring the defeat of AI to winning games with the associated civilization. 
-      - Fixed a bug where building extra landmarks to activate dynasties as the Chinese was being counted as aging up for the Achievement “Through the Ages”. 
-      - Some Achievements that were previously untranslated into Turkish, Finnish, Polish and Russian are now translated. 
-      - Fixed a bug where the “Transcontinental Empire” Achievement was not properly displaying progress. 
+
+      - Revamped Masteries to improve difficulty balance.
+      - Changed “Test of Strength” challenges from requiring the defeat of AI to winning games with the associated civilization.
+      - Fixed a bug where building extra landmarks to activate dynasties as the Chinese was being counted as aging up for the Achievement “Through the Ages”.
+      - Some Achievements that were previously untranslated into Turkish, Finnish, Polish and Russian are now translated.
+      - Fixed a bug where the “Transcontinental Empire” Achievement was not properly displaying progress.
       - An issue with some Achievements not unlocking on Steam has been fixed.`,
     },
     {

@@ -4,17 +4,17 @@ import { PatchNotes } from "../../types/patches";
 https://www.reddit.com/r/aoe4/comments/tmose7/pup_patch_update_notes_v12851_march_24th/
 https://www.reddit.com/r/aoe4/comments/tau52p/season_1_update_beta_formatted_patchnotes/
 */
-export const season1: PatchNotes = {
-  id: "season-one",
+export const patch: PatchNotes = {
+  id: "patch-5.0.12973-season-one",
+  buildId: "5.0.12973",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-one-update-release-notes/",
   name: "Season One Update",
   season: 1,
   type: "update",
   summary:
     "Start of Ranked Seasons, Content Editor beta. Several balance changes to naval play and landmarks such as the Burgrave Palace, House of Wisdom and Chinese Dynasty unlocks.",
-  introduction: `The first major update of 2022 brings Ranked Seasons, the Content Editor beta (and Mods!), Seasonal Events, Major Balance changes, as well as a ton of quality-of-life changes to Age of Empires IV.   
+  introduction: `The first major update of 2022 brings Ranked Seasons, the Content Editor beta (and Mods!), Seasonal Events, Major Balance changes, as well as a ton of quality-of-life changes to Age of Empires IV.
       `,
-  buildId: 12793,
   date: new Date("2022-04-07"),
   sections: [
     {

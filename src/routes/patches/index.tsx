@@ -49,9 +49,10 @@ export const PatchListRoute = () => {
             <div class="flex flex-auto flex-col lg:flex-row py-3 gap-2 lg:items-center">
               <Link href={`/patches/${patch.notes.id}`} class="basis-1/3 group">
                 <p class="-my-1 group-hover:underline font-bold text-lg text-white group-hover:text-white ">{patch.notes.name}</p>
-                <span class="capitalize font-normal text-sm text-gray-300">
-                  S{patch.notes.season} {patch.notes.type}
-                </span>
+                <div class="font-normal text-sm text-gray-300 flex flex-row pt-1">
+                  <span class="w-20">{patch.notes.season !== 0 && `S${patch.notes.season}`} <span class="capitalize">{patch.notes.type}</span></span>
+                  {patch.notes.buildId && <span class="text-gray-400 ml-3">v{patch.notes.buildId}</span>}
+                </div>
               </Link>
 
               <div class="basis-2/3 shrink-0">
@@ -81,7 +82,7 @@ export const PatchListRoute = () => {
                     <Icon icon="circle-check" class="text-gray-300" /> {patch.fixed} fixes
                   </p>
                 )}
-              </div> 
+              </div>
             </div> */}
 
             {/* <div class="flex flex-wrap gap-2 basis-1/3">

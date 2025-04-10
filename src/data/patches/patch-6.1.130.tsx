@@ -1,17 +1,17 @@
 import { PatchNotes } from "../../types/patches";
 
-export const patch61130: PatchNotes = {
-  id: "patch-61130",
-  buildId: 61130,
+export const patch: PatchNotes = {
+  id: "patch-6.1.130",
+  buildId: "6.1.130",
   name: "Patch 6.1.130",
   season: 4,
   type: "patch",
-  summary: "Trebuchet changes, reintroduction of Hardest AI. Sofa, Abbasid and French buffs, nerfs to trade, Delhi, Mongols and Ottomans.",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-four-patch-6-1-130/",
+  summary: "Trebuchet changes, reintroduction of Hardest AI. Sofa, Abbasid and French buffs, nerfs to trade, Delhi, Mongols and Ottomans.",
   introduction: `"Our Enchanted Grove event comes to a close with the release of Patch 6.1.130. We hope you had an enchanting time in the biome but now both the biome and the Enchanted Stag have trotted off to parts unknown.
 
   In this new patch we have listened to your feedback and reverted the resource-gathering boost which was added to the Hardest AI. Instead, we have added multiple additional new levels of AI difficulty beyond the Hardest setting making use of the boosted resource-gathering in those difficulties. We can’t wait to hear your feedback on the new AI Difficulty levels! There are also improvements to in-game balance, fixes to known issues, and slight tweaks to trade as our team previews some of our larger goals with that mechanic – read more below! Thanks again to our amazing community members, all of whom have helped to make Age of Empires what it is today!
-  
+
   —The Age of Empires Team"`,
   date: new Date("2023-04-04"),
   sections: [
@@ -23,21 +23,21 @@ export const patch61130: PatchNotes = {
       ## Return of Hardest AI & New Difficulty Selections
       Earlier this year, we introduced a new Hardest AI that gathered resources faster and took quicker military action. You let us know that the resource-gathering boost created too much of a step-up in difficulty from Hard to Hardest and indicated that more difficulty options would be preferable. We’re pleased to provide the following updates:
       * We have reverted the resource-gathering boost which we had given to Hardest AI but kept other improvements made in January’s 5.2.131 patch.
-      * We have added not 1, not 2, but 3 new AI Difficulty levels beyond the Hardest setting which have been given incremental resource-gathering boosts. The resource-gathering boosts are set at 1.2x, 1.5x and 2x the normal rate We believe these changes provide a better range of opportunities based on the amount of challenge you’re seeking. This will provide new ways of playing with and against the AI allowing for more varied battles and even more fun! 
-      
+      * We have added not 1, not 2, but 3 new AI Difficulty levels beyond the Hardest setting which have been given incremental resource-gathering boosts. The resource-gathering boosts are set at 1.2x, 1.5x and 2x the normal rate We believe these changes provide a better range of opportunities based on the amount of challenge you’re seeking. This will provide new ways of playing with and against the AI allowing for more varied battles and even more fun!
+
       ## Age Insider Rewards
       We’ve unlocked several Insider rewards for all players starting with this update. This is to thank everyone who’s played and given feedback from before launch until now. You will find the Fishing Boat Monument, Insider Portrait, Dual Fish Coat of Arms, and Fishing Net Sigil Frame within your in-game profile options. Thank you for joining us on our journey thus far!
-            
+
       `,
     },
     {
       title: "General Bug Fixes & Changes",
       md: `
-      * Fishing boats will now always return to the nearest dock. 
-* Cancelled building blueprints no longer block future placements. 
-* Added additional HUD feedback when building limits have been reached for certain buildings or units, for example the Ottoman’s Military School and Grand Galley. 
-* Fixed an issue to ensure units only display weapons that are currently available to them. Upgraded weapons are shown when upgraded, the basic version is hidden after upgrading. 
-* Fixed issue where some Cheats not intended for Campaign were usable in campaign missions and potentially breaking them. 
+      * Fishing boats will now always return to the nearest dock.
+* Cancelled building blueprints no longer block future placements.
+* Added additional HUD feedback when building limits have been reached for certain buildings or units, for example the Ottoman’s Military School and Grand Galley.
+* Fixed an issue to ensure units only display weapons that are currently available to them. Upgraded weapons are shown when upgraded, the basic version is hidden after upgrading.
+* Fixed issue where some Cheats not intended for Campaign were usable in campaign missions and potentially breaking them.
 * Fixed some Masteries and Achievements to make sure playing with new AI Difficulties would still allow for completion. – Fixed an issue with Training Mastery that would not progress for some players and added Art of War challenges for Ottoman and Malians.
 `,
       changes: [],
@@ -286,7 +286,7 @@ export const patch61130: PatchNotes = {
       changes: [],
       civs: [],
       md: `
-The map pool for Season Four has been updated. The following maps are now available:      
+The map pool for Season Four has been updated. The following maps are now available:
 ### Solo Ranked
 * Mountain Clearing
 * Dry Arabia
@@ -314,7 +314,7 @@ The map pool for Season Four has been updated. The following maps are now availa
       changes: [],
       civs: [],
       md: `
-There’s still plenty to do in Season Four 
+There’s still plenty to do in Season Four
 * We’re celebrating our busy villagers who help make the world go round! Join us April 20th through May 18th for our Villager Appreciation Celebration and complete challenges to unlock up to 20 new portraits in-game! Details are coming so look out for more!
 * Season Four has been extended through June 14th, but you can rest assured we’ll keep the fun rolling with Season Five. Some monstrous events are even ready for a return!
         `,

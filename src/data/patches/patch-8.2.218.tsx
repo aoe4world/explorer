@@ -1,15 +1,15 @@
 import { PatchNotes } from "../../types/patches";
 
-export const patch82218: PatchNotes = {
-  id: "patch-82218",
-  buildId: 82218,
-  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-8-2-218/",
+export const patch: PatchNotes = {
+  id: "patch-8.2.218",
+  buildId: "8.2.218",
   name: "Patch 8.2.218",
   season: 5,
   type: "patch",
+  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-8-2-218/",
   summary: "Changes to repair rate, nerfs to Rams and Lightweight Beams, buffs to Bombards and Ribauldequins, HRE, Malians and Mongols + several fixes.",
   introduction: `
-![](https://www.ageofempires.com/wp-content/uploads/2023/09/HallowsHearth_Patch_1920x1080.png)  
+![](https://www.ageofempires.com/wp-content/uploads/2023/09/HallowsHearth_Patch_1920x1080.png)
   "Today’s patch (September 26th) packs in a number of changes across the board – introducing balance updates including a rework to the Repair mechanic, stability improvements and preparing for a spooky seasonal event that kicks off next month. We’re also bringing a new map rotation to Ranked Season Five and have plans to extend the season overall (more on that in a bit!)."`,
   date: new Date("2023-09-26T12:00:00Z"),
   sections: [
@@ -18,30 +18,30 @@ export const patch82218: PatchNotes = {
       civs: [],
       changes: [],
       md: `
-# New! Seasonal Event – Hallow’s Hearth      
+# New! Seasonal Event – Hallow’s Hearth
 Starting next month, you’ll be able explore a delightfully spooky biome with our latest seasonal event, Hallow’s Hearth. This event features an eerie event-exclusive biome and 10 challenges to overcome for thematic rewards.  We hope you have a hauntingly good time!
-> Hallow’s Hearth runs from October 3rd at 10:00 am PT through November 7th at 11:59 pm PT.  
+> Hallow’s Hearth runs from October 3rd at 10:00 am PT through November 7th at 11:59 pm PT.
 
 ## Seasonal Biome: Hallow’s Hearth Biome
 ![Hallows Hearth](https://www.ageofempires.com/wp-content/uploads/2023/09/Biome_Hallows_Hearth_ageIV.png)
-A dark and spooky environment with bare earth and sinister-looking trees. The Hallow’s Hearth biome brings a sense of eeriness just beyond the fog of war! This special biome will be available for a limited time throughout the seasonal event. 
+A dark and spooky environment with bare earth and sinister-looking trees. The Hallow’s Hearth biome brings a sense of eeriness just beyond the fog of war! This special biome will be available for a limited time throughout the seasonal event.
 
 ## Hallow’s Hearth Event
 ![](https://www.ageofempires.com/wp-content/uploads/2023/09/Events_Showcase_Template_Hallows_Hearth-2048x2048.png)
 > The “Threatening” event challenge can be completed on any biome despite the in-game text.
 
 ## Login Events
-Don’t miss out on these login rewards, available for a limited time only! 
-* Cat in a Hat – October 2nd at 10am PT through October 8th at 11:59pm PT 
-* Pumpkin Head – October 26th at 10am PT through November 1st at 11:59pm PT 
-* Roses – November 2nd at 10am PT through November 7th at 11:59pm PT 
+Don’t miss out on these login rewards, available for a limited time only!
+* Cat in a Hat – October 2nd at 10am PT through October 8th at 11:59pm PT
+* Pumpkin Head – October 26th at 10am PT through November 1st at 11:59pm PT
+* Roses – November 2nd at 10am PT through November 7th at 11:59pm PT
 
 # Ranked Season Updates
 ![](https://www.ageofempires.com/wp-content/uploads/2023/06/s5_keyart_rankedseason-2400x1350.png)
-Season Five’s Ranked Season will extend from October 23rd to November 13th at 11:59pm PT – enjoy the extra time to climb the ladder. Remember:  For the first time Ranked Rewards will be given out based on the highest rank you achieve at any point during the season! 
+Season Five’s Ranked Season will extend from October 23rd to November 13th at 11:59pm PT – enjoy the extra time to climb the ladder. Remember:  For the first time Ranked Rewards will be given out based on the highest rank you achieve at any point during the season!
 
 # Map Pool Rotation
-Today’s patch also comes with a full map rotation for Ranked play, and some map-related changes for Unranked Quickmatches! 
+Today’s patch also comes with a full map rotation for Ranked play, and some map-related changes for Unranked Quickmatches!
 
 #### Unranked Quickmatch Changes
 * Hill and Dale and Wetlands have been added to the map pool for Unranked Quickmatch.
@@ -52,25 +52,25 @@ Today’s patch also comes with a full map rotation for Ranked play, and some ma
 * Danube River
 * Dry Arabia
 * Four Lakes
-* Golden Heights 
-* High View 
-* Hill and Dale 
-* Lipany  
-* Prairie  
+* Golden Heights
+* High View
+* Hill and Dale
+* Lipany
+* Prairie
 
 #### Team Ranked Map Pool
-* Dry Arabia 
-* Golden Heights 
-* Hideout 
-* High View 
-* Hill and Dale 
-* Lipany 
-* Prairie 
-* The Pit 
-* Wetlands 
+* Dry Arabia
+* Golden Heights
+* Hideout
+* High View
+* Hill and Dale
+* Lipany
+* Prairie
+* The Pit
+* Wetlands
 
-### Queue Dodging 
-Today’s build invalidates some common forms of Queue Dodging that exploited the game’s menus and UI. The actions needed to execute these dodges can no longer be performed in-game. 
+### Queue Dodging
+Today’s build invalidates some common forms of Queue Dodging that exploited the game’s menus and UI. The actions needed to execute these dodges can no longer be performed in-game.
 
       `,
     },
@@ -80,24 +80,24 @@ Today’s build invalidates some common forms of Queue Dodging that exploited th
       changes: [],
       md: `
 ## Campaign (Console Only)
-* Resolved an issue on console where the Auto Villager creation feature was not working on most campaign missions. 
+* Resolved an issue on console where the Auto Villager creation feature was not working on most campaign missions.
 
-> This issue is still occurring in two missions: “1105, The Fall of Bayeux” within The Normans Campaign and “1514, Moscow versus Lithuania” within The Rise of Moscow. These will be addressed in future updates.* 
+> This issue is still occurring in two missions: “1105, The Fall of Bayeux” within The Normans Campaign and “1514, Moscow versus Lithuania” within The Rise of Moscow. These will be addressed in future updates.*
 
 ## Mods & Content Editor
-* Modded Win conditions no longer crash when they contain a starting building replacement that replaces the starting building with no building. 
+* Modded Win conditions no longer crash when they contain a starting building replacement that replaces the starting building with no building.
 
-## UX/UI & Menus (All Platforms) 
-* Fixed an issue where some post-game ranked information text was cut off in certain regions. 
+## UX/UI & Menus (All Platforms)
+* Fixed an issue where some post-game ranked information text was cut off in certain regions.
 
-## PC UX/UI & Menus 
-* Options to specify Audio Input/Output devices for Voice Chat have been added to PC platforms. 
+## PC UX/UI & Menus
+* Options to specify Audio Input/Output devices for Voice Chat have been added to PC platforms.
 
-## Console UX/UI & Menus 
-* Map Seeds can now be copy/pasted in Skirmish Lobbies on console while using keyboard and mouse. 
-* LT + place rally points will always place a rally point regardless of the building selected or friendly building targeted settings. 
-* Fixed an issue where the Palisade Gate was in the wrong position when playing on console with a mouse and keyboard as the English. 
-* Double pressing ‘B’ whilst holding LT now deselects all units of the target type. 
+## Console UX/UI & Menus
+* Map Seeds can now be copy/pasted in Skirmish Lobbies on console while using keyboard and mouse.
+* LT + place rally points will always place a rally point regardless of the building selected or friendly building targeted settings.
+* Fixed an issue where the Palisade Gate was in the wrong position when playing on console with a mouse and keyboard as the English.
+* Double pressing ‘B’ whilst holding LT now deselects all units of the target type.
 `,
     },
     {
@@ -143,14 +143,14 @@ Today’s build invalidates some common forms of Queue Dodging that exploited th
       ],
       md: `
 ### General Changes & Bugfixes
-* Fixed crash that could occur when packing a Mongol building after Age Up. 
-* Fixed an issue that could cause a rare crash when resuming the game from suspend on Xbox consoles. 
-* Fixed a crash on Xbox related to fishing ships and the Villager Priority System. 
-* On the Xbox console, Fishing Ships are now counted in the Villager Priority System. 
+* Fixed crash that could occur when packing a Mongol building after Age Up.
+* Fixed an issue that could cause a rare crash when resuming the game from suspend on Xbox consoles.
+* Fixed a crash on Xbox related to fishing ships and the Villager Priority System.
+* On the Xbox console, Fishing Ships are now counted in the Villager Priority System.
 
 ### Updates to Repair
-* Base repair rate increased from 20 to 25 health per second. 
-* Repair diminishing returns formula adjusted so that repair with 3-10 Villagers is approximately 5% slower overall. 
+* Base repair rate increased from 20 to 25 health per second.
+* Repair diminishing returns formula adjusted so that repair with 3-10 Villagers is approximately 5% slower overall.
 
 > This change is an overall reduction to repairing with larger numbers of Villagers, our intention here is to specifically target repairs vs Trebuchets so that defenders have a harder time stalling for long periods of time. We didn’t increase Trebuchet damage because our intent is not to increase the base time for a Trebuchet to destroy a Keep.*
 `,
@@ -362,12 +362,12 @@ Today’s build invalidates some common forms of Queue Dodging that exploited th
       changes: [],
       md: `
   ### Known Issues
-  * Loading Campaign Save Gives Popup Warning About Mods 
-  > We are aware that loading into a Campaign save file that was created before the current patch causes a popup warning indicating that the save file uses out-of-date mods. This is an erroneous error message and can be clicked through to ignore. We do not require any further reports of this issue. 
-  
-  * Hallow’s Hearth Event Challenge “Threatening” Can be Triggered on Any Biome 
-  > We are aware that the event challenge “Threatening” for Hallow’s Hearth can be triggered on any biome, despite the in-game text saying it has to be the Hallow’s Hearth biome. This issue will not be fixed before the event’s end. 
-  
+  * Loading Campaign Save Gives Popup Warning About Mods
+  > We are aware that loading into a Campaign save file that was created before the current patch causes a popup warning indicating that the save file uses out-of-date mods. This is an erroneous error message and can be clicked through to ignore. We do not require any further reports of this issue.
+
+  * Hallow’s Hearth Event Challenge “Threatening” Can be Triggered on Any Biome
+  > We are aware that the event challenge “Threatening” for Hallow’s Hearth can be triggered on any biome, despite the in-game text saying it has to be the Hallow’s Hearth biome. This issue will not be fixed before the event’s end.
+
   ### Investigation
   Community-Reported Issues:
   Your reports continue being crucial to our prioritization and implementation of fixes and features in the game. Keep them coming!
@@ -383,19 +383,19 @@ Today’s build invalidates some common forms of Queue Dodging that exploited th
       md: `
 ![Sultans Ascend](https://www.ageofempires.com/wp-content/uploads/2023/09/AoE-IV_Sultans-Ascend-DLC_1920x1080_02.png)
 # The Sultans Ascend Expansion
-Lead powerful forces in defense of your homeland in The Sultans Ascend – the exciting new expansion to Age of Empires IV. Experience a brand-new campaign set in the Middle East, or command new armies with the Japanese and Byzantines.   
+Lead powerful forces in defense of your homeland in The Sultans Ascend – the exciting new expansion to Age of Empires IV. Experience a brand-new campaign set in the Middle East, or command new armies with the Japanese and Byzantines.
 
-* 2 New Civilizations 
-* 4 New Variant Civilizations 
-* New “The Sultans Ascend” Campaign 
-* 10 New Maps 
-* 2 New Biomes 
+* 2 New Civilizations
+* 4 New Variant Civilizations
+* New “The Sultans Ascend” Campaign
+* 10 New Maps
+* 2 New Biomes
 
-> Pre-order now and join the ranks of legends. Your empire awaits! Coming November 14th! 
+> Pre-order now and join the ranks of legends. Your empire awaits! Coming November 14th!
 [Pre-Order](https://www.ageofempires.com/buy-now/#AoE-IV-DLC)
 
 ### November Update
-Paired with the release of our upcoming expansion, there will be a major update coming on November 14th. This update will also mark the start of Season Six, with the Ranked Season beginning the next day on the 15th. Stay tuned for all the new and exciting things coming to Age of Empires IV! 
+Paired with the release of our upcoming expansion, there will be a major update coming on November 14th. This update will also mark the start of Season Six, with the Ranked Season beginning the next day on the 15th. Stay tuned for all the new and exciting things coming to Age of Empires IV!
 `,
     },
   ],

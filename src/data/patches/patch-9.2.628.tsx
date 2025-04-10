@@ -1,15 +1,15 @@
 import { PatchNotes } from "../../types/patches";
 
-export const patch92628: PatchNotes = {
-  id: "patch-92628",
-  buildId: 92628,
-  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-9-2-628/",
+export const patch: PatchNotes = {
+  id: "patch-9.2.628",
+  buildId: "9.2.628",
   name: "Patch 9.2.628",
   season: 6,
   type: "patch",
+  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-9-2-628/",
   summary: "Changes to late-game siege stalemates, buffs for Byzantines, rework of Japanese Religious landmarks and other balance changes.",
   introduction: `
-![](https://cdn.ageofempires.com/aoe/wp-content/uploads/2024/01/Lunar-Faire-Patch-1920x1080-1.webp)  
+![](https://cdn.ageofempires.com/aoe/wp-content/uploads/2024/01/Lunar-Faire-Patch-1920x1080-1.webp)
 "Happy Patch Day! We’ve got our first update of 2024 loaded with balance improvements for our awesome line up of new and variant civilizations released with The Sultans Ascend expansion last year. Not only that, but we’re bringing a whole host of AI improvements, map fixes, and a stellar seasonal event to the mix."`,
   date: new Date("2024-01-30T18:00:00Z"),
   sections: [
@@ -28,58 +28,58 @@ export const patch92628: PatchNotes = {
       civs: [],
       changes: [],
       md: `
-        With a new update comes an opportunity to refresh the map pools! This update features two maps that have not seen ranked play yet: Forts and Waterholes.  
- 
-        Some familiar maps have made their return — giving brand new civilizations a chance to flex their refreshing gameplay on familiar battlegrounds. 
-        
-        # 1v1 Ranked Map Pool 
-        ### Maps rotating out for 9.2 
-        
-        - Hidden Valley   
-        - Rocky River 
-        - Canal 
-        - Golden Heights
-        
-        ### Maps rotating in 
-        - Forts  
-        - Boulder Bay 
-        - Mongolian Heights 
-        - Four Lakes 
-        
-        ### New 1v1 Ranked Map Pool
-        - Dry Arabia 
-        - Cliffside 
-        - Himeyama 
-        - Forts 
-        - Gorge 
-        - Boulder Bay  
-        - Mongolian Heights 
-        - Golden Pit 
-        - Four Lakes 
-        
-        # Team Ranked Map Pool
-        ### Maps rotating out for 9.2 
-        - Hidden Valley 
-        - Volcanic Island 
-        - Hideout 
-        - Golden Heights 
+        With a new update comes an opportunity to refresh the map pools! This update features two maps that have not seen ranked play yet: Forts and Waterholes.
 
-        ### Maps rotating in 
-        - Forts 
+        Some familiar maps have made their return — giving brand new civilizations a chance to flex their refreshing gameplay on familiar battlegrounds.
+
+        # 1v1 Ranked Map Pool
+        ### Maps rotating out for 9.2
+
+        - Hidden Valley
+        - Rocky River
+        - Canal
+        - Golden Heights
+
+        ### Maps rotating in
+        - Forts
+        - Boulder Bay
+        - Mongolian Heights
+        - Four Lakes
+
+        ### New 1v1 Ranked Map Pool
+        - Dry Arabia
+        - Cliffside
+        - Himeyama
+        - Forts
+        - Gorge
+        - Boulder Bay
+        - Mongolian Heights
+        - Golden Pit
+        - Four Lakes
+
+        # Team Ranked Map Pool
+        ### Maps rotating out for 9.2
+        - Hidden Valley
+        - Volcanic Island
+        - Hideout
+        - Golden Heights
+
+        ### Maps rotating in
+        - Forts
         - Canal
         - Hill and Dale
         - Waterholes
 
         ### New Team Ranked Map Pool
-        - Dry Arabia 
-        - Cliffside 
-        - Himeyama 
-        - Forts 
-        - Gorge 
-        - Canal 
-        - Hill and Dale 
-        - Golden Pit 
-        - Waterholes 
+        - Dry Arabia
+        - Cliffside
+        - Himeyama
+        - Forts
+        - Gorge
+        - Canal
+        - Hill and Dale
+        - Golden Pit
+        - Waterholes
   `,
     },
     {
@@ -89,15 +89,15 @@ export const patch92628: PatchNotes = {
       md: `
       ## Xbox Update: Xbox Home Share
       After we launched The Sultans Ascend expansion last year, we heard that Xbox Home share wasn’t working as expecting. This has been fixed in this latest update.
-      
+
       ## Design Update
       - Our main focus this update has been to improve the balance of new Civilizations.
       - The Japanese sacred choice design has been reworked, with six new technologies that are unlocked at either the Shinto Shrine or Buddhist Temple; based on your Castle Age Landmark selection.
-      
+
       ##Crash Fixes
       We’ve identified and fixed a number of high frequency crashes and desyncs, this should lead to better game stability with this update.
-      
-      
+
+
       `,
     },
     {
@@ -108,23 +108,23 @@ export const patch92628: PatchNotes = {
       ### AI Updates (Byzantines)
 
       - AI is better at picking safe places to build mercenary houses.
-      
+
       ### AI Updates (Jeanne d’Arc)
-      
+
       - AI Jeanne d’Arc no longer abandons her army when she levels up in combat.
       - AI Jeanne d’Arc is now able to use Valorous Inspiration and Strength of Heaven.
-      
+
       ### AI Updates (Japanese)
-      
+
       - Fixed issue with AI trying to deposit Yorishiro in buildings that can’t accept Yorishiro.
       - AI now prioritizes placing Yorishrio in forges, lumber camps, and farmhouses.
-      
+
       ### AI Updates (Nomad Mode)
-      
+
       - Fixed AI sometimes being unable to build their Town Center in Nomad mode.
-      
+
       ### AI Bug Fixes
-      
+
       - Fixed an issue that could cause idle AI units if it failed to retreat with a set-up siege unit.
       - Fixed a crash that could occur in the AI system when loading a save game.
       - Fixed big groups of AI villagers refusing to gather resources during the late game.
@@ -132,9 +132,9 @@ export const patch92628: PatchNotes = {
       - Fixed an issue that caused the AI to stay on a sacred site longer than intended.
       - Fixed AI sometimes being unable to build anything or progress in any way when being in the proximity of an enemy.
       - Fixed small groups of AI military units sometimes being defeated by chasing enemies into their base.
-      
+
       ### General
-      
+
       - Fixed a crash that could happen on Xbox and Windows Store versions of _Age of Empires IV_ when playing multiplayer games with Voice Chat enabled.
       - Fixed a bug where the game could crash when starting a multiplayer game.
       - Units will no longer get stuck on generated wall blockers, this would previously happen most commonly when Villagers are chopping wood near wall ends.
@@ -143,43 +143,43 @@ export const patch92628: PatchNotes = {
       - Units that use torches will no longer occasionally deal no damage attacking a palisade wall when standing close to the wall.
       - Fixed various bugs where certain abilities would stop working after loading a saved game.
       - Rus Hunting Cabins and High Trade House now show the number of trees counted on the Xbox.
-      
+
       ### Nomad Mode
-      
+
       - In Nomad Mode, players now must complete a Town Center before they can Age Up.
-      
+
       ### Steam Deck
-      
+
       - Fixed an issue causing desyncs on Steam Decks when playing online.
-      
+
       ### Campaign
-      
+
       - Campaign Mission: 1215, Zhongdu – The enemy landmarks in campaign mission Zhongdu have hit the gym and can now withstand the player’s overwhelming onslaught, preventing building destruction which leads to a Fatal Scar Error.
       - Campaign Mission: 1426, Cyprus – Prevented a Fatal Scar that could occur from destroying Famagusta’s Docks before the objective had started.
       - Campaign Mission: The Battle of Mansurah – Fixed a crash that could occur on the mission The Battle of Mansurah if the player survived for 40 minutes on hard mode.
       - Mongol Town Center no longer activates Age Up progression bar in campaigns.
       - Fixed a crash that could occur when loading a save game from some of the new Campaign missions.
-      
+
       ### Hotkeys
-      
+
       - We have corrected a range of issues related to remappable hotkeys where they were either unlisted, in the wrong spot, or did not have the correct default hotkey based on their grid position. Thank you for all your reports.
-      
+
       ### Masteries
-      
+
       - Fixed a bug where Delhi Sultanate Mastery #10, “Protecting the Sword” was not correctly tracking healing from the Mosque’s healing aura. The mastery was undercounting health received.
-      
+
       ### UX/UI & Menus (All Platforms)
-      
+
       - A bug in the Korean language IME has been fixed: terminating a syllable with the spacebar will now add the space character after the syllable instead of before.
       - Improved the smoothing of the camera when watching a recorded replay when Free Camera is disabled.
       - Shift click in resources panel allows you to select all idle workers or all workers in the clicked resource.
       - Fixed an issue where toggle buttons in the settings page would get clipped randomly in certain resolution monitors.
       - Fixed an issue with High Contrast UI being difficult to read in the Quick Match tab.
-      
+
       ### Localization
-      
+
       We have been tracking your feedback relating to localization quality in _The Sultans Ascend_ expansion and have made expansive changes to several languages, including Chinese, Korean, Japanese and Hungarian languages.
-      
+
       We are committed to continuing to track and evaluate improvements in this space. So, please let us know in [the forums](https://forums.ageofempires.com/t/incorrect-translations-for-age-of-empires-iv-the-sultans-ascend-dlc/243544) if you continue to see issues related to language quality.
 `,
     },
@@ -270,7 +270,7 @@ export const patch92628: PatchNotes = {
           civs: [],
           diff: [],
           note: `The above set of changes to Siege aims to help with late-game stalemate situations and address a couple of issues with Springalds and Culverins:
-        1. Volatility of Springalds and Culverins vs other Siege units. By increasing the attack speed and reducing damage, it now requires more Springalds and Culverins to be able to one-shot other Siege weapons. This should widen the window available to react to seeing these units on the battlefield before all your attacking siege is destroyed.  
+        1. Volatility of Springalds and Culverins vs other Siege units. By increasing the attack speed and reducing damage, it now requires more Springalds and Culverins to be able to one-shot other Siege weapons. This should widen the window available to react to seeing these units on the battlefield before all your attacking siege is destroyed.
         2. Camping under Keeps with Springalds and Culverins surrounded by units makes them difficult to push into and pick off, but without picking them off it is challenging to use siege to take down the Keep. By reducing the ranged armor of the Springald, we hope that using ranged units to pick them off becomes more viable.`,
         },
         {

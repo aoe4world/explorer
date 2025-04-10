@@ -1,18 +1,20 @@
 import { JSX } from "solid-js/jsx-runtime";
 import { civAbbr } from "./data";
+
 export type PatchNotes = {
   id: string;
   season: number;
   type: "update" | "patch";
   name: string;
   date: Date;
-  buildId?: number;
+  buildId?: number | string;
   officialUrl?: string;
   introduction: string;
   summary?: string;
   html?: JSX.Element;
   sections: PatchSection[];
 };
+
 export type PatchSection = {
   title?: string;
   subtitle?: string;
@@ -29,4 +31,5 @@ export type PatchSet = {
   diff: PatchLine[];
   note?: string;
 };
+
 export type PatchLine = ["nerf" | "buff" | "fix", string, civAbbr[]?];

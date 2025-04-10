@@ -1,9 +1,9 @@
 import { PatchNotes } from "../../types/patches";
 
-export const patch1304157: PatchNotes = {
-  id: "patch-1304157",
-  buildId: 1304157,
-  name: "Season 10 Patch 13.0.4157",
+export const patch: PatchNotes = {
+  id: "patch-13.0.4178-season-ten",
+  buildId: "13.0.4178",
+  name: "Season 10 Update",
   season: 10,
   type: "update",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-ten-update-preview/",
@@ -11,8 +11,8 @@ export const patch1304157: PatchNotes = {
     "Major siege combat adjustments including villager repair nerfs and Springald changes. Naval formations added, Professional Scouts nerfed, and significant civilization updates including Abbasid/Ayyubid Trade Caravans, HRE Black Riders, and Byzantine mercenary cost reductions.",
   introduction: `
   ![](https://cdn.ageofempires.com/aoe/wp-content/uploads/2025/03/COC_Update_1920x1080.webp)
-  "Spring is officially here, and Age of Empires IV is almost ready to blossom with a new ranked season! This update brings with it a fresh map pool and a bundle of balance changes, along with the kickoff of Ranked Season Ten. Be on the lookout for the Clash of Champions mini event, along with a unique new map feature. 
-Alongside this update, we will be releasing the Knights of Cross and Rose DLC across all platforms! Players can look forward to two new variant civilizations, the valorous Knights Templar and the ever-capable House of Lancaster. Additionally, the DLC will contain the new Historical Battles game mode, ten unique maps, and new achievements. 
+  "Spring is officially here, and Age of Empires IV is almost ready to blossom with a new ranked season! This update brings with it a fresh map pool and a bundle of balance changes, along with the kickoff of Ranked Season Ten. Be on the lookout for the Clash of Champions mini event, along with a unique new map feature.
+Alongside this update, we will be releasing the Knights of Cross and Rose DLC across all platforms! Players can look forward to two new variant civilizations, the valorous Knights Templar and the ever-capable House of Lancaster. Additionally, the DLC will contain the new Historical Battles game mode, ten unique maps, and new achievements.
   `,
   date: new Date("2025-04-03T18:00:00Z"),
   sections: [

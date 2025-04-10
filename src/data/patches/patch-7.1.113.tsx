@@ -1,20 +1,20 @@
 import { PatchNotes } from "../../types/patches";
 
 export const patch71113: PatchNotes = {
-  id: "patch-71113",
-  buildId: 71113,
-  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-five-update-7-1-113/",
+  id: "patch-7.1.113",
+  buildId: "7.1.113",
   name: "Patch 7.1.113",
   season: 5,
   type: "patch",
+  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-season-five-update-7-1-113/",
   summary: "Nerfs to Keep costs, range and boiling oil. Nerfs to Levy Militia, Rus, Chinese. Buffs for Musofadi Warriors, Sipahi and Delhi Landmarks.",
   introduction: `"Plenty of changes are coming with the release of our latest minor patch. The Wild Man and Dragon Turtle have faded back into legend, and we hope you enjoyed the monstrous start to Season Five! Here is a peak at what is included":
 
 
-*  Updates to Ranked Season Rewards! 
-*  Upcoming seasonal events! 
-*  Changes to address Queue Dodging & Cheating in Ranked. 
-* … plus bug fixes and balance changes. 
+*  Updates to Ranked Season Rewards!
+*  Upcoming seasonal events!
+*  Changes to address Queue Dodging & Cheating in Ranked.
+* … plus bug fixes and balance changes.
 
 `,
 
@@ -33,8 +33,8 @@ Since our Map Monsters have left for the season, they will no longer be appearin
 Mentioned in both our  Season Five release notes, and  our follow-up post , progress continues to be made on changing the Ranked Rewards system. Starting with this patch, players should now see the **highest**rank they’ve achieved this season on their profile and on the multiplayer ranked screen.
 
 ## Queue Dodging
-We’ve updated the game servers’ backend to better detect when a player purposefully disconnects from their match. The system should now apply queue dodging cooldown punishments more instantly than previous configurations. Purposefully disconnecting from a Ranked Team or Ranked 1v1 lobby or load screen, as well as any time during Ranked 1v1 matches, will now also count as a loss for the disconnecting player in addition to the cooldown punishment.  
-These changes, in congruence with some of our other changes, should reduce the frequency of queue dodging. We are continuing to monitor this closely and may further tighten queue dodging punishments to be more in-line with other Age titles. 
+We’ve updated the game servers’ backend to better detect when a player purposefully disconnects from their match. The system should now apply queue dodging cooldown punishments more instantly than previous configurations. Purposefully disconnecting from a Ranked Team or Ranked 1v1 lobby or load screen, as well as any time during Ranked 1v1 matches, will now also count as a loss for the disconnecting player in addition to the cooldown punishment.
+These changes, in congruence with some of our other changes, should reduce the frequency of queue dodging. We are continuing to monitor this closely and may further tighten queue dodging punishments to be more in-line with other Age titles.
 Additionally, we remain aware queue dodging is more frequent at the high and low extremes of ELO levels and are continuing our work to address the matchmaking process for these extremes, to further reduce the frequency of queue dodging for these players.
 
 ## Ranked Cheating
@@ -53,12 +53,12 @@ In our  update kicking off the start of Season 5 (https://www.ageofempires.com/n
       changes: [],
       md: `
 ### AI Updates
-* Fixed a rare issue where the AI would build too many Lumber camps on some maps. 
-* Fixed a crash bug related to AI trading. 
+* Fixed a rare issue where the AI would build too many Lumber camps on some maps.
+* Fixed a crash bug related to AI trading.
 ### UX/UI & Menus
-* Fixed an issue where the user was unable to zoom while in replays when using Caster Mode.   
-* When launching the game in Malay or Hindi languages, the Daily Challenges, News Feed and Events will now be in the correct language. 
-* Fixed the alignment of the Season Four painting sigil frame, which was off-center. 
+* Fixed an issue where the user was unable to zoom while in replays when using Caster Mode.
+* When launching the game in Malay or Hindi languages, the Daily Challenges, News Feed and Events will now be in the correct language.
+* Fixed the alignment of the Season Four painting sigil frame, which was off-center.
 * Fixed a bug to ensure that if a player’s communications are set to blocked no one will be able to chat to that player in-game.
 * Thanks in part to players sending in their warning logs, we were able to quickly identify and implement a fix for another set of conditions that were causing a crash on age up for several players. If you continue to encounter crashes, please reach out to Customer Support so that we may investigate.
 ### Campaign
@@ -70,10 +70,10 @@ In our  update kicking off the start of Season 5 (https://www.ageofempires.com/n
       civs: [],
       changes: [],
       md: `
-### Prairie 
-* Fixed an issue on Prairie where one of the neutral markets would sometime not spawn. 
-### Golden Heights 
-* Golden Heights now appears in the correct alphabetical order on the map selection list. 
+### Prairie
+* Fixed an issue on Prairie where one of the neutral markets would sometime not spawn.
+### Golden Heights
+* Golden Heights now appears in the correct alphabetical order on the map selection list.
 * Fixed an occasional unequal boar distance distribution issue on Golden Heights 1v1. `,
     },
     {
@@ -85,8 +85,8 @@ In our  update kicking off the start of Season 5 (https://www.ageofempires.com/n
       subtitle: "General Changes & Bugfixes",
       civs: [],
       md: `
-* Fixed a hitching issue seen when felling trees on certain maps. 
-* Fixed a potential crash that was linked to using Voice Chat. 
+* Fixed a hitching issue seen when felling trees on certain maps.
+* Fixed a potential crash that was linked to using Voice Chat.
 `,
       changes: [],
     },

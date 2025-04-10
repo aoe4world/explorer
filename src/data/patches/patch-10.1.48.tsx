@@ -1,15 +1,15 @@
 import { PatchNotes } from "../../types/patches";
 
 export const patch10148: PatchNotes = {
-  id: "patch-10148",
-  buildId: 10148,
-  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-10-1-48/",
+  id: "patch-10.1.48",
+  buildId: "10.1.48",
   name: "Patch 10.1.48",
   season: 7,
   type: "patch",
+  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-10-1-48/",
   summary: "Cost reduction for Arrow and Springald Ships, major buff to English Abbey, changes to English Campfire and other balance changes.",
   introduction: `
-![](https://cdn.ageofempires.com/aoe/wp-content/uploads/2024/03/S7-Patch-1920x1080-1.webp)  
+![](https://cdn.ageofempires.com/aoe/wp-content/uploads/2024/03/S7-Patch-1920x1080-1.webp)
 "Happy Patch Day! This minor patch incorporates a few balance tweaks and bugfixes.
 
 Read on to learn more!"`,
@@ -28,7 +28,7 @@ Read on to learn more!"`,
 
       ### AI Updates (Nomad Mode)
       - Fixed a problem in Nomad mode where building your Town Center close to an AI’s Town Center could cause the AI to stop playing. Now, the AI will still start building again in a different location.
-      
+
       ### UX/UI & Menus (All Platforms)
       - Added a separate Free-For-All map pool which contains Megarandom and Land Megarandom only. This pool has one veto and is used when a Free-For-All match is found in Quick Match. We plan to look at how best to expand this pool in future with maps which are more appropriate for the Free-For-All experience.
       - Fixed an issue on Xbox consoles where a permission dialogue would show for settings other than cross play when adjusting Cross Play settings.
@@ -36,7 +36,7 @@ Read on to learn more!"`,
       - Fixed a bug where if the player views a replay from someone else’s profile, after the replay they were viewing their own profile. Now, after a replay, players will view the profile they originally started the replay from.
       - Reduced rose sigil size.
       - Fixed a softlock that may occur when accepting an invite while in a loading screen of the tutorial mission.
-      
+
       ### Remappable Hotkeys
       - It’s now possible to bind the keys Ctrl+NumLock, Ctrl+Pause and Ctrl+ScrollLock.`,
     },
@@ -52,7 +52,7 @@ Read on to learn more!"`,
       md: `
       - Fixed a bug that required using parameters on Steam for older PCs to avoid a crash during launch.
       - Fixed an issue where Springalds received extra damage from Horseman and Mangonels.
-      - Fixed an issue where the HRE Prelate UI counter wasn’t displayed. 
+      - Fixed an issue where the HRE Prelate UI counter wasn’t displayed.
       - Fixed a Sync Error that would occur when using the “It Was Known” cheat in a multiplayer match.
 `,
     },
@@ -263,7 +263,7 @@ Read on to learn more!"`,
       md: `
         ## Known Issues
         We’ve seen reports of players attempting to queue for Free-For-All (FFA) in a party receiving a server error message. Party play is currently not supported while queueing for a FFA match and the option to select the FFA match type should be disabled while in a party. Currently, the option is not disabled properly, and the server error is preventing teams from entering the FFA queue. This is intended, and we plan to make a future fix to disable the FFA option in these circumstances.
-        
+
         [Known Issues](https://support.ageofempires.com/hc/en-us/articles/4408424670484-Known-Issues-Solutions)`,
     },
     {

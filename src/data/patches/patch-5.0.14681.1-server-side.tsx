@@ -1,9 +1,9 @@
 import { PatchNotes } from "../../types/patches";
 
-export const serverSidePatch14681: PatchNotes = {
-  id: "server-side-patch-14681",
-  buildId: 14681,
-  name: "Server-Side Patch 14681 ",
+export const patch: PatchNotes = {
+  id: "patch-5.0.14681.1-server-side",
+  buildId: "5.0.14781.1",
+  name: "Server-Side Patch 14681",
   season: 1,
   type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-server-side-patch-14681/",
