@@ -55,7 +55,7 @@ export const patch1304343: PatchNotes = {
         {
           items: ["technologies/synchronized-shot", "units/yeoman"],
           civs: ["hl"],
-          diff: [["nerf", "Synchronized Shot damage decreased from 6/7/8 → 5/6/7 (Feudal/Veteran/Elite tiers)."]],
+          diff: [["nerf", "Synchronized Shot damage decreased from 6/7/8 to 5/6/7 (Feudal/Veteran/Elite tiers)."]],
         },
         {
           items: ["buildings/manor"],
@@ -116,7 +116,7 @@ export const patch1304343: PatchNotes = {
           items: ["units/heavy-spearman"],
           civs: ["kt"],
           diff: [
-            ["nerf", "Cost increased from 70 food and 30 gold → 80 food and 30 gold."],
+            ["nerf", "Cost increased from 70 food and 30 gold to 80 food and 30 gold."],
           ],
         },
         {
