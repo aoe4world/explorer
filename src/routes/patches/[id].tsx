@@ -164,7 +164,8 @@ export const PatchDetailRoute = () => {
 const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem>; civ: civAbbr }> = (props) => {
   return (
     <div class="mb-10 max-w-prose scroll-mt-24">
-      <TableOfContents.Anchor label={props.section.title ?? props.section.subtitle} level={props.section.subtitle ? 2 : 1} />
+      { props.section.title && <TableOfContents.Anchor label={props.section.title} level={1} /> }
+      { props.section.subtitle && <TableOfContents.Anchor label={props.section.subtitle} level={2} /> }
 
       {props.section.title && <h2 class="text-4xl font-bold mb-4 mt-20  border-b pb-3 border-white/20">{props.section.title}</h2>}
       {props.section.subtitle && <h3 class="text-2xl font-bold mb-4 border-b pb-3 border-white/20">{props.section.subtitle}</h3>}

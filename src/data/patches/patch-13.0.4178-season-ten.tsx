@@ -271,10 +271,10 @@ Alongside this update, we will be releasing the Knights of Cross and Rose DLC ac
           ],
         },
         {
-          items: ["technologies/cistercian-churches"],
+          items: ["technologies/cistercian-abbeys"],
           civs: ["hr"],
           diff: [
-            ["buff", "New Castle Age technology: Cistercian Churches (75 wood, 200 gold)"],
+            ["buff", "New Castle Age technology: Cistercian Abbeys (75 wood, 200 gold)"],
             ["fix", "Each Monastery acts as a drop off building and inspires villagers in an area when a Prelate garrisons inside."],
             ["fix", "Radius is smaller than Aachen."],
             ["fix", "Prelates can be trained directly into hold like Delhi Scholars."],
