@@ -21,10 +21,10 @@ export const CivOverviewRoute = () => {
               class="text-xs px-3 uppercase font-bold py-1 rounded-full text-gray-100 bg-black border border-gray-300"
               ref={el}
             >
-              <i class="fas fa-asterisk mr-1"></i> Patch 13.1.4420 (Preview)
+              <i class="fas fa-asterisk mr-1"></i> Patch 13.2.4553 (Preview)
             </Link>
             <Tooltip attachTo={el}>
-              <div class={tooltipCSSClass}>The Explorer includes all changes introduced with Season 10 Patch 13.1.4420</div>
+              <div class={tooltipCSSClass}>The Explorer includes all changes introduced with Season 10 Patch 13.2.4553</div>
             </Tooltip>
           </div>
           <p class="text-2xl mt-2 text-gray-200">Discover all units, buildings and technologies in the game.</p>
