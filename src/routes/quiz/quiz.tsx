@@ -28,7 +28,7 @@ export const QuizRoute: Component = () => {
                 </p>
                 <ul class="list-disc text-gray-200 max-w-prose flex flex-col gap-2 pl-6 my-4">
                   <li>Landmarks and civivilization bonuses.</li>
-                  <li>Availiblity of technologies, buildings and units</li>
+                  <li>Availability of technologies, buildings and units</li>
                   <li>Research per age and unit costs</li>
                   <li>Which unit wins, or how many to one shot</li>
                 </ul>

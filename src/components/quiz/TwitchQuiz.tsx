@@ -6,11 +6,11 @@ import { DLC_CIVS, MultipleChoiceOption } from "./Quiz";
 import { ChatClient } from "@twurple/chat";
 import { Random } from "./random";
 
-const graceperiod = 5000,
-  autoplaySpeed = 15000;
 let cancelableAction: Function;
 let secondsInterval;
-export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = (props) => {
+export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; gracePeriod?: number; autoplaySpeed?: number }> = (props) => {
+  const graceperiod = props.gracePeriod ?? 5000;
+  const autoplaySpeed = props.autoplaySpeed ?? 15000;
   const [choice, setChoice] = createSignal<number>(undefined);
   const [users, setUsers] = createStore<Record<string, TwitchUser>>({});
   const [pendingAnswers, setPendingAnswers] = createStore<PendingAnswers>({ total: {}, host: undefined, viewers: {} });
@@ -186,7 +186,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string }> = 
           {(answer, index) => (
             <MultipleChoiceOption
               option={indexToLetter[index()]}
-              class={`${pendingSubmissionsClosed() ? "opacity-60" : ""} 
+              class={`${pendingSubmissionsClosed() ? "opacity-60" : ""}
               ${choice() === undefined && pendingAnswers.host == index() ? "!outline-white outline-2 !opacity-100" : ""}`}
               correct={choice() !== undefined ? (index() == question()?.correctAnswer ? true : index() == choice() ? false : null) : undefined}
               onPick={() => pickChoice(index)}

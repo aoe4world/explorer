@@ -1,4 +1,4 @@
-import { Component, createResource, createSignal, For, onCleanup, onMount } from "solid-js";
+import { Component, createResource, createSignal, For, onCleanup, onMount, JSX } from "solid-js";
 import { Icon } from "@components/Icon";
 import { getRandomQuestion } from "./questions";
 import { CIVILIZATION_BY_SLUG } from "../../config";
@@ -109,7 +109,7 @@ export const Quiz: Component<{ difficulty?: number }> = (props) => {
   );
 };
 
-export const MultipleChoiceOption: Component<{ option: "A" | "B" | "C" | "D"; correct?: boolean; onPick: Function; class?: string }> = (props) => {
+export const MultipleChoiceOption: Component<{ option: "A" | "B" | "C" | "D"; correct?: boolean; onPick: Function; class?: string, children: JSX.Element }> = (props) => {
   return (
     <button
       class={`whitespace-nowrap inline-flex items-center gap-2 bg-gray-500 p-2
