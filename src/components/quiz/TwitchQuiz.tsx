@@ -1,10 +1,11 @@
-import { Component, createResource, createSignal, For, onCleanup, onMount, Show } from "solid-js";
+import { Component, createResource, createSignal, For, Show } from "solid-js";
 import { createStore, produce } from "solid-js/store";
 import { Icon } from "../Icon";
 import { formatAnswer, getRandomQuestion, loadCustomQuestions } from "./questions";
-import { DLC_CIVS, MultipleChoiceOption } from "./Quiz";
+import { MultipleChoiceOption } from "./SoloQuiz";
 import { ChatClient } from "@twurple/chat";
 import { Random } from "./random";
+import { indexToLetter, DLC_CIVS, Score, updateScore, useKeyHandler } from "./shared";
 
 let cancelableAction: Function;
 let secondsInterval;
@@ -48,7 +49,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
     }
   });
 
-  onCleanup(async () => (await chat).disconnect());
+  // onCleanup(async () => (await chat).disconnect()); // This line was commented out in the original file, keeping it commented.
 
   function setTimer(cb: Function, time: number, cancelable = false) {
     if (cancelable) cancelableAction = cb;
@@ -146,20 +147,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
     if (autoplay()) setTimer(stopSubmissionsAndShowResults, autoplaySpeed, true);
   }
 
-  function keyDownListener(e: KeyboardEvent) {
-    if (finished()) return;
-    const key = e.key.toUpperCase();
-    if (keys.includes(key) && !e.metaKey && !e.ctrlKey) {
-      pickChoice(keys.indexOf(key));
-      e.preventDefault();
-    }
-    if ([1, 2, 3, 4].includes(parseInt(e.key))) {
-      pickChoice(parseInt(e.key) - 1);
-      e.preventDefault();
-    }
-  }
-  onMount(() => window.addEventListener("keydown", keyDownListener));
-  onCleanup(() => window.removeEventListener("keydown", keyDownListener));
+  useKeyHandler(pickChoice, finished);
 
   function startAutoplay() {
     if (autoplay()) return;
@@ -285,7 +273,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
                 onClick={() => next()}
                 disabled={!nextReady() || autoplay()}
               >
-                {props.numQuestions && questionCount() + 1 >= props.numQuestions ? "Finish" : "Next"}
+                  {props.numQuestions && questionCount() + 1 >= props.numQuestions ? "Finish" : "Next"}
               </button>
             </Show>
             </div>
@@ -382,15 +370,6 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
   );
 };
 
-function updateScore(choice: number, correctAnswer: number, score: Score) {
-  const correct = choice === correctAnswer;
-  score = { ...score };
-  score.correct += correct ? 1 : 0;
-  score.incorrect += !correct ? 1 : 0;
-  score.total += 1;
-  score.streak = correct ? score.streak + 1 : 0;
-  return score;
-}
 
 function parseChoice(message: string) {
   const letters = ["a", "b", "c", "d", "e"];
@@ -415,21 +394,6 @@ async function useIncomingTwitchMessages({ channel }: { channel: string }, callb
   return { disconnect };
 }
 
-const indexToLetter = {
-  0: "A",
-  1: "B",
-  2: "C",
-  3: "D",
-  4: "E",
-};
-const keys = Object.values(indexToLetter);
-
-export type Score = {
-  correct: number;
-  incorrect: number;
-  total: number;
-  streak: number;
-};
 
 export type Scores = {
   host: Score;

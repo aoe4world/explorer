@@ -1,19 +1,8 @@
-import { Component, createResource, createSignal, For, onCleanup, onMount, JSX, Show } from "solid-js";
+import { Component, createResource, createSignal, For, JSX, Show } from "solid-js";
 import { Icon } from "@components/Icon";
 import { formatAnswer, getRandomQuestion, loadCustomQuestions } from "./questions";
-import { CIVILIZATION_BY_SLUG } from "../../config";
 import { Random } from "./random";
-
-export const DLC_CIVS = [
-  CIVILIZATION_BY_SLUG.byzantines,
-  CIVILIZATION_BY_SLUG.japanese,
-  CIVILIZATION_BY_SLUG.orderofthedragon,
-  CIVILIZATION_BY_SLUG.zhuxi,
-  CIVILIZATION_BY_SLUG.ayyubids,
-  CIVILIZATION_BY_SLUG.jeannedarc,
-  CIVILIZATION_BY_SLUG.lancaster,
-  CIVILIZATION_BY_SLUG.templar,
-];
+import { DLC_CIVS, indexToLetter, updateScore, useKeyHandler } from "./shared";
 
 export const Quiz: Component<{ difficulty?: number; questionsUrl?: string; numQuestions?: number }> = (props) => {
   const [score, setScore] = createSignal({ correct: 0, incorrect: 0, total: 0, streak: 0 });
@@ -33,13 +22,7 @@ export const Quiz: Component<{ difficulty?: number; questionsUrl?: string; numQu
     if (pending()) return;
     setPending(true);
     setChoice(number);
-    const correct = choice() === question().correctAnswer;
-    const s = { ...score() };
-    s.correct += correct ? 1 : 0;
-    s.incorrect += !correct ? 1 : 0;
-    s.total += 1;
-    s.streak = correct ? s.streak + 1 : 0;
-    setScore(s);
+    setScore(updateScore(number, question().correctAnswer, score()));
     clearTimeout(pendingTimer);
     pendingTimer = window.setTimeout(() => {
       setChoice(undefined);
@@ -58,20 +41,8 @@ export const Quiz: Component<{ difficulty?: number; questionsUrl?: string; numQu
     setChoice(undefined);
     setPending(false);
   }
-  function keyDownListener(e: KeyboardEvent) {
-    const key = e.key.toUpperCase();
-    if (keys.includes(key) && !e.metaKey && !e.ctrlKey) {
-      pickChoice(keys.indexOf(key));
-      e.preventDefault();
-    }
-    if ([1, 2, 3, 4].includes(parseInt(e.key))) {
-      pickChoice(parseInt(e.key) - 1);
-      e.preventDefault();
-    }
-  }
-  onMount(() => window.addEventListener("keydown", keyDownListener));
 
-  onCleanup(() => window.removeEventListener("keydown", keyDownListener));
+  useKeyHandler(pickChoice, finished);
 
   return (
     <div class="my-5 rounded-lg p-6 bg-gray-600">
@@ -171,13 +142,4 @@ export const MultipleChoiceOption: Component<{ option: "A" | "B" | "C" | "D"; co
   );
 };
 
-const indexToLetter = {
-  0: "A",
-  1: "B",
-  2: "C",
-  3: "D",
-  4: "E",
-};
-
-const keys = Object.values(indexToLetter);
 
