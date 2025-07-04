@@ -6,8 +6,11 @@ import { Quiz } from "@components/quiz/Quiz";
 import { hideNav, setHideNav } from "../../global";
 
 export const QuizRoute: Component = () => {
+  const query = useLocation().query;
   const [show, setShow] = createSignal(false);
   const [difficulty, setDifficulty] = createSignal(0);
+  const questionsUrl = query.questionsUrl;
+  const numQuestions = parseInt(query.numQuestions);
 
   setHideNav(true);
   onCleanup(() => setHideNav(false));
@@ -66,7 +69,7 @@ export const QuizRoute: Component = () => {
           </>
         }
       >
-        <Quiz difficulty={difficulty()} />
+        <Quiz difficulty={difficulty()} questionsUrl={questionsUrl} numQuestions={numQuestions} />
       </Show>
     </div>
   );

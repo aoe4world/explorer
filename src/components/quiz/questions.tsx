@@ -14,13 +14,33 @@ const SDK = import("@data/sdk");
 export type Question = {
   question: string;
   note?: string;
-  answers: JSX.Element[];
+  answers: Answer[];
   correctAnswer: number;
 };
 
-type ResourceType = "food" | "wood" | "gold" | "stone";
+export type AnswerDefinition = {
+  type: "civ" | "resource" | "text" | "unit" | "building" | "technology" | "costs";
+  id?: string;
+  label?: string;
+  costs?: ResourceCosts;
+};
 
-const levels = {
+type Answer = AnswerDefinition | string;
+
+type ResourceType = "food" | "wood" | "gold" | "stone" | "oliveoil";
+
+type ResourceCosts = Partial<Record<ResourceType, number>>;
+
+type LevelDefinition = {
+  difficulty: number;
+  maxDifficulty?: number;
+  chance: number;
+  questions: (QuestionFunc | Question)[];
+};
+
+type QuestionFunc = (i?: number, civ?: civConfig) => Promise<Question>;
+
+const baseLevels = {
   beginner: { difficulty: 0, maxDifficulty: 10, chance: 1, questions: [getCivLandmarkQuestion, getCivBonusQuestion, getCivHasAccessQuestion] },
   easy: { difficulty: 5, maxDifficulty: 20, chance: 0.5, questions: [getAgeRequirementQuestion] },
   medium: { difficulty: 10, maxDifficulty: undefined, chance: 0.4, questions: [getCostQuestion] },
@@ -28,18 +48,82 @@ const levels = {
   expert: { difficulty: 20, maxDifficulty: undefined, chance: 0.2, questions: [getOneShotQuestion, getTimeQuestion] },
 };
 
-export async function getRandomQuestion(difficulty?: number, civ?: civConfig): Promise<Question> {
-  difficulty = Math.max(0, difficulty);
+let levels: Record<string, LevelDefinition> = baseLevels;
+
+export async function loadCustomQuestions(url: string) {
+  if (!url) {
+    levels = baseLevels;
+    return;
+  }
+  console.log(`Loading custom questions from ${url}`);
   try {
-    for (const level of Object.values(levels).reverse()) {
-      if (difficulty >= level.difficulty && (level.maxDifficulty == undefined || level.maxDifficulty > difficulty) && Random.chance(level.chance)) {
-        return Random.pick(level.questions)(difficulty, civ);
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Failed to fetch custom questions: ${response.statusText}`);
+    const customData = await response.json();
+
+    const newLevels = Object.fromEntries(
+      Object.entries(baseLevels).map(([levelName, value]) => [levelName, { ...value, questions: [...value.questions] }])
+    );
+
+    if (customData.level_overrides) {
+      console.log(`Loading level_overrides...`);
+      for (const levelName in customData.level_overrides) {
+        if (newLevels[levelName]) {
+          Object.assign(newLevels[levelName], customData.level_overrides[levelName]);
+        } else {
+          newLevels[levelName] = customData.level_overrides[levelName];
+        }
       }
     }
+
+    if (customData.additional_questions) {
+      console.log(`Loading additional_questions...`);
+      Object.assign(newLevels, customData.additional_questions);
+    }
+
+    levels = newLevels as typeof baseLevels;
   } catch (e) {
     console.error(e);
+    levels = baseLevels;
   }
-  return getRandomQuestion(difficulty, civ);
+}
+
+const RECENTLY_ASKED_LIMIT = 30;
+const MAX_ATTEMPTS = 20;
+const recentlyAsked: string[] = [];
+
+export async function getRandomQuestion(difficulty?: number, civ?: civConfig): Promise<Question | null> {
+  difficulty = Math.max(0, difficulty);
+  console.log(`Getting random question at ${difficulty} difficulty...`);
+  let attempts = 0;
+  while (attempts < MAX_ATTEMPTS) {
+    try {
+      for (const level of Object.values(levels).reverse()) {
+        if (difficulty >= level.difficulty && (level.maxDifficulty == undefined || level.maxDifficulty > difficulty) && Random.chance(level.chance)) {
+          if (!level.questions.length) continue;
+          const questionOrFunc = Random.pick(level.questions);
+          let question: Question;
+          if (typeof questionOrFunc === "function") {
+            question = await questionOrFunc(difficulty, civ);
+          } else if (typeof questionOrFunc === "object" && questionOrFunc !== null) {
+            question = questionOrFunc;
+          }
+          if (question) {
+            const hash = JSON.stringify(question);
+            if (recentlyAsked.includes(hash)) continue;
+            recentlyAsked.push(hash);
+            if (recentlyAsked.length > RECENTLY_ASKED_LIMIT) recentlyAsked.shift();
+            return question;
+          }
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    attempts++;
+  }
+  console.warn(`Could not generate a question after ${MAX_ATTEMPTS} attempts.`);
+  return null;
 }
 
 /**
@@ -47,7 +131,7 @@ export async function getRandomQuestion(difficulty?: number, civ?: civConfig): P
  * "Which French landmark is described?"
  */
 async function getCivLandmarkQuestion(i?: number, civ?: civConfig): Promise<Question> {
-  civ ??= Random.pick(Object.values(CIVILIZATIONS).filter((c) => c.abbr !== "ab"));
+  civ ??= Random.pick(Object.values(CIVILIZATIONS).filter((c) => c.abbr !== "ab")) as unknown as civConfig;
   const historyId = `landmark-${civ.abbr}`;
   const history = randomPickedHistory.get(historyId) ?? randomPickedHistory.set(historyId, new Set()).get(historyId);
   const buildings = (await SDK).buildings.where({ civilization: civ?.abbr });
@@ -67,11 +151,7 @@ async function getCivLandmarkQuestion(i?: number, civ?: civConfig): Promise<Ques
   return {
     question: `Which ${civ.name} landmark is described?`,
     note: `"${correctLandmark.description.replace(correctLandmark.name, "landmark")}"`,
-    answers: options.map((l) => (
-      <>
-        <ItemIcon url={/*@once*/ l.icon} class="w-8 bg-item-building rounded-sm" /> {/*@once*/ l.name}
-      </>
-    )),
+    answers: options.map((l) => ({ type: "building", id: l.id })),
     correctAnswer: options.indexOf(correctLandmark),
   };
 }
@@ -83,7 +163,7 @@ async function getCivLandmarkQuestion(i?: number, civ?: civConfig): Promise<Ques
 
 async function getCivBonusQuestion(i?: number, _?: civConfig): Promise<Question> {
   const history = getOrCreateHistory("civ-bonus");
-  const allCivs = Object.values(CIVILIZATIONS);
+  const allCivs = Object.values(CIVILIZATIONS) as unknown as civConfig[];
   if (history.size >= allCivs.length * 4) history.clear();
   const civs = Random.order(allCivs).slice(0, 3);
   const civ = Random.pick(civs);
@@ -95,7 +175,7 @@ async function getCivBonusQuestion(i?: number, _?: civConfig): Promise<Question>
   return {
     question: `Which civilization has the following bonus?`,
     note: `"${bonus}"`,
-    answers: civs.map(formatCiv),
+    answers: civs.map((c) => ({ type: "civ", id: c.slug })),
     correctAnswer: civs.indexOf(civ),
   };
 }
@@ -152,7 +232,7 @@ async function getCivHasAccessQuestion(i?: number, civ?: civConfig): Promise<Que
   if (item.civs.length >= 7) return getCivHasAccessQuestion(i, civ);
 
   if (item.civs.length >= 4) {
-    const correctCiv = Random.pick(Object.values(CIVILIZATIONS).filter((c) => !item.civs.includes(c.abbr)));
+    const correctCiv = Random.pick(Object.values(CIVILIZATIONS).filter((c) => !item.civs.includes(c.abbr))) as unknown as civConfig;
     const incorrectCiv = Random.order(item.civs)
       .slice(0, 2)
       .map((c) => CIVILIZATIONS[c]);
@@ -162,17 +242,17 @@ async function getCivHasAccessQuestion(i?: number, civ?: civConfig): Promise<Que
       question: `Which civilization is unable to ${itemProduceVerb[item.type]} ${item.name}?`,
       note: "",
       correctAnswer: options.indexOf(correctCiv),
-      answers: options.map(formatCiv),
+      answers: options.map((c) => ({ type: "civ", id: c.slug })),
     };
   } else {
     const correctCiv = CIVILIZATIONS[Random.pick(item.civs)];
-    const incorrectCiv = Random.order(Object.values(CIVILIZATIONS).filter((c) => !item.civs.includes(c.abbr))).slice(0, 2);
+    const incorrectCiv = Random.order(Object.values(CIVILIZATIONS).filter((c) => !item.civs.includes(c.abbr))).slice(0, 2) as unknown as civConfig[];
     const options = Random.order([correctCiv, ...incorrectCiv]);
     return {
       question: `Which civilization can ${itemProduceVerb[item.type]} ${item.name}?`,
       note: "",
       correctAnswer: options.indexOf(correctCiv),
-      answers: options.map(formatCiv),
+      answers: options.map((c) => ({ type: "civ", id: c.slug })),
     };
   }
 }
@@ -204,7 +284,7 @@ async function getCostQuestion(difficulty?: number, civ?: civConfig): Promise<Qu
   const correctAnswer = costs;
   let question = variation.type == "technology" ? `What does it cost to research ${variation.name}` : `What is the cost of a ${variation.name}?`,
     note = `Standard cost, without any civ or landmark discounts. "${variation.description}"`,
-    answers = [costs];
+    answers = [costs as ResourceCosts];
 
   // Add incorrect answers until there are 3, and ensure there are no duplicates
   let attempts = 0;
@@ -228,7 +308,7 @@ async function getCostQuestion(difficulty?: number, civ?: civConfig): Promise<Qu
   return {
     question,
     note,
-    answers: answers.map(formatCosts),
+    answers: answers.map((costs) => ({ type: "costs", costs })),
     correctAnswer: answers.indexOf(correctAnswer),
   };
 }
@@ -313,14 +393,7 @@ async function getStraightUpFightQuestion(difficulty?: number, civ?: civConfig):
   return {
     question: `Which unit wins in a fight?`,
     note: `Without any upgrades, in range, no kiting, charges or special attacks and influences. Last one standing wins.`,
-    answers: [
-      ...options.map((u) => (
-        <>
-          {/*@once*/ u.name} <span class="opacity-50 ml-2">{/*@once*/ PRETTY_AGE_MAP_LONG[u.age]}</span>
-        </>
-      )),
-      "It's a draw",
-    ],
+    answers: [...options.map((u) => `${u.name} in ${PRETTY_AGE_MAP_LONG[u.age]}`), "It's a draw"],
     correctAnswer: winner === false ? 2 : options.indexOf(winner),
   };
 }
@@ -377,22 +450,61 @@ async function getOneShotQuestion(i?: number, civ?: civConfig): Promise<Question
   };
 }
 
+export async function formatAnswer(answer: Answer): Promise<JSX.Element> {
+  if (typeof answer === "string") {
+    return <>{answer}</>;
+  }
+  switch (answer.type) {
+    case "civ":
+      const civ = CIVILIZATION_BY_SLUG[answer.id];
+      if (!civ) return <>{answer.id}</>;
+      return formatCiv(civ);
+    case "resource":
+      return (
+        <>
+          <img src={RESOURCES[answer.id]} class="h-4 object-contain w-5" /> {answer.label ?? (answer.id[0].toUpperCase() + answer.id.slice(1))}
+        </>
+      );
+    case "unit":
+    case "building":
+    case "technology":
+      const Sdk = await SDK;
+      const item = Sdk[answer.type === "unit" ? "units" : answer.type === "building" ? "buildings" : "technologies"].get(answer.id);
+      if (!item) return <>{answer.id}</>;
+      return (
+        <>
+          <ItemIcon url={item.icon} class={`w-8 bg-item-${answer.type}/80 rounded-sm`} />
+          {item.name}
+        </>
+      );
+    case "text":
+      return <>{answer.label ?? answer.id}</>;
+    case "costs":
+      return <>{formatCosts(answer.costs)}</>;
+    default:
+      return <>{answer.id}</>;
+  }
+}
+
 /**
  * Helper functions
  */
 
-const formatCosts = (costs: Record<ResourceType, number>) =>
-  Object.entries(costs).map(([key, value]) =>
-    value ? (
-      <>
-        <img src={/*@once*/ RESOURCES[key]} class="h-4 object-contain w-5" /> {/*@once*/ value}
-      </>
-    ) : undefined
-  );
+const formatCosts = (costs: ResourceCosts) => (
+  <div class="flex items-center">
+    {Object.entries(costs).map(([key, value]) =>
+      value ? (
+        <span class="flex items-center gap-1 mr-2">
+          <img src={/*@once*/ RESOURCES[key]} class="h-4 object-contain w-5" /> {/*@once*/ value}
+        </span>
+      ) : undefined
+    )}
+  </div>
+);
 
 // Todo: This should return two answers generated with the same logic to make it less easy to deduce the correct answer
-const getIncorrectCosts = (correct: Record<ResourceType, number>) => {
-  const costs = Object.fromEntries(Object.entries(correct).filter(([k, v]) => v > 0)) as Record<ResourceType, number>;
+const getIncorrectCosts = (correct: ResourceCosts) => {
+  const costs = Object.fromEntries(Object.entries(correct).filter(([k, v]) => v > 0)) as ResourceCosts;
   const { gold, food, wood, stone } = costs;
 
   const resourcesWithValues = ["gold", "food", "wood", "stone"].filter((r) => costs[r] > 0);
@@ -493,7 +605,7 @@ function battleUnits(a: Unit, b: Unit) {
 function formatCiv(civ: civConfig) {
   return (
     <>
-      <CivFlag abbr={/*@once*/ civ.abbr} class="w-4" />
+      <CivFlag abbr={/*@once*/ civ.abbr} class="w-8 mr-2" />
       {/*@once*/ civ.name}
     </>
   );

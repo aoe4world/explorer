@@ -1,6 +1,6 @@
-import { Component, createResource, createSignal, For, onCleanup, onMount, JSX } from "solid-js";
+import { Component, createResource, createSignal, For, onCleanup, onMount, JSX, Show } from "solid-js";
 import { Icon } from "@components/Icon";
-import { getRandomQuestion } from "./questions";
+import { formatAnswer, getRandomQuestion, loadCustomQuestions } from "./questions";
 import { CIVILIZATION_BY_SLUG } from "../../config";
 import { Random } from "./random";
 
@@ -15,11 +15,18 @@ export const DLC_CIVS = [
   CIVILIZATION_BY_SLUG.templar,
 ];
 
-export const Quiz: Component<{ difficulty?: number }> = (props) => {
+export const Quiz: Component<{ difficulty?: number; questionsUrl?: string; numQuestions?: number }> = (props) => {
   const [score, setScore] = createSignal({ correct: 0, incorrect: 0, total: 0, streak: 0 });
   const [pending, setPending] = createSignal(false);
-  const [question, { refetch }] = createResource(() => getRandomQuestion(score().correct - score().incorrect + (props.difficulty ?? 0), Random.pick(DLC_CIVS)));
+  const [questionCount, setQuestionCount] = createSignal(0);
+  const [finished, setFinished] = createSignal(false);
+  const [customQuestions] = createResource(props.questionsUrl, loadCustomQuestions);
+  const [question, { refetch }] = createResource(
+    () => !customQuestions.loading,
+    (ready) => ready && getRandomQuestion(score().correct - score().incorrect + (props.difficulty ?? 0), Random.pick(DLC_CIVS))
+  );
   const [choice, setChoice] = createSignal<number>(undefined);
+  const [formattedAnswers] = createResource(question, async (q) => q ? Promise.all(q.answers.map(formatAnswer)) : []);
 
   let pendingTimer = 0;
   const pickChoice = (number) => {
@@ -35,11 +42,22 @@ export const Quiz: Component<{ difficulty?: number }> = (props) => {
     setScore(s);
     clearTimeout(pendingTimer);
     pendingTimer = window.setTimeout(() => {
-      refetch();
       setChoice(undefined);
       setPending(false);
+      next();
     }, 1000);
   };
+
+  const next = () => {
+    setQuestionCount((q) => q + 1);
+    if (props.numQuestions && questionCount() >= props.numQuestions) {
+      setFinished(true);
+      return;
+    }
+    refetch();
+    setChoice(undefined);
+    setPending(false);
+  }
   function keyDownListener(e: KeyboardEvent) {
     const key = e.key.toUpperCase();
     if (keys.includes(key) && !e.metaKey && !e.ctrlKey) {
@@ -57,54 +75,79 @@ export const Quiz: Component<{ difficulty?: number }> = (props) => {
 
   return (
     <div class="my-5 rounded-lg p-6 bg-gray-600">
-      <div class="flex items-center">
-        <h5 class="font-bold text-gray-300 uppercase text-sm mb-1 flex-auto">
-          Question{" "}
-          <button
-            onClick={() => {
-              refetch();
-            }}
-          >
-            <Icon icon="dice" />
-          </button>
-        </h5>
-        {score().total && (
-          <div class="flex gap-4">
-            {score().streak > 2 && (
-              <span class="text-orange-300">
-                <Icon icon="fire" /> {score().streak} streak
+      <Show
+        when={!finished()}
+        fallback={
+          <div class="text-center">
+            <h3 class="font-bold text-white text-2xl my-3">Quiz Finished!</h3>
+            <p class="text-gray-200 mt-1 ">You answered {score().correct} out of {questionCount()} questions correctly.</p>
+            <button class="bg-gray-400 text-sm p-4 rounded mt-6" onClick={() => window.location.reload()}>Play Again</button>
+          </div>
+        }
+      >
+        <div class="flex items-center">
+          <h5 class="font-bold text-gray-300 uppercase text-sm mb-1 flex-auto">
+            Question {props.numQuestions && `${questionCount() + 1} / ${props.numQuestions}`}{" "}
+            <button
+              onClick={() => {
+                next();
+              }}
+            >
+              <Icon icon="dice" />
+            </button>
+          </h5>
+          {score().total && (
+            <div class="flex gap-4">
+              {score().streak > 2 && (
+                <span class="text-orange-300">
+                  <Icon icon="fire" /> {score().streak} streak
+                </span>
+              )}
+              <span class="text-green-500">
+                <Icon icon="circle-check" /> {score().correct}
               </span>
-            )}
-            <span class="text-green-500">
-              <Icon icon="circle-check" /> {score().correct}
-            </span>
-            <span class="text-red-500">
-              <Icon icon="circle-xmark" /> {score().incorrect}
-            </span>
+              <span class="text-red-500">
+                <Icon icon="circle-xmark" /> {score().incorrect}
+              </span>
+            </div>
+          )}
+        </div>
+        <Show
+          when={!question.loading && question()}
+          fallback={
+            <div class="text-center p-8">
+              {question.loading ? "Loading question..." : (
+                <div class="flex flex-col items-center">
+                  <span>No more questions available.</span>
+                  <button class="bg-gray-400 text-sm p-4 rounded mt-6" onClick={() => setFinished(true)}>Finish</button>
+                </div>
+              )}
+            </div>
+          }
+        >
+          <h3 class="font-bold text-white text-2xl my-3">{question()?.question}</h3>
+          <p class="text-gray-200 mt-1 ">{question()?.note}</p>
+
+          <div class="flex flex-col gap-4 mt-8">
+            <For each={formattedAnswers()}>
+              {(answer, index) => (
+                <MultipleChoiceOption
+                  option={indexToLetter[index()]}
+                  correct={choice() !== undefined ? (index() == question()?.correctAnswer ? true : index() == choice() ? false : null) : undefined}
+                  onPick={() => pickChoice(index)}
+                >
+                  {answer}
+                </MultipleChoiceOption>
+              )}
+            </For>
+          </div>
+        </Show>
+        {!props.numQuestions && score()?.correct >= 30 && (
+          <div class="bg-gray-400 text-sm p-4 rounded mt-6">
+            The quiz currently goes on indefinitely. You reach 30+ correct answers, great job. You can stop if you want to.
           </div>
         )}
-      </div>
-      <h3 class="font-bold text-white text-2xl my-3">{question()?.question}</h3>
-      <p class="text-gray-200 mt-1 ">{question()?.note}</p>
-
-      <div class="flex flex-col gap-4 mt-8">
-        <For each={question()?.answers}>
-          {(answer, index) => (
-            <MultipleChoiceOption
-              option={indexToLetter[index()]}
-              correct={choice() !== undefined ? (index() == question()?.correctAnswer ? true : index() == choice() ? false : null) : undefined}
-              onPick={() => pickChoice(index)}
-            >
-              {answer}
-            </MultipleChoiceOption>
-          )}
-        </For>
-      </div>
-      {score()?.correct >= 30 && (
-        <div class="bg-gray-400 text-sm p-4 rounded mt-6">
-          The quiz currently goes on indefinetly. You reach 30+ correct answers, great job. You can stop if you want to.
-        </div>
-      )}
+      </Show>
     </div>
   );
 };
@@ -137,3 +180,4 @@ const indexToLetter = {
 };
 
 const keys = Object.values(indexToLetter);
+
