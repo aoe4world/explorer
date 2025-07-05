@@ -1,6 +1,6 @@
 import { JSX } from "solid-js";
 import { RESOURCES } from "../../../assets";
-import { civilizations } from "@data/sdk";
+import * as SDK from "@data/sdk";
 import { Item, ItemClass, UnifiedItem } from "@data/types/items";
 import { CivFlag } from "@components/CivFlag";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
@@ -9,7 +9,6 @@ import { civConfig, Unit } from "../../types/data";
 import { ItemIcon } from "../ItemIcon";
 import { formatSecondsToTime } from "../Stats";
 import { Random } from "./random";
-const SDK = import("@data/sdk");
 
 export type Question = {
   question: string;
@@ -134,7 +133,7 @@ async function getCivLandmarkQuestion(i?: number, civ?: civConfig): Promise<Ques
   civ ??= Random.pick(Object.values(CIVILIZATIONS).filter((c) => c.abbr !== "ab")) as unknown as civConfig;
   const historyId = `landmark-${civ.abbr}`;
   const history = randomPickedHistory.get(historyId) ?? randomPickedHistory.set(historyId, new Set()).get(historyId);
-  const buildings = (await SDK).buildings.where({ civilization: civ?.abbr });
+  const buildings = SDK.buildings.where({ civilization: civ?.abbr });
   const landmarks = buildings.filter((b) => b.classes.includes("landmark") && !["wynguard-palace", "capital-town-center"].includes(b.id));
 
   const correctOptions = landmarks.filter((l) => !history.has(l.id));
@@ -167,7 +166,7 @@ async function getCivBonusQuestion(i?: number, _?: civConfig): Promise<Question>
   if (history.size >= allCivs.length * 4) history.clear();
   const civs = Random.order(allCivs).slice(0, 3);
   const civ = Random.pick(civs);
-  const bonuses = (await SDK).civilizations.Get(civ.abbr).info.overview.find((o) => o.title === "Civilization Bonuses")?.list ?? [];
+  const bonuses = SDK.civilizations.Get(civ.abbr).info.overview.find((o) => o.title === "Civilization Bonuses")?.list ?? [];
   const bonus = Random.pick(bonuses);
   if (!bonuses.length || history.has(bonus) || (bonus.includes("Berry") && ["de", "ab"].every((abbr) => civs.some((cv) => cv.abbr == abbr))))
     return getCivBonusQuestion(i);
@@ -450,7 +449,7 @@ async function getOneShotQuestion(i?: number, civ?: civConfig): Promise<Question
   };
 }
 
-export async function formatAnswer(answer: Answer): Promise<JSX.Element> {
+export function formatAnswer(answer: Answer): JSX.Element {
   if (typeof answer === "string") {
     return <>{answer}</>;
   }
@@ -462,14 +461,13 @@ export async function formatAnswer(answer: Answer): Promise<JSX.Element> {
     case "resource":
       return (
         <>
-          <img src={RESOURCES[answer.id]} class="h-4 object-contain w-5" /> {answer.label ?? (answer.id[0].toUpperCase() + answer.id.slice(1))}
+          <img src={RESOURCES[answer.id]} class="h-6 object-contain w-7" /> {answer.label ?? (answer.id[0].toUpperCase() + answer.id.slice(1))}
         </>
       );
     case "unit":
     case "building":
     case "technology":
-      const Sdk = await SDK;
-      const item = Sdk[answer.type === "unit" ? "units" : answer.type === "building" ? "buildings" : "technologies"].get(answer.id);
+      const item = SDK[answer.type === "unit" ? "units" : answer.type === "building" ? "buildings" : "technologies"].get(answer.id);
       if (!item) return <>{answer.id}</>;
       return (
         <>
@@ -495,7 +493,7 @@ const formatCosts = (costs: ResourceCosts) => (
     {Object.entries(costs).map(([key, value]) =>
       value ? (
         <span class="flex items-center gap-1 mr-2">
-          <img src={/*@once*/ RESOURCES[key]} class="h-4 object-contain w-5" /> {/*@once*/ value}
+          <img src={/*@once*/ RESOURCES[key]} class="h-6 object-contain w-7" /> {/*@once*/ value}
         </span>
       ) : undefined
     )}
@@ -622,9 +620,8 @@ async function getRandomItem<T extends ITEMS>(
   excludeIds: string[] = [],
   excludeClasses: ItemClass[] = []
 ): Promise<UnifiedItem<ItemTypes[T]>> {
-  const Sdk = await SDK;
   const history = getOrCreateHistory(historyKey);
-  const items = Sdk[Random.pick(types)].where({ civilization: civ?.abbr });
+  const items = SDK[Random.pick(types)].where({ civilization: civ?.abbr });
   const item = Random.pick(
     items.filter(
       (i) => !excludeIds.includes(i.id) && !history.has(i.id) && !i.classes.some((c) => excludeClasses.includes(c) && (!civ || i.unique || i.civs.length <= 2))

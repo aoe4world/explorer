@@ -1,4 +1,5 @@
 import { Component, createSignal, For, Show, createMemo } from "solid-js";
+import { TWITCH } from '../../../assets';
 import { createStore } from "solid-js/store";
 import { Icon } from "../Icon";
 import { Scores, TwitchUser } from "./TwitchQuiz";
@@ -113,8 +114,8 @@ export const TwitchGiveaway: Component<TwitchGiveawayProps> = (props) => {
                       <div class={`flex items-center gap-2 p-2 bg-gray-600 rounded ${isExcluded() ? 'opacity-50' : ''}`}>
                         <ToggleSwitch id={`user-${candidate.user.username}`} checked={!isExcluded()} onChange={() => toggleViewerExclusion(candidate.user.username)} size="small" />
                         <span class="truncate" style={{ color: candidate.user.color }}>{candidate.user.display_name}</span>
-                        {candidate.user.moderator && <Icon icon="shield-halved" class="text-purple-400 opacity-80" title="Moderator" />}
-                        {candidate.user.subscriber && <Icon icon="star" class="text-yellow-400 opacity-80" title="Subscriber" />}
+                        {candidate.user.moderator && <img src={TWITCH.moderator} class="h-4 object-contain w-4" title="Moderator" />}
+                        {candidate.user.subscriber && <img src={TWITCH.subscriber} class="h-4 object-contain w-4" title="Subscriber" />}
                         <span class="ml-auto mr-2 text-sm text-gray-300">{candidate.correct} / {candidate.total}</span>
                       </div>
                     )
