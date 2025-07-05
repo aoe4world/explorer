@@ -2,7 +2,7 @@ import { Link, useParams } from "@solidjs/router";
 import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { ReportButton } from "@components/ReportButton";
-import { StatNumber, StatBar, StatDps, StatCosts } from "@components/Stats";
+import { StatNumber, StatBar, StatDps, StatCosts, StatLos } from "@components/Stats";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { getUnitStats } from "../../query/stats";
 import { mainIntroductionCSSClass } from "../../styles";
@@ -119,13 +119,12 @@ const UnitSidebar: Component<{ item?: UnifiedItem<Unit>; civ: civConfig }> = (pr
               <StatNumber label="Attack Speed" stat={stats.attackSpeed} unitLabel="S" age={age}></StatNumber>
               <StatNumber label="Min Range" stat={stats.minRange} unitLabel="TILES" age={age}></StatNumber>
               <StatNumber label="Range" stat={stats.maxRange} unitLabel="TILES" age={age}></StatNumber>
-              <StatNumber
+              <StatLos
                 label="Line of Sight"
                 stat={stats.lineOfSight}
-                unitLabel="TILES"
-                helper="Maximum line of sight for a unit, only reached when on elevation"
+                statMax={stats.maxLineOfSight}
                 age={age}
-              ></StatNumber>
+              ></StatLos>
             </div>
           </>
         )}

@@ -17,7 +17,8 @@ export type StatProperty =
   | "moveSpeed"
   | "minRange"
   | "maxRange"
-  | "lineOfSight";
+  | "lineOfSight"
+  | "maxLineOfSight";
 
 export type Stat = {
   category: StatProperty;
@@ -26,17 +27,18 @@ export type Stat = {
   bonus: StatPart<Modifier>[];
 };
 
-export type StatPart<T extends number | Modifier> = [
-  value: T,
-  id: string,
-  age: number,
-  variation?: Item,
-  type?: "base" | "upgrade" | "technology" | "bonus",
-  label?: string
-];
+export type StatPart<T extends number | Modifier> = {
+  value: T;
+  maxValue?: T;
+  id: string;
+  age: number;
+  variation?: Item;
+  type?: "base" | "upgrade" | "technology" | "bonus";
+  label?: string;
+};
 
-export function isModifier(value: StatPart<number | Modifier>[0]): value is Modifier {
-  return typeof value != "number";
+export function isModifier(value: number | Modifier): value is Modifier {
+  return typeof value !== "number";
 }
 
 export type CalculatedStats = { total: number; base: number; upgrades: number; technologies: number; bonus: number; max: number; parts: StatPart<number>[] };

@@ -29,11 +29,11 @@ export const StatBar: Component<{
   createEffect(
     on([globalAgeFilter, globalCivFilter, () => props.age?.()], () => {
       const { parts, ...rest } = calculateStatParts(props.stat, props.age?.() ?? globalAgeFilter(), { item: props.item });
-      setParts(parts.map(([v, ...p]) => [v * multiplier(), ...p]));
+      setParts(parts.map((p) => ({ ...p, value: p.value * multiplier() })));
       setValues(Object.fromEntries(Object.entries(rest).map(([k, v]) => [k, v * multiplier()])) as any);
     })
   );
-  const multiplier = createMemo(() => props.multiplier?.parts?.reduce((sum, [v]) => sum + v, 0) ?? 1);
+  const multiplier = createMemo(() => props.multiplier?.parts?.reduce((sum, p) => sum + p.value, 0) ?? 1);
   const formattedMultiplier = () => (props.multiplier ? `${multiplier()}× ` : "");
   return (
     <Show when={parts().length > 0 || props.displayAlways}>
@@ -129,36 +129,7 @@ export const StatBar: Component<{
                   </span>
                 </div>
               )}
-              <Show when={multiplier() > 1}>
-                {() => {
-                  const projectiles = multiplier();
-                  const base = values().base / projectiles;
-                  return (
-                    <div class="bg-gray-500 rounded-sm p-2 flex gap-2 items-center mt-4">
-                      <p class="text-xl px-2">{projectiles}×</p>
-                      <div class="text-sm text-gray-200">
-                        <p class="font-bold mb-1 text-xs">Every volley has {projectiles} projectiles</p>
-                        <p class="text-xs text-gray-200">Target armor has effect on each individual projectile</p>
-                        <div class="uppercase text-gray-50 text-[10px] mt-2">Example</div>
-                        <div class="py-1">
-                          (<span class="bg-lime-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-lime-200">projectile damage</span>
-                          {` - `}
-                          <span class="bg-pink-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-pink-200">target armor</span>) ×{" "}
-                          <span class="bg-teal-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-teal-200">projectiles</span> ={" "}
-                          <span class="bg-blue-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-blue-200">total damage</span>
-                        </div>
-                        <div class="py-1">
-                          (<span class="bg-lime-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-lime-200">{base}</span>
-                          {` - `}
-                          <span class="bg-pink-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-pink-200">2</span>) ×{" "}
-                          <span class="bg-teal-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-teal-200">{projectiles}</span> ={" "}
-                          <span class="bg-blue-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-blue-200">{(base - 2) * projectiles}</span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                }}
-              </Show>
+              <ProjectileDamageHint numProjectiles={multiplier()} baseDamage={values().base} />
             </div>
           </Tooltip>
         )}
@@ -166,7 +137,7 @@ export const StatBar: Component<{
           {/* {formattedMultiplier()} */}
           <Index each={parts()}>
             {(part, i) => {
-              const [value, id, age, variation, type, label] = part();
+              const { value, id, age, variation, type, label } = part();
 
               let partEl;
               const isBase = ["unit", "building"].includes(variation.type) && i == 0;
@@ -176,21 +147,20 @@ export const StatBar: Component<{
                 ? "bg-white/20 !text-white shrink"
                 : type == "upgrade" && ["building"].includes(variation.type)
                 ? "bg-bar-building shrink"
-                : type == "upgrade" ?? ["unit"].includes(variation.type)
+                : type == "upgrade" && ["unit"].includes(variation.type)
                 ? "bg-bar-upgrade shrink-0"
                 : variation.unique
                 ? "bg-bar-unique"
                 : type == "technology"
                 ? "bg-bar-technology"
                 : "bg-bar-base shrink-0";
-              const hide = () => part()[0] <= 0;
+              const hide = () => part().value <= 0;
               return (
                 <div
-                  class="h-full hover:bg-white"
+                  class={`h-full hover:bg-white ${className}`}
                   ref={partEl}
-                  className={className}
                   style={{
-                    width: hide() ? "0" : `min(max(5px, calc(${(part()[0] / props.max) * 100}% - 2px)), 100%)`,
+                    width: hide() ? "0" : `min(max(5px, calc(${(part().value / props.max) * 100}% - 2px)), 100%)`,
                     "margin-right": hide() ? "0" : "2px",
                     opacity: hide() ? 0 : 1,
                     transition: "all 0.2s ease-in",
@@ -199,7 +169,7 @@ export const StatBar: Component<{
                   <Tooltip attachTo={partEl}>
                     <div class={tooltipCSSClass}>
                       <div class="text-lg mb-4">
-                        <span class=" text-white font-bold rounded-sm px-2 py-1 inline-flex flex-col items-center" className={className}>
+                        <span class={`text-white font-bold rounded-sm px-2 py-1 inline-flex flex-col items-center ${className}`}>
                           <span class="text-xs uppercase ">{type}</span>
                           {!isBase && "+"} {value ?? 0}
                         </span>
@@ -225,6 +195,38 @@ export const StatBar: Component<{
       </div>
     </Show>
   );
+};
+
+const Part: Component<{ part: StatPart<number> }> = (props) => {
+  const { value, maxValue, age, variation, type, label } = props.part;
+
+  const name =
+    {
+      base: `Base (${PRETTY_AGE_MAP[age]})`,
+      upgrade: `${variation.name} (${PRETTY_AGE_MAP[age]})`,
+      technology: `${variation.name} (${PRETTY_AGE_MAP[age]})`,
+    }[type] ?? label;
+
+  const valueClass =
+    {
+      upgrade: "text-item-unit-light",
+      technology: "text-item-tech-light",
+    }[type] ?? "text-white/80";
+
+  const Value = (props: { value: number }) => (
+    <div class={`text-right ${valueClass}`}>
+      {props.value > 0 && type != "base" ? "+ " : ""}
+      {props.value}
+    </div>
+  );
+
+  return value || maxValue ? (
+    <>
+      <div class="text-left">{name}</div>
+      <Value value={value} />
+      {maxValue != null && <Value value={maxValue} />}
+    </>
+  ) : null;
 };
 
 export const StatNumber: Component<{
@@ -277,37 +279,9 @@ export const StatNumber: Component<{
         </span>
         <Tooltip attachTo={el}>
           <div class={tooltipCSSClass}>
-            <Index each={parts()}>
-              {(part, i) => {
-                const [value, id, age, variation, type, label] = part();
-                return value ? (
-                  <>
-                    {type == "base" ? (
-                      <div class="text-lg mb-2">
-                        Base ({PRETTY_AGE_MAP[age]}) <span class="text-white/80 float-right ml-4">{value}</span>
-                      </div>
-                    ) : type == "upgrade" ? (
-                      <div>
-                        {variation.name} ({PRETTY_AGE_MAP[age]})<span class="text-item-unit-light float-right ml-4"> + {value}</span>
-                      </div>
-                    ) : type == "technology" ? (
-                      <div>
-                        {variation.name} ({PRETTY_AGE_MAP[age]})
-                        <span class="text-item-tech-light float-right ml-4">
-                          {" "}
-                          {value > 1 && "+"}
-                          {value}
-                        </span>
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                ) : (
-                  <></>
-                );
-              }}
-            </Index>
+            <div class="grid gap-x-4 grid-cols-[1fr_auto]">
+              <Index each={parts()}>{(part) => <Part part={part()} />}</Index>
+            </div>
           </div>
         </Tooltip>
       </div>
@@ -339,7 +313,6 @@ export const StatDps: Component<{
   helper?: string;
   speed: Stat;
   attacks: Stat[];
-  stat: Stat;
   age?: () => number;
 }> = (props) => {
   const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
@@ -437,3 +410,144 @@ export const StatCosts: Component<{ costs: Item["costs"] }> = (props) => (
     </div>
   </div>
 );
+
+export const StatLos: Component<{
+  label: string;
+  displayAlways?: boolean;
+  helper?: string;
+  stat: Stat;
+  statMax: Stat;
+  age?: () => number;
+}> = (props) => {
+  const [parts, setParts] = createSignal<StatPart<number>[]>([]);
+  const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
+  const [maxValues, setMaxValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
+  createEffect(
+    on([globalAgeFilter, () => props.age?.()], () => {
+      const los = calculateStatParts(props.stat, props.age?.() ?? globalAgeFilter(), { decimals: 1 });
+      const losMax = calculateStatParts(props.statMax, props.age?.() ?? globalAgeFilter(), { decimals: 1 });
+      setValues(los);
+      setMaxValues(losMax);
+
+      if (los.total !== losMax.total) {
+        const getKey = (p: StatPart<number>) => `${p.type}-${p.id}-${p.age}`;
+        const maxPartsMap = new Map(losMax.parts.map((p) => [getKey(p), p]));
+        const combined = los.parts
+          .map((p) => {
+            const maxPart = maxPartsMap.get(getKey(p));
+            return { ...p, maxValue: maxPart?.value };
+          })
+          .filter((p) => p.value || p.maxValue);
+        setParts(combined);
+      } else {
+        setParts(los.parts);
+      }
+    })
+  );
+
+  let el;
+  let helperEl;
+  const showMax = createMemo(() => values().total !== maxValues().total);
+
+  return (
+    <Show when={values().base || props.displayAlways}>
+      <div class="flex flex-col">
+        <span class={statLabelCSSClass}>
+          {props.label}
+          <span ref={helperEl}>{props.helper && <Icon icon="circle-question" class="ml-2"></Icon>}</span>
+        </span>
+        {props.helper && (
+          <Tooltip attachTo={helperEl}>
+            <div class={tooltipCSSClass}>
+              <p>{props.helper}</p>
+            </div>
+          </Tooltip>
+        )}
+
+        <span class="text-white text-xl flex-auto" ref={el}>
+          {values().base}
+          {<span class="text-white/60 text-sm ml-1">TILES</span>}
+          {values().total != values().base && (
+            <span class="text-white/40 text-sm ml-2">
+              <Icon icon="arrow-up-right" class="text-xs" /> {values().total}
+            </span>
+          )}
+          {values().bonus && (
+            <span class="text-white/40  text-sm ml-1">
+              {" "}
+              <Icon icon="plus" class="text-xs" /> {values().bonus}
+            </span>
+          )}
+          <Show when={showMax()}>
+            {maxValues().total && (
+              <span class="text-white/40  text-sm ml-1">
+                {" "}
+                <Icon icon="bolt" class="text-xs" /> {maxValues().total}
+                {" MAX"}
+              </span>
+            )}
+          </Show>
+        </span>
+        <Tooltip attachTo={el}>
+          <div class={tooltipCSSClass}>
+            <div class={`grid gap-x-4 ${showMax() ? "grid-cols-[1fr_auto_auto]" : "grid-cols-[1fr_auto]"}`}>
+              <Show when={showMax()}>
+                <div class="text-md text-gray-300 mb-2"></div>
+                <div class="text-md text-gray-300 mb-2 text-right">Base</div>
+                <div class="text-md text-gray-300 mb-2 text-right">Max</div>
+              </Show>
+              <Index each={parts()}>{(part) => <Part part={part()} />}</Index>
+              <hr class="my-3 col-span-full" />
+              <div class="text-left font-bold">Total</div>
+              <div class="text-right font-bold">{values().total}</div>
+              <Show when={showMax()}>
+                <div class="text-right font-bold">{maxValues().total}</div>
+              </Show>
+            </div>
+            <Show when={showMax()}>
+              <span class="mt-3 text-gray-300">Max when on sufficient elevation</span>
+            </Show>
+          </div>
+        </Tooltip>
+      </div>
+    </Show>
+  );
+};
+
+const ProjectileDamageHint: Component<{
+  numProjectiles: number;
+  baseDamage: number;
+}> = ({numProjectiles, baseDamage}) => {
+  const exampleArmor = 2;
+  const projectileDamage = baseDamage / numProjectiles;
+
+  return (
+    <Show when={numProjectiles > 1}>
+      <div class="bg-gray-500 rounded-sm p-2 flex gap-2 items-center mt-4">
+        <p class="text-xl px-2">{numProjectiles}×</p>
+        <div class="text-sm text-gray-200">
+          <p class="font-bold mb-1 text-xs">Every volley has {numProjectiles} projectiles</p>
+          <p class="text-xs text-gray-200">Target armor has effect on each individual projectile</p>
+          <div class="uppercase text-gray-50 text-[10px] mt-2">Example</div>
+          <div class="text-gray-200 text-[10px]">Assuming target has <span class="bg-pink-900/50 py-0.5 px-1 font-bold rounded text-pink-200">{exampleArmor}</span> ranged armor</div>
+          <div class="py-1">
+            (<span class="bg-lime-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-lime-200">projectile damage</span>
+            {` - `}
+            <span class="bg-pink-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-pink-200">target armor</span>) ×{" "}
+            <span class="bg-teal-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-teal-200">projectiles</span> ={" "}
+            <span class="bg-blue-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-blue-200">total damage</span>
+          </div>
+          <div class="py-1">
+            (<span class="bg-lime-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-lime-200">{projectileDamage}</span>
+            {` - `}
+            <span class="bg-pink-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-pink-200">{exampleArmor}</span>) ×{" "}
+            <span class="bg-teal-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-teal-200">{numProjectiles}</span> ={" "}
+            <span class="bg-blue-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-blue-200">
+              {(projectileDamage - exampleArmor) * numProjectiles}
+            </span>
+          </div>
+        </div>
+      </div>
+    </Show>
+  );
+};

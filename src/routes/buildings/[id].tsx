@@ -7,7 +7,7 @@ import { ItemPage } from "@components/ItemPage";
 import { PatchHistory } from "@components/PatchHistory";
 import { RelatedContent } from "@components/RelatedContent";
 import { ReportButton } from "@components/ReportButton";
-import { StatNumber, StatBar, StatDps, StatCosts } from "@components/Stats";
+import { StatNumber, StatBar, StatDps, StatCosts, StatLos } from "@components/Stats";
 import { TechnologyCard } from "@components/TechnologyCard";
 import { Tooltip } from "@components/Tooltip";
 import { UnitCard } from "@components/UnitCard";
@@ -186,13 +186,12 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
               <StatNumber label="Attack Speed" stat={stats.attackSpeed} unitLabel="S" age={age}></StatNumber>
               <StatNumber label="Min Range" stat={stats.minRange} unitLabel="TILES" age={age}></StatNumber>
               <StatNumber label="Range" stat={stats.maxRange} unitLabel="TILES" age={age}></StatNumber>
-              <StatNumber
+              <StatLos
                 label="Line of Sight"
                 stat={stats.lineOfSight}
-                unitLabel="TILES"
-                helper="Maximum line of sight for a unit, only reached when on elevation"
+                statMax={stats.maxLineOfSight}
                 age={age}
-              ></StatNumber>
+              ></StatLos>
             </div>
           </>
         )}
