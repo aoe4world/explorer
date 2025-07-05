@@ -2,12 +2,15 @@ import { Link, useLocation } from "@solidjs/router";
 import { Component, createSignal, onCleanup, Show } from "solid-js";
 import { setActivePage } from "../../App";
 import { Icon } from "@components/Icon";
-import { Quiz } from "@components/quiz/Quiz";
+import { Quiz } from "@components/quiz/SoloQuiz";
 import { hideNav, setHideNav } from "../../global";
 
 export const QuizRoute: Component = () => {
+  const query = useLocation().query;
   const [show, setShow] = createSignal(false);
   const [difficulty, setDifficulty] = createSignal(0);
+  const questionsUrl = query.questionsUrl;
+  const numQuestions = parseInt(query.numQuestions);
 
   setHideNav(true);
   onCleanup(() => setHideNav(false));
@@ -28,7 +31,7 @@ export const QuizRoute: Component = () => {
                 </p>
                 <ul class="list-disc text-gray-200 max-w-prose flex flex-col gap-2 pl-6 my-4">
                   <li>Landmarks and civivilization bonuses.</li>
-                  <li>Availiblity of technologies, buildings and units</li>
+                  <li>Availability of technologies, buildings and units</li>
                   <li>Research per age and unit costs</li>
                   <li>Which unit wins, or how many to one shot</li>
                 </ul>
@@ -66,7 +69,7 @@ export const QuizRoute: Component = () => {
           </>
         }
       >
-        <Quiz difficulty={difficulty()} />
+        <Quiz difficulty={difficulty()} questionsUrl={questionsUrl} numQuestions={numQuestions} />
       </Show>
     </div>
   );

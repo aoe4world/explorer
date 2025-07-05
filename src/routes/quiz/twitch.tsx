@@ -1,14 +1,42 @@
 import { Link, useLocation, useParams } from "@solidjs/router";
-import { Component, createSignal, onCleanup, Show } from "solid-js";
+import { Component, createSignal, onCleanup, Show, createEffect } from "solid-js";
 import { Icon } from "@components/Icon";
 import { TwitchQuiz } from "@components/quiz/TwitchQuiz";
+import { ToggleSwitch } from "@components/common/ToggleSwitch";
 import { setHideNav } from "../../global";
 import { setActivePage } from "../../App";
 
 export const QuizRoute: Component = () => {
+  const query = useLocation().query;
   const [show, setShow] = createSignal(false);
-  const [difficulty, setDifficulty] = createSignal(0);
-  const [channel, setChannel] = createSignal(useParams()?.channel ?? "");
+ const initialShowAdvancedSettings =
+   !isNaN(parseInt(query.numQuestions)) ||
+   parseInt(query.gracePeriod ?? "5") !== 5 ||
+   parseInt(query.autoplaySpeed ?? "15") !== 15 ||
+   !["0", "80"].includes(query.difficulty ?? "0");
+
+ const [showAdvancedSettings, setShowAdvancedSettings] = createSignal(initialShowAdvancedSettings);
+  const [difficulty, setDifficulty] = createSignal(parseInt(query.difficulty ?? "0"));
+  const [customDifficulty, setCustomDifficulty] = createSignal(!["0", "80"].includes(query.difficulty ?? "0"));
+  const [channel, setChannel] = createSignal(useParams()?.channel ?? query.channel ?? "");
+  const [gracePeriod, setGracePeriod] = createSignal(parseInt(query.gracePeriod ?? "5"));
+  const [autoplaySpeed, setAutoplaySpeed] = createSignal(parseInt(query.autoplaySpeed ?? "15"));
+  const [shareUrl, setShareUrl] = createSignal("");
+  const [numQuestions, setNumQuestions] = createSignal(parseInt(query.numQuestions));
+  const [hideVotes, setHideVotes] = createSignal(query.hideVotes === "true");
+  const questionsUrl = query.questionsUrl;
+
+  createEffect(() => {
+    const url = new URL(window.location.href.split("?")[0]);
+    if (channel()) url.searchParams.set("channel", channel());
+    if (difficulty() !== 0) url.searchParams.set("difficulty", difficulty().toString());
+    if (gracePeriod() !== 5) url.searchParams.set("gracePeriod", gracePeriod().toString());
+    if (autoplaySpeed() !== 15) url.searchParams.set("autoplaySpeed", autoplaySpeed().toString());
+    if (questionsUrl) url.searchParams.set("questionsUrl", questionsUrl);
+    if (numQuestions()) url.searchParams.set("numQuestions", numQuestions().toString());
+    if (hideVotes()) url.searchParams.set("hideVotes", "true");
+    setShareUrl(url.toString());
+  });
 
   setHideNav(true);
   onCleanup(() => setHideNav(false));
@@ -64,20 +92,130 @@ export const QuizRoute: Component = () => {
                   Start
                 </button>
               </div>
-              <button
-                onClick={() => setDifficulty(80) && setShow(true)}
-                class="fond-bold underline underline-offset-2 text-sm text-gray-300 p-2 active:outline outline-white"
-              >
-                Start without easy questions
-              </button>
+              <div class="grid grid-cols-7 gap-4 mt-4 text-black">
+                <div class="col-span-3">
+                  <label class="text-sm text-gray-300 mb-1 block">
+                    Starting Difficulty
+                  </label>
+                  <div class="flex items-center gap-2">
+                    <span class={`px-2 text-sm w-12 text-center ${difficulty() === 0 && !customDifficulty() ? "text-purple-400 font-bold" : "text-gray-300"}`}>Easy</span>
+                    <ToggleSwitch
+                      id="difficulty-toggle"
+                      checked={customDifficulty() ? null : difficulty() === 80}
+                      onChange={(checked) => {
+                        setCustomDifficulty(false);
+                        setDifficulty(checked ? 80 : 0);
+                      }}
+                    />
+                    <span class={`px-2 text-sm w-12 text-center ${difficulty() === 80 && !customDifficulty() ? "text-purple-400 font-bold" : "text-gray-300"}`}>Hard</span>
+                  </div>
+                </div>
+                <div class="col-span-4 flex justify-end items-start">
+                  <button onClick={() => setShowAdvancedSettings(!showAdvancedSettings())} class="text-gray-300 text-sm flex items-center gap-1">
+                    Advanced
+                    <Icon icon={showAdvancedSettings() ? "chevron-up" : "chevron-down"} class="ml-1" />
+                  </button>
+                </div>
+              </div>
+              <Show when={showAdvancedSettings()}>
+                <div class="mt-4 p-4 rounded-lg bg-gray-700 text-black">
+                  <div class="grid grid-cols-3 gap-4 mb-4">
+                    <h3 class="font-bold text-gray-300">Questions</h3>
+                    <div class="col-span-1">
+                      <label class="text-sm text-gray-300 mb-1 block">Number of Questions</label>
+                      <input
+                        type="number"
+                        value={numQuestions()}
+                        onInput={(e) => setNumQuestions(parseInt(e.currentTarget.value))}
+                        placeholder="Unlimited"
+                        class="w-full p-1 rounded-md"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label class="text-sm text-gray-300 mb-1 block">Custom Difficulty</label>
+                      <input
+                        type="number"
+                        value={difficulty()}
+                        onInput={(e) => {
+                          setDifficulty(parseInt(e.currentTarget.value));
+                          setCustomDifficulty(true);
+                        }}
+                        class="w-full p-1 rounded-md"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-4 mt-4 mb-1">
+                    <h3 class="font-bold text-gray-300 ">Autoplay</h3>
+                    <div class="col-span-1">
+                      <label for="autoplayspeed" class="text-sm text-gray-300 mb-1 block">
+                        Speed (s)
+                      </label>
+                      <input
+                        id="autoplayspeed"
+                        type="number"
+                        value={autoplaySpeed()}
+                        onInput={(e) => setAutoplaySpeed(parseInt(e.currentTarget.value))}
+                        class="w-full p-1 rounded-md"
+                      />
+                    </div>
+                    <div class="col-span-1">
+                      <label for="graceperiod" class="text-sm text-gray-300 mb-1 block relative group">
+                        Grace Period (s)
+                        <Icon icon="info-circle" class="ml-1 text-gray-400" />
+                        <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max p-2 bg-gray-800 text-white text-xs rounded-md hidden group-hover:block z-10">
+                          Accounts for stream delay, giving viewers extra time after the timer expires.
+                        </span>
+                      </label>
+                      <input
+                        id="graceperiod"
+                        type="number"
+                        value={gracePeriod()}
+                        onInput={(e) => setGracePeriod(parseInt(e.currentTarget.value))}
+                        class="w-full p-1 rounded-md"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-3 gap-4 mt-4 mb-1">
+                    <h3 class="font-bold text-gray-300 ">Submissions</h3>
+                    <div class="col-span-2 flex items-center">
+                      <ToggleSwitch
+                        id="hidevotes"
+                        checked={hideVotes()}
+                        onChange={setHideVotes}
+                        label="Hide Viewer Submissions"
+                        tooltip="Hide viewer votes until the voting period ends."
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Show>
               {channel()?.length > 3 && (
-                <small class="text-gray-300 text-sm mt-4 block">Tip: Instantly start the quiz for your channel by navigating to {window.location.href}</small>
+                <div class="text-gray-300 text-sm mt-4">
+                  Tip: Instantly start the quiz for your channel by navigating{" "}
+                  <a href={shareUrl()} class="text-purple-400 underline">
+                    here
+                  </a>
+                  .
+                  <button onClick={() => navigator.clipboard.writeText(shareUrl())} class="ml-2 p-1 rounded-md bg-gray-500 text-white">
+                    <Icon icon="copy" />
+                  </button>
+                </div>
               )}
             </div>
           </div>
         }
       >
-        <TwitchQuiz difficulty={difficulty()} channel={channel()} />
+        <TwitchQuiz
+          difficulty={difficulty()}
+          channel={channel()}
+          gracePeriod={gracePeriod() * 1000}
+          autoplaySpeed={autoplaySpeed() * 1000}
+          questionsUrl={questionsUrl}
+          numQuestions={numQuestions()}
+          hideVotes={hideVotes()}
+          onRestart={() => setShow(false)}
+        />
       </Show>
     </div>
   );
