@@ -214,6 +214,7 @@ export const QuizRoute: Component = () => {
           questionsUrl={questionsUrl}
           numQuestions={numQuestions()}
           hideVotes={hideVotes()}
+          onRestart={() => setShow(false)}
         />
       </Show>
     </div>

@@ -19,7 +19,7 @@ enum TwitchQuizState {
   Finished,
 }
 
-export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; gracePeriod?: number; autoplaySpeed?: number; questionsUrl?: string; numQuestions?: number; hideVotes?: boolean }> = (props) => {
+export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; gracePeriod?: number; autoplaySpeed?: number; questionsUrl?: string; numQuestions?: number; hideVotes?: boolean; onRestart?: Function }> = (props) => {
   const graceperiod = props.gracePeriod ?? 5000;
   const autoplaySpeed = props.autoplaySpeed ?? 15000;
   const autoplayNextSpeed = Math.min(10000, autoplaySpeed * 0.5);
@@ -180,10 +180,10 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
             <h3 class="font-bold text-white text-2xl my-3">Quiz Finished!</h3>
             <p class="text-gray-200 mt-1 ">The quiz has ended. Check out the final scores below.</p>
             <div class="flex gap-4 justify-center mt-6">
-              <button class="bg-gray-400 text-sm p-4 rounded" onClick={() => window.location.reload()}>
+              <button class="bg-gray-400 hover:bg-gray-300 text-sm p-4 rounded" onClick={() => props.onRestart ? props.onRestart() : window.location.reload()}>
                 Play Again
               </button>
-              <button class="bg-gray-700 text-sm p-4 rounded" onClick={() => setShowGiveaway(true)}>
+              <button class="bg-gray-700 hover:bg-gray-500 text-sm p-4 rounded" onClick={() => setShowGiveaway(true)}>
                 Start Giveaway
               </button>
             </div>
