@@ -14,12 +14,12 @@ const typeToPathMap = {
 };
 
 export function getItemHref(item: UnifiedItem, civ?: civConfig) {
-  if (item.civs.length == 1 && !civ) civ = CIVILIZATIONS[item.civs[0]];
+  if (item.civs.length == 1 && !civ) civ = CIVILIZATIONS[item.civs[0]] as unknown as civConfig;
   return `${civ ? `/civs/${civ.slug}` : ""}/${typeToPathMap[item.type]}/${item.id}`;
 }
 
-export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
-  const minAge = () => (!props.civ ? props.item.minAge : props.item.variations.reduce((a, v) => (v.civs.includes(props.civ.abbr) ? Math.min(a, v.age) : a), 4));
+export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig; age?: number }> = (props) => {
+  const minAge = () => (props.age ?? (!props.civ ? props.item.minAge : props.item.variations.reduce((a, v) => (v.civs.includes(props.civ.abbr) ? Math.min(a, v.age) : a), 4)));
 
   return (
     <div
@@ -45,7 +45,7 @@ export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig }> = (pr
           <For each={props.item.civs}>
             {(civ) =>
               props.item.type != "technology" ? (
-                <Link href={getItemHref(props.item, CIVILIZATIONS[civ])}>
+                <Link href={getItemHref(props.item, CIVILIZATIONS[civ] as unknown as civConfig)}>
                   <CivFlag abbr={civ} class="h-3.5 w-5 object-cover rounded-sm transition-opacity opacity-30 group-hover:opacity-80  hover:!opacity-100" />
                 </Link>
               ) : (

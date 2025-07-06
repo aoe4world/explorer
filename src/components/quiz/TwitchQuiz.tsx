@@ -3,6 +3,7 @@ import { createStore, produce } from "solid-js/store";
 import { Icon } from "../Icon";
 import { formatAnswer, getRandomQuestion, loadCustomQuestions } from "./questions";
 import { MultipleChoiceOption } from "./SoloQuiz";
+import { QuestionInspectPopup } from "./QuestionInspectPopup";
 import { ChatClient } from "@twurple/chat";
 import { Random } from "./random";
 import { indexToLetter, DLC_CIVS, Score, updateScore, useKeyHandler } from "./shared";
@@ -19,7 +20,7 @@ enum TwitchQuizState {
   Finished,
 }
 
-export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; gracePeriod?: number; autoplaySpeed?: number; questionsUrl?: string; numQuestions?: number; hideVotes?: boolean; onRestart?: Function }> = (props) => {
+export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; gracePeriod?: number; autoplaySpeed?: number; questionsUrl?: string; numQuestions?: number; hideVotes?: boolean; dev?: boolean; onRestart?: Function }> = (props) => {
   const graceperiod = props.gracePeriod ?? 5000;
   const autoplaySpeed = props.autoplaySpeed ?? 15000;
   const autoplayNextSpeed = Math.min(10000, autoplaySpeed * 0.5);
@@ -31,13 +32,16 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
   const [autoplay, setAutoplay] = createSignal(false);
   const [showGiveaway, setShowGiveaway] = createSignal(false);
   const [questionCount, setQuestionCount] = createSignal(0);
+  const [askedQuestions, setAskedQuestions] = createStore<AskedQuestion[]>([]);
   const [customQuestions] = createResource(props.questionsUrl, loadCustomQuestions);
+  const [showInspectPopup, setShowInspectPopup] = createSignal(false);
   const [question, { refetch }] = createResource(
     () => !customQuestions.loading,
     async (ready) => {
       if (!ready) return null;
       const q = await getRandomQuestion(questionCount() + (props.difficulty ?? 0), Random.pick(DLC_CIVS));
       if (!q) finishQuiz();
+      if (props.dev) setAskedQuestions(askedQuestions.length, { ...q, category: `difficulty-${props.difficulty ?? 0}` });
       return q;
     }
   );
@@ -130,8 +134,8 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
     }
   }
 
-  function next(reroll?: boolean) {
-    if (!reroll)
+  function next(reroll?: boolean, rejected?: boolean) {
+    if (!reroll && !rejected)
       setQuestionCount((q) => q + 1);
     setSelectedChoice(undefined);
     setPendingAnswers({ total: {}, host: undefined, viewers: {} });
@@ -148,6 +152,12 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
     if (quizState() === TwitchQuizState.Finished) return;
     pauseAutoplay();
     setQuizState(TwitchQuizState.Finished);
+  }
+
+  function rejectQuestion() {
+    if (quizState() === TwitchQuizState.Finished) return; // Cannot reject if quiz is finished
+    setAskedQuestions(askedQuestions.length - 1, produce((q) => q.rejected = true));
+    next(false, true);
   }
 
   function startAutoplay() {
@@ -186,6 +196,9 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
               <button class="bg-gray-700 hover:bg-gray-500 text-sm p-4 rounded" onClick={() => setShowGiveaway(true)}>
                 Start Giveaway
               </button>
+              {props.dev && <button class="bg-gray-700 hover:bg-gray-500 text-sm p-4 rounded" onClick={() => exportQuestions()}>
+                Export Questions
+              </button>}
             </div>
           </div>
         }
@@ -216,7 +229,14 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
         </div>
         <Show when={!question.loading && question()} fallback={<div class="text-center p-8">{question.loading ? "Loading question..." : "Failed to load new question." }</div>}>
           <h3 class="font-bold text-white text-2xl my-3">{question().question}</h3>
-          <p class="text-gray-200 mt-1 ">{question().note}</p>
+          <p class="text-gray-200 mt-1 ">
+            {question().note}
+            <Show when={(props.dev || quizState() === TwitchQuizState.ShowingResults) && question().versus}>
+              <button class="bg-gray-700 hover:bg-gray-500 text-sm p-2 rounded float-right" onClick={() => setShowInspectPopup(true)}>
+                Inspect
+              </button>
+            </Show>
+          </p>
 
           <div class="flex flex-col gap-4 mt-8">
             <For each={question().answers}>
@@ -246,6 +266,13 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
             <div>Send your answers in chat (i.e. 'A' or 'B'). {secondsLeft() && <>Round closes in {formatSeconds(secondsLeft())}.</>}</div>
           )}
           <div class="ml-auto">
+            {props.dev && <button
+              class="bg-red-500 hover:bg-red-400 text-white rounded py-2 px-6 mr-4 disabled:opacity-30 disabled:bg-gray-700"
+              onClick={() => rejectQuestion()}
+              disabled={quizState() === TwitchQuizState.Finished}
+            >
+              Reject
+            </button>}
             <Show
               when={quizState() === TwitchQuizState.ShowingResults}
               fallback={
@@ -368,8 +395,46 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
       <Show when={showGiveaway()}>
         <TwitchGiveaway scores={scores} users={users} channel={props.channel} onClose={() => setShowGiveaway(false)} />
       </Show>
+
+      <Show when={showInspectPopup()}>
+        <QuestionInspectPopup
+          question={question()}
+          onClose={() => setShowInspectPopup(false)}
+        />
+      </Show>
     </div>
   );
+
+  function exportQuestions() {
+    const approvedQuestions = {};
+    const rejectedQuestions = {};
+
+    askedQuestions.forEach(q => {
+      const questionData = {
+        question: q.question,
+        note: q.note,
+        answers: q.answers,
+        correctAnswer: q.correctAnswer
+      };
+
+      if (q.rejected) {
+        if (!rejectedQuestions[q.category]) rejectedQuestions[q.category] = { questions: [] };
+        rejectedQuestions[q.category].questions.push(questionData);
+      } else {
+        if (!approvedQuestions[q.category]) approvedQuestions[q.category] = { questions: [] };
+        approvedQuestions[q.category].questions.push(questionData);
+      }
+    });
+
+    const exportData = {
+      level_overrides: {}, // You might want to populate this based on your needs
+      additional_questions: approvedQuestions,
+      rejected_questions: rejectedQuestions
+    };
+
+    navigator.clipboard.writeText(JSON.stringify(exportData, null, 2));
+    alert("Questions exported to clipboard!");
+  }
 };
 
 
@@ -418,3 +483,12 @@ export type TwitchUser = {
   subscriber: boolean;
   moderator: boolean;
 };
+
+type AskedQuestion = {
+  question: string;
+  note: string;
+  answers: any[];
+  correctAnswer: number;
+  category: string;
+  rejected?: boolean;
+}

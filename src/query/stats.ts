@@ -49,7 +49,7 @@ export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
   else return getStats(unit);
 }
 
-function mergeVariationsToStats(variations: (Unit | Building)[]) {
+export function mergeVariationsToStats(variations: (Unit | Building)[]) {
   return variations
     .sort(
       firstBy<Unit>((a, b) => a.age - b.age) // Sort by age

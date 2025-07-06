@@ -1,11 +1,11 @@
 import { JSX } from "solid-js";
 import { RESOURCES } from "../../../assets";
 import * as SDK from "@data/sdk";
-import { Item, ItemClass, UnifiedItem } from "@data/types/items";
+import { ItemClass, UnifiedItem } from "@data/types/items";
 import { CivFlag } from "@components/CivFlag";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
 import { getMostAppropriateVariation, modifierMatches } from "../../query/utils";
-import { civConfig, Unit } from "../../types/data";
+import { civAbbr, civConfig, Unit } from "../../types/data";
 import { ItemIcon } from "../ItemIcon";
 import { formatSecondsToTime } from "../Stats";
 import { Random } from "./random";
@@ -15,7 +15,15 @@ export type Question = {
   note?: string;
   answers: Answer[];
   correctAnswer: number;
+  versus?: [VersusUnit, VersusUnit];
 };
+
+export type VersusUnit = {
+  id: string;
+  baseId: string;
+  civ: civAbbr;
+  age: number;
+}
 
 export type AnswerDefinition = {
   type: "civ" | "resource" | "text" | "unit" | "building" | "technology" | "costs";
@@ -394,6 +402,10 @@ async function getStraightUpFightQuestion(difficulty?: number, civ?: civConfig):
     note: `Without any upgrades, in range, no kiting, charges or special attacks and influences. Last one standing wins.`,
     answers: [...options.map((u) => `${u.name} in ${PRETTY_AGE_MAP_LONG[u.age]}`), "It's a draw"],
     correctAnswer: winner === false ? 2 : options.indexOf(winner),
+    versus: [
+      { id: options[0].id, baseId: options[0].baseId, civ: options[0].civs[0], age: options[0].age },
+      { id: options[1].id, baseId: options[1].baseId, civ: options[1].civs[0], age: options[1].age },
+    ],
   };
 }
 
@@ -446,6 +458,10 @@ async function getOneShotQuestion(i?: number, civ?: civConfig): Promise<Question
     answers: options.map((x) => `${x} ${x === 1 ? ranged.name : `${ranged.name}s`}`),
     correctAnswer,
     note: `Without any blacksmith or university upgrades`,
+    versus: [
+      { id: ranged.id, baseId: ranged.baseId, civ: ranged.civs[0], age: ranged.age },
+      { id: target.id, baseId: target.baseId, civ: target.civs[0], age: target.age },
+    ],
   };
 }
 

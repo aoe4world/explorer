@@ -24,6 +24,7 @@ export const QuizRoute: Component = () => {
   const [shareUrl, setShareUrl] = createSignal("");
   const [numQuestions, setNumQuestions] = createSignal(parseInt(query.numQuestions));
   const [hideVotes, setHideVotes] = createSignal(query.hideVotes === "true");
+  const [devMode, setDevMode] = createSignal(query.dev === "true");
   const questionsUrl = query.questionsUrl;
 
   createEffect(() => {
@@ -35,6 +36,7 @@ export const QuizRoute: Component = () => {
     if (questionsUrl) url.searchParams.set("questionsUrl", questionsUrl);
     if (numQuestions()) url.searchParams.set("numQuestions", numQuestions().toString());
     if (hideVotes()) url.searchParams.set("hideVotes", "true");
+    if (devMode()) url.searchParams.set("dev", "true");
     setShareUrl(url.toString());
   });
 
@@ -214,6 +216,7 @@ export const QuizRoute: Component = () => {
           questionsUrl={questionsUrl}
           numQuestions={numQuestions()}
           hideVotes={hideVotes()}
+          dev={devMode()}
           onRestart={() => setShow(false)}
         />
       </Show>
