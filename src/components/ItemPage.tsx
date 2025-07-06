@@ -17,7 +17,7 @@ const Header: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
   const itemCssClass = getItemCssClass(props.item);
   return (
     <div class="flex gap-4 items-center mb-4">
-      <div class={`flex-none self-start rounded-md bg-${itemCssClass} h-24 w-24 p-2`}>
+      <div class={`flex self-start rounded-md bg-${itemCssClass} h-24 w-24 p-2 items-center`}>
         <ItemIcon url={props.item.icon} />
       </div>
       <div>

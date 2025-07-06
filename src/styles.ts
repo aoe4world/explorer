@@ -8,8 +8,10 @@ export const itemGridCSSClass = `grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 
 export const secondaryButtonClass = `text-gray-300 font-bold text-sm bg-gray-600 rounded px-3 py-2 hover:bg-gray-500 hover:text-gray-50 transition`;
 
 export function getItemCssClass(item: UnifiedItem) {
-  return item.type === "unit" ? "item-unit" :
+  const isCommanderie = item.civs.includes("kt") && item.classes.includes("advance");
+  return isCommanderie ? "item-commanderie" :
+    item.type === "unit" ? "item-unit" :
     item.type == "building" ? "item-building" :
-      item.type == "technology" ? "item-tech" :
-        item.type == "ability" ? "item-ability" : "item-building";
+    item.type == "technology" ? "item-tech" :
+    item.type == "ability" ? "item-ability" : "item-building";
 }

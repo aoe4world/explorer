@@ -23,6 +23,7 @@ import { CivConfig } from "@data/types/civs";
 import { getStructuredItems, parseCurrentLocation } from "../global";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
+import { getItemCssClass } from "../styles";
 const SDK = import("@data/sdk");
 
 export const SidebarNav: Component = (props) => {
@@ -79,11 +80,11 @@ export const SidebarNav: Component = (props) => {
                                           <Link
                                             href={getItemHref(item, civilization())}
                                             role="treeitem"
-                                            class={`flex items-center p-1 rounded gap-2 text-white/90 hover:text-white bg-item-${item.type} bg-opacity-0 hover:bg-opacity-30 transition-all outline-none border border-transparent focus-visible:border-white`}
+                                            class={`flex items-center p-1 rounded gap-2 text-white/90 hover:text-white bg-${getItemCssClass(item)} bg-opacity-0 hover:bg-opacity-30 transition-all outline-none border border-transparent focus-visible:border-white`}
                                             activeClass={`!bg-opacity-40 font-bold !text-white`}
                                             end
                                           >
-                                            <div class={`w-6 h-6 bg-item-${item.type} rounded-sm flex-none`}>
+                                            <div class={`w-6 h-6 bg-${getItemCssClass(item)} rounded-sm flex items-center`}>
                                               <ItemIcon url={item.icon} />
                                             </div>
                                             <p

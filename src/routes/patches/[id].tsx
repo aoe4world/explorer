@@ -7,7 +7,7 @@ import { Icon } from "@components/Icon";
 import { ItemIcon } from "@components/ItemIcon";
 import { scrollIntoViewIfNeeded, TableOfContents, useTableOfContents } from "@components/TableOfContents";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG } from "../../config";
-import { capitlize, getItemByCanonicalName, sortPatchDiff } from "../../query/utils";
+import { capitalize, getMapsAsItems, sortPatchDiff } from "../../query/utils";
 import { getItemCssClass, mainIntroductionCSSClass } from "../../styles";
 import { civAbbr, Item, UnifiedItem } from "../../types/data";
 import { PatchLine, PatchSection, PatchSet } from "../../types/patches";
@@ -23,6 +23,10 @@ export const PatchDetailRoute = () => {
   const [items] = createResource(patch, async (patch) => {
     const SDK = await import("@data/sdk/index");
     const items = patch.sections.flatMap((s) => s.changes).flatMap((c) => c.items.map((ci) => [ci, SDK.Get(ci as ItemSlug)] as [string, ItemGroup<Item>]));
+    const mapItems = getMapsAsItems();
+    mapItems.forEach(mapItem => {
+      items.push([`maps/${mapItem.id}`, mapItem]);
+    });
     return new Map(items);
   });
 
@@ -162,13 +166,24 @@ export const PatchDetailRoute = () => {
 };
 
 const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem>; civ: civAbbr }> = (props) => {
+  let subtitle: string | Element = props.section.subtitle;
+  if (subtitle) {
+    const civ = Object.values(CIVILIZATIONS).filter((civ) => civ.name == subtitle)[0];
+    if (civ) {
+      subtitle = (<div class="flex items-center gap-4 w-full justify-between">
+        <span>{civ.name}</span>
+        <CivFlag class="inline-block h-7 opacity-50" abbr={civ.abbr} />
+      </div>);
+    }
+  }
+
   return (
     <div class="mb-10 max-w-prose scroll-mt-24">
       { props.section.title && <TableOfContents.Anchor label={props.section.title} level={1} /> }
       { props.section.subtitle && <TableOfContents.Anchor label={props.section.subtitle} level={2} /> }
 
       {props.section.title && <h2 class="text-4xl font-bold mb-4 mt-20  border-b pb-3 border-white/20">{props.section.title}</h2>}
-      {props.section.subtitle && <h3 class="text-2xl font-bold mb-4 border-b pb-3 border-white/20">{props.section.subtitle}</h3>}
+      {props.section.subtitle && <h3 class="text-2xl font-bold mb-4 border-b pb-3 border-white/20">{subtitle}</h3>}
       {props.section.description && <p class="leading-6 text-white/80 my-8 max-w-prose whitespace-pre-wrap">{props.section.description}</p>}
       {props.section.md && <DirtSimpleMd md={props.section.md} />}
       <For each={props.section.changes}>
@@ -188,7 +203,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
                           href={(item.type as any) == "map" ? `https://aoe4world.com/stats/maps/${item.name}` : getItemHref(item)}
                           class="inline-flex flex-row items-center"
                         >
-                          <div class={`flex-none rounded bg-${itemCssClass} w-8 h-8 p-0.5 mr-2`}>
+                          <div class={`flex rounded bg-${itemCssClass} w-8 h-8 p-0.5 mr-2 items-center`}>
                             <ItemIcon url={item.icon} />
                           </div>
                           <span class="font-bold">{item.name}</span>
@@ -197,7 +212,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
                     }
                     const unmapped = ci.split("/");
                     console.warn(`Item not found: ${unmapped[1]} in ${unmapped[0]}`);
-                    return <span class="font-bold">{capitlize(unmapped[1])}</span>;
+                    return <span class="font-bold">{capitalize(unmapped[1])}</span>;
                   }}
                 </For>
               </div>
@@ -265,9 +280,9 @@ const DirtSimpleMd: Component<{ md: string }> = (props) => {
     <div class="mb-8">
       {...(props.md ?? "").split("\n").map((line) => {
         const l = line.trim();
-        if (l.startsWith("###")) return <h5 class="text-md font-bold mb-2 mt-4">{l.slice(4)}</h5>;
-        if (l.startsWith("##")) return <h4 class="text-lg font-bold mb-2 mt-4">{l.slice(3)}</h4>;
-        if (l.startsWith("#")) return <h3 class="text-xl text-white font-bold  mb-2 mt-4">{l.slice(2)}</h3>;
+        if (l.startsWith("###")) return <h5 class="text-md font-bold mb-2 mt-4">{l.slice(3).trimStart()}</h5>;
+        if (l.startsWith("##")) return <h4 class="text-lg font-bold mb-2 mt-4">{l.slice(2).trimStart()}</h4>;
+        if (l.startsWith("#")) return <h3 class="text-xl text-white font-bold  mb-2 mt-4">{l.slice(1).trimStart()}</h3>;
         if (l.startsWith("> ")) return <DevNote note={l.slice(2)} />;
         if (l.startsWith("![") && l.endsWith(")")) {
           const [_, alt, url] = l.match(/!\[(.*)\]\((.*)\)/);

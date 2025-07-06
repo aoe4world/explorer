@@ -189,20 +189,34 @@ export async function findClosestMatch<T extends ITEMS>(type: T, id: string, civ
 }
 
 function getMapAsItem(id: string) {
-  const [name, icon] = staticMaps[id] ?? [capitlize(id.replaceAll("-", " ")), ""];
+  const {name, imageUrl} = staticMaps[id] ?? {name: capitalize(id.replaceAll("-", " ")), imageUrl: ""};
 
   return {
     id,
     name,
     civs: [],
     classes: ["Map"],
-    icon,
+    icon: imageUrl,
     description: "",
     type: "map",
   } as unknown as UnifiedItem;
 }
 
-export function capitlize(string: string) {
+export function getMapsAsItems() {
+  return Object.entries(staticMaps).map(([key, value]) => (
+    {
+      id: key,
+      name: value.name,
+      civs: [],
+      classes: ["Map"],
+      icon: value.imageUrl,
+      description: "",
+      type: "map",
+    } as unknown as UnifiedItem)
+  );
+}
+
+export function capitalize(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
