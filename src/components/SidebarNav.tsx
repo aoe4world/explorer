@@ -24,6 +24,7 @@ import { getStructuredItems, parseCurrentLocation } from "../global";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { getItemCssClass } from "../styles";
+import { UnifiedItem } from "src/types/data";
 const SDK = import("@data/sdk");
 
 export const SidebarNav: Component = (props) => {
@@ -62,7 +63,7 @@ export const SidebarNav: Component = (props) => {
                         </Link>
                       </div>
                       <TreeGroupItems class="pl-0.5 flex flex-col gap-2 mb-4">
-                        <For each={Object.entries(data?.[type] ?? {})}>
+                        <For each={Object.entries(data?.[type] ?? {}) as [key: string, items?: UnifiedItem[]][]}>
                           {([key, items]) =>
                             items?.length ? (
                               <TreeItem>

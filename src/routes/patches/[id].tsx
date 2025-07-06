@@ -1,5 +1,5 @@
 import { Link, useLocation, useParams } from "@solidjs/router";
-import { Component, createMemo, onMount, createResource, createSignal, For, Index, Resource, createEffect, Show, onCleanup } from "solid-js";
+import { Component, createMemo, onMount, createResource, createSignal, For, Index, Resource, createEffect, Show, onCleanup, JSX } from "solid-js";
 import { setActivePage } from "../../App";
 import { getItemHref } from "@components/Cards";
 import { CivFlag } from "@components/CivFlag";
@@ -166,7 +166,7 @@ export const PatchDetailRoute = () => {
 };
 
 const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem>; civ: civAbbr }> = (props) => {
-  let subtitle: string | Element = props.section.subtitle;
+  let subtitle: string | JSX.Element = props.section.subtitle;
   if (subtitle) {
     const civ = Object.values(CIVILIZATIONS).filter((civ) => civ.name == subtitle)[0];
     if (civ) {

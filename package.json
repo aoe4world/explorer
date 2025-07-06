@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/generateMaps.js",
     "build": "cd ./data && yarn install && cd ../ && vite build",
     "serve": "yarn build && vite preview",
     "format": "prettier --write ./src"

@@ -137,7 +137,7 @@ const UnavailableForCiv: Component<{ item: UnifiedItem; civ: civConfig }> = (pro
           <div class="flex">
             <For each={props.item.civs}>
               {(civ) => (
-                <Link href={getItemHref(props.item, CIVILIZATIONS[civ])} class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80 mr-3">
+                <Link href={getItemHref(props.item, CIVILIZATIONS[civ] as unknown as civConfig)} class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80 mr-3">
                   <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {CIVILIZATIONS[civ].name}
                 </Link>
               )}
@@ -170,7 +170,7 @@ const CivOptionsForItem: ParentComponent<{ item: UnifiedItem; civs: civAbbr[]; p
       <For each={props.civs}>
         {(civ) => (
           <Link
-            href={getItemHref(props.item, CIVILIZATIONS[civ])}
+            href={getItemHref(props.item, CIVILIZATIONS[civ] as unknown as civConfig)}
             class="flex gap-2 items-center font-bold text-base  mr-3 bg-gray-900 p-2 rounded-md hover:text-white text-gray-100 hover:bg-black"
           >
             <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {props.prefix} {CIVILIZATIONS[civ].name}

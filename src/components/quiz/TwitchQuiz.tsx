@@ -214,9 +214,9 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
             </button>
           )}
         </div>
-        <Show when={!question.loading} fallback={<div class="text-center p-8">Loading question...</div>}>
-          <h3 class="font-bold text-white text-2xl my-3">{question()?.question}</h3>
-          <p class="text-gray-200 mt-1 ">{question()?.note}</p>
+        <Show when={!question.loading && question()} fallback={<div class="text-center p-8">{question.loading ? "Loading question..." : "Failed to load new question." }</div>}>
+          <h3 class="font-bold text-white text-2xl my-3">{question().question}</h3>
+          <p class="text-gray-200 mt-1 ">{question().note}</p>
 
           <div class="flex flex-col gap-4 mt-8">
             <For each={question().answers}>
@@ -225,7 +225,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
                   option={indexToLetter[index()]}
                   disabled={quizState() !== TwitchQuizState.Asking}
                   selected={pendingAnswers.host == index()}
-                  correct={quizState() === TwitchQuizState.ShowingResults ? (index() == question()?.correctAnswer ? true : index() == selectedChoice() ? false : null) : undefined}
+                  correct={quizState() === TwitchQuizState.ShowingResults ? (index() == question().correctAnswer ? true : index() == selectedChoice() ? false : null) : undefined}
                   onPick={() => pickChoice(index)}
                 >
                   {formatAnswer(answer)}

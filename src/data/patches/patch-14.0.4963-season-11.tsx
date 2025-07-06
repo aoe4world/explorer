@@ -265,17 +265,15 @@ export const patch: PatchNotes = {
         {
           items: ["units/khan"],
           civs: ["mo"],
-          diff: [["fix", "Fixed an issue where the Khan would not deal more than 1 damage to buildings after researching Incendiary Arrows."]],
+          diff: [
+            ["fix", "Fixed an issue where the Khan would not deal more than 1 damage to buildings after researching Incendiary Arrows."],
+            ["fix", "Fixed an issue preventing the buff indicator for the Khan’s Hunter from displaying sometimes."]
+          ],
         },
         {
           items: ["buildings/kurultai"],
           civs: ["mo"],
           diff: [["fix", "Fixed an issue where placing two Kurultais from two different players next to one another would cause the aura to only be applied to one of the players."]],
-        },
-        {
-          items: ["units/khan"],
-          civs: ["mo"],
-          diff: [["fix", "Fixed an issue preventing the buff indicator for the Khan’s Hunter from displaying sometimes."]],
         },
       ],
     },

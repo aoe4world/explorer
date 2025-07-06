@@ -1,4 +1,4 @@
-import { Accessor, Component, createContext, createSignal, onCleanup, onMount, useContext } from "solid-js";
+import { Accessor, Component, createContext, createSignal, onCleanup, onMount, useContext, JSX } from "solid-js";
 
 type Heading = { label: string; id: string; level: number };
 type TocContext = {
@@ -12,7 +12,7 @@ const TableOfContentsContext = createContext<TocContext>({
   remove: () => null,
 });
 
-export const TableOfContentsProvider: Component = (props) => {
+export const TableOfContentsProvider: Component<{ children?: JSX.Element; }> = (props) => {
   const [headings, setHeadings] = createSignal<Heading[]>([]);
   const value: TocContext = {
     headings,

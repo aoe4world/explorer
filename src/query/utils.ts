@@ -1,4 +1,3 @@
-import { getAbbr, getSlug } from "@data/sdk/utils";
 import { Ability, Building, Item, Modifier, PhysicalItem } from "@data/types/items";
 import { CIVILIZATIONS, ITEMS, SIMILAIR_ITEMS } from "../config";
 import { staticMaps } from "../data/maps";
@@ -10,7 +9,7 @@ const SDK = import("@data/sdk");
 /** Map any of civAbbr | civConfig | civConfig[] | civAbbr[] to a single array */
 export type civFilterParam = Parameters<typeof mapCivsArgument>[0];
 export function mapCivsArgument(civs?: civAbbr | civConfig | civConfig[] | civAbbr[]): civConfig[] {
-  const configs = Object.values(CIVILIZATIONS);
+  const configs = Object.values(CIVILIZATIONS) as unknown as Readonly<civConfig>[];
   if (!civs) return configs;
   else if (Array.isArray(civs)) return civs.map((c) => (typeof c === "string" ? configs.find((civ) => civ.abbr === c) : c));
   else if (typeof civs === "string") return configs.filter((c) => c.abbr === civs);
