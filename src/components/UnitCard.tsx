@@ -7,7 +7,7 @@ import { civConfig, UnifiedItem, Unit } from "../types/data";
 import { Card } from "./Cards";
 import { StatBar, StatCosts, StatDps, StatNumber } from "./Stats";
 
-const increaseBarSizeForClass = ["siege", "elephant", "incendiary"];
+const increaseBarSizeForClass = ["siege", "war_elephant", "incendiary_ship"];
 function getBarSize(unit: UnifiedItem<Unit>, baseSize: number, increasedSize: number) {
   return unit.classes.some((c) => increaseBarSizeForClass.includes(c)) ? increasedSize : baseSize;
 }
@@ -40,7 +40,7 @@ export const UnitCard: Component<{ unit: UnifiedItem<Unit>; age?: number; variat
               item={props.unit}
             />
             <StatBar
-              label={props.unit.classes.includes("incendiary") ? "Fire Attack" : "Torch Attack"}
+              label={props.unit.classes.includes("incendiary_ship") ? "Fire Attack" : "Torch Attack"}
               icon="fire"
               stat={stats().fireAttack}
               max={getBarSize(props.unit, 50, 300)}

@@ -95,7 +95,7 @@ const UnitSidebar: Component<{ item?: UnifiedItem<Unit>; civ: civConfig }> = (pr
                 <StatBar label="Melee Attack" icon="swords" stat={stats.meleeAttack} max={50} item={props.item} age={age} />
                 <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats.rangedAttack} max={50} multiplier={stats.burst} item={props.item} age={age} />
                 <StatBar
-                  label={props.item.classes.includes("incendiary") ? "Fire Attack" : "Torch Attack"}
+                  label={props.item.classes.includes("incendiary_ship") ? "Fire Attack" : "Torch Attack"}
                   icon="fire"
                   stat={stats.fireAttack}
                   max={50}

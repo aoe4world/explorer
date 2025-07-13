@@ -37,8 +37,6 @@ export const ItemIcon: Component<ItemIconProps> = (props) => {
       title ??= local.item.name;
     }
 
-    console.log(props);
-
     return {
       src: useLocal ? url?.replace(/https?:\/\/[a-z0-9.]+\/images/, inRuby ? '/vite-dev/lib/explorer/data/images' : '') : url,
       title: title,

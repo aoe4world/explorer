@@ -82,17 +82,17 @@ export function getMostAppropriateVariation<T extends Item = Item>(item: Unified
 export function splitUnitsIntoGroups(units: UnifiedItem<Unit>[]) {
   const grouped = units?.reduce(
     (acc, unit) => {
-      if (unit.classes.some((c) => c === "hero")) acc.hero.push(unit);
-      else if (unit.classes.some((c) => c === "ship")) acc.ships.push(unit);
+      if (unit.classes.some((c) => c === "leader")) acc.hero.push(unit);
+      else if (unit.classes.some((c) => c === "naval_unit")) acc.ships.push(unit);
       else if (unit.variations.some((v) => v.producedBy.includes("mercenary-house") || v.producedBy.includes("foreign-engineering-company")))
         acc.mercenaries.push(unit);
-      else if (unit.classes.some((c) => c === "warship")) acc.ships.push(unit);
+      else if (unit.classes.some((c) => c === "naval_warship")) acc.ships.push(unit);
       else if (unit.classes.some((c) => c === "worker")) acc.workers.push(unit);
       else if (unit.classes.some((c) => c === "infantry")) acc.infantry.push(unit);
       else if (unit.classes.some((c) => c === "cavalry")) acc.cavalry.push(unit);
       else if (unit.classes.some((c) => c === "camel")) acc.cavalry.push(unit);
       else if (unit.classes.some((c) => c === "siege")) acc.siege.push(unit);
-      else if (unit.classes.some((c) => c === "mixed")) acc.misc.push(unit);
+      else if (unit.displayClasses.some((c) => c.match(/Mixed/))) acc.misc.push(unit); // We don't have a class for this
       else acc.workers.push(unit);
 
       return acc;
