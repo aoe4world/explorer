@@ -145,6 +145,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
     }
     refetch();
     setQuizState(TwitchQuizState.Asking);
+    setShowInspectPopup(false);
     if (autoplay()) setTimer(stopSubmissionsAndShowResults, autoplaySpeed);
   }
 
