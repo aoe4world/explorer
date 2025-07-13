@@ -43,7 +43,7 @@ export const Tooltip: Component<{ attachTo: HTMLElement; children?: JSX.Element 
     <>
       <Show when={hover()}>
         <Portal>
-          <div class="w-50 p-5 w-screen sm:w-auto" style="opacity: 0; position: absolute;" ref={(el) => positionTooltip(el)}>
+          <div class="w-50 p-5 w-screen sm:w-auto" style="opacity: 0; position: absolute; top: 0;" ref={(el) => positionTooltip(el)}>
             {props.children}
           </div>
         </Portal>

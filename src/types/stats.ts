@@ -3,9 +3,11 @@ import { Item, Modifier } from "./data";
 /** Normalized stat categories */
 export type StatProperty =
   | "meleeArmor"
-  | "meleeAttack"
   | "rangedArmor"
   | "fireArmor"
+  | "meleeResistance"
+  | "rangedResistance"
+  | "meleeAttack"
   | "rangedAttack"
   | "siegeAttack"
   | "bonusAttack"

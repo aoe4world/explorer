@@ -11,12 +11,11 @@ import { capitalize, getMapsAsItems, sortPatchDiff } from "../../query/utils";
 import { getItemCssClass, mainIntroductionCSSClass } from "../../styles";
 import { civAbbr, Item, UnifiedItem } from "../../types/data";
 import { PatchLine, PatchSection, PatchSet } from "../../types/patches";
-import { setHideNav } from "../../global";
+import { tempHideNav } from "../../global";
 import { ItemGroup, ItemSlug } from "@data/sdk/utils";
 
 export const PatchDetailRoute = () => {
-  setHideNav(true);
-  onCleanup(() => setHideNav(false));
+  tempHideNav();
   const params = useParams();
   const [patch] = createResource(async () => (await import("../../data/patches/patch")).patches.find((patch) => patch.id === params.id));
   const [civ, setCiv] = createSignal<civAbbr>(CIVILIZATION_BY_SLUG[params.civ]?.abbr);

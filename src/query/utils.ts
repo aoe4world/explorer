@@ -3,8 +3,7 @@ import { CIVILIZATIONS, ITEMS, SIMILAIR_ITEMS } from "../config";
 import { staticMaps } from "../data/maps";
 import { civAbbr, civConfig, GroupedBuildings, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
 import { PatchLine, PatchNotes } from "../types/patches";
-
-const SDK = import("@data/sdk");
+import * as SDK from "@data/sdk";
 
 /** Map any of civAbbr | civConfig | civConfig[] | civAbbr[] to a single array */
 export type civFilterParam = Parameters<typeof mapCivsArgument>[0];
@@ -34,13 +33,13 @@ export function filterItems<T extends UnifiedItem[]>(items: T, { civs, maxAge }:
 }
 
 /** Query the technologies that apply to an item and merge them with all technology modifiers */
-export async function getItemTechnologies<T extends ITEMS>(
+export function getItemTechnologies<T extends ITEMS>(
   type: T,
   item: string | UnifiedItem,
   civ?: civAbbr | civConfig,
   includeAllCivsUnitSpecificTech = false
-): Promise<UnifiedItem<Technology>[]> {
-  const { Get, technologies } = await SDK;
+): UnifiedItem<Technology>[] {
+  const { Get, technologies } = SDK;
   const unifiedItem = typeof item == "string" ? Get(`${type}/${item}`) : item;
   return technologies.reduce((acc, t) => {
     const filteringByCiv = !!civ;
@@ -126,8 +125,9 @@ export function splitBuildingsIntoGroups(buildings: UnifiedItem<Building>[]) {
 export function splitTechnologiesIntroGroups(buildings: UnifiedItem<Technology>[]) {
   return buildings?.reduce(
     (acc, tech) => {
-      if (tech.classes.some((c) => ["advance"].includes(c) && tech.civs[0] == "ab")) return acc;
-      else if (tech.classes.some((c) => tech.civs[0] == "ay" && tech.id.includes("wing"))) acc.wings.push(tech);
+      if (tech.classes.some((c) => ["advance"].includes(c)) && tech.civs[0] == "ab") acc.wings.push(tech);
+      else if (tech.classes.some((c) => ["advance"].includes(c)) && tech.civs[0] == "kt") acc.commanderies.push(tech);
+      else if (tech.classes.some((c) => tech.id.includes("wing")) && tech.civs[0] == "ay") acc.wings.push(tech);
       else if (tech.classes.some((c) => c === "level-up-choice") && tech.civs[0] == "je") acc.leveling.push(tech);
       else if (tech.classes.some((c) => ["ship", "naval", "warship"].includes(c))) acc.naval.push(tech);
       else if (
@@ -160,7 +160,7 @@ export function splitTechnologiesIntroGroups(buildings: UnifiedItem<Technology>[
 
       return acc;
     },
-    { wings: [], leveling: [], economy: [], naval: [], defensive: [], religious: [], military: [], units: [] } as Record<string, UnifiedItem<Technology>[]>
+    { wings: [], commanderies: [], leveling: [], economy: [], naval: [], defensive: [], religious: [], military: [], units: [] } as Record<string, UnifiedItem<Technology>[]>
   );
 }
 
@@ -178,7 +178,7 @@ export function canonicalItemName(item: Item | UnifiedItem) {
 
 export function getItemByCanonicalName(id: string) {
   if (id.startsWith("maps/")) return getMapAsItem(id.split("/")[1]);
-  return SDK.then((sdk) => sdk.Get(id as any));
+  return SDK.Get(id as any);
 }
 
 export async function findClosestMatch<T extends ITEMS>(type: T, id: string, civ: civConfig) {

@@ -7,11 +7,14 @@ import { StatCosts } from "./Stats";
 
 export const TechnologyCard: Component<{ item: UnifiedItem<Technology>; civ?: civConfig }> = (props) => {
   const variation = createMemo(() => getMostAppropriateVariation<Technology>(props.item, props.civ));
+
+  const costs = () => variation()?.costs;
+
   return (
     <Card item={props.item} civ={props.civ}>
       <div class="flex-auto">
         <p class="mb-5">{variation()?.description}</p>
-        <StatCosts costs={variation()?.costs} />
+        <StatCosts costs={costs()} />
       </div>
     </Card>
   );

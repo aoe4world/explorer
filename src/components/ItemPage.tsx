@@ -87,7 +87,7 @@ function getItemType(item: UnifiedItem) {
 const AvailableUpgrades: Component<{ item: UnifiedItem; civ: civConfig }> = (props) => {
   const [technologies] = createResource(
     () => ({ item: props.item, civ: props.civ }),
-    async ({ item, civ }) => item && (await getItemTechnologies(getItemType(item), item, civ, true))
+    async ({ item, civ }) => item && getItemTechnologies(getItemType(item), item, civ, true)
     //.flatMap((x) => x.variations)
     // We're not really picking up the variations right now
   );

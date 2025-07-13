@@ -7,8 +7,10 @@ export type { Building, ModifyableProperty, Technology, Unit, Upgrade, ItemTypes
 export const SUPPORTED_MODIFIER_PROPERTIES: ModifyableProperty[] = [
   "meleeArmor",
   "meleeAttack",
+  "meleeResistance",
   "rangedArmor",
   "rangedAttack",
+  "rangedResistance",
   "fireAttack",
   "fireArmor",
   "siegeAttack",

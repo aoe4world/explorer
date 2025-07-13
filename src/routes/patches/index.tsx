@@ -5,11 +5,10 @@ import { Icon } from "@components/Icon";
 import { PatchNotes } from "../../types/patches";
 import { CivAbbr } from "@data/sdk/utils";
 import { mainIntroductionCSSClass } from "../../styles";
-import { setHideNav } from "../../global";
+import { tempHideNav } from "../../global";
 
 export const PatchListRoute = () => {
-  setHideNav(true);
-  onCleanup(() => setHideNav(false));
+  tempHideNav();
   const [patches] = createResource(async () => [...(await import("../../data/patches/patch")).patches].reverse().map(patchSummary));
 
   setActivePage({ title: "Patches", location: useLocation() });

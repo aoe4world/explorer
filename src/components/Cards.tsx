@@ -1,5 +1,5 @@
-import { Link } from "@solidjs/router";
-import { Component, For, ParentComponent } from "solid-js";
+import { Component, For, ParentComponent, createMemo } from "solid-js";
+import { Link, LinkType } from "./common/Link";
 import { CIVILIZATIONS, PRETTY_AGE_MAP } from "../config";
 import { civConfig, UnifiedItem } from "../types/data";
 import { CivFlag } from "./CivFlag";
@@ -18,21 +18,21 @@ export function getItemHref(item: UnifiedItem, civ?: civConfig) {
   return `${civ ? `/civs/${civ.slug}` : ""}/${typeToPathMap[item.type]}/${item.id}`;
 }
 
-export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig; age?: number }> = (props) => {
-  const minAge = () => (props.age ?? (!props.civ ? props.item.minAge : props.item.variations.reduce((a, v) => (v.civs.includes(props.civ.abbr) ? Math.min(a, v.age) : a), 4)));
+export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig; age?: number, linkType?: LinkType, onCivSelect?: (civ: civConfig) => void }> = (props) => {
+  const minAge = createMemo(() => (props.age ?? (!props.civ ? props.item.minAge : props.item.variations.reduce((a, v) => (v.civs.includes(props.civ.abbr) ? Math.min(a, v.age) : a), 4))));
 
   return (
     <div
-      class={`bg-item-${props.item.type} text-white rounded-2xl p-4 z-0  transition-all flex flex-col bg-opacity-10 relative hover:bg-opacity-20 group`}
+      class={`bg-item-${props.item.type} text-white rounded-2xl p-4 z-0 transition-all flex flex-col bg-opacity-10 relative hover:bg-opacity-20 group`}
       style={{ opacity: globalAgeFilter() >= minAge() ? 1 : 0.5 }}
     >
-      <Link href={getItemHref(props.item, props.civ)}>
+      <Link linkType={props.linkType} href={getItemHref(props.item, props.civ)}>
         <CardHeader item={props.item} civ={props.civ} minAge={minAge()} />
       </Link>
 
       {props.children}
 
-      {props.civ ? (
+      {props.civ && !props.onCivSelect ? (
         props.item.civs.length == 1 && (
           <div class="flex h-6 mt-5  items-center gap-2">
             <span class="text-unique text-sm font-semibold">
@@ -43,15 +43,23 @@ export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig; age?: n
       ) : (
         <div class="flex h-auto mt-5  items-center gap-2 w-full flex-wrap">
           <For each={props.item.civs}>
-            {(civ) =>
-              props.item.type != "technology" ? (
-                <Link href={getItemHref(props.item, CIVILIZATIONS[civ] as unknown as civConfig)}>
-                  <CivFlag abbr={civ} class="h-3.5 w-5 object-cover rounded-sm transition-opacity opacity-30 group-hover:opacity-80  hover:!opacity-100" />
+            {(civ) => {
+              const civObj = CIVILIZATIONS[civ] as unknown as civConfig;
+              return props.item.type != "technology" ? (
+                <Link
+                  href={getItemHref(props.item, civObj)}
+                  onClick={(e) => {
+                    if (e.ctrlKey) return;
+                    props.onCivSelect?.(civObj);
+                    e.preventDefault();
+                  }}
+                >
+                  <CivFlag abbr={civ} class={`h-3.5 w-5 object-cover rounded-sm transition-opacity ${props.civ?.abbr === civ ? "opacity-60 outline outline-2 outline-white" : !props.civ ? "opacity-30 group-hover:opacity-80" : "opacity-30"} hover:!opacity-100`} />
                 </Link>
               ) : (
-                <CivFlag abbr={civ} class="h-3.5 w-5 object-cover rounded-sm opacity-30 transition-opacity group-hover:opacity-100" />
-              )
-            }
+                <CivFlag abbr={civ} class={`h-3.5 w-5 object-cover rounded-sm transition-opacity ${props.civ?.abbr === civ ? "opacity-60 outline outline-2 outline-white group-hover:opacity-100" : !props.civ ? "opacity-30 group-hover:opacity-100" : "opacity-30"} hover:!opacity-100`} />
+              );
+            }}
           </For>
           {props.item.civs.length == 1 && (
             <span class="text-unique text-sm font-semibold ml-auto">

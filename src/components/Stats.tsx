@@ -12,6 +12,7 @@ import { Tooltip } from "./Tooltip";
 export const StatBar: Component<{
   label: string;
   icon?: string;
+  unit?: string;
   item: UnifiedItem<Item>;
   stat: Stat;
   /** Event when the total value is zero, display the graph,
@@ -27,7 +28,7 @@ export const StatBar: Component<{
   const [parts, setParts] = createSignal([] as StatPart<number>[]);
   const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
   createEffect(
-    on([globalAgeFilter, globalCivFilter, () => props.age?.()], () => {
+    on([globalAgeFilter, globalCivFilter, () => props.age?.(), () => props.stat], () => {
       const { parts, ...rest } = calculateStatParts(props.stat, props.age?.() ?? globalAgeFilter(), { item: props.item });
       setParts(parts.map((p) => ({ ...p, value: p.value * multiplier() })));
       setValues(Object.fromEntries(Object.entries(rest).map(([k, v]) => [k, v * multiplier()])) as any);
@@ -42,6 +43,7 @@ export const StatBar: Component<{
           <span class="text-white text-[14px] flex-auto flex items-center" ref={totalEl}>
             {props.icon && <Icon icon={props.icon} class="mr-1.5 text-[12px]" />}
             {values().base}
+            {props.unit && <span class="pl-1">{props.unit}</span>}
             {props.multiplier && <>*</>}
             {values().total > values().base && (
               <span class="text-white/60 ml-3">
@@ -241,7 +243,7 @@ export const StatNumber: Component<{
   const [parts, setParts] = createSignal<StatPart<number>[]>([]);
   const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
   createEffect(
-    on([globalAgeFilter, () => props.age?.()], () => {
+    on([globalAgeFilter, () => props.age?.(), () => props.stat], () => {
       const { parts, ...rest } = calculateStatParts(props.stat, props.age?.() ?? globalAgeFilter(), { decimals: 3 });
       setValues(rest);
       setParts(parts);

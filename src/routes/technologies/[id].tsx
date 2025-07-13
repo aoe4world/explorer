@@ -26,6 +26,8 @@ export function TechnologyDetailRoute() {
 
   const variation = createMemo(() => getMostAppropriateVariation<Technology>(item(), civ));
 
+  const costs = () => variation()?.costs;
+
   return (
     <ItemPage.Wrapper civ={civ}>
       <Show when={!unmatched() && item()} keyed>
@@ -52,7 +54,7 @@ export function TechnologyDetailRoute() {
             </div>
             <div class="flex-auto flex flex-col gap-8">
               <div class=" bg-black/70 rounded-2xl p-6 ">
-                <StatCosts costs={variation()?.costs} />
+                <StatCosts costs={costs()} />
               </div>
             </div>
           </div>

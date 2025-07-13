@@ -5,7 +5,7 @@ import { ContentRow } from "@components/RelatedContent";
 import { CIVILIZATION_BY_SLUG } from "../../config";
 import { ContentItem, getRelatedContent } from "../../query/content";
 import { mainIntroductionCSSClass, mainItemTitleCSSClass, secondaryButtonClass } from "../../styles";
-import { hideNav, setHideNav } from "../../global";
+import { tempHideNav } from "../../global";
 import { useLocation, useParams } from "@solidjs/router";
 
 const defaultLimit = 12;
@@ -16,8 +16,7 @@ export const ContentOverviewRoute = () => {
   const [limit, setLimit] = createSignal(defaultLimit);
   const [showFilter, setShowFilter] = createSignal(false);
   const [filters, setFilters] = createSignal<{ [key: string]: string[] }>({});
-  setHideNav(true);
-  onCleanup(() => setHideNav(false));
+  tempHideNav();
 
   const toggleFilter = (key: string, value: string) => {
     const current = filters()[key] || [];

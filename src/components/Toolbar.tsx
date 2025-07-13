@@ -29,7 +29,7 @@ export const Toolbar: Component = () => {
     "w-12 h-7 md:w-10 lg:h-7 md:hover:bg-white md:hover:text-black bg-gray-900 text-white/70 text-lg px-3 grid rounded-md flex-none transition";
 
   return (
-    <Show when={!hideNav()}>
+    <Show when={hideNav() !== "hidden"}>
       <div class="bg-gray-700 z-10 border-bottom border border-gray-500 sticky mt-25 top-0" classList={{ "opacity-20": pending() }}>
         <div class="max-w-screen-2xl py-2 px-4 lg:px-8 h-auto text-base lg:p-3 mx-auto flex flex-row items-center flex-wrap sm:flex-nowrap gap-2 lg:gap-5">
           <div class="hidden lg:flex flex-row gap-2 h-10 lg:h-8 items-center">
@@ -117,9 +117,12 @@ export const Toolbar: Component = () => {
           <Search class="basis-full my-2 sm:my-0 sm:basis-48 lg:basis-96" />
         </div>
       </div>
-      <div class="bg-blue-900/20 border-bottom border border-gray-500 p-3 text-white/70 text-center">
-        Work in Progress: The <CivFlag abbr="kt" class="inline-block h-5" /> Knights Templar and <CivFlag abbr="hl" class="inline-block h-5" /> House of Lancaster civilizations aren't fully updated and miss stats, abilities and upgrades.<br/>Explorer will continue to be updated over the next few weeks for both old and new civs.
-      </div>
+
+      <Show when={hideNav() === "visible"}>
+        <div class="bg-blue-900/20 border-bottom border border-gray-500 p-3 text-white/70 text-center">
+          Work in Progress: The <CivFlag abbr="kt" class="inline-block h-5" /> Knights Templar and <CivFlag abbr="hl" class="inline-block h-5" /> House of Lancaster civilizations aren't fully updated and miss stats, abilities and upgrades.<br/>Explorer will continue to be updated over the next few weeks for both old and new civs.
+        </div>
+      </Show>
     </Show>
   );
 };

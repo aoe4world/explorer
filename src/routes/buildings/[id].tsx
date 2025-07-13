@@ -136,10 +136,12 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
   const variation = createMemo(() => getMostAppropriateVariation<Building>(props.item, props.civ));
   const [age, setAge] = createSignal(4);
 
+  const costs = () => variation()?.costs;
+
   return (
     <div class="flex-auto flex flex-col gap-8">
       <div class=" bg-black/70 rounded-2xl p-6 ">
-        <StatCosts costs={variation().costs} />
+        <StatCosts costs={costs()} />
         <Show when={variation().popcapIncrease} keyed>
           {(amount) => (
             <div class="mt-4">

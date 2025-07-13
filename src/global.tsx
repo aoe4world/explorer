@@ -1,11 +1,18 @@
-import { createSignal } from "solid-js";
+import { createSignal, onCleanup } from "solid-js";
 import { civAbbr } from "./types/data";
 import { CivConfig } from "@data/types/civs";
 import { splitUnitsIntoGroups, splitBuildingsIntoGroups, splitTechnologiesIntroGroups } from "./query/utils";
 
-export const [hideNav, setHideNav] = createSignal(false);
+export type HideNav = 'visible' | 'hide-sidebar' | 'hidden';
+
+export const [hideNav, setHideNav] = createSignal('visible');
 export const [globalAgeFilter, setGlobalAgeFilter] = createSignal(4);
 export const [globalCivFilter, setGlobalCivsFilter] = createSignal<civAbbr>(null);
+
+export const tempHideNav = (style?: HideNav) => {
+  setHideNav(style ?? "hidden");
+  onCleanup(() => setHideNav("visible"));
+}
 
 export async function getStructuredItems(civilization?: CivConfig) {
   const sdk = await import("@data/sdk");

@@ -206,7 +206,7 @@ const App: Component = () => {
         }}
       >
         <div class="max-w-screen-2xl mx-auto flex">
-          <Show when={!hideNav()}>
+          <Show when={!["hidden", "hide-sidebar"].includes(hideNav())}>
             <div class="w-full max-w-xs pl-8 hidden lg:block">
               <div class="p-4 mx-auto gap-4 mb-4 mt-10 sticky bottom-0 top-16 max-h-[calc(100vh-80px)] overflow-y-auto scrollbar-hide">
                 <SidebarNav />

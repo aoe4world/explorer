@@ -4,16 +4,25 @@ import { SUPPORTED_MODIFIER_PROPERTIES } from "../config";
 import { Building, civAbbr, civConfig, Item, Modifier, Technology, UnifiedItem, Unit } from "../types/data";
 import { CalculatedStats, Stat, StatPart, StatProperty } from "../types/stats";
 import { getItemTechnologies, mapCivsArgument, modifierMatches } from "./utils";
+import * as SDK from '@data/sdk';
 
-export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
+export function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
   type: T,
   unit: string | UnifiedItem<Unit | Building>,
-  civ?: civAbbr | civConfig
-): Promise<ReturnType<typeof mergeVariationsToStats>> {
+  civ?: civAbbr | civConfig,
+  options?: {
+    variation?: Unit | Building,
+    selectedTechnologies?: string[]
+  }
+): ReturnType<typeof mergeVariationsToStats> {
+  const {variation, selectedTechnologies} = options || {};
   const forCiv = mapCivsArgument(civ);
-  const getStats = async (unit: UnifiedItem<Unit | Building>) => {
-    const combatStats = mergeVariationsToStats(unit.variations.filter((u) => u.civs.some((c) => forCiv.some((fc) => fc.abbr == c))));
-    const techs = await getItemTechnologies(type, unit, civ);
+  const getStats = (unit: UnifiedItem<Unit | Building>) => {
+    const combatStats = mergeVariationsToStats(variation ? [variation] : unit.variations.filter((u) => u.civs.some((c) => forCiv.some((fc) => fc.abbr == c))));
+    let techs = getItemTechnologies(type, unit, civ);
+    if (selectedTechnologies) {
+      techs = techs.filter((t) => selectedTechnologies.includes(t.id));
+    }
 
     for (const tech of techs) {
       let lazelyPickJustTheFirst = tech.variations.sort((a, b) => b.civs.length - a.civs.length)[0]; //tech.variations?.[0];
@@ -29,6 +38,9 @@ export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
           }
 
           for (const property of properties) {
+            // Don't add multipliers for props that don't exist, because they wouldn't have an effect. Particularly relevant for techs that give bonus to both Ranged and Siege damage.
+            if (modifier.effect === 'multiply' && !combatStats[property]) continue;
+
             combatStats[property] ??= { category: property, parts: [], modifiers: [], bonus: [] };
 
             combatStats[property]?.[modifier.type == "bonus" ? "bonus" : "modifiers"].push({
@@ -45,7 +57,7 @@ export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
     return combatStats;
   };
 
-  if (typeof unit == "string") return getStats((await import("@data/sdk"))[type].get(unit));
+  if (typeof unit == "string") return getStats(SDK[type].get(unit));
   else return getStats(unit);
 }
 
@@ -104,6 +116,14 @@ export function mergeVariationsToStats(variations: (Unit | Building)[]) {
         else if (a.type == "fire") stats.fireArmor = a.value;
       }
 
+      if (variation.resistance) {
+        for (const a of variation.resistance) {
+          // We assume there's only one resistance type per variation, for now.
+          if (a.type == "melee") stats.meleeResistance = a.value;
+          else if (a.type == "ranged") stats.rangedResistance = a.value;
+        }
+      }
+
       return [variation, stats, bonus] as [typeof variation, typeof stats, Modifier[]];
     })
     .reduce((total, [variation, stats, bonus], i, arr) => {
@@ -146,7 +166,7 @@ export function calculateStatParts(
 ): CalculatedStats {
   if (!stat) return { total: 0, base: 0, upgrades: 0, technologies: 0, bonus: 0, parts: [], max: 0 };
   if (!decimals) decimals = 0;
-  const round = (val) => (stat.category == "attackSpeed" ? roundToGameTicks(val) : roundToDecimals(val, decimals));
+  const round = (val) => (stat.category === "attackSpeed" ? roundToGameTicks(val) : roundToDecimals(val, decimals));
   const parts = stat.parts.sort((a, b) => a.age - b.age).map((p) => ({ ...p, value: p.age > maxAge ? 0 : round(p.value) }));
 
   let base = parts[0]?.value ?? 0;

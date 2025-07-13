@@ -3,7 +3,7 @@ import { Component, createSignal, onCleanup, Show } from "solid-js";
 import { setActivePage } from "../../App";
 import { Icon } from "@components/Icon";
 import { Quiz } from "@components/quiz/SoloQuiz";
-import { hideNav, setHideNav } from "../../global";
+import { tempHideNav } from "../../global";
 
 export const QuizRoute: Component = () => {
   const query = useLocation().query;
@@ -12,8 +12,7 @@ export const QuizRoute: Component = () => {
   const questionsUrl = query.questionsUrl;
   const numQuestions = parseInt(query.numQuestions);
 
-  setHideNav(true);
-  onCleanup(() => setHideNav(false));
+  tempHideNav();
   setActivePage({ title: "Quiz", description: "Test your game knowledge through randomly generated multiple questions.", location: useLocation() });
 
   return (

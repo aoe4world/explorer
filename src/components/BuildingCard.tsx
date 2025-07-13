@@ -10,6 +10,8 @@ export const BuildingCard: Component<{ item: UnifiedItem<Building>; civ?: civCon
   const [stats] = createResource(() => getUnitStats(ITEMS.BUILDINGS, props.item, props.civ));
   const variation = createMemo(() => getMostAppropriateVariation<Building>(props.item, props.civ));
 
+  const costs = () => variation()?.costs;
+
   return (
     <Card item={props.item} civ={props.civ}>
       <Show when={stats()}>
@@ -19,6 +21,7 @@ export const BuildingCard: Component<{ item: UnifiedItem<Building>; civ?: civCon
             <StatBar label="Siege Attack" icon="meteor" stat={stats().siegeAttack} max={500} multiplier={stats().burst} item={props.item} />
             <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats().rangedAttack} max={100} multiplier={stats().burst} item={props.item} />
             <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats().rangedArmor} max={60} displayAlways={true} item={props.item} />
+            <StatBar label="Ranged Resistance" icon="bullseye-arrow" stat={stats().rangedResistance} max={100} displayAlways={false} item={props.item} unit="%" />
             <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats().fireArmor} max={20} displayAlways={true} item={props.item} />
           </div>
           <div class="flex flex-col gap-4 mt-auto">
@@ -26,7 +29,7 @@ export const BuildingCard: Component<{ item: UnifiedItem<Building>; civ?: civCon
               <StatNumber label="Atck Spd" stat={stats().attackSpeed} unitLabel="S"></StatNumber>
             </div>
             <StatDps label="Damage" speed={stats().attackSpeed} attacks={[stats().rangedAttack || stats().meleeAttack || stats().siegeAttack]}></StatDps>
-            <StatCosts costs={variation()?.costs} />
+            <StatCosts costs={costs()} />
           </div>
         </>
       </Show>

@@ -3,7 +3,7 @@ import { Component, createSignal, onCleanup, Show, createEffect } from "solid-js
 import { Icon } from "@components/Icon";
 import { TwitchQuiz } from "@components/quiz/TwitchQuiz";
 import { ToggleSwitch } from "@components/common/ToggleSwitch";
-import { setHideNav } from "../../global";
+import { tempHideNav } from "../../global";
 import { setActivePage } from "../../App";
 
 export const QuizRoute: Component = () => {
@@ -40,8 +40,7 @@ export const QuizRoute: Component = () => {
     setShareUrl(url.toString());
   });
 
-  setHideNav(true);
-  onCleanup(() => setHideNav(false));
+  tempHideNav();
   setActivePage({
     title: `Quiz ${useParams().channel ? `(${useParams().channel})` : ""}`,
     description: "Test your game knowledge through randomly generated multiple questions.",

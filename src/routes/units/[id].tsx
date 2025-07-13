@@ -77,10 +77,12 @@ const UnitSidebar: Component<{ item?: UnifiedItem<Unit>; civ: civConfig }> = (pr
   const variation = createMemo(() => getMostAppropriateVariation<Unit>(props.item, props.civ));
   const [age, setAge] = createSignal(4);
 
+  const costs = () => variation()?.costs;
+
   return (
     <div class="flex-auto flex flex-col gap-8">
       <div class=" bg-black/70 rounded-2xl p-6 ">
-        <StatCosts costs={variation().costs} />
+        <StatCosts costs={costs()} />
       </div>
       <Show when={stats()} keyed>
         {(stats) => (
