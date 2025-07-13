@@ -79,8 +79,8 @@ export const ContentRow: Component<{ content: ContentItem; item?: Item | Unified
             <div class="flex gap-1">
               <For each={relatedItems()}>
                 {(item, i) => (
-                  <Link href={getItemHref(item, props.civ)} class={`inline-flex min-w-0 items-center  text-${getItemCssClass(item)}-light`}>
-                    <ItemIcon url={item.icon} class="w-5 h-5" title={item.name} />
+                  <Link href={getItemHref(item, props.civ)} class={`inline-flex min-w-0 items-center text-${getItemCssClass(item)}-light`}>
+                    <ItemIcon item={item} size={5} />
                     {relatedItems().length < 3 && <span class="truncate ml-1 max-w-[150px]">{item.name}</span>}
                   </Link>
                 )}

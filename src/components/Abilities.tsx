@@ -17,15 +17,8 @@ export const Abilities: Component<{ abilities: ItemList<Ability>; civ: civConfig
       <div class="flex gap-4 flex-col mb-8">
         <For each={sortedMappedAbilities()}>
           {(ability) => (
-            <div class="flex flex-row items-start mb-2 group ">
-              <div
-                class={`flex-none rounded w-10 my-1.5 p-0 h-10 mr-4 ${
-                  ability.active == "manual" ? "bg-gradient-to-b from-[#5C457B] to-[#4D366E] border border-[#493B65]" : ""
-                  // ability.active == "manual" ? "bg-gradient-to-b from-[#3D4E68] to-[#222535] border border-item-ability" : ""
-                }`}
-              >
-                <ItemIcon url={ability.icon ?? ""} class="scale-100" />
-              </div>
+            <div class="flex flex-row items-start mb-2 group">
+              <ItemIcon item={ability} size={10} class={`my-1.5 !p-0 mr-4 scale-100 ${ability.active == "manual" ? "bg-gradient-to-b from-[#5C457B] to-[#4D366E] border border-[#493B65]" : ""}`} />
               <div>
                 <p class="text-base font-bold text-white w-full">{ability.name}</p>
                 <p class="text-sm text-white/80 break-words w-full leading-relaxed whitespace-pre-wrap">
@@ -89,9 +82,7 @@ const InlineItemLink: Component<{ itemId: ItemSlug; civ: civConfig }> = (props) 
     <Show when={item()} keyed>
       {(item) => (
         <Link href={getItemHref(item, props.civ)} class="whitespace-nowrap">
-          <div class={`inline-block w-[1.2em] h-[1.2em] mb-[-0.2em] p-0 mx-[0.3em] bg-item-${item.type}`}>
-            <ItemIcon url={item.icon} />
-          </div>
+          <ItemIcon item={item} size={'inline'} />
           <span class="font-bold">{item.name}</span>
         </Link>
       )}

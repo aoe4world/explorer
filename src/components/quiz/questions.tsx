@@ -487,7 +487,7 @@ export function formatAnswer(answer: Answer): JSX.Element {
       if (!item) return <>{answer.id}</>;
       return (
         <>
-          <ItemIcon url={item.icon} class={`w-8 bg-item-${answer.type}/80 rounded-sm`} />
+          <ItemIcon item={item} size={8} class="self-center" />
           {item.name}
         </>
       );

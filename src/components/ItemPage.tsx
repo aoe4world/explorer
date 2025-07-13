@@ -17,9 +17,7 @@ const Header: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
   const itemCssClass = getItemCssClass(props.item);
   return (
     <div class="flex gap-4 items-center mb-4">
-      <div class={`flex self-start rounded-md bg-${itemCssClass} h-24 w-24 p-2 items-center`}>
-        <ItemIcon url={props.item.icon} />
-      </div>
+      <ItemIcon item={props.item} size={24} />
       <div>
         <span class={`text-${itemCssClass}-light`}>{props.item.displayClasses.join(", ")}</span>
         <h2 class={mainItemTitleCSSClass}>{props.item.name}</h2>
@@ -67,10 +65,8 @@ const ProducedAt: Component<{ item: UnifiedItem; civ: civConfig; title?: string 
       <div class="flex gap-10 flex-wrap mb-8">
         <For each={productionBuildings()}>
           {(building) => (
-            <Link href={`${props.civ ? `/civs/${props.civ.slug}` : ""}/buildings/${building.id}`} class="flex flex-row items-center mb-2 group ">
-              <div class="flex-none  rounded bg-item-building/80 group-hover:bg-item-building/100 w-10 h-10 p-0.5 mr-2 transition">
-                <ItemIcon url={building.icon} />
-              </div>
+            <Link href={`${props.civ ? `/civs/${props.civ.slug}` : ""}/buildings/${building.id}`} class="flex flex-row items-center mb-2 group">
+              <ItemIcon item={building} link={true} size={10} class="mr-2" />
               <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{building.name}</span>
             </Link>
           )}
@@ -128,9 +124,7 @@ const UnavailableForCiv: Component<{ item: UnifiedItem; civ: civConfig }> = (pro
   return (
     <div>
       <div class="flex gap-4 items-center mb-4 mt-4">
-        <div class={`flex-none self-start rounded-md bg-${itemCssClass} h-24 w-24 p-2`}>
-          <ItemIcon url={props.item.icon} />
-        </div>
+        <ItemIcon item={props.item} size={24} />
         <div>
           <span class={`text-${itemCssClass}-light`}>{props.item.displayClasses}</span>
           <h2 class={mainItemTitleCSSClass}>{props.item.name}</h2>

@@ -8,7 +8,7 @@ module.exports = {
     "text-3xl",
     {
       pattern: /bg-item-(unit|technology|tech|building|upgrade|ability)/,
-      variants: ["hover"],
+      variants: ["hover", "group-hover"],
     },
     {
       pattern: /text-item-(unit|technology|tech|building|upgrade|ability)/,

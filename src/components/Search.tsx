@@ -132,9 +132,7 @@ export const Search: Component<{ class?: string }> = (props) => {
                 href={getItemHref(item)}
                 class={`flex items-center p-2 rounded hover:bg-gray-500/50 ${selected() == i() ? "!bg-gray-400/40 selected" : ""}`}
               >
-                <div class="flex-none self-start rounded w-8 h-8 p-0 mr-2" className={`bg-item-${item.type}`}>
-                  <ItemIcon url={item.icon} />
-                </div>
+                <ItemIcon item={item} size={8} class="mr-2" />
                 <span class="font-bold text-sm">{item.name}</span>
                 {/* <span class="ml-2">{score}</span> */}
               </Link>

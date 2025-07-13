@@ -75,9 +75,7 @@ export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig; age?: n
 export const CardHeader: Component<{ item: UnifiedItem; civ?: civConfig; minAge: number }> = (props) => {
   return (
     <div class="flex gap-4 items-center mb-4">
-      <div class={`flex-none self-start rounded-md w-16 h-16 p-1 bg-item-${props.item.type}`}>
-        <ItemIcon url={props.item.icon} />
-      </div>
+      <ItemIcon item={props.item} size={16} />
       <div class="flex-auto">
         <div class="flex flex-row items-center">
           <h2 class="text-lg font-bold flex-auto leading-tight ">{props.item.name}</h2>

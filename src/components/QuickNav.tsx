@@ -146,9 +146,7 @@ export const QuickNav: Component = () => {
                               activeClass={`!bg-opacity-40 font-bold !text-white`}
                               end
                             >
-                              <div class={`w-6 h-6 bg-item-${item.type} rounded-sm flex-none`}>
-                                <ItemIcon url={item.icon} />
-                              </div>
+                              <ItemIcon item={item} size={6} />
                               <p class="whitespace-pre-wrap" innerHTML={item.name.replace(/(.*?)\((.*?)\)/, '$1<span class="opacity-50">$2</span>')}></p>
                             </Link>
                           )}

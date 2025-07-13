@@ -54,9 +54,7 @@ export const CivDetailRoute = () => {
               {(unit) =>
                 unit.unique && (
                   <Link href={`./units/${unit.id}`} class="flex flex-row items-center mb-2 group ">
-                    <div class="flex-none  rounded bg-item-unit/80 group-hover:bg-item-unit/100 w-10 h-10 p-0.5 mr-2 transition">
-                      <ItemIcon url={unit.icon} />
-                    </div>
+                    <ItemIcon item={unit} link={true} size={10} class="mr-2" />
                     <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
                   </Link>
                 )
@@ -68,9 +66,7 @@ export const CivDetailRoute = () => {
               {(building) =>
                 building.unique && (
                   <Link href={`./buildings/${building.id}`} class="flex flex-row items-center mb-2 group ">
-                    <div class="flex-none  rounded bg-item-building/80 group-hover:bg-item-building/100 w-10 h-10 p-0.5 mr-2 transition">
-                      <ItemIcon url={building.icon} />
-                    </div>
+                    <ItemIcon item={building} link={true} size={10} class="mr-2" />
                     <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{building.name}</span>
                   </Link>
                 )
@@ -82,9 +78,7 @@ export const CivDetailRoute = () => {
               {(tech) =>
                 tech.unique && (
                   <Link href={`./technologies/${tech.id}`} class="flex flex-row items-center mb-2 group ">
-                    <div class="flex-none  rounded bg-item-technology/80 group-hover:bg-item-technology/100 w-10 h-10 p-0.5 mr-2 transition">
-                      <ItemIcon url={tech.icon} />
-                    </div>
+                    <ItemIcon item={tech} link={true} size={10} class="mr-2" />
                     <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{tech.name}</span>
                   </Link>
                 )

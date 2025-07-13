@@ -202,9 +202,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
                           href={(item.type as any) == "map" ? `https://aoe4world.com/stats/maps/${item.name}` : getItemHref(item)}
                           class="inline-flex flex-row items-center"
                         >
-                          <div class={`flex rounded bg-${itemCssClass} w-8 h-8 p-0.5 mr-2 items-center`}>
-                            <ItemIcon url={item.icon} />
-                          </div>
+                          <ItemIcon item={item} size={8} class="mr-2" />
                           <span class="font-bold">{item.name}</span>
                         </Link>
                       );
