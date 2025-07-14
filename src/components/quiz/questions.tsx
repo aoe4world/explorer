@@ -1,28 +1,31 @@
 import { JSX } from "solid-js";
 import { RESOURCES } from "../../../assets";
 import * as SDK from "@data/sdk";
-import { ItemClass, UnifiedItem } from "@data/types/items";
+import { Item, ItemClass, UnifiedItem } from "@data/types/items";
 import { CivFlag } from "@components/CivFlag";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
-import { getMostAppropriateVariation, modifierMatches } from "../../query/utils";
+import { canonicalItemGroup, getMostAppropriateVariation } from "../../query/utils";
 import { civAbbr, civConfig, Unit } from "../../types/data";
 import { ItemIcon } from "../ItemIcon";
 import { formatSecondsToTime } from "../Stats";
 import { Random } from "./random";
+import { getBattleStats } from "../../query/battlereport";
 
 export type Question = {
   question: string;
   note?: string;
   answers: Answer[];
   correctAnswer: number;
-  versus?: [VersusUnit, VersusUnit];
+  items?: QuestionItem[];
 };
 
-export type VersusUnit = {
+export type QuestionItem = {
+  group: ITEMS;
+  type: UnifiedItem["type"];
   id: string;
   baseId: string;
   civ: civAbbr;
-  age: number;
+  age?: number;
 }
 
 export type AnswerDefinition = {
@@ -317,6 +320,7 @@ async function getCostQuestion(difficulty?: number, civ?: civConfig): Promise<Qu
     note,
     answers: answers.map((costs) => ({ type: "costs", costs })),
     correctAnswer: answers.indexOf(correctAnswer),
+    items: [ getQuestionItem(item, variation) ]
   };
 }
 
@@ -394,18 +398,17 @@ async function getStraightUpFightQuestion(difficulty?: number, civ?: civConfig):
   }
 
   const options = Random.order(units);
+  const unifiedItems = options.map(v => SDK.units.get(v.baseId));
 
-  const winner = battleUnits(options[0], options[1]);
+  const stats = getBattleStats(options[0], options[1], options[0].age, options[1].age, unifiedItems[0], unifiedItems[1], [], []);
+  const winner = stats.winner;
 
   return {
     question: `Which unit wins in a fight?`,
     note: `Without any upgrades, in range, no kiting, charges or special attacks and influences. Last one standing wins.`,
     answers: [...options.map((u) => `${u.name} in ${PRETTY_AGE_MAP_LONG[u.age]}`), "It's a draw"],
-    correctAnswer: winner === false ? 2 : options.indexOf(winner),
-    versus: [
-      { id: options[0].id, baseId: options[0].baseId, civ: options[0].civs[0], age: options[0].age },
-      { id: options[1].id, baseId: options[1].baseId, civ: options[1].civs[0], age: options[1].age },
-    ],
+    correctAnswer: winner === 'draw' ? 2 : winner === 'unit1' ? 0 : 1,
+    items: [ getQuestionItem(unifiedItems[0], options[0]), getQuestionItem(unifiedItems[1], options[1]) ],
   };
 }
 
@@ -433,11 +436,11 @@ async function getOneShotQuestion(i?: number, civ?: civConfig): Promise<Question
   const ranged = getMostAppropriateVariation(rangedUnit, civ);
   if (!ranged.weapons.length) return getOneShotQuestion(i, civ);
   const target = getMostAppropriateVariation<Unit>(targetUnit, civ);
-  const attack = getBattleStats(ranged, target);
+  const attack = getBattleStats(ranged, target, ranged.age, target.age, rangedUnit, targetUnit, [], []);
 
-  if (!attack.damage || attack.attacksRequired > 30) return getOneShotQuestion(i, civ);
+  if (!attack.stats1.damage || attack.stats1.attacksRequired > 30 || attack.winner !== 'unit1') return getOneShotQuestion(i, civ);
 
-  const shots = attack.attacksRequired;
+  const shots = attack.stats1.attacksRequired;
 
   const options = [
     shots,
@@ -458,10 +461,7 @@ async function getOneShotQuestion(i?: number, civ?: civConfig): Promise<Question
     answers: options.map((x) => `${x} ${x === 1 ? ranged.name : `${ranged.name}s`}`),
     correctAnswer,
     note: `Without any blacksmith or university upgrades`,
-    versus: [
-      { id: ranged.id, baseId: ranged.baseId, civ: ranged.civs[0], age: ranged.age },
-      { id: target.id, baseId: target.baseId, civ: target.civs[0], age: target.age },
-    ],
+    items: [ getQuestionItem(rangedUnit, ranged), getQuestionItem(targetUnit, target) ],
   };
 }
 
@@ -521,7 +521,7 @@ const getIncorrectCosts = (correct: ResourceCosts) => {
   const costs = Object.fromEntries(Object.entries(correct).filter(([k, v]) => v > 0)) as ResourceCosts;
   const { gold, food, wood, stone } = costs;
 
-  const resourcesWithValues = ["gold", "food", "wood", "stone"].filter((r) => costs[r] > 0);
+  const resourcesWithValues = ["gold", "food", "wood", "stone", "oliveoil"].filter((r) => costs[r] > 0);
 
   const fuckitUps =
     resourcesWithValues.length > 1
@@ -584,38 +584,6 @@ const getIncorrectCosts = (correct: ResourceCosts) => {
   return costs;
 };
 
-function getBattleStats(attacker: Unit, target: Unit) {
-  const weapon = attacker.weapons.filter((w) => w.type != "fire")[0];
-  const { speed, damage, type } = weapon;
-  const armor = target.armor.find((ar) => ar.type == type)?.value || 0;
-  const bonusDamage =
-    weapon.modifiers
-      ?.filter((m) => modifierMatches(m.target, target).any)
-      ?.reduce((acc, b) => acc + (b.effect == "change" ? b.value : damage - damage * b.value), 0) ?? 0;
-  const hp = target.hitpoints;
-  const netDamage = Math.max(1, damage + bonusDamage - armor);
-  const attacksRequired = Math.ceil(hp / netDamage);
-  const timeRequired = attacksRequired * speed;
-  const netDps = netDamage / speed;
-  return {
-    timeRequired,
-    attacksRequired,
-    weapon,
-    armor,
-    damage,
-    bonusDamage,
-    hp,
-    netDamage,
-    netDps,
-  };
-}
-
-function battleUnits(a: Unit, b: Unit) {
-  const aTime = getBattleStats(a, b).timeRequired;
-  const bTime = getBattleStats(b, a).timeRequired;
-  return aTime == bTime ? false : aTime < bTime ? a : b;
-}
-
 function formatCiv(civ: civConfig) {
   return (
     <>
@@ -629,6 +597,7 @@ const randomPickedHistory = new Map<string, Set<string>>();
 function getOrCreateHistory(key: string) {
   return randomPickedHistory.get(key) ?? randomPickedHistory.set(key, new Set()).get(key);
 }
+
 async function getRandomItem<T extends ITEMS>(
   historyKey: string,
   types: T[],
@@ -649,6 +618,17 @@ async function getRandomItem<T extends ITEMS>(
   }
   history.add(item.id);
   return item;
+}
+
+function getQuestionItem(item: UnifiedItem, variation: Item): QuestionItem {
+  return {
+    group: canonicalItemGroup(item),
+    type: item.type,
+    id: variation?.id,
+    baseId: item.id,
+    civ: variation?.civs[0] ?? item.civs[0],
+    age: variation?.age ?? item.minAge
+  };
 }
 
 // Saving 2kB here 💪 🤓 https://bundlephobia.com/package/pluralize@8.0.0

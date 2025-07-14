@@ -232,7 +232,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
           <h3 class="font-bold text-white text-2xl my-3">{question().question}</h3>
           <p class="text-gray-200 mt-1 ">
             {question().note}
-            <Show when={(props.dev || quizState() === TwitchQuizState.ShowingResults) && question().versus}>
+            <Show when={(props.dev || quizState() === TwitchQuizState.ShowingResults) && question().items?.length}>
               <button class="bg-gray-700 hover:bg-gray-500 text-sm p-2 rounded float-right" onClick={() => setShowInspectPopup(true)}>
                 Inspect
               </button>

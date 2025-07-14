@@ -1,10 +1,11 @@
-import { Link, RouteDefinition, useLocation, useNavigate, useRoutes } from "@solidjs/router";
+import { Link, RouteDefinition, useLocation, useNavigate, useRoutes, useParams } from "@solidjs/router";
 import { Component, createEffect, createSignal, ErrorBoundary, lazy, on, Show } from "solid-js";
 import { Toolbar } from "./components/Toolbar";
 import { Nav } from "./components/Nav";
 import { CivDetailRoute } from "./routes/civs/[slug]";
 import { UnitOverviewRoute } from "./routes/units/units";
 import { UnitDetailRoute } from "./routes/units/[id]";
+import { UnitVersusRoute } from "./routes/units/versus";
 import { CivOverviewRoute } from "./routes/home";
 import { Icon } from "./components/Icon";
 import { BuildingOverviewRoute } from "./routes/buildings/buildings";
@@ -47,6 +48,28 @@ const routes: RouteDefinition[] = [
     component: () => UnitDetailRoute,
   },
   {
+    path: "/civs/:slug/units/:id/versus",
+    component: () => {
+      const params = useParams();
+      const navigate = useNavigate();
+      createEffect(() => {
+        navigate(`/versus?civ1=${params.slug}&unit1=${params.id}`, { replace: true });
+      });
+      return null;
+    },
+  },
+  {
+    path: "/civs/:slug/units/:id/versus/:civ2/units/:id2",
+    component: () => {
+      const params = useParams();
+      const navigate = useNavigate();
+      createEffect(() => {
+        navigate(`/versus?civ1=${params.slug}&unit1=${params.id}&civ2=${params.civ2}&unit2=${params.id2}`, { replace: true });
+      });
+      return null;
+    },
+  },
+  {
     path: "/civs/:slug/buildings",
     component: () => BuildingOverviewRoute,
   },
@@ -85,6 +108,10 @@ const routes: RouteDefinition[] = [
   {
     path: "/technologies/:id",
     component: () => TechnologyDetailRoute,
+  },
+  {
+    path: "/versus",
+    component: () => UnitVersusRoute,
   },
   {
     path: "/about",

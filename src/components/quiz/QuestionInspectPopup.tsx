@@ -1,17 +1,17 @@
 import { Component, Show, createResource, createMemo } from "solid-js";
-import { Question, VersusUnit } from "./questions";
+import { Question } from "./questions";
 import * as SDK from "@data/sdk";
 import { UnifiedItem, Unit, civConfig } from "../../types/data";
 import { BattleReportView } from "./BattleReportView";
 import { getMostAppropriateVariation } from "../../query/utils";
-import { CIVILIZATION_BY_SLUG } from "../../config";
+import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 
 export const QuestionInspectPopup: Component<{ question: Question; onClose: () => void }> = (props) => {
-  const units = createMemo(() => props.question.versus.map(unitData => {
-    const unit = SDK.units.get(unitData.baseId);
-    const variation = unit.variations.filter(variation => variation.id === unitData.id && variation.civs.includes(unitData.civ) && variation.age === unitData.age)[0];
+  const units = createMemo(() => props.question.items.filter(v => v.group === ITEMS.UNITS).map(itemData => {
+    const unit = SDK.units.get(itemData.baseId);
+    const variation = unit.variations.filter(variation => variation.id === itemData.id && variation.civs.includes(itemData.civ) && variation.age === itemData.age)[0];
     return {
-      unitData,
+      ...itemData,
       unit,
       variation
     };
@@ -27,8 +27,8 @@ export const QuestionInspectPopup: Component<{ question: Question; onClose: () =
         </button>
 
         <div class="mt-4">
-          <Show when={units()[0] && units()[1]} fallback={<div class="text-center text-gray-300">Loading unit data...</div>}>
-            <BattleReportView unit1={units()[0].unit} unit2={units()[1].unit} variation1={units()[0].variation} variation2={units()[1].variation} />
+          <Show when={units()[0]} fallback={<div class="text-center text-gray-300">Loading unit data...</div>}>
+            <BattleReportView unit1={units()[0].unit} unit2={units()[1]?.unit} variation1={units()[0].variation} variation2={units()[1]?.variation} />
           </Show>
         </div>
       </div>

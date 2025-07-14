@@ -171,6 +171,11 @@ export function modifierMatches(matcher: Modifier["select"], item: Item | Unifie
   return { id: matchesId, class: matchesClass, any: matchesId || matchesClass };
 }
 
+export function canonicalItemGroup(item: Item | UnifiedItem) {
+  const group = item.type === "unit" ? ITEMS.UNITS : item.type === "building" ? ITEMS.BUILDINGS : ITEMS.TECHNOLOGIES;
+  return group;
+}
+
 export function canonicalItemName(item: Item | UnifiedItem) {
   const group = item.type === "unit" ? "units" : item.type === "building" ? "buildings" : "technologies";
   return `${group}/${"baseId" in item ? item.baseId : item.id}`;
