@@ -35,12 +35,14 @@ export const UnitVersusRoute = () => {
       const unit1 = SDK.units.get(unitId1);
       const civ1 = CIVILIZATION_BY_SLUG[civSlug1].abbr;
       const age1 = age1Str ? parseInt(age1Str) : undefined;
-      const variation1 = unit1?.variations.filter((v) => v.civs.includes(civ1) && (!age1 || v.age <= age1)).sort((a, b) => a.age - b.age)[0];
+      const variations1 = unit1?.variations.filter((v) => v.civs.includes(civ1) && (!age1 || v.age <= age1)).sort((a, b) => b.age - a.age);
+      const variation1 = variations1?.[0];
 
       const unit2 = SDK.units.get(unitId2);
       const civ2 = civSlug2 ? CIVILIZATION_BY_SLUG[civSlug2].abbr : undefined;
       const age2 = age2Str ? parseInt(age2Str) : undefined;
-      const variation2 = unit2?.variations.filter((v) => v.civs.includes(civ2) && (!age2 || v.age <= age2)).sort((a, b) => b.age - a.age)[0];
+      const variations2 = unit2?.variations.filter((v) => v.civs.includes(civ2) && (!age2 || v.age <= age2)).sort((a, b) => b.age - a.age);
+      const variation2 = variations2?.[0];
 
       return {
         unit1,
