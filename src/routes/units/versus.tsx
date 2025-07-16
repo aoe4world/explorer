@@ -122,7 +122,7 @@ export const UnitVersusRoute = () => {
           />
         </div>
         <Show when={data()?.variation1}>
-          <div class="col-span-3 max-w-6xl w-[72rem] w-full">
+          <div class="col-span-3 max-w-6xl w-[72rem]">
             <BattleReportView unit1={data()?.unit1} unit2={data()?.unit2} variation1={data()?.variation1} variation2={data()?.variation2} age1={data()?.age1} age2={data()?.age2} onCivSelect={handleCivSelect} />
           </div>
         </Show>

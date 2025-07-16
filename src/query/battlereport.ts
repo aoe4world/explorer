@@ -72,7 +72,7 @@ export function getBattleStats(
     const attackerDamageStatProperty = weaponType && getAttackStatProperty(weaponType);
     const attackerDamageStat = attackerStatsMap[attackerDamageStatProperty];
     const calculatedAttackerDamage = attackerDamageStat && calculateStatParts(attackerDamageStat, attackerAge, { item: unifiedAttacker, target: unifiedTarget });
-    const projectileDamage = calculatedAttackerDamage?.total ?? 0;
+    const projectileDamage = calculatedAttackerDamage?.max ?? 0;
 
     const targetArmorStatProperty = weaponType && getArmorStatProperty(weaponType);
     const targetArmorStat = targetStatsMap[targetArmorStatProperty];
@@ -127,17 +127,31 @@ export function getBattleStats(
   let timeRequired = Math.min(stats1.timeRequired ?? Infinity, stats2.timeRequired ?? Infinity);
 
   if (timeRequired !== Infinity) {
-    stats1.hitpointRemaining = Math.max(0, stats2.targetHitpoints - stats2.damage * Math.ceil(timeRequired / stats2.attackSpeed));
-    stats2.hitpointRemaining = Math.max(0, stats1.targetHitpoints - stats1.damage * Math.ceil(timeRequired / stats1.attackSpeed));
+    const maxAttacks1 = stats1.isExplosive ? 1 : stats1.attacksRequired;
+    const maxAttacks2 = stats2.isExplosive ? 1 : stats2.attacksRequired;
+    stats1.hitpointRemaining = Math.max(0, stats2.targetHitpoints - stats2.damage * Math.min(maxAttacks2, Math.ceil(timeRequired / stats2.attackSpeed)));
+    stats2.hitpointRemaining = Math.max(0, stats1.targetHitpoints - stats1.damage * Math.min(maxAttacks1, Math.ceil(timeRequired / stats1.attackSpeed)));
   }
 
   if (stats1.isExplosive) {
     if (stats1.attacksRequired === 1) {
       stats2.timeRequired = stats1.timeRequired;
+      stats1.hitpointRemaining = 0;
     } else {
       // Technically, if the explosive ship blows itself up, it'll lose and a fishing ship would win.
       // But if it doesn't blow itself up, then it's a draw. The only winning move is not to play.
       // stats2.timeRequired = stats1.finalWeaponAttack;
+    }
+  }
+
+  if (stats2.isExplosive) {
+    if (stats2.attacksRequired === 1) {
+      stats1.timeRequired = stats2.timeRequired;
+      stats2.hitpointRemaining = 0;
+    } else {
+      // Technically, if the explosive ship blows itself up, it'll lose and a fishing ship would win.
+      // But if it doesn't blow itself up, then it's a draw. The only winning move is not to play.
+      // stats1.timeRequired = stats2.finalWeaponAttack;
     }
   }
 

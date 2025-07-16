@@ -105,9 +105,9 @@ export const BattleReportView: Component<{ unit1: UnifiedItem<Unit>; unit2: Unif
             <StatLine class="capitalize text-gray-200" sizeClass="text-md" leftStats={stats1()} rightStats={stats2()} valueFunc={(stat) => stat?.damageType} />
             <StatLine leftStats={stats1()} rightStats={stats2()} valueFunc={(stat) => stat?.damage} fixed={1} unit="dmg" />
 
-            {/* Shots to kill */}
-            <div class="col-span-3 mt-4 uppercase text-center text-gray-100 font-bold mt-4">Shots to kill</div>
-            <StatLine leftStats={stats1()} rightStats={stats2()} styleFunc={(stat, other) => stat?.attacksRequired < other?.attacksRequired ? winnerClass : drawClass} valueFunc={(stat) => stat?.attacksRequired} unit="shots" />
+            {/* Attacks to kill */}
+            <div class="col-span-3 mt-4 uppercase text-center text-gray-100 font-bold mt-4">Attacks to kill</div>
+            <StatLine leftStats={stats1()} rightStats={stats2()} styleFunc={(stat, other) => stat?.attacksRequired < other?.attacksRequired ? winnerClass : drawClass} valueFunc={(stat) => stat?.attacksRequired} unit="attacks" />
             <Show when={stats1()?.isExplosive || stats2()?.isExplosive}>
               <div class="col-span-3 text-sm text-gray-300">{formatExplosiveMessage(stats1(), stats2())}</div>
             </Show>

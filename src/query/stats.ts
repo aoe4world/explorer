@@ -217,7 +217,13 @@ export function calculateStatParts(
           if (modifier.effect == "multiply") value = Math.round((modifier.value - 1) * (base + upgrades));
           else if (modifier.effect == "change") value = modifier.value;
         }
-        if (value > maxBonusInAge[age]) maxBonusInAge[age] = value;
+        if (target) {
+          // If we have a target, we can accumulate them
+          maxBonusInAge[age] += value;
+        } else if (value > maxBonusInAge[age]) {
+          // Otherwise take the max to avoid counting mutually exclusive bonuses.
+          maxBonusInAge[age] = value;
+        }
         const tryCreateVsBonusName = [
           ...(modifier.target?.id ?? []),
           ...(modifier.target?.class ?? []).map((c) => c.flatMap((x) => x.split("_")).join(" ")),
