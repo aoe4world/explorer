@@ -45,6 +45,7 @@ type LevelDefinition = {
   difficulty: number;
   maxDifficulty?: number;
   chance: number;
+  limit?: number;
   questions: (QuestionFunc | Question)[];
 };
 
@@ -101,31 +102,79 @@ export async function loadCustomQuestions(url: string) {
 const RECENTLY_ASKED_LIMIT = 30;
 const MAX_ATTEMPTS = 20;
 const recentlyAsked: string[] = [];
+const questionsProvided: Record<string, number> = {};
+
+export function resetQuestionLimits() {
+  for (const key in questionsProvided) {
+    delete questionsProvided[key];
+  }
+}
+
 
 export async function getRandomQuestion(difficulty?: number, civ?: civConfig): Promise<Question | null> {
   difficulty = Math.max(0, difficulty);
   console.log(`Getting random question at ${difficulty} difficulty...`);
   let attempts = 0;
+
   while (attempts < MAX_ATTEMPTS) {
     try {
-      for (const level of Object.values(levels).reverse()) {
-        if (difficulty >= level.difficulty && (level.maxDifficulty == undefined || level.maxDifficulty > difficulty) && Random.chance(level.chance)) {
-          if (!level.questions.length) continue;
-          const questionOrFunc = Random.pick(level.questions);
-          let question: Question;
-          if (typeof questionOrFunc === "function") {
-            question = await questionOrFunc(difficulty, civ);
-          } else if (typeof questionOrFunc === "object" && questionOrFunc !== null) {
-            question = questionOrFunc;
-          }
-          if (question) {
-            const hash = JSON.stringify(question);
-            if (recentlyAsked.includes(hash)) continue;
-            recentlyAsked.push(hash);
-            if (recentlyAsked.length > RECENTLY_ASKED_LIMIT) recentlyAsked.shift();
-            return question;
-          }
+      const eligibleLevels = Object.entries(levels).filter(([levelName, level]) => {
+        const isDifficultyMet = difficulty >= (level.difficulty ?? 0) && (level.maxDifficulty == undefined || level.maxDifficulty > difficulty);
+        const hasQuestions = level.questions.length > 0;
+        const limitNotReached = level.limit === undefined || (questionsProvided[levelName] || 0) < level.limit;
+        return isDifficultyMet && hasQuestions && limitNotReached;
+      });
+
+      if (eligibleLevels.length === 0) {
+        console.warn("No eligible categories to pick questions from.");
+        return null;
+      }
+
+      const totalChance = eligibleLevels.reduce((sum, [, level]) => sum + level.chance, 0);
+      if (totalChance === 0) {
+        console.warn("Total chance of eligible categories is zero. Cannot pick a question.");
+        return null;
+      }
+
+      let selectedLevelName: string | null = null;
+      let randomChance = Math.random() * totalChance;
+
+      for (const [levelName, level] of eligibleLevels) {
+        randomChance -= level.chance;
+        if (randomChance <= 0) {
+          selectedLevelName = levelName;
+          break;
         }
+      }
+
+      if (!selectedLevelName) {
+        // Fallback if for some reason no level was selected (shouldn't happen if totalChance > 0)
+        selectedLevelName = eligibleLevels[0][0];
+      }
+
+      const selectedLevel = levels[selectedLevelName];
+      const questionOrFunc = Random.pick(selectedLevel.questions);
+      let question: Question;
+
+      if (typeof questionOrFunc === "function") {
+        question = await questionOrFunc(difficulty, civ);
+      } else if (typeof questionOrFunc === "object" && questionOrFunc !== null) {
+        question = questionOrFunc;
+      }
+
+      if (question) {
+        const hash = JSON.stringify(question);
+        if (recentlyAsked.includes(hash)) {
+          attempts++;
+          continue;
+        }
+        recentlyAsked.push(hash);
+        if (recentlyAsked.length > RECENTLY_ASKED_LIMIT) recentlyAsked.shift();
+
+        // Increment the count for the selected category
+        questionsProvided[selectedLevelName] = (questionsProvided[selectedLevelName] || 0) + 1;
+
+        return question;
       }
     } catch (e) {
       console.error(e);

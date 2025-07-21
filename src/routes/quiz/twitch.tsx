@@ -5,6 +5,7 @@ import { TwitchQuiz } from "@components/quiz/TwitchQuiz";
 import { ToggleSwitch } from "@components/common/ToggleSwitch";
 import { tempHideNav } from "../../global";
 import { setActivePage } from "../../App";
+import { resetQuestionLimits } from "@components/quiz/questions";
 
 export const QuizRoute: Component = () => {
   const query = useLocation().query;
@@ -47,6 +48,11 @@ export const QuizRoute: Component = () => {
     location: useLocation(),
   });
 
+  const startQuiz = () => {
+    resetQuestionLimits();
+    setShow(true);
+  }
+
   return (
     <div class="max-w-screen-lg p-4 mx-auto gap-4 mb-4 mt-8">
       <Show
@@ -88,7 +94,7 @@ export const QuizRoute: Component = () => {
                 <button
                   class="whitespace-nowrap inline-flex items-center gap-2 bg-purple-400 py-2 px-10 font-bold text-lg text-purple-900 outline outline-purple-800 rounded-md
              hover:outline-white/30 hover:bg-purple-300 active:bg-white active:text-purple-900"
-                  onClick={() => setShow(true)}
+                  onClick={startQuiz}
                 >
                   Start
                 </button>
