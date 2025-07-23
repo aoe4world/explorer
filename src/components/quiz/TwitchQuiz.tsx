@@ -51,8 +51,10 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
   useIncomingTwitchMessages({ channel: props.channel }, ({ user, message }) => {
     const choice = parseChoice(message);
     if (choice == undefined) return;
-    if (user.username === props.channel) registerHostChoice(choice);
-    else {
+    const mainChannel = props.channel.split(',')[0];
+    if (user.username === mainChannel) {
+      registerHostChoice(choice);
+    } else {
       if (!users[user.username]) setUsers(user.username, user);
       registerViewerChoice(user.username, choice);
     }
@@ -450,7 +452,7 @@ function parseChoice(message: string) {
 }
 
 async function useIncomingTwitchMessages({ channel }: { channel: string }, callback: ({ user, message }: { user: TwitchUser; message: string }) => void) {
-  const chatClient = new ChatClient({ channels: [channel] });
+  const chatClient = new ChatClient({ channels: channel.split(',') });
   const listener = chatClient.onMessage(async (channel: string, user: string, message: string, data) => {
     callback({ user: { username: user, display_name: data.userInfo.displayName, color: data.userInfo.color, subscriber: data.userInfo.isSubscriber, moderator: data.userInfo.isMod }, message })
   });
