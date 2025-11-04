@@ -286,6 +286,48 @@ const ExpansionInfo: Component<{ civ: CivConfig }> = (props) => (
         </div>
       </div>
     </Show>
+    <Show when={props.civ?.expansion.includes("dynasties-of-the-east")}>
+      <div class="bg-purple-700/20 p-1 flex items-center gap-2 rounded-xl mb-8">
+        <img src={dlcFlag} class="w-6 ml-3 -my-2" />
+        <div class="p-2">
+          <p>
+            {props.civ.name} is part of the <strong>Dynasties of the East</strong> expansion
+          </p>
+          <p class="text-sm opacity-90 mt-1">
+            <span>Get it on</span>
+            <a
+              href="https://store.steampowered.com/app/3067190?utm_source=aoe4world"
+              target="_blank"
+              data-anal-event="buy_dlc_steam"
+              class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
+            >
+              <i class="fab fa-steam mx-1"></i> Steam
+            </a>
+            <a
+              href="https://www.xbox.com/en-us/games/store/age-of-empires-iv-dynasties-of-the-east/9n12vdwgdh6r"
+              data-anal-event="buy_dlc_xbox"
+              class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
+            >
+              <i class="fab fa-xbox mx-1 "></i> Xbox
+            </a>
+            <a
+              href="https://www.microsoft.com/store/productid/9n759w6rb0j7"
+              data-anal-event="buy_dlc_ms"
+              class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
+            >
+              <i class="fab fa-microsoft mx-1"></i> MS Store
+            </a>
+            <a
+              href="https://store.playstation.com/en-us/product/UP6312-PPSA25366_00-0809826663220128"
+              data-anal-event="buy_dlc_ps"
+              class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
+            >
+              <i class="fab fa-playstation mx-1"></i> Playstation
+            </a>
+          </p>
+        </div>
+      </div>
+    </Show>
   </>
 );
 
