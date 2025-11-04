@@ -69,7 +69,7 @@ export function BuildingDetailRoute() {
                       let el;
                       return (
                         <Link href={`${civ ? `/civs/${civ.slug}` : ""}/units/${unit.id}`} class="flex flex-row items-center mb-2 group " ref={el}>
-                          <ItemIcon url={unit} link={true} size={10} class="mr-2" />
+                          <ItemIcon item={unit} link={true} size={10} class="mr-2" />
                           <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
                           <Tooltip attachTo={el}>
                             <div class="max-w-md bg-gray-800 rounded-2xl border border-item-unit">
@@ -91,7 +91,7 @@ export function BuildingDetailRoute() {
                       let el;
                       return (
                         <Link class="flex flex-row items-center mb-2 group " ref={el} href={getItemHref(tech, civ)}>
-                          <ItemIcon url={tech} link={true} size={10} class="mr-2" />
+                          <ItemIcon item={tech} link={true} size={10} class="mr-2" />
                           <span
                             class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100 whitespace-pre-wrap"
                             innerHTML={tech.name.replace(/(.*?)\((.*?)\)/, '$1<span class="opacity-50">$2</span>')}

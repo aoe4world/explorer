@@ -120,7 +120,7 @@ export const Toolbar: Component = () => {
 
       <Show when={hideNav() === "visible"}>
         <div class="bg-blue-900/20 border-bottom border border-gray-500 p-3 text-white/70 text-center">
-          Work in Progress: The <CivFlag abbr="kt" class="inline-block h-5" /> Knights Templar and <CivFlag abbr="hl" class="inline-block h-5" /> House of Lancaster civilizations aren't fully updated and miss stats, abilities and upgrades.<br/>Explorer will continue to be updated over the next few weeks for both old and new civs.
+          Work in Progress: The DLC civilizations aren't fully updated and miss stats, abilities and upgrades.
         </div>
       </Show>
     </Show>
