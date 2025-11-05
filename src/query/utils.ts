@@ -240,7 +240,7 @@ export async function getPatchHistory(item: UnifiedItem, civs?: civConfig[]) {
       if (!civOverlap(civAbbrs, section.civs)) continue;
       diff.push(
         ...section.changes.reduce(
-          (acc, c) => (c.items.includes(cid) && civOverlap(civAbbrs, c.civs) ? [...acc, ...c.diff.filter(([t, l, lc]) => civOverlap(civAbbrs, lc)).map(([t, l, lc = []]) => [t, l, [...lc, section.civs]])] : acc),
+          (acc, c) => (c.items.includes(cid) && civOverlap(civAbbrs, c.civs) ? [...acc, ...c.diff.filter(([t, l, lc]) => civOverlap(civAbbrs, lc)).map(([t, l, lc = []]) => [t, l, [...lc, ...section.civs]])] : acc),
           [] as PatchLine[]
         )
       );
