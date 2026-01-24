@@ -30,6 +30,9 @@ export const PatchListRoute = () => {
         <p>
           <Icon icon="circle-check" class="text-gray-300" /> fixes
         </p>
+        <p>
+          <Icon icon="circle-arrow-right" class="text-gray-300" /> changes
+        </p>
       </div>
 
       <ul class="flex flex-col lg:gap-2 my-6 relative py-4">
@@ -99,7 +102,8 @@ export const PatchListRoute = () => {
 function patchSummary(notes: PatchNotes, i: number, patches: PatchNotes[]) {
   let buffed = 0,
     nerfed = 0,
-    fixed = 0;
+    fixed = 0,
+    changes = 0;
 
   let civs = new Set<CivAbbr>();
   for (const change of notes.sections.flatMap((section) => section.changes)) {
@@ -108,6 +112,7 @@ function patchSummary(notes: PatchNotes, i: number, patches: PatchNotes[]) {
       if (type === "buff") buffed++;
       else if (type === "nerf") nerfed++;
       else if (type === "fix") fixed++;
+      else if (type === "change") changes++;
     }
   }
 
@@ -117,6 +122,7 @@ function patchSummary(notes: PatchNotes, i: number, patches: PatchNotes[]) {
     buffed,
     nerfed,
     fixed,
+    changes,
     civs: [...civs],
     notes,
     daysSinceLastPatch,

@@ -35,6 +35,7 @@ export const PatchDetailRoute = () => {
       if (!patch || !items) return [];
       if (!civ) return patch?.sections;
 
+      let nexttitle = null;
       return patch?.sections?.reduce((sections, s) => {
         const changes = s.changes.reduce((chs, c) => {
           if (c.civs.length ? c.civs.includes(civ) : !c.items.length || c.items.some((i) => items.get(i)?.civs.includes(civ))) {
@@ -45,7 +46,15 @@ export const PatchDetailRoute = () => {
           }
           return chs;
         }, [] as PatchSet[]);
-        if ((!s.civs?.length || (s.civs && s.civs.includes(civ))) && changes.length) sections.push({ ...s, changes });
+        if ((!s.civs?.length || (s.civs && s.civs.includes(civ))) && changes.length) {
+          sections.push({ ...s, title: s.title ?? nexttitle, changes });
+          nexttitle = null;
+        }
+        else {
+          if (s.title)
+            nexttitle = s.title;
+        }
+
         return sections;
       }, [] as PatchSection[]);
     }
@@ -141,9 +150,9 @@ export const PatchDetailRoute = () => {
 
           <For each={filteredPatchNotes()}>{(section) => <Section section={section} items={items()} civ={civ()} />}</For>
         </div>
-        <div class="hidden lg:block sticky basis-72 -order-1 top-24 max-h-screen overflow-y-auto pb-24 self-start align-self-start bottom-48">
+        <div class="hidden lg:block sticky basis-72 min-w-[12rem] -order-1 top-24 max-h-screen overflow-y-auto pb-24 self-start align-self-start bottom-48">
           {civ() && (
-            <div class="my-5 rounded-lg p-4 bg-gray-500  gap-2">
+            <div class="my-5 rounded-lg p-4 bg-gray-500 gap-2">
               <p class="text-gray-100 text-sm">
                 Showing notes for the <CivFlag abbr={civ()} class="w-7 h-4 ml-1 inline-block" /> {CIVILIZATIONS[civ()]?.name}. Other patch notes are hidden.
               </p>
@@ -177,7 +186,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
   }
 
   return (
-    <div class="mb-10 max-w-prose scroll-mt-24">
+    <div class="mb-10 scroll-mt-24">
       { props.section.title && <TableOfContents.Anchor label={props.section.title} level={1} /> }
       { props.section.subtitle && <TableOfContents.Anchor label={props.section.subtitle} level={2} /> }
 
@@ -242,6 +251,7 @@ const DiffList: Component<{ diff: PatchLine[] }> = (props) => (
             {type == "buff" && <Icon icon="circle-plus" class="text-green-700" />}
             {type == "nerf" && <Icon icon="circle-minus" class="text-red-700" />}
             {type == "fix" && <Icon icon="circle-check" class="text-gray-300" />}
+            {type == "change" && <Icon icon="circle-arrow-right" class="text-gray-300" />}
           </div>
           <p class="text-gray-100 text-base">{change}</p>
         </li>

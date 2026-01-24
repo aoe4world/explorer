@@ -37,7 +37,7 @@ export type AnswerDefinition = {
 
 type Answer = AnswerDefinition | string;
 
-type ResourceType = "food" | "wood" | "gold" | "stone" | "oliveoil";
+type ResourceType = "food" | "wood" | "gold" | "stone" | "oliveoil" | "silver";
 
 type ResourceCosts = Partial<Record<ResourceType, number>>;
 
@@ -570,7 +570,7 @@ const getIncorrectCosts = (correct: ResourceCosts) => {
   const costs = Object.fromEntries(Object.entries(correct).filter(([k, v]) => v > 0)) as ResourceCosts;
   const { gold, food, wood, stone } = costs;
 
-  const resourcesWithValues = ["gold", "food", "wood", "stone", "oliveoil"].filter((r) => costs[r] > 0);
+  const resourcesWithValues = ["gold", "food", "wood", "stone", "oliveoil", "silver"].filter((r) => costs[r] > 0);
 
   const fuckitUps =
     resourcesWithValues.length > 1

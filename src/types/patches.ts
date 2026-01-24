@@ -26,10 +26,11 @@ export type PatchSection = {
 
 export type PatchSet = {
   title?: string;
+  uionly?: boolean;
   items: string[];
   civs: civAbbr[];
   diff: PatchLine[];
   note?: string;
 };
 
-export type PatchLine = ["nerf" | "buff" | "fix", string, civAbbr[]?];
+export type PatchLine = ["nerf" | "buff" | "fix" | "change", string, civAbbr[]?];

@@ -125,9 +125,8 @@ export function splitBuildingsIntoGroups(buildings: UnifiedItem<Building>[]) {
 export function splitTechnologiesIntroGroups(buildings: UnifiedItem<Technology>[]) {
   return buildings?.reduce(
     (acc, tech) => {
-      if (tech.classes.some((c) => ["advance"].includes(c)) && tech.civs[0] == "ab") acc.wings.push(tech);
-      else if (tech.classes.some((c) => ["advance"].includes(c)) && tech.civs[0] == "kt") acc.commanderies.push(tech);
-      else if (tech.classes.some((c) => tech.id.includes("wing")) && tech.civs[0] == "ay") acc.wings.push(tech);
+      if (tech.classes.some((c) => ["age_up_upgrade"].includes(c)) && ["ab", "ay"].includes(tech.civs[0])) acc.wings.push(tech);
+      else if (tech.classes.some((c) => ["age_up_upgrade"].includes(c)) && tech.civs[0] == "kt") acc.commanderies.push(tech);
       else if (tech.classes.some((c) => c === "level-up-choice") && tech.civs[0] == "je") acc.leveling.push(tech);
       else if (tech.classes.some((c) => ["ship", "naval", "warship"].includes(c))) acc.naval.push(tech);
       else if (
@@ -224,7 +223,7 @@ export function capitalize(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const patchOrder = ["buff", "nerf", "fix"];
+const patchOrder = ["buff", "change", "nerf", "fix"];
 export const sortPatchDiff = (a: PatchLine, b: PatchLine) => patchOrder.indexOf(a[0]) - patchOrder.indexOf(b[0]);
 
 /** Get all changes, line by line, that apply to a specific item */
@@ -240,7 +239,7 @@ export async function getPatchHistory(item: UnifiedItem, civs?: civConfig[]) {
       if (!civOverlap(civAbbrs, section.civs)) continue;
       diff.push(
         ...section.changes.reduce(
-          (acc, c) => (c.items.includes(cid) && civOverlap(civAbbrs, c.civs) ? [...acc, ...c.diff.filter(([t, l, lc]) => civOverlap(civAbbrs, lc)).map(([t, l, lc = []]) => [t, l, [...lc, ...section.civs]])] : acc),
+          (acc, c) => (c.items.includes(cid) && !c.uionly && civOverlap(civAbbrs, c.civs) ? [...acc, ...c.diff.filter(([t, l, lc]) => civOverlap(civAbbrs, lc)).map(([t, l, lc = []]) => [t, l, [...lc, ...section.civs]])] : acc),
           [] as PatchLine[]
         )
       );

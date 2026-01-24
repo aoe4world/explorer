@@ -400,7 +400,7 @@ export const StatCosts: Component<{ costs: Item["costs"] }> = (props) => (
   <div>
     <div class={statLabelCSSClass}>Costs</div>
     <div class="flex items-center gap-4 mt-1">
-      {["food", "wood", "gold", "stone", "oliveoil", "time", "popcap", "vizier"].map(
+      {["food", "wood", "gold", "stone", "oliveoil", "silver", "time", "popcap", "vizier"].map(
         (type) =>
           (type == "popcap" ? props.costs[type] > 1 : props.costs[type] > 0) && (
             <div class="flex items-center gap-1">

@@ -38,6 +38,7 @@ export const PatchHistory: Component<{ item: UnifiedItem; civ?: civConfig }> = (
                       {type == "buff" && <Icon icon="circle-plus" class="text-green-700" />}
                       {type == "nerf" && <Icon icon="circle-minus" class="text-red-700" />}
                       {type == "fix" && <Icon icon="circle-check" class="text-gray-300" />}
+                      {type == "change" && <Icon icon="circle-arrow-right" class="text-gray-300" />}
                     </div>
                     <p class="text-gray-100 text-base max-w-prose white">
                       {!props.civ && civs?.length >= 1 ? civs.map((c) => <CivFlag abbr={c} class="h-3 rounded-sm mr-1.5 mb-0.5 inline" />) : <></>}

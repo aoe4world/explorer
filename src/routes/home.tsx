@@ -17,14 +17,14 @@ export const CivOverviewRoute = () => {
           <div class="flex flex-wrap items-center">
             <h1 class="text-3xl font-bold mr-6">AoE4 Explorer</h1>
             <Link
-              href="/patches/patch-15-1-6970-season-12"
+              href="/patches/patch-15-2-7380-season-13"
               class="text-xs px-3 uppercase font-bold py-1 rounded-full text-gray-100 bg-black border border-gray-300"
               ref={el}
             >
-              <i class="fas fa-asterisk mr-1"></i> Patch 15.1.6970
+              <i class="fas fa-asterisk mr-1"></i> Patch 15.2.7380
             </Link>
             <Tooltip attachTo={el}>
-              <div class={tooltipCSSClass}>The Explorer includes all changes introduced with Season 12 Patch 15.1.6970</div>
+              <div class={tooltipCSSClass}>The Explorer includes all changes introduced with Season 13 Patch 15.2.7380</div>
             </Tooltip>
           </div>
           <p class="text-2xl mt-2 text-gray-200">Discover all units, buildings and technologies in the game.</p>

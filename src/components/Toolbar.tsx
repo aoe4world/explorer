@@ -26,23 +26,22 @@ export const Toolbar: Component = () => {
   };
 
   const navButtonClass =
-    "w-12 h-7 md:w-10 lg:h-7 md:hover:bg-white md:hover:text-black bg-gray-900 text-white/70 text-lg px-3 grid rounded-md flex-none transition";
+    "w-10 h-7 md:w-12 md:hover:bg-white md:hover:text-black bg-gray-900 text-white/70 text-lg grid rounded-md flex-none transition";
 
   return (
     <Show when={hideNav() !== "hidden"}>
       <div class="bg-gray-700 z-10 border-bottom border border-gray-500 sticky mt-25 top-0" classList={{ "opacity-20": pending() }}>
         <div class="max-w-screen-2xl py-2 px-4 lg:px-8 h-auto text-base lg:p-3 mx-auto flex flex-row items-center flex-wrap sm:flex-nowrap gap-2 lg:gap-5">
-          <div class="hidden lg:flex flex-row gap-2 h-10 lg:h-8 items-center">
-            {current().subroute ? (
-              <Link href={`/civs/${current().civ}/`} class={navButtonClass} noScroll={true}>
-                <Icon icon="grid-horizontal" class="place-self-center" />
-              </Link>
-            ) : (
-              <Link href={`/`} class={navButtonClass} noScroll={true}>
-                <Icon icon="home" class="place-self-center" />
-              </Link>
-            )}
-
+          {current().subroute ? (
+            <Link href={`/civs/${current().civ}/`} class={navButtonClass} noScroll={true}>
+              <Icon icon="grid-horizontal" class="place-self-center" />
+            </Link>
+          ) : (
+            <Link href={`/`} class={navButtonClass} noScroll={true}>
+              <Icon icon="home" class="place-self-center" />
+            </Link>
+          )}
+          <div class="hidden lg:flex flex-row flex-wrap gap-2 h-auto items-center">
             <For each={Object.values(CIVILIZATIONS)}>
               {(civ) => (
                 <NavLink
@@ -85,7 +84,7 @@ export const Toolbar: Component = () => {
             let el;
             return (
               <>
-                <Link href={`/about`} ref={el} class={`${navButtonClass} ml-auto hidden sm:block`} noScroll={true}>
+                <Link href={`/about`} ref={el} class={`${navButtonClass} ml-auto hidden sm:grid`} noScroll={true}>
                   <Icon icon="circle-question" class="place-self-center text-gray-300" />
                 </Link>
                 <Tooltip attachTo={el}>
