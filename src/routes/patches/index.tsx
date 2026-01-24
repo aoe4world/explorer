@@ -28,10 +28,10 @@ export const PatchListRoute = () => {
           <Icon icon="circle-minus" class="text-red-500" /> nerfs
         </p>
         <p>
-          <Icon icon="circle-check" class="text-gray-300" /> fixes
+          <Icon icon="circle-arrow-right" class="text-gray-200" /> changes
         </p>
         <p>
-          <Icon icon="circle-arrow-right" class="text-gray-300" /> changes
+          <Icon icon="circle-check" class="text-gray-300" /> fixes
         </p>
       </div>
 
@@ -62,6 +62,7 @@ export const PatchListRoute = () => {
                 <div class="max-w-2xl h-2 w-[300px] flex rounded-full overflow-hidden">
                   <div class="bg-green-500 flex-shrink" style={{ "flex-basis": patch.buffed * 1.5 + "px" }}></div>
                   <div class="bg-red-500 flex-shrink" style={{ "flex-basis": patch.nerfed * 1.5 + "px" }}></div>
+                  <div class="bg-gray-200 flex-shrink" style={{ "flex-basis": patch.changes * 1.5 + "px" }}></div>
                   <div class="bg-white/20 flex-shrink" style={{ "flex-basis": patch.fixed * 1.5 + "px" }}></div>
                 </div>
               </div>

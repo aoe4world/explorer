@@ -1,11 +1,11 @@
 import { PatchNotes } from "../../types/patches";
 
 export const patch: PatchNotes = {
-  id: "patch-15-2-7380-season-13",
+  id: "patch-15-2-7380",
   buildId: "15.2.7380",
-  name: "Season 13 Update",
-  season: 13,
-  type: "update",
+  name: "Patch 15.2.7380",
+  season: 12,
+  type: "patch",
   officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-update-15-2-7380/",
   summary: `This patch brings additional fixes to issues resulting in lost Perk Points, changes to our Ranked Map Pool, and adjustments to units like the Torguud, Worker Elephant, and Healer Elephant.`,
   introduction: `
