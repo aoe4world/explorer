@@ -24,8 +24,17 @@ export function TechnologyDetailRoute() {
     setActivePageForItem(item(), civ);
   });
 
-  const variation = createMemo(() => getMostAppropriateVariation<Technology>(item(), civ));
+  const [age, setAge] = createSignal(1);
 
+  createEffect(() => {
+    if (age() < item()?.minAge) {
+      setAge(item()?.minAge);
+    } 
+  });
+
+  const variation = createMemo(() => getMostAppropriateVariation<Technology>(item(), civ, age()));
+
+  const minAge = () => variation()?.age;
   const costs = () => variation()?.costs;
 
   return (
@@ -34,9 +43,9 @@ export function TechnologyDetailRoute() {
         {(item) => (
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
-              <ItemPage.Header item={item} civ={civ} />
+              <ItemPage.Header item={variation()} civ={civ} />
               <div class={mainIntroductionCSSClass}>{item?.description}</div>
-              {item?.minAge > 0 ? <div class={mainIntroductionCSSClass}>Available in the {PRETTY_AGE_MAP_LONG[item?.minAge]}</div> : <></>}
+              {minAge() > 0 ? <div class={mainIntroductionCSSClass}>Available in the {PRETTY_AGE_MAP_LONG[minAge()]}</div> : <></>}
 
               <ItemPage.ExpansionInfo civ={civ} />
 
@@ -53,8 +62,11 @@ export function TechnologyDetailRoute() {
               </div>
             </div>
             <div class="flex-auto flex flex-col gap-8">
-              <div class=" bg-black/70 rounded-2xl p-6 ">
-                <StatCosts costs={costs()} />
+              <div class="bg-black/70 rounded-2xl">
+                <ItemPage.AgeTabs age={age} setAge={setAge} minAge={item?.minAge} />
+                <div class="p-6">
+                  <StatCosts costs={costs()} />
+                </div>
               </div>
             </div>
           </div>

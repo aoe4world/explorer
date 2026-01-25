@@ -6,14 +6,14 @@ import { TechnologyCard } from "./TechnologyCard";
 import { CIVILIZATIONS, ITEMS, PRETTY_AGE_MAP, PRETTY_AGE_MAP_SHORT } from "../config";
 import { getItemTechnologies } from "../query/utils";
 import { getItemCssClass, itemGridCSSClass, mainIntroductionCSSClass, mainItemTitleCSSClass } from "../styles";
-import { civAbbr, civConfig, UnifiedItem } from "../types/data";
+import { civAbbr, civConfig, UnifiedItem, Item } from "../types/data";
 import { Icon } from "./Icon";
 import { civBackdrops } from "../data/civData";
 import { ItemIcon } from "./ItemIcon";
 import { CivConfig, CivInfo } from "@data/types/civs";
 import dlcFlag from "../../assets/dlc-flag.png";
 
-const Header: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
+const Header: Component<{ item: UnifiedItem | Item; civ?: civConfig }> = (props) => {
   const itemCssClass = getItemCssClass(props.item);
   return (
     <div class="flex gap-4 items-center mb-4">

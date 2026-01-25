@@ -6,7 +6,7 @@ export const patch: PatchNotes = {
   name: "Patch 15.2.7380",
   season: 12,
   type: "patch",
-  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-update-15-2-7380/",
+  officialUrl: "https://www.ageofempires.com/news/age-of-empires-iv-patch-15-2-7380/",
   summary: `This patch brings additional fixes to issues resulting in lost Perk Points, changes to our Ranked Map Pool, and adjustments to units like the Torguud, Worker Elephant, and Healer Elephant.`,
   introduction: `
 ![](https://cdn.ageofempires.com/aoe/wp-content/uploads/2024/11/S9_Event_2_Patch_Banner-1080x608.webp)

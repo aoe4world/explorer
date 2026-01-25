@@ -34,7 +34,7 @@ export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig; age?: n
 
       {props.civ && !props.onCivSelect ? (
         props.item.civs.length == 1 && (
-          <div class="flex h-6 mt-5  items-center gap-2">
+          <div class="flex h-6 mt-2 items-center gap-2">
             <span class="text-unique text-sm font-semibold">
               <Icon icon="star-sharp" /> Unique to {props.civ.name}
             </span>

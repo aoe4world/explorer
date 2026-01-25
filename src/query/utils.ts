@@ -69,14 +69,15 @@ export function getItemTechnologies<T extends ITEMS>(
   }, [] as UnifiedItem<Technology>[]);
 }
 
-export function getMostAppropriateVariation<T extends Item = Item>(item: UnifiedItem<T>, civ: civConfig): T {
+export function getMostAppropriateVariation<T extends Item = Item>(item: UnifiedItem<T>, civ: civConfig, age?: number): T {
   if (!item) return null;
-  return (
-    (civ ? item.variations.filter((v) => v.civs.includes(civ.abbr)) : item.variations)
+  const candidates = (civ ? item.variations.filter((v) => v.civs.includes(civ.abbr)) : item.variations)
+      .filter((a) => !age || a.age <= age)
       .sort((a, b) => b.costs.total - a.costs.total)
       .sort((a, b) => a.id.length - b.id.length)
-      .sort((a, b) => b.civs.length - a.civs.length)[0] ?? item.variations[0]
-  );
+      .sort((a, b) => b.civs.length - a.civs.length)
+      .sort((a, b) => !age ? 0 : (b.age - a.age));
+  return candidates[0] ?? item.variations[0]
 }
 
 export function splitUnitsIntoGroups(units: UnifiedItem<Unit>[]) {

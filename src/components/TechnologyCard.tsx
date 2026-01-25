@@ -12,8 +12,8 @@ export const TechnologyCard: Component<{ item: UnifiedItem<Technology>; civ?: ci
 
   return (
     <Card item={props.item} civ={props.civ}>
-      <div class="flex-auto">
-        <p class="mb-5">{variation()?.description}</p>
+      <div class="flex flex-col flex-auto">
+        <p class="mb-5 grow">{variation()?.description}</p>
         <StatCosts costs={costs()} />
       </div>
     </Card>
