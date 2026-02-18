@@ -83,29 +83,29 @@ export const Toolbar: Component = () => {
 
           <A href={`/about`} ref={aboutEl} class={`${navButtonClass} ml-auto hidden sm:grid`} noScroll={true}>
             <Icon icon="circle-question" class="place-self-center text-gray-300" />
+            <Tooltip attachTo={aboutEl}>
+              <div class={tooltipCSSClass}>
+                <p class="font-bold">Learn more about the Explorer.</p>
+                <hr class="my-4" />
+                <For
+                  each={[
+                    ["base", "Base value"],
+                    ["upgrade", "Unit Upgrades"],
+                    ["building", "Building Upgrades"],
+                    ["technology", "Technology Research"],
+                    ["unique", "Unique Upgrade"],
+                    ["bonus", "Bonus"],
+                  ]}
+                >
+                  {([type, label]) => (
+                    <div>
+                      <span class={`bg-bar-${type} inline-block w-3 h-3 rounded-full mr-1`}></span> {label}
+                    </div>
+                  )}
+                </For>
+              </div>
+            </Tooltip>
           </A>
-          <Tooltip attachTo={aboutEl}>
-            <div class={tooltipCSSClass}>
-              <p class="font-bold">Learn more about the Explorer.</p>
-              <hr class="my-4" />
-              <For
-                each={[
-                  ["base", "Base value"],
-                  ["upgrade", "Unit Upgrades"],
-                  ["building", "Building Upgrades"],
-                  ["technology", "Technology Research"],
-                  ["unique", "Unique Upgrade"],
-                  ["bonus", "Bonus"],
-                ]}
-              >
-                {([type, label]) => (
-                  <div>
-                    <span class={`bg-bar-${type} inline-block w-3 h-3 rounded-full mr-1`}></span> {label}
-                  </div>
-                )}
-              </For>
-            </div>
-          </Tooltip>
 
           <Search class="basis-full my-2 sm:my-0 sm:basis-48 lg:basis-96" />
         </div>

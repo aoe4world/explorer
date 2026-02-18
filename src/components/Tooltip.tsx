@@ -2,24 +2,34 @@ import { computePosition, offset, flip, shift } from "@floating-ui/dom";
 import { Component, createSignal, onMount, onCleanup, Show, JSX } from "solid-js";
 import { Portal } from "solid-js/web";
 
-export const Tooltip: Component<{ attachTo: HTMLElement; children?: JSX.Element }> = (props) => {
+export const Tooltip: Component<{ attachTo?: HTMLElement; children?: JSX.Element }> = (props) => {
   let [hover, setHover] = createSignal(false);
+  let ref: HTMLDivElement | undefined;
   const delay = 50;
 
+  const target = () => props.attachTo || ref?.parentElement;
+
+  const onEnter = () => setHover(true);
+  const onLeave = () => setHover(false);
+
   onMount(() => {
-    props.attachTo?.addEventListener("mouseenter", () => setHover(true));
-    props.attachTo?.addEventListener("mouseleave", () => setHover(false));
+    const el = target();
+    el?.addEventListener("mouseenter", onEnter);
+    el?.addEventListener("mouseleave", onLeave);
+
+    onCleanup(() => {
+      el?.removeEventListener("mouseenter", onEnter);
+      el?.removeEventListener("mouseleave", onLeave);
+    });
   });
 
-  onCleanup(() => {
-    props.attachTo?.removeEventListener("mouseenter", () => setHover(true));
-    props.attachTo?.removeEventListener("mouseleave", () => setHover(false));
-  });
+  function positionTooltip(el: HTMLDivElement) {
+    const anchor = target();
+    if (!anchor) return;
 
-  function positionTooltip(el) {
     Object.assign(el.style, { position: "absolute" });
     function updatePosition() {
-      computePosition(props.attachTo, el, {
+      computePosition(anchor, el, {
         placement: "bottom-start",
         strategy: "absolute",
         middleware: [flip(), shift()],
@@ -41,6 +51,7 @@ export const Tooltip: Component<{ attachTo: HTMLElement; children?: JSX.Element 
   }
   return (
     <>
+      <div ref={ref} style="display: none" />
       <Show when={hover()}>
         <Portal>
           <div class="w-50 p-5 w-screen sm:w-auto" style="opacity: 0; position: absolute; top: 0;" ref={(el) => positionTooltip(el)}>
@@ -51,3 +62,4 @@ export const Tooltip: Component<{ attachTo: HTMLElement; children?: JSX.Element 
     </>
   );
 };
+
