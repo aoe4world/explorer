@@ -5,7 +5,13 @@ export default defineConfig({
   plugins: [solidPlugin()],
   build: {
     target: "esnext",
-    polyfillDynamicImport: false,
+  },
+  server: {
+    watch: {
+      ignored: [
+        "**/data/source/**"
+      ]
+    }
   },
   define: {
     "import.meta.env.DATA_URL": '"http://localhost:3000/data"',
