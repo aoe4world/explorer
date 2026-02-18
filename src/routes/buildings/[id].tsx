@@ -28,7 +28,8 @@ export function BuildingDetailRoute() {
   const civ: civConfig = CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
   const [item] = createResource(params.id, async (id) => (await SDK).buildings.get(id));
-  const variation = createMemo(() => getMostAppropriateVariation<Building>(item(), civ));
+  const [age, setAge] = createSignal(4);
+  const variation = createMemo(() => getMostAppropriateVariation<Building>(item(), civ, age()));
 
   createEffect(() => {
     if (!item()) return;
@@ -48,7 +49,7 @@ export function BuildingDetailRoute() {
         {(item) => (
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
-              <ItemPage.Header item={item} civ={civ} />
+              <ItemPage.Header item={variation()} civ={civ} />
               <div class={mainIntroductionCSSClass}>{variation()?.description}</div>
 
               <ItemPage.ExpansionInfo civ={civ} />
@@ -112,7 +113,7 @@ export function BuildingDetailRoute() {
 
               <PatchHistory item={item} civ={civ} />
             </div>
-            <BuildingSidebar item={item} civ={civ} />
+            <BuildingSidebar item={item} civ={civ} age={age} setAge={setAge} />
           </div>
         )}
       </Show>
@@ -123,14 +124,13 @@ export function BuildingDetailRoute() {
   );
 }
 
-const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }> = (props) => {
+const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig; age: () => number; setAge: (age: number) => void }> = (props) => {
   const [stats] = createResource(
     () => ({ unit: props.item, civ: props.civ }),
     (x) => getUnitStats(ITEMS.UNITS, x.unit, x.civ)
   );
 
-  const variation = createMemo(() => getMostAppropriateVariation<Building>(props.item, props.civ));
-  const [age, setAge] = createSignal(4);
+  const variation = createMemo(() => getMostAppropriateVariation<Building>(props.item, props.civ, props.age()));
 
   const costs = () => variation()?.costs;
 
@@ -159,14 +159,14 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
         {(stats) => (
           <>
             <div class=" bg-black/70 rounded-2xl">
-              <ItemPage.AgeTabs age={age} setAge={setAge} minAge={props.item.minAge} />
+              <ItemPage.AgeTabs age={props.age} setAge={props.setAge} minAge={props.item.minAge} />
               <div class="flex flex-col gap-5 p-6">
-                <StatBar label="Hitpoints" icon="heart" stat={stats.hitpoints} max={10000} item={props.item} age={age} />
-                <StatBar label="Siege Attack" icon="meteor" stat={stats.siegeAttack} max={500} multiplier={stats.burst} item={props.item} age={age} />
-                <StatBar label="Melee Attack" icon="swords" stat={stats.meleeAttack} max={50} item={props.item} age={age} />
-                <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats.rangedAttack} max={50} multiplier={stats.burst} item={props.item} age={age} />
-                <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats.fireArmor} max={20} displayAlways={true} item={props.item} age={age} />
-                <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats.rangedArmor} max={60} displayAlways={true} item={props.item} age={age} />
+                <StatBar label="Hitpoints" icon="heart" stat={stats.hitpoints} max={10000} item={props.item} age={props.age} />
+                <StatBar label="Siege Attack" icon="meteor" stat={stats.siegeAttack} max={500} multiplier={stats.burst} item={props.item} age={props.age} />
+                <StatBar label="Melee Attack" icon="swords" stat={stats.meleeAttack} max={50} item={props.item} age={props.age} />
+                <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats.rangedAttack} max={50} multiplier={stats.burst} item={props.item} age={props.age} />
+                <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats.fireArmor} max={20} displayAlways={true} item={props.item} age={props.age} />
+                <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats.rangedArmor} max={60} displayAlways={true} item={props.item} age={props.age} />
               </div>
             </div>
             <div class="flex gap-5 flex-wrap bg-black/70 rounded-2xl p-6 ">
@@ -176,19 +176,19 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig }
                     label="Damage"
                     speed={stats.attackSpeed}
                     attacks={[stats.rangedAttack || stats.meleeAttack || stats.siegeAttack]}
-                    age={age}
+                    age={props.age}
                   ></StatDps>
                 </div>
               )}
-              <StatNumber label="Move Speed" stat={stats.moveSpeed} unitLabel="T/S" age={age}></StatNumber>
-              <StatNumber label="Attack Speed" stat={stats.attackSpeed} unitLabel="S" age={age}></StatNumber>
-              <StatNumber label="Min Range" stat={stats.minRange} unitLabel="TILES" age={age}></StatNumber>
-              <StatNumber label="Range" stat={stats.maxRange} unitLabel="TILES" age={age}></StatNumber>
+              <StatNumber label="Move Speed" stat={stats.moveSpeed} unitLabel="T/S" age={props.age}></StatNumber>
+              <StatNumber label="Attack Speed" stat={stats.attackSpeed} unitLabel="S" age={props.age}></StatNumber>
+              <StatNumber label="Min Range" stat={stats.minRange} unitLabel="TILES" age={props.age}></StatNumber>
+              <StatNumber label="Range" stat={stats.maxRange} unitLabel="TILES" age={props.age}></StatNumber>
               <StatLos
                 label="Line of Sight"
                 stat={stats.lineOfSight}
                 statMax={stats.maxLineOfSight}
-                age={age}
+                age={props.age}
               ></StatLos>
             </div>
           </>
