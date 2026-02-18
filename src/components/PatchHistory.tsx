@@ -1,4 +1,4 @@
-import { Link } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import { Component, createResource, createSignal, For } from "solid-js";
 import { getPatchHistory } from "../query/utils";
 import { UnifiedItem, civConfig } from "../types/data";
@@ -16,12 +16,12 @@ export const PatchHistory: Component<{ item: UnifiedItem; civ?: civConfig }> = (
           const [expanded, setExpanded] = createSignal(false);
           return (
             <div class="mb-6">
-              <Link
+              <A
                 href={`${props.civ ? `/civs/${props.civ.slug}` : ""}/patches/${history.patch.id}`}
                 class="font-bold text-gray-300 mb-1.5 hover:text-white transition"
               >
                 {history.patch.name}
-              </Link>
+              </A>
               {history.patch.date.valueOf() > Date.now() && (
                 <p class="my-3 text-gray-200 items-center  flex">
                   <Icon icon="calendar-clock" class="text-gray-300 mr-4" />

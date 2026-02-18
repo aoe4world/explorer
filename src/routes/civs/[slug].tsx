@@ -1,4 +1,4 @@
-import { Link, useIsRouting, useLocation, useParams } from "@solidjs/router";
+import { A, useIsRouting, useLocation, useParams } from "@solidjs/router";
 import { createEffect, createResource, For, on, Show, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
 import { BuildingCard } from "@components/BuildingCard";
@@ -53,10 +53,10 @@ export const CivDetailRoute = () => {
             <For each={data() && Object.values(data().units).flat()}>
               {(unit) =>
                 unit.unique && (
-                  <Link href={`./units/${unit.id}`} class="flex flex-row items-center mb-2 group ">
+                  <A href={`./units/${unit.id}`} class="flex flex-row items-center mb-2 group ">
                     <ItemIcon item={unit} link={true} size={10} class="mr-2" />
                     <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
-                  </Link>
+                  </A>
                 )
               }
             </For>
@@ -65,10 +65,10 @@ export const CivDetailRoute = () => {
             <For each={data() && Object.values(data().buildings).flat()}>
               {(building) =>
                 building.unique && (
-                  <Link href={`./buildings/${building.id}`} class="flex flex-row items-center mb-2 group ">
+                  <A href={`./buildings/${building.id}`} class="flex flex-row items-center mb-2 group ">
                     <ItemIcon item={building} link={true} size={10} class="mr-2" />
                     <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{building.name}</span>
-                  </Link>
+                  </A>
                 )
               }
             </For>
@@ -77,10 +77,10 @@ export const CivDetailRoute = () => {
             <For each={data() && Object.values(data().technologies).flat()}>
               {(tech) =>
                 tech.unique && (
-                  <Link href={`./technologies/${tech.id}`} class="flex flex-row items-center mb-2 group ">
+                  <A href={`./technologies/${tech.id}`} class="flex flex-row items-center mb-2 group ">
                     <ItemIcon item={tech} link={true} size={10} class="mr-2" />
                     <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{tech.name}</span>
-                  </Link>
+                  </A>
                 )
               }
             </For>

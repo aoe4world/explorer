@@ -1,16 +1,21 @@
-import { Link, useLocation } from "@solidjs/router";
+import { A, SearchParams, useLocation, useSearchParams } from "@solidjs/router";
 import { Component, createSignal, onCleanup, Show } from "solid-js";
 import { setActivePage } from "../../App";
 import { Icon } from "@components/Icon";
 import { Quiz } from "@components/quiz/SoloQuiz";
 import { tempHideNav } from "../../global";
 
+export interface QuizParams extends SearchParams {
+  questionsUrl?: string;
+  numQuestions?: string;
+}
+
 export const QuizRoute: Component = () => {
-  const query = useLocation().query;
+  const [query] = useSearchParams<QuizParams>();
   const [show, setShow] = createSignal(false);
   const [difficulty, setDifficulty] = createSignal(0);
   const questionsUrl = query.questionsUrl;
-  const numQuestions = parseInt(query.numQuestions);
+  const numQuestions = parseInt(query.numQuestions ?? "");
 
   tempHideNav();
   setActivePage({ title: "Quiz", description: "Test your game knowledge through randomly generated multiple questions.", location: useLocation() });
@@ -60,10 +65,10 @@ export const QuizRoute: Component = () => {
                 <strong class="font-bold">Play this quiz with your Twitch viewers</strong>
                 <p class="text-sm opacity-70">Viewers can submit answers via chat and compete with each other</p>
               </div>
-              <Link href="/quiz/twitch" class="ml-auto bg-white text-purple-900 font-bold px-6 py-2 rounded-full hover:bg-purple-200 active:text-black">
+              <A href="/quiz/twitch" class="ml-auto bg-white text-purple-900 font-bold px-6 py-2 rounded-full hover:bg-purple-200 active:text-black">
                 Play
                 <Icon icon="arrow-right" class=" ml-2" />
-              </Link>
+              </A>
             </div>
           </>
         }

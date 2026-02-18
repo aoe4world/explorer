@@ -1,10 +1,11 @@
 import { Component, JSX } from 'solid-js';
-import { AnchorProps, Link as LinkBase } from "@solidjs/router";
+import { A } from "@solidjs/router";
 
 export type LinkType = 'none' | 'self' | 'blank';
 
-export interface LinkProps extends AnchorProps {
+export interface LinkProps extends JSX.AnchorHTMLAttributes<HTMLAnchorElement> {
   linkType?: LinkType;
+  href: string;
 }
 
 export const Link: Component<LinkProps> = ({linkType = 'self', target, ...props}) => {
@@ -17,9 +18,9 @@ export const Link: Component<LinkProps> = ({linkType = 'self', target, ...props}
   } else {
     target ||= linkType === 'blank' ? "_blank" : undefined;
     return (
-      <LinkBase {...props} target={target}>
+      <A {...props} target={target}>
         {props.children}
-      </LinkBase>
+      </A>
     );
   }
 };

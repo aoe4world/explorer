@@ -1,4 +1,4 @@
-import { Link, useParams } from "@solidjs/router";
+import { A, useParams } from "@solidjs/router";
 import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { ReportButton } from "@components/ReportButton";

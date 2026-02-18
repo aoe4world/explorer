@@ -1,10 +1,10 @@
 import "./index.css";
 import { render } from "solid-js/web";
-import { Router } from "@solidjs/router";
+import { Router, Route } from "@solidjs/router";
 import { Path } from "@solidjs/router/dist/types";
 
-import App, { activePage } from "./App";
-import { createEffect, on } from "solid-js";
+import App, { activePage, routes } from "./App";
+import { createEffect, on, For } from "solid-js";
 
 interface explorerOptions {
   /** The path at which the explorer is located */
@@ -17,8 +17,8 @@ export function initializeExplorer(el: HTMLElement = document.getElementById("ex
   let router: typeof Router;
   render(
     () => (
-      <Router base={options.base} ref={router}>
-        <App />
+      <Router base={options.base} ref={router} root={App}>
+        <For each={routes}>{(route) => <Route path={route.path} component={route.component} />}</For>
       </Router>
     ),
     el

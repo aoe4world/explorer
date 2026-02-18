@@ -4,7 +4,7 @@ import { formatSecondsToPhrase, formatSecondsToTime } from "./Stats";
 import { Component, Show, For, createResource } from "solid-js";
 import { ItemIcon } from "./ItemIcon";
 import { ITEM_TYPES } from "@data/lib/config";
-import { Link } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import { civConfig } from "@data/types/civs";
 import { getItemHref } from "./Cards";
 
@@ -81,10 +81,10 @@ const InlineItemLink: Component<{ itemId: ItemSlug; civ: civConfig }> = (props) 
   return (
     <Show when={item()} keyed>
       {(item) => (
-        <Link href={getItemHref(item, props.civ)} class="whitespace-nowrap">
+        <A href={getItemHref(item, props.civ)} class="whitespace-nowrap">
           <ItemIcon item={item} size={'inline'} />
           <span class="font-bold">{item.name}</span>
-        </Link>
+        </A>
       )}
     </Show>
   );

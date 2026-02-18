@@ -1,4 +1,4 @@
-import { Link, useLocation, useParams } from "@solidjs/router";
+import { A, SearchParams, useLocation, useParams, useSearchParams } from "@solidjs/router";
 import { Component, createSignal, onCleanup, Show, createEffect } from "solid-js";
 import { Icon } from "@components/Icon";
 import { TwitchQuiz } from "@components/quiz/TwitchQuiz";
@@ -7,23 +7,35 @@ import { tempHideNav } from "../../global";
 import { setActivePage } from "../../App";
 import { resetQuestionLimits } from "@components/quiz/questions";
 
-export const QuizRoute: Component = () => {
-  const query = useLocation().query;
-  const [show, setShow] = createSignal(false);
- const initialShowAdvancedSettings =
-   !isNaN(parseInt(query.numQuestions)) ||
-   parseInt(query.gracePeriod ?? "5") !== 5 ||
-   parseInt(query.autoplaySpeed ?? "15") !== 15 ||
-   !["0", "80"].includes(query.difficulty ?? "0");
+export interface TwitchQuizParams extends SearchParams {
+  numQuestions?: string;
+  gracePeriod?: string;
+  autoplaySpeed?: string;
+  difficulty?: string;
+  channel?: string;
+  hideVotes?: string;
+  dev?: string;
+  questionsUrl?: string;
+}
 
- const [showAdvancedSettings, setShowAdvancedSettings] = createSignal(initialShowAdvancedSettings);
+export const QuizRoute: Component = () => {
+  const [query] = useSearchParams<TwitchQuizParams>();
+  const [show, setShow] = createSignal(false);
+
+  const initialShowAdvancedSettings =
+    !isNaN(parseInt(query.numQuestions ?? "")) ||
+    parseInt(query.gracePeriod ?? "5") !== 5 ||
+    parseInt(query.autoplaySpeed ?? "15") !== 15 ||
+    !["0", "80"].includes(query.difficulty ?? "0");
+
+  const [showAdvancedSettings, setShowAdvancedSettings] = createSignal(initialShowAdvancedSettings);
   const [difficulty, setDifficulty] = createSignal(parseInt(query.difficulty ?? "0"));
   const [customDifficulty, setCustomDifficulty] = createSignal(!["0", "80"].includes(query.difficulty ?? "0"));
   const [channel, setChannel] = createSignal(useParams()?.channel ?? query.channel ?? "");
   const [gracePeriod, setGracePeriod] = createSignal(parseInt(query.gracePeriod ?? "5"));
   const [autoplaySpeed, setAutoplaySpeed] = createSignal(parseInt(query.autoplaySpeed ?? "15"));
   const [shareUrl, setShareUrl] = createSignal("");
-  const [numQuestions, setNumQuestions] = createSignal(parseInt(query.numQuestions));
+  const [numQuestions, setNumQuestions] = createSignal(parseInt(query.numQuestions ?? ""));
   const [hideVotes, setHideVotes] = createSignal(query.hideVotes === "true");
   const [devMode, setDevMode] = createSignal(query.dev === "true");
   const questionsUrl = query.questionsUrl;
@@ -66,9 +78,9 @@ export const QuizRoute: Component = () => {
               </h1>
               <p class="text-gray-200 my-4 font-bold max-w-prose ">
                 This is the multiplayer version of our{" "}
-                <Link href="/quiz" class="underline  text-white">
+                <A href="/quiz" class="underline  text-white">
                   Quiz
-                </Link>
+                </A>
                 . Viewers can submit their answers via chat (By i.e. sending 'A' or 'B') and try to get a streak. The difficulty of questions increases over
                 time.
               </p>

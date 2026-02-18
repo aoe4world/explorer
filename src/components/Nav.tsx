@@ -1,17 +1,17 @@
-import { Link, useLocation, useMatch } from "@solidjs/router";
+import { A, useLocation, useMatch } from "@solidjs/router";
 import { Component, createEffect, For } from "solid-js";
 
 const MenuLink: Component<{ href: string; children: any }> = (props) => {
   const isMatch = useMatch(() => props.href);
   return (
     <li>
-      <Link
+      <A
         href={props.href}
         class="text-white font-bold text-lg py-2 px-3 rounded-lg focus:outline-none focus:ring focus:ring-white active:ring-transparent"
         classList={{ "opacity-70": !isMatch() }}
       >
         {props.children}
-      </Link>
+      </A>
     </li>
   );
 };

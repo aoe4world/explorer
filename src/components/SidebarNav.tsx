@@ -1,5 +1,5 @@
 import { CivSlug } from "@data/sdk/utils";
-import { Link, useLocation, useParams } from "@solidjs/router";
+import { A, useLocation, useParams } from "@solidjs/router";
 import {
   Component,
   For,
@@ -40,10 +40,10 @@ export const SidebarNav: Component = (props) => {
         {(data) => (
           <nav>
             {civilization() ? (
-              <Link href={`/civs/${civilization().slug}/`} class="text-xl font-bold white mb-2 flex items-center">
+              <A href={`/civs/${civilization().slug}/`} class="text-xl font-bold white mb-2 flex items-center">
                 {civilization() && <CivFlag abbr={civilization().abbr} class="w-auto h-6 mr-2 inline-block rounded" />}
                 <span>{data.civ?.info.name}</span>
-              </Link>
+              </A>
             ) : (
               <p>All Civilizations</p>
             )}
@@ -55,12 +55,12 @@ export const SidebarNav: Component = (props) => {
                     <TreeGroup label={type} isOpen={currentItemType() == type}>
                       <div class="flex items-center py-2 sticky -top-6 bg-gray-800 z-10">
                         <TreeGroupToggle class="text-sm w-4 outline-none group" toggleClass="block w-3 mr-1" />
-                        <Link
+                        <A
                           href={civilization() ? `/civs/${civilization().slug}/${type}` : `/${type}`}
                           class="font-bold my-1 rounded text-lg outline-none focus:underline hover:underline"
                         >
                           {label}
-                        </Link>
+                        </A>
                       </div>
                       <TreeGroupItems class="pl-0.5 flex flex-col gap-2 mb-4">
                         <For each={Object.entries(data?.[type] ?? {}) as [key: string, items?: UnifiedItem[]][]}>
@@ -78,7 +78,7 @@ export const SidebarNav: Component = (props) => {
                                     <For each={items}>
                                       {(item) => (
                                         <TreeItem>
-                                          <Link
+                                          <A
                                             href={getItemHref(item, civilization())}
                                             role="treeitem"
                                             class={`flex items-center p-1 rounded gap-2 text-white/90 hover:text-white bg-${getItemCssClass(item)} bg-opacity-0 hover:bg-opacity-30 transition-all outline-none border border-transparent focus-visible:border-white`}
@@ -90,7 +90,7 @@ export const SidebarNav: Component = (props) => {
                                               class="whitespace-pre-wrap"
                                               innerHTML={item.name.replace(/(.*?)\((.*?)\)/, '$1<span class="opacity-50">$2</span>')}
                                             ></p>
-                                          </Link>
+                                          </A>
                                         </TreeItem>
                                       )}
                                     </For>

@@ -5,7 +5,7 @@ import { CivConfig } from "@data/types/civs";
 import { CIVILIZATIONS } from "@data/lib/config/civs";
 import { TechnologySelector } from "./TechnologySelector";
 import { getItemHref } from "@components/Cards";
-import { Link } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import { getBattleStats } from "../../query/battlereport";
 
 function formatExplosiveMessage(stats1, stats2) {
@@ -80,7 +80,7 @@ export const BattleReportView: Component<{ unit1: UnifiedItem<Unit>; unit2: Unif
 
           <div class="grid grid-cols-[auto_1fr_auto] text-md mb-auto">
             <h4 class="col-span-3 font-bold text-white text-xl text-center pb-10">
-              {battleReportHref ? <Link href={battleReportHref} target="about:blank">Battle Report</Link> : <>Battle Report</>}
+              {battleReportHref ? <A href={battleReportHref} target="about:blank">Battle Report</A> : <>Battle Report</>}
             </h4>
 
             {/* Hitpoints */}

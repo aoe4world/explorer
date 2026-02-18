@@ -1,4 +1,4 @@
-import { Link } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import { Component, createResource, createSignal, For, Suspense } from "solid-js";
 import { getRelatedContent, ContentItem } from "../query/content";
 import { getItemCssClass } from "../styles";
@@ -64,9 +64,9 @@ export const ContentRow: Component<{ content: ContentItem; item?: Item | Unified
         <small class="text-gray-400 mt-1 text-sm flex flex-wrap gap-x-4 gap-y-1">
           <div class="text-gray-200">
             {props.content.creator_url ? (
-              <Link href={props.content.creator_url} class="hover:underline" target="_blank" rel="noopener ugc nofollow">
+              <A href={props.content.creator_url} class="hover:underline" target="_blank" rel="noopener ugc nofollow">
                 {props.content.creator}
-              </Link>
+              </A>
             ) : (
               props.content.creator
             )}
@@ -79,10 +79,10 @@ export const ContentRow: Component<{ content: ContentItem; item?: Item | Unified
             <div class="flex gap-1">
               <For each={relatedItems()}>
                 {(item, i) => (
-                  <Link href={getItemHref(item, props.civ)} class={`inline-flex min-w-0 items-center text-${getItemCssClass(item)}-light`}>
+                  <A href={getItemHref(item, props.civ)} class={`inline-flex min-w-0 items-center text-${getItemCssClass(item)}-light`}>
                     <ItemIcon item={item} size={5} />
                     {relatedItems().length < 3 && <span class="truncate ml-1 max-w-[150px]">{item.name}</span>}
-                  </Link>
+                  </A>
                 )}
               </For>
             </div>

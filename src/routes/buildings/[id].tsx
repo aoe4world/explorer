@@ -1,4 +1,4 @@
-import { Link, useParams } from "@solidjs/router";
+import { A, useParams } from "@solidjs/router";
 import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { getItemHref } from "@components/Cards";
@@ -68,7 +68,7 @@ export function BuildingDetailRoute() {
                     {(unit) => {
                       let el;
                       return (
-                        <Link href={`${civ ? `/civs/${civ.slug}` : ""}/units/${unit.id}`} class="flex flex-row items-center mb-2 group " ref={el}>
+                        <A href={`${civ ? `/civs/${civ.slug}` : ""}/units/${unit.id}`} class="flex flex-row items-center mb-2 group " ref={el}>
                           <ItemIcon item={unit} link={true} size={10} class="mr-2" />
                           <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
                           <Tooltip attachTo={el}>
@@ -76,7 +76,7 @@ export function BuildingDetailRoute() {
                               <UnitCard unit={unit} civ={civ} />
                             </div>
                           </Tooltip>
-                        </Link>
+                        </A>
                       );
                     }}
                   </For>
@@ -90,7 +90,7 @@ export function BuildingDetailRoute() {
                     {(tech) => {
                       let el;
                       return (
-                        <Link class="flex flex-row items-center mb-2 group " ref={el} href={getItemHref(tech, civ)}>
+                        <A class="flex flex-row items-center mb-2 group " ref={el} href={getItemHref(tech, civ)}>
                           <ItemIcon item={tech} link={true} size={10} class="mr-2" />
                           <span
                             class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100 whitespace-pre-wrap"
@@ -101,7 +101,7 @@ export function BuildingDetailRoute() {
                               <TechnologyCard item={tech} civ={civ} />
                             </div>
                           </Tooltip>
-                        </Link>
+                        </A>
                       );
                     }}
                   </For>

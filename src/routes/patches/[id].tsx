@@ -1,4 +1,4 @@
-import { Link, useLocation, useParams } from "@solidjs/router";
+import { A, useLocation, useParams } from "@solidjs/router";
 import { Component, createMemo, onMount, createResource, createSignal, For, Index, Resource, createEffect, Show, onCleanup, JSX } from "solid-js";
 import { setActivePage } from "../../App";
 import { getItemHref } from "@components/Cards";
@@ -82,19 +82,19 @@ export const PatchDetailRoute = () => {
         <div class="mb-6 text-gray-300 space-x-4">
           <Show when={pagination()?.previous}>
             {(prev) => (
-              <Link href={`/patches/${prev().id}`} class="hover:text-white">
+              <A href={`/patches/${prev().id}`} class="hover:text-white">
                 <Icon icon="arrow-left-long" class="mr-1"></Icon> {prev().name}
-              </Link>
+              </A>
             )}
           </Show>
-          <Link href={"/patches/"} class="hover:text-white">
+          <A href={"/patches/"} class="hover:text-white">
             All
-          </Link>
+          </A>
           <Show when={pagination()?.next}>
             {(next) => (
-              <Link href={`/patches/${next().id}`} class="hover:text-white">
+              <A href={`/patches/${next().id}`} class="hover:text-white">
                 {next().name} <Icon icon="arrow-right-long" class="ml-1"></Icon>
-              </Link>
+              </A>
             )}
           </Show>
         </div>
@@ -128,7 +128,7 @@ export const PatchDetailRoute = () => {
           <div class="mb-8">
             <div class="text-sm font-bold">Filter updates by civilization</div>
             <div class="flex flex-wrap gap-2 my-2">
-              <Link
+              <A
                 href={`/patches/${params.id}`}
                 onClick={() => setCiv(null)}
                 class={`w-10 h-6 rounded grid place-content-center bg-gray-400 uppercase text-sm text-white hover:text-gray-50 ${
@@ -136,12 +136,12 @@ export const PatchDetailRoute = () => {
                 }`}
               >
                 All
-              </Link>
+              </A>
               <For each={Object.values(CIVILIZATIONS)}>
                 {(c) => (
-                  <Link href={`${civ() ? `/civs/${c.slug}` : ""}/patches/${params.id}`} onClick={() => setCiv(c.abbr)}>
+                  <A href={`${civ() ? `/civs/${c.slug}` : ""}/patches/${params.id}`} onClick={() => setCiv(c.abbr)}>
                     <CivFlag abbr={c.abbr} class={`w-10 h-5.5 rounded  ${civ() == c.abbr ? "outline outline-white" : ""}`} />
-                  </Link>
+                  </A>
                 )}
               </For>
             </div>
@@ -156,13 +156,13 @@ export const PatchDetailRoute = () => {
               <p class="text-gray-100 text-sm">
                 Showing notes for the <CivFlag abbr={civ()} class="w-7 h-4 ml-1 inline-block" /> {CIVILIZATIONS[civ()]?.name}. Other patch notes are hidden.
               </p>
-              <Link
+              <A
                 href={`/patches/${params.id}`}
                 onClick={() => setCiv(null)}
                 class="rounded basis-full grid place-content-center uppercase p-1 mt-3 bg-gray-400 text-[12px] text-white hover:text-gray-50"
               >
                 View the full notes
-              </Link>
+              </A>
             </div>
           )}
 
@@ -207,13 +207,13 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
                     if (item) {
                       const itemCssClass = getItemCssClass(item);
                       return (
-                        <Link
+                        <A
                           href={(item.type as any) == "map" ? `https://aoe4world.com/stats/maps/${item.name}` : getItemHref(item)}
                           class="inline-flex flex-row items-center"
                         >
                           <ItemIcon item={item} size={8} class="mr-2" />
                           <span class="font-bold">{item.name}</span>
-                        </Link>
+                        </A>
                       );
                     }
                     const unmapped = ci.split("/");

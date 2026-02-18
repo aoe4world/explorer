@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "@solidjs/router";
+import { A, useLocation, useNavigate } from "@solidjs/router";
 import { Component, createEffect, createResource, createSignal, For, onCleanup, onMount, Show } from "solid-js";
 import { ITEMS, SIMILAIR_ITEMS } from "../config";
 import { UnifiedItem } from "../types/data";
@@ -128,14 +128,14 @@ export const Search: Component<{ class?: string }> = (props) => {
           </Show>
           <For each={results()}>
             {({ score, item }, i) => (
-              <Link
+              <A
                 href={getItemHref(item)}
                 class={`flex items-center p-2 rounded hover:bg-gray-500/50 ${selected() == i() ? "!bg-gray-400/40 selected" : ""}`}
               >
                 <ItemIcon item={item} size={8} class="mr-2" />
                 <span class="font-bold text-sm">{item.name}</span>
                 {/* <span class="ml-2">{score}</span> */}
-              </Link>
+              </A>
             )}
           </For>
         </div>

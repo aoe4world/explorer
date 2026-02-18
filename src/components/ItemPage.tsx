@@ -1,4 +1,4 @@
-import { Link } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import { Component, createResource, For, Match, ParentComponent, Show, Switch, useTransition } from "solid-js";
 import { getItemHref } from "./Cards";
 import { CivFlag } from "./CivFlag";
@@ -22,10 +22,10 @@ const Header: Component<{ item: UnifiedItem | Item; civ?: civConfig }> = (props)
         <span class={`text-${itemCssClass}-light`}>{props.item.displayClasses.join(", ")}</span>
         <h2 class={mainItemTitleCSSClass}>{props.item.name}</h2>
         {props.civ && (
-          <Link href={`/civs/${props.civ.slug}`} class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80">
+          <A href={`/civs/${props.civ.slug}`} class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80">
             <CivFlag abbr={props.civ.abbr} class="h-3 w-4.5 rounded-sm  " />
             {props.civ?.name}
-          </Link>
+          </A>
         )}
       </div>
     </div>
@@ -65,10 +65,10 @@ const ProducedAt: Component<{ item: UnifiedItem; civ: civConfig; title?: string 
       <div class="flex gap-10 flex-wrap mb-8">
         <For each={productionBuildings()}>
           {(building) => (
-            <Link href={`${props.civ ? `/civs/${props.civ.slug}` : ""}/buildings/${building.id}`} class="flex flex-row items-center mb-2 group">
+            <A href={`${props.civ ? `/civs/${props.civ.slug}` : ""}/buildings/${building.id}`} class="flex flex-row items-center mb-2 group">
               <ItemIcon item={building} link={true} size={10} class="mr-2" />
               <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{building.name}</span>
-            </Link>
+            </A>
           )}
         </For>
       </div>
@@ -131,9 +131,9 @@ const UnavailableForCiv: Component<{ item: UnifiedItem; civ: civConfig }> = (pro
           <div class="flex">
             <For each={props.item.civs}>
               {(civ) => (
-                <Link href={getItemHref(props.item, CIVILIZATIONS[civ] as unknown as civConfig)} class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80 mr-3">
+                <A href={getItemHref(props.item, CIVILIZATIONS[civ] as unknown as civConfig)} class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80 mr-3">
                   <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {CIVILIZATIONS[civ].name}
-                </Link>
+                </A>
               )}
             </For>
           </div>
@@ -144,14 +144,14 @@ const UnavailableForCiv: Component<{ item: UnifiedItem; civ: civConfig }> = (pro
       </p>
 
       <CivOptionsForItem item={props.item} civs={props.item.civs} prefix="Show for">
-        <Link
+        <A
           href={["/civs", props.civ.slug, getItemType(props.item)].join("/")}
           class="flex gap-2 items-center font-bold text-base  mr-3 bg-gray-900 p-2 rounded-md hover:text-white text-gray-100 hover:bg-black"
         >
           <CivFlag abbr={props.civ.abbr} class="h-3 w-4.5 rounded-sm " />
           {props.civ.name}'s {getItemType(props.item)}
           <Icon icon="arrow-right" class="ml-auto mr-2" />
-        </Link>
+        </A>
       </CivOptionsForItem>
     </div>
   );
@@ -163,13 +163,13 @@ const CivOptionsForItem: ParentComponent<{ item: UnifiedItem; civs: civAbbr[]; p
       {props.children}
       <For each={props.civs}>
         {(civ) => (
-          <Link
+          <A
             href={getItemHref(props.item, CIVILIZATIONS[civ] as unknown as civConfig)}
             class="flex gap-2 items-center font-bold text-base  mr-3 bg-gray-900 p-2 rounded-md hover:text-white text-gray-100 hover:bg-black"
           >
             <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {props.prefix} {CIVILIZATIONS[civ].name}
             <Icon icon="arrow-right" class="ml-auto mr-2" />
-          </Link>
+          </A>
         )}
       </For>
     </div>

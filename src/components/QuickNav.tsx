@@ -1,5 +1,6 @@
 import { CivConfig, CivSlug } from "@data/types/civs";
-import { Link, NavLink, useLocation } from "@solidjs/router";
+import { UnifiedItem } from "../types/data";
+import { A, useLocation } from "@solidjs/router";
 import { Component, For, createEffect, createMemo, createResource, createSignal, onCleanup } from "solid-js";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS } from "../config";
 import { parseCurrentLocation, getStructuredItems } from "../global";
@@ -130,16 +131,16 @@ export const QuickNav: Component = () => {
                 ))}
               </div>
               <div class="overflow-y-auto" ref={list}>
-                <For each={Object.entries(data()?.[view()] ?? {})}>
+                <For each={Object.entries(data()?.[view()] ?? {}) as [string, UnifiedItem[]][]}>
                   {([key, items]) =>
-                    items?.length ? (
+                    items.length ? (
                       <div class="mx-3">
                         <div class="bg-gray-700 sticky -top-px">
                           <p class="uppercase font-bold p-2 text-sm text-gray-300">{key}</p>
                         </div>
                         <For each={items}>
                           {(item) => (
-                            <Link
+                            <A
                               href={getItemHref(item, civilization())}
                               role="treeitem"
                               class={`flex items-center p-2 mb-1 rounded gap-2 text-white/90 hover:text-white bg-item-${item.type} bg-opacity-0 hover:bg-opacity-30 transition-all outline-none border border-transparent focus-visible:border-white`}
@@ -148,7 +149,7 @@ export const QuickNav: Component = () => {
                             >
                               <ItemIcon item={item} size={6} />
                               <p class="whitespace-pre-wrap" innerHTML={item.name.replace(/(.*?)\((.*?)\)/, '$1<span class="opacity-50">$2</span>')}></p>
-                            </Link>
+                            </A>
                           )}
                         </For>
                       </div>

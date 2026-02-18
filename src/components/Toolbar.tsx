@@ -1,4 +1,4 @@
-import { Link, NavLink, useIsRouting, useLocation } from "@solidjs/router";
+import { A, useIsRouting, useLocation } from "@solidjs/router";
 import { Component, createMemo, createSignal, For, Show } from "solid-js";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG } from "../config";
 import { tooltipCSSClass } from "../styles";
@@ -12,6 +12,7 @@ import { QuickNav } from "./QuickNav";
 
 export const Toolbar: Component = () => {
   const pending = useIsRouting();
+  let aboutEl: HTMLAnchorElement | undefined;
 
   const location = useLocation();
   const current = createMemo(() => {
@@ -33,18 +34,18 @@ export const Toolbar: Component = () => {
       <div class="bg-gray-700 z-10 border-bottom border border-gray-500 sticky mt-25 top-0" classList={{ "opacity-20": pending() }}>
         <div class="max-w-screen-2xl py-2 px-4 lg:px-8 h-auto text-base lg:p-3 mx-auto flex flex-row items-center flex-wrap sm:flex-nowrap gap-2 lg:gap-5">
           {current().subroute ? (
-            <Link href={`/civs/${current().civ}/`} class={navButtonClass} noScroll={true}>
+            <A href={`/civs/${current().civ}/`} class={navButtonClass} noScroll={true}>
               <Icon icon="grid-horizontal" class="place-self-center" />
-            </Link>
+            </A>
           ) : (
-            <Link href={`/`} class={navButtonClass} noScroll={true}>
+            <A href={`/`} class={navButtonClass} noScroll={true}>
               <Icon icon="home" class="place-self-center" />
-            </Link>
+            </A>
           )}
           <div class="hidden lg:flex flex-row flex-wrap gap-2 h-auto items-center">
             <For each={Object.values(CIVILIZATIONS)}>
               {(civ) => (
-                <NavLink
+                <A
                   href={smartCivLink(civ)}
                   class="relative w-12 h-7 rounded-md overflow-hidden border-2 shadow-inner opacity-50 hover:opacity-100  border-transparent hidden xl:block transition"
                   activeClass="opacity-90 border-white"
@@ -52,7 +53,7 @@ export const Toolbar: Component = () => {
                   noScroll={true}
                 >
                   <CivFlag abbr={civ.abbr} class="h-full w-full object-cover" />
-                </NavLink>
+                </A>
               )}
             </For>
           </div>
@@ -69,9 +70,9 @@ export const Toolbar: Component = () => {
                   <div class="hidden max-h-[80vh] overflow-y-auto group-hover:block group-focus-within:block z-10 rounded-md absolute bg-gray-900 w-60 mt-0 ">
                     <For each={Object.values(CIVILIZATIONS)}>
                       {(civ) => (
-                        <NavLink href={[`/civs/${civ.slug}`, current().subroute].join("/")} noScroll={true} class="flex p-3 hover:bg-gray-700">
+                        <A href={[`/civs/${civ.slug}`, current().subroute].join("/")} noScroll={true} class="flex p-3 hover:bg-gray-700">
                           <CivFlag abbr={civ.abbr} class="h-6 w-10 mr-3 rounded object-cover" /> {civ.name}
-                        </NavLink>
+                        </A>
                       )}
                     </For>
                   </div>
@@ -80,38 +81,31 @@ export const Toolbar: Component = () => {
             )}
           </Show>
 
-          {() => {
-            let el;
-            return (
-              <>
-                <Link href={`/about`} ref={el} class={`${navButtonClass} ml-auto hidden sm:grid`} noScroll={true}>
-                  <Icon icon="circle-question" class="place-self-center text-gray-300" />
-                </Link>
-                <Tooltip attachTo={el}>
-                  <div class={tooltipCSSClass}>
-                    <p class="font-bold">Learn more about the Explorer.</p>
-                    <hr class="my-4" />
-                    <For
-                      each={[
-                        ["base", "Base value"],
-                        ["upgrade", "Unit Upgrades"],
-                        ["building", "Building Upgrades"],
-                        ["technology", "Technology Research"],
-                        ["unique", "Unique Upgrade"],
-                        ["bonus", "Bonus"],
-                      ]}
-                    >
-                      {([type, label]) => (
-                        <div>
-                          <span class={`bg-bar-${type} inline-block w-3 h-3 rounded-full mr-1`}></span> {label}
-                        </div>
-                      )}
-                    </For>
+          <A href={`/about`} ref={aboutEl} class={`${navButtonClass} ml-auto hidden sm:grid`} noScroll={true}>
+            <Icon icon="circle-question" class="place-self-center text-gray-300" />
+          </A>
+          <Tooltip attachTo={aboutEl}>
+            <div class={tooltipCSSClass}>
+              <p class="font-bold">Learn more about the Explorer.</p>
+              <hr class="my-4" />
+              <For
+                each={[
+                  ["base", "Base value"],
+                  ["upgrade", "Unit Upgrades"],
+                  ["building", "Building Upgrades"],
+                  ["technology", "Technology Research"],
+                  ["unique", "Unique Upgrade"],
+                  ["bonus", "Bonus"],
+                ]}
+              >
+                {([type, label]) => (
+                  <div>
+                    <span class={`bg-bar-${type} inline-block w-3 h-3 rounded-full mr-1`}></span> {label}
                   </div>
-                </Tooltip>
-              </>
-            );
-          }}
+                )}
+              </For>
+            </div>
+          </Tooltip>
 
           <Search class="basis-full my-2 sm:my-0 sm:basis-48 lg:basis-96" />
         </div>

@@ -1,4 +1,4 @@
-import { Link, RouteDefinition, useLocation, useNavigate, useRoutes, useParams } from "@solidjs/router";
+import { Route, useLocation, useNavigate, useParams } from "@solidjs/router";
 import { Component, createEffect, createSignal, ErrorBoundary, lazy, on, Show } from "solid-js";
 import { Toolbar } from "./components/Toolbar";
 import { Nav } from "./components/Nav";
@@ -23,7 +23,7 @@ import { PatchListRoute } from "./routes/patches";
 import { SidebarNav } from "@components/SidebarNav";
 import { hideNav } from "./global";
 
-const routes: RouteDefinition[] = [
+export const routes = [
   {
     path: "/",
     component: () => CivOverviewRoute,
@@ -151,13 +151,13 @@ const routes: RouteDefinition[] = [
   },
 ];
 
-export const [activePage, setActivePage] = createSignal<{ title?: string; description?: string; location: ReturnType<typeof useLocation> }>();
+export const [activePage, setActivePage] = createSignal<{ title?: string; description?: string; location: any }>();
 
 export const setActivePageForItem = (item: UnifiedItem, civ: civConfig) =>
   setActivePage({
     title: item.name + (civ?.name ? ` — ${civ?.name}` : ""),
     description: item.description,
-    location: useLocation(),
+    location: { pathname: window.location.pathname },
   });
 
 export async function tryRedirectToClosestMatch(type: ITEMS, id: string, civ: civConfig, fallback?: Function) {
@@ -181,8 +181,7 @@ createEffect(
     } else document.querySelector("meta[name=description]")?.setAttribute("content", activePage()?.description ?? "");
   })
 );
-const App: Component = () => {
-  const Routes = useRoutes(routes);
+const App: Component<{ children?: any }> = (props) => {
   const location = useLocation();
   let resetFocusEl: HTMLDivElement;
 
@@ -240,9 +239,7 @@ const App: Component = () => {
               </div>
             </div>
           </Show>
-          <div class="flex-auto">
-            <Routes />
-          </div>
+          <div class="flex-auto">{props.children}</div>
         </div>
       </ErrorBoundary>
     </>
