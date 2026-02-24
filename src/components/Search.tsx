@@ -1,16 +1,18 @@
 import { A, useLocation, useNavigate } from "@solidjs/router";
 import { Component, createEffect, createResource, createSignal, For, onCleanup, onMount, Show } from "solid-js";
-import { ITEMS, SIMILAIR_ITEMS } from "../config";
+
+import { SIMILAIR_ITEMS } from "../config";
 import { UnifiedItem } from "../types/data";
 import { getItemHref } from "./Cards";
 import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
+const SDK = import("@data/sdk");
 
 const isMac = /mac/i.test(navigator.userAgent);
 
 async function getEverything() {
-  const SDK = await import("@data/sdk");
-  return [SDK.buildings, SDK.technologies, SDK.units].flat();
+  const sdk = await SDK;
+  return [sdk.buildings, sdk.technologies, sdk.units].flat();
 }
 
 function mergeSearchableData(item: UnifiedItem) {

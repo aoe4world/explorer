@@ -1,14 +1,15 @@
-import { Ability, ITEMS } from "@data/types/items";
-import { CivAbbr, ItemList, ItemSlug } from "@data/sdk/utils";
-import { formatSecondsToPhrase, formatSecondsToTime } from "./Stats";
-import { Component, Show, For, createResource } from "solid-js";
-import { ItemIcon } from "./ItemIcon";
-import { ITEM_TYPES } from "@data/lib/config";
 import { A } from "@solidjs/router";
-import { civConfig } from "@data/types/civs";
-import { getItemHref } from "./Cards";
+import { Component, For, Show, createResource } from "solid-js";
 
-export const Abilities: Component<{ abilities: ItemList<Ability>; civ: civConfig }> = (props) => {
+import { ItemList, ItemSlug } from "@data/sdk/utils";
+import { CivConfig } from "@data/types/civs";
+import { Ability } from "@data/types/items";
+import { getItemHref } from "./Cards";
+import { ItemIcon } from "./ItemIcon";
+import { formatSecondsToPhrase } from "./Stats";
+const SDK = import("@data/sdk");
+
+export const Abilities: Component<{ abilities: ItemList<Ability>; civ: CivConfig }> = (props) => {
   const sortedMappedAbilities = () => props.abilities.map((ab) => ab.variations[0]).sort((a, b) => (a.active == "manual" ? -1 : 1));
   return (
     <Show when={props.abilities?.length}>
@@ -74,8 +75,7 @@ export const Abilities: Component<{ abilities: ItemList<Ability>; civ: civConfig
   );
 };
 
-const InlineItemLink: Component<{ itemId: ItemSlug; civ: civConfig }> = (props) => {
-  const SDK = import("@data/sdk/index");
+const InlineItemLink: Component<{ itemId: ItemSlug; civ: CivConfig }> = (props) => {
   const [item] = createResource(props.itemId, async (id) => (await SDK).civilizations.Get(props.civ).Get(id));
 
   return (

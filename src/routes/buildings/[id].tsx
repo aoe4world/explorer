@@ -19,8 +19,7 @@ import { Building, civAbbr, civConfig, UnifiedItem } from "../../types/data";
 import { ItemList } from "@data/sdk/utils";
 import { Ability } from "@data/types/items";
 import { Abilities } from "@components/Abilities";
-
-const SDK = import("@data/sdk/index");
+const SDK = import("@data/sdk");
 
 export function BuildingDetailRoute() {
   const itemType = ITEMS.BUILDINGS;

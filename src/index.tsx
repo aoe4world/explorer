@@ -1,16 +1,15 @@
-import "./index.css";
+import { Router, useLocation } from "@solidjs/router";
+import { createEffect, on } from "solid-js";
 import { render } from "solid-js/web";
-import { Router, Route } from "@solidjs/router";
-import { Path } from "@solidjs/router/dist/types";
-
-import App, { activePage, routes } from "./App";
-import { createEffect, on, For } from "solid-js";
+import App, { activePage } from "./App";
+import { AppRoutes } from "./routes";
+import "./index.css";
 
 interface explorerOptions {
   /** The path at which the explorer is located */
   base?: string;
   /** Callback function to be used after each navigation */
-  onNavigate?: (page: { title?: string; description?: string; location: Path }) => void;
+  onNavigate?: (page: { title?: string; description?: string; location: typeof useLocation }) => void;
 }
 
 export function initializeExplorer(el: HTMLElement = document.getElementById("explorer"), options: explorerOptions = {}) {
@@ -18,7 +17,7 @@ export function initializeExplorer(el: HTMLElement = document.getElementById("ex
   render(
     () => (
       <Router base={options.base} ref={router} root={App}>
-        <For each={routes}>{(route) => <Route path={route.path} component={route.component} />}</For>
+        <AppRoutes />
       </Router>
     ),
     el

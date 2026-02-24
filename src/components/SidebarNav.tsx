@@ -6,7 +6,6 @@ import {
   JSX,
   ParentComponent,
   Show,
-  Suspense,
   createContext,
   createEffect,
   createMemo,
@@ -16,16 +15,14 @@ import {
   useContext,
 } from "solid-js";
 import { CIVILIZATION_BY_SLUG } from "../config";
-import { splitUnitsIntoGroups, splitBuildingsIntoGroups, splitTechnologiesIntroGroups } from "../query/utils";
-import { getItemHref } from "./Cards";
-import { ItemIcon } from "./ItemIcon";
-import { CivConfig } from "@data/types/civs";
 import { getStructuredItems, parseCurrentLocation } from "../global";
+import { getItemCssClass } from "../styles";
+import { UnifiedItem } from "../types/data";
+import { BackdropCover } from "./Backdrop";
+import { getItemHref } from "./Cards";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
-import { getItemCssClass } from "../styles";
-import { UnifiedItem } from "src/types/data";
-const SDK = import("@data/sdk");
+import { ItemIcon } from "./ItemIcon";
 
 export const SidebarNav: Component = (props) => {
   const location = useLocation();
@@ -35,7 +32,7 @@ export const SidebarNav: Component = (props) => {
   const [allData] = createResource(() => getStructuredItems());
   const currentItemType = () => current().itemType || "units";
   return (
-    <div class="">
+    <div>
       <Show when={civilization() ? data() : allData()} keyed>
         {(data) => (
           <nav>
@@ -53,7 +50,7 @@ export const SidebarNav: Component = (props) => {
                 {([type, label]) => (
                   <TreeItem>
                     <TreeGroup label={type} isOpen={currentItemType() == type}>
-                      <div class="flex items-center py-2 sticky -top-6 bg-gray-800 z-10">
+                      <div class="flex items-center py-2 sticky -top-6 z-10">
                         <TreeGroupToggle class="text-sm w-4 outline-none group" toggleClass="block w-3 mr-1" />
                         <A
                           href={civilization() ? `/civs/${civilization().slug}/${type}` : `/${type}`}
@@ -61,6 +58,7 @@ export const SidebarNav: Component = (props) => {
                         >
                           {label}
                         </A>
+                        <BackdropCover />
                       </div>
                       <TreeGroupItems class="pl-0.5 flex flex-col gap-2 mb-4">
                         <For each={Object.entries(data?.[type] ?? {}) as [key: string, items?: UnifiedItem[]][]}>
@@ -69,10 +67,11 @@ export const SidebarNav: Component = (props) => {
                               <TreeItem>
                                 <TreeGroup label={key} isOpen>
                                   <TreeGroupToggle
-                                    class="text-gray-300 flex items-center group w-full text-sm py-1 outline-none sticky top-5 bg-gray-800"
+                                    class="text-gray-300 flex items-center group w-full text-sm py-1 outline-none sticky top-5"
                                     toggleClass="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 block w-3 mr-1"
                                   >
                                     <p class="uppercase font-bold">{key}</p>
+                                    <BackdropCover />
                                   </TreeGroupToggle>
                                   <TreeGroupItems class="flex flex-col gap-1 pl-3">
                                     <For each={items}>

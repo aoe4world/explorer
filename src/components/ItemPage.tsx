@@ -8,10 +8,10 @@ import { getItemTechnologies } from "../query/utils";
 import { getItemCssClass, itemGridCSSClass, mainIntroductionCSSClass, mainItemTitleCSSClass } from "../styles";
 import { civAbbr, civConfig, UnifiedItem, Item } from "../types/data";
 import { Icon } from "./Icon";
-import { civBackdrops } from "../data/civData";
 import { ItemIcon } from "./ItemIcon";
 import { CivConfig, CivInfo } from "@data/types/civs";
 import { DLCS } from "../data/dlcs";
+const SDK = import("@data/sdk");
 
 const Header: Component<{ item: UnifiedItem | Item; civ?: civConfig }> = (props) => {
   const itemCssClass = getItemCssClass(props.item);
@@ -52,8 +52,9 @@ const ProducedAt: Component<{ item: UnifiedItem; civ: civConfig; title?: string 
   const [productionBuildings] = createResource(
     () => ({ item: props.item, civ: props.civ?.abbr }),
     async ({ item, civ }) => {
+      const sdk = await SDK;
       const producedBy = [...new Set(item.variations.filter((v) => !civ || v.civs.includes(civ)).flatMap((v) => v.producedBy))];
-      const items = await Promise.all(producedBy.map(async (b) => (await import("@data/sdk")).buildings.get(b)));
+      const items = await Promise.all(producedBy.map(async (b) => sdk.buildings.get(b)));
       if (items.length != producedBy.length) console.warn("Some buildings were not found", producedBy, items);
       return (civ ? items.filter((i) => !!i && i.civs.includes(civ)) : items).filter(Boolean).sort((a, b) => b.civs?.length - a.civs?.length);
     }
@@ -100,22 +101,9 @@ const AvailableUpgrades: Component<{ item: UnifiedItem; civ: civConfig }> = (pro
 const Wrapper: ParentComponent<{ civ?: civConfig }> = (props) => {
   const [pending] = useTransition();
   return (
-    <>
-      {/* <div
-        class="fixed top-10 left-0 right-0 h-screen opacity-20 saturate-0 -z-10 bg-right-top bg-contain bg-no-repeat transition-[background-image] duration-400"
-        style={{ "background-image": `url(${civBackdrops[props.civ?.abbr]})` }}
-        classList={{ "opacity-0": pending() }}
-      ></div> */}
-      <div class="max-w-screen-lg p-4 mx-auto gap-4 mb-4 mt-8">
-        {props.children}
-        <div
-          class="fixed top-10 w-screen h-screen opacity-20 saturate-0	-z-10 bg-top bg-cover bg-no-repeat transition-all duration-400"
-          style={{ "background-image": `url(${civBackdrops[props.civ?.abbr]})`, opacity: pending() ? "0" : "0.4" }}
-        >
-          <div class="bg-gradient-to-r from-gray-800 to-transparent w-full h-full"></div>
-        </div>
-      </div>
-    </>
+    <div class="max-w-screen-lg p-4 mx-auto gap-4 mb-4 mt-8">
+      {props.children}
+    </div>
   );
 };
 

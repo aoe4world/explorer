@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap");
+@import "./backdrop.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

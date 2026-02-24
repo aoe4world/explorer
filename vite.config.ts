@@ -5,6 +5,19 @@ export default defineConfig({
   plugins: [solidPlugin()],
   build: {
     target: "esnext",
+    chunkSizeWarningLimit: 3000, // data-sdk is 2.4 MB
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("src/routes/quiz") || id.includes("src/components/quiz")) {
+            return "quiz";
+          }
+          if (id.includes("data/src/sdk")) {
+            return "data-sdk";
+          }
+        },
+      },
+    },
   },
   server: {
     watch: {

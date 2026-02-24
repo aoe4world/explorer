@@ -1,7 +1,9 @@
 import { createSignal, onCleanup } from "solid-js";
+
 import { civAbbr } from "./types/data";
-import { CivConfig } from "@data/types/civs";
+import { CivConfig, CivSlug } from "@data/types/civs";
 import { splitUnitsIntoGroups, splitBuildingsIntoGroups, splitTechnologiesIntroGroups } from "./query/utils";
+const SDK = import("@data/sdk");
 
 export type HideNav = 'visible' | 'hide-sidebar' | 'hidden';
 
@@ -15,7 +17,7 @@ export const tempHideNav = (style?: HideNav) => {
 }
 
 export async function getStructuredItems(civilization?: CivConfig) {
-  const sdk = await import("@data/sdk");
+  const sdk = await SDK;
   if (!civilization)
     return {
       civ: undefined,
@@ -33,10 +35,9 @@ export async function getStructuredItems(civilization?: CivConfig) {
   };
 }
 
-export function parseCurrentLocation(pathname: string) {
+export function parseCurrentLocation(pathname: string): { route?: string; civ?: CivSlug; subroute?: string; itemType?: string; } {
   const path = pathname?.toLowerCase() ?? "";
   const [route, civ, subroute] = path.match(/\/civs\/([a-z]+)\/?([\w/-]*)/i) ?? [];
   const itemType = subroute?.split("/")[0] || (civ?.length ? "" : path.match(/(units|buildings|technologies)/i)?.[0])?.toLowerCase();
-  const id = ["buildings", "technologies", "units"].includes(itemType);
-  return { route, civ, subroute, itemType };
+  return { route, civ: civ as CivSlug, subroute, itemType };
 }

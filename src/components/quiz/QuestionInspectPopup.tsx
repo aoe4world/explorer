@@ -1,21 +1,22 @@
-import { Component, Show, createResource, createMemo } from "solid-js";
-import { Question } from "./questions";
-import * as SDK from "@data/sdk";
-import { UnifiedItem, Unit, civConfig } from "../../types/data";
+import { Component, Show, createMemo, createResource } from "solid-js";
+import { ITEMS } from "../../config";
 import { BattleReportView } from "./BattleReportView";
-import { getMostAppropriateVariation } from "../../query/utils";
-import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
+import { Question } from "./questions";
+const SDK = import("@data/sdk");
 
 export const QuestionInspectPopup: Component<{ question: Question; onClose: () => void }> = (props) => {
-  const units = createMemo(() => props.question.items.filter(v => v.group === ITEMS.UNITS).map(itemData => {
-    const unit = SDK.units.get(itemData.baseId);
-    const variation = unit.variations.filter(variation => variation.id === itemData.id && variation.civs.includes(itemData.civ) && variation.age === itemData.age)[0];
-    return {
-      ...itemData,
-      unit,
-      variation
-    };
-  }));
+  const [units] = createResource(() => props.question.items, async (items) => {
+    const sdk = await SDK;
+    return items.filter(v => v.group === ITEMS.UNITS).map(itemData => {
+      const unit = sdk.units.get(itemData.baseId);
+      const variation = unit.variations.filter(variation => variation.id === itemData.id && variation.civs.includes(itemData.civ) && variation.age === itemData.age)[0];
+      return {
+        ...itemData,
+        unit,
+        variation
+      };
+    });
+  });
 
   return (
     <div class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">

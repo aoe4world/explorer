@@ -1,0 +1,68 @@
+:root {
+  --backdrop-desktop: none;
+  --backdrop-mobile: none;
+  --backdrop-opacity: 0.1;
+
+  /* xs */
+  --backdrop-top-margin: 108px;
+
+  /* sm */
+  @media (min-width: 640px) {
+    --backdrop-top-margin: 54px;
+  }
+  
+  /* md */
+  @media (min-width: 768px) {
+    --backdrop-top-margin: 54px;
+  }
+  
+  /* lg */
+  @media (min-width: 1024px) {
+    --backdrop-top-margin: 54px;
+  }
+  
+  /* xl */
+  @media (min-width: 1280px) {
+    --backdrop-top-margin: 88px;
+  }
+  
+  /* 2xl */
+  @media (min-width: 1536px) {
+    --backdrop-top-margin: 88px;
+  }
+}
+
+.bg-backdrop {
+  @apply left-0 top-0 right-0 bottom-0 -z-20 bg-fixed bg-no-repeat transition-opacity duration-300;
+  --backdrop-color: rgba(15, 15, 17, calc(1 - var(--backdrop-opacity) / 3));
+  --backdrop-overlay: rgba(15, 15, 17, calc(1 - var(--backdrop-opacity))); 
+  filter: saturate(20%);
+  background-image: linear-gradient(to right, var(--backdrop-color), var(--backdrop-overlay)), var(--backdrop-mobile);
+
+  /* Override the tailwind styles to remove the top margin/nav bar */
+  &.bg-left-top {
+    background-position-x: left;
+    background-position-y: var(--backdrop-top-margin);
+  }
+
+  &.bg-right-top {
+    background-position-x: right;
+    background-position-y: var(--backdrop-top-margin);
+  }
+
+  &.bg-left-bottom {
+    background-position-x: left;
+    background-position-y: bottom;
+  }
+
+  &.bg-right-bottom {
+    background-position-x: left;
+    background-position-y: bottom;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bg-backdrop {
+    background-image: linear-gradient(to right, var(--backdrop-color), var(--backdrop-overlay)), var(--backdrop-desktop);
+  }
+}

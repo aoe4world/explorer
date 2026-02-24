@@ -1,19 +1,18 @@
+import { ItemSlug } from "@data/sdk/utils";
 import { CivConfig, CivSlug } from "@data/types/civs";
-import { UnifiedItem } from "../types/data";
+import { computePosition } from "@floating-ui/dom";
 import { A, useLocation } from "@solidjs/router";
 import { Component, For, createEffect, createMemo, createResource, createSignal, onCleanup } from "solid-js";
-import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS } from "../config";
-import { parseCurrentLocation, getStructuredItems } from "../global";
 import { Portal, Show } from "solid-js/web";
-import { ItemSlug } from "@data/sdk/utils";
-import { computePosition, offset, flip, shift, size } from "@floating-ui/dom";
-import { Search } from "./Search";
-import { ItemIcon } from "./ItemIcon";
+import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS } from "../config";
+import { getStructuredItems, parseCurrentLocation } from "../global";
+import { UnifiedItem } from "../types/data";
 import { getItemHref } from "./Cards";
-import { Icon } from "./Icon";
 import { CivFlag } from "./CivFlag";
-
+import { Icon } from "./Icon";
+import { ItemIcon } from "./ItemIcon";
 const SDK = import("@data/sdk");
+ 
 const itemTypeLabels = {
   units: "Units",
   buildings: "Buildings",

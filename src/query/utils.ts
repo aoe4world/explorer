@@ -3,7 +3,7 @@ import { CIVILIZATIONS, ITEMS, SIMILAIR_ITEMS } from "../config";
 import { staticMaps } from "../data/maps";
 import { civAbbr, civConfig, GroupedBuildings, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
 import { PatchLine, PatchNotes } from "../types/patches";
-import * as SDK from "@data/sdk";
+const SDK = import("@data/sdk");
 
 /** Map any of civAbbr | civConfig | civConfig[] | civAbbr[] to a single array */
 export type civFilterParam = Parameters<typeof mapCivsArgument>[0];
@@ -33,13 +33,13 @@ export function filterItems<T extends UnifiedItem[]>(items: T, { civs, maxAge }:
 }
 
 /** Query the technologies that apply to an item and merge them with all technology modifiers */
-export function getItemTechnologies<T extends ITEMS>(
+export async function getItemTechnologies<T extends ITEMS>(
   type: T,
   item: string | UnifiedItem,
   civ?: civAbbr | civConfig,
   includeAllCivsUnitSpecificTech = false
-): UnifiedItem<Technology>[] {
-  const { Get, technologies } = SDK;
+): Promise<UnifiedItem<Technology>[]> {
+  const { Get, technologies } = await SDK;
   const unifiedItem = typeof item == "string" ? Get(`${type}/${item}`) : item;
   return technologies.reduce((acc, t) => {
     const filteringByCiv = !!civ;
@@ -181,9 +181,9 @@ export function canonicalItemName(item: Item | UnifiedItem) {
   return `${group}/${"baseId" in item ? item.baseId : item.id}`;
 }
 
-export function getItemByCanonicalName(id: string) {
+export async function getItemByCanonicalName(id: string) {
   if (id.startsWith("maps/")) return getMapAsItem(id.split("/")[1]);
-  return SDK.Get(id as any);
+  return (await SDK).Get(id as any);
 }
 
 export async function findClosestMatch<T extends ITEMS>(type: T, id: string, civ: civConfig) {

@@ -10,13 +10,14 @@ import { CIVILIZATION_BY_SLUG, ITEMS, PRETTY_AGE_MAP_LONG } from "../../config";
 import { getMostAppropriateVariation } from "../../query/utils";
 import { mainIntroductionCSSClass } from "../../styles";
 import { Technology } from "../../types/data";
+const SDK = import("@data/sdk");
 
 export function TechnologyDetailRoute() {
   const itemType = ITEMS.TECHNOLOGIES;
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
-  const [item] = createResource(params.id, async (id) => (await import("@data/sdk/index")).technologies.get(id));
+  const [item] = createResource(params.id, async (id) => (await SDK).technologies.get(id));
 
   createEffect(() => {
     if (!item()) return;

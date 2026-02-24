@@ -8,16 +8,16 @@ import { RelatedContent } from "@components/RelatedContent";
 import { ReportButton } from "@components/ReportButton";
 import { UnitCard } from "@components/UnitCard";
 import { CIVILIZATION_BY_SLUG } from "../../config";
-import { civBackdrops } from "../../data/civData";
 import { splitBuildingsIntoGroups, splitTechnologiesIntroGroups, splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass, mainIntroductionCSSClass } from "../../styles";
+const SDK = import("@data/sdk");
 
 export const CivDetailRoute = () => {
   const pending = useIsRouting();
   const params = useParams();
   const civConfig = CIVILIZATION_BY_SLUG[params.slug];
   const [data] = createResource(async () => {
-    const civ = (await import("@data/sdk")).civilizations.Get(civConfig.abbr);
+    const civ = (await SDK).civilizations.Get(civConfig.abbr);
     return {
       civ,
       units: splitUnitsIntoGroups(civ.units.order("hitpoints", "age")),
@@ -165,12 +165,6 @@ export const CivDetailRoute = () => {
             }
           </For>
         </Show>
-      </div>
-      <div
-        class="fixed top-10 w-screen h-screen opacity-20 saturate-0	-z-10 bg-right-top bg-cover bg-no-repeat transition-all duration-400"
-        style={{ "background-image": `url(${civBackdrops[civConfig.abbr]})` }}
-      >
-        <div class="bg-gradient-to-r from-gray-800 to-transparent w-full h-full"></div>
       </div>
     </>
   );

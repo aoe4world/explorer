@@ -1,15 +1,16 @@
-import { JSX } from "solid-js";
-import { RESOURCES } from "../../../assets";
-import * as SDK from "@data/sdk";
-import { Item, ItemClass, UnifiedItem } from "@data/types/items";
+import { Component, createEffect, createResource, JSX, Match, Switch } from "solid-js";
+
 import { CivFlag } from "@components/CivFlag";
-import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
+import { Item, ItemClass, UnifiedItem } from "@data/types/items";
+import { RESOURCES } from "../../../assets";
+import { CIVILIZATION_BY_SLUG, CIVILIZATIONS, ITEMS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
+import { getBattleStats } from "../../query/battlereport";
 import { canonicalItemGroup, getMostAppropriateVariation } from "../../query/utils";
 import { civAbbr, civConfig, Unit } from "../../types/data";
 import { ItemIcon } from "../ItemIcon";
 import { formatSecondsToTime } from "../Stats";
 import { Random } from "./random";
-import { getBattleStats } from "../../query/battlereport";
+const SDK = import("@data/sdk");
 
 export type Question = {
   question: string;
@@ -190,10 +191,11 @@ export async function getRandomQuestion(difficulty?: number, civ?: civConfig): P
  * "Which French landmark is described?"
  */
 async function getCivLandmarkQuestion(i?: number, civ?: civConfig): Promise<Question> {
+  const sdk = await SDK;
   civ ??= Random.pick(Object.values(CIVILIZATIONS).filter((c) => c.abbr !== "ab")) as unknown as civConfig;
   const historyId = `landmark-${civ.abbr}`;
   const history = randomPickedHistory.get(historyId) ?? randomPickedHistory.set(historyId, new Set()).get(historyId);
-  const buildings = SDK.buildings.where({ civilization: civ?.abbr });
+  const buildings = sdk.buildings.where({ civilization: civ?.abbr });
   const landmarks = buildings.filter((b) => b.classes.includes("landmark") && !["wynguard-palace", "capital-town-center"].includes(b.id));
 
   const correctOptions = landmarks.filter((l) => !history.has(l.id));
@@ -221,12 +223,13 @@ async function getCivLandmarkQuestion(i?: number, civ?: civConfig): Promise<Ques
  */
 
 async function getCivBonusQuestion(i?: number, _?: civConfig): Promise<Question> {
+  const sdk = await SDK;
   const history = getOrCreateHistory("civ-bonus");
   const allCivs = Object.values(CIVILIZATIONS) as unknown as civConfig[];
   if (history.size >= allCivs.length * 4) history.clear();
   const civs = Random.order(allCivs).slice(0, 3);
   const civ = Random.pick(civs);
-  const bonuses = SDK.civilizations.Get(civ.abbr).info.overview.find((o) => o.title === "Civilization Bonuses")?.list ?? [];
+  const bonuses = sdk.civilizations.Get(civ.abbr).info.overview.find((o) => o.title === "Civilization Bonuses")?.list ?? [];
   const bonus = Random.pick(bonuses);
   if (!bonuses.length || history.has(bonus) || (bonus.includes("Berry") && ["de", "ab"].every((abbr) => civs.some((cv) => cv.abbr == abbr))))
     return getCivBonusQuestion(i);
@@ -442,14 +445,16 @@ async function getStraightUpFightQuestion(difficulty?: number, civ?: civConfig):
             await getRandomItem("straight-up-fight", [ITEMS.UNITS], civ, ["battering-ram", "ribauldequin"], excludeClasses),
             civ
           );
+    if (!unit || !unit.weapons) continue;
     if (unit.weapons.filter((w) => w.type != "fire")?.length !== 1) continue;
     units.push(unit);
   }
 
+  const sdk = await SDK;
   const options = Random.order(units);
-  const unifiedItems = options.map(v => SDK.units.get(v.baseId));
+  const unifiedItems = options.map(v => sdk.units.get(v.baseId));
 
-  const stats = getBattleStats(options[0], options[1], options[0].age, options[1].age, unifiedItems[0], unifiedItems[1], [], []);
+  const stats = await getBattleStats(options[0], options[1], options[0].age, options[1].age, unifiedItems[0], unifiedItems[1], [], []);
   const winner = stats.winner;
 
   return {
@@ -485,7 +490,7 @@ async function getOneShotQuestion(i?: number, civ?: civConfig): Promise<Question
   const ranged = getMostAppropriateVariation(rangedUnit, civ);
   if (!ranged.weapons.length) return getOneShotQuestion(i, civ);
   const target = getMostAppropriateVariation<Unit>(targetUnit, civ);
-  const attack = getBattleStats(ranged, target, ranged.age, target.age, rangedUnit, targetUnit, [], []);
+  const attack = await getBattleStats(ranged, target, ranged.age, target.age, rangedUnit, targetUnit, [], []);
 
   if (!attack.stats1.damage || attack.stats1.attacksRequired > 30 || attack.winner !== 'unit1') return getOneShotQuestion(i, civ);
 
@@ -514,40 +519,51 @@ async function getOneShotQuestion(i?: number, civ?: civConfig): Promise<Question
   };
 }
 
-export function formatAnswer(answer: Answer): JSX.Element {
-  if (typeof answer === "string") {
-    return <>{answer}</>;
-  }
-  switch (answer.type) {
-    case "civ":
-      const civ = CIVILIZATION_BY_SLUG[answer.id];
-      if (!civ) return <>{answer.id}</>;
-      return formatCiv(civ);
-    case "resource":
-      return (
-        <>
-          <img src={RESOURCES[answer.id]} class="h-6 object-contain w-7" /> {answer.label ?? (answer.id[0].toUpperCase() + answer.id.slice(1))}
-        </>
-      );
-    case "unit":
-    case "building":
-    case "technology":
-      const item = SDK[answer.type === "unit" ? "units" : answer.type === "building" ? "buildings" : "technologies"].get(answer.id);
-      if (!item) return <>{answer.id}</>;
-      return (
-        <>
-          <ItemIcon item={item} size={8} class="self-center" />
-          {item.name}
-        </>
-      );
-    case "text":
-      return <>{answer.label ?? answer.id}</>;
-    case "costs":
-      return <>{formatCosts(answer.costs)}</>;
-    default:
-      return <>{answer.id}</>;
-  }
-}
+export const FormatAnswer = (props: { answer: Answer }): JSX.Element => {
+  const [item] = createResource(
+    () => (typeof props.answer === "object" && ["unit", "building", "technology"].includes(props.answer.type) ? props.answer : null),
+    async (a) => (await SDK)[a.type === "unit" ? "units" : a.type === "building" ? "buildings" : "technologies"].get(a.id)
+  );
+
+  return (
+    <Switch fallback={<>{(props.answer as any).id}</>}>
+      <Match when={typeof props.answer === "string"}>{props.answer as string}</Match>
+      <Match when={typeof props.answer === "object" && props.answer.type === "civ" ? props.answer : false}>
+        {(answer) => {
+          const civ = CIVILIZATION_BY_SLUG[answer().id];
+          return civ ? formatCiv(civ) : <>{answer().id}</>;
+        }}
+      </Match>
+      <Match when={typeof props.answer === "object" && props.answer.type === "resource" ? props.answer : false}>
+        {(answer) => {
+          return (
+            <>
+              <img src={RESOURCES[answer().id as keyof typeof RESOURCES]} class="h-6 object-contain w-7" />{" "}
+              {answer().label ?? answer().id[0].toUpperCase() + answer().id.slice(1)}
+            </>
+          );
+        }}
+      </Match>
+      <Match when={typeof props.answer === "object" && ["unit", "building", "technology"].includes(props.answer.type)}>
+        <Switch fallback={<>{(props.answer as AnswerDefinition).id}</>}>
+          <Match when={item.loading}>...</Match>
+          <Match when={item()}>
+            <ItemIcon item={item()!} size={8} class="self-center" />
+            {item()!.name}
+          </Match>
+        </Switch>
+      </Match>
+      <Match when={typeof props.answer === "object" && props.answer.type === "text" ? props.answer : false}>
+        {(props.answer as AnswerDefinition).label ?? (props.answer as AnswerDefinition).id}
+      </Match>
+      <Match when={typeof props.answer === "object" && props.answer.type === "costs" ? props.answer : false}>
+        {(answer) => {
+          return answer().costs && formatCosts(answer().costs);
+        }}
+      </Match>
+    </Switch>
+  );
+};
 
 /**
  * Helper functions
@@ -570,7 +586,7 @@ const getIncorrectCosts = (correct: ResourceCosts) => {
   const costs = Object.fromEntries(Object.entries(correct).filter(([k, v]) => v > 0)) as ResourceCosts;
   const { gold, food, wood, stone } = costs;
 
-  const resourcesWithValues = ["gold", "food", "wood", "stone", "oliveoil", "silver"].filter((r) => costs[r] > 0);
+  const resourcesWithValues = (["gold", "food", "wood", "stone", "oliveoil", "silver"] as ResourceType[]).filter((r) => (costs[r] ?? 0) > 0);
 
   const fuckitUps =
     resourcesWithValues.length > 1
@@ -654,8 +670,9 @@ async function getRandomItem<T extends ITEMS>(
   excludeIds: string[] = [],
   excludeClasses: ItemClass[] = []
 ): Promise<UnifiedItem<ItemTypes[T]>> {
+  const sdk = await SDK;
   const history = getOrCreateHistory(historyKey);
-  const items = SDK[Random.pick(types)].where({ civilization: civ?.abbr });
+  const items = sdk[Random.pick(types)].where({ civilization: civ?.abbr });
   const item = Random.pick(
     items.filter(
       (i) => !excludeIds.includes(i.id) && !history.has(i.id) && !i.classes.some((c) => excludeClasses.includes(c) && (!civ || i.unique || i.civs.length <= 2))

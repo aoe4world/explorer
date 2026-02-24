@@ -8,6 +8,7 @@ import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
 import { Random } from "./quiz/random";
 import { formatSecondsToTime } from "./Stats";
+const SDK = import("@data/sdk");
 
 const defaultLimit = 3;
 export const RelatedContent: Component<{ item?: Item | UnifiedItem; civ?: civConfig; title?: string }> = (props) => {
@@ -94,8 +95,7 @@ export const ContentRow: Component<{ content: ContentItem; item?: Item | Unified
 };
 
 async function getRelatedItems(ids: string[]) {
-  const sdk = await import("@data/sdk/index");
-  let Get = sdk.Get;
+  const Get = (await SDK).Get;
 
   const items: UnifiedItem[] = [];
   for (const id of ids) {

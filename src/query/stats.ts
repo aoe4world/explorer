@@ -4,9 +4,9 @@ import { SUPPORTED_MODIFIER_PROPERTIES } from "../config";
 import { Building, civAbbr, civConfig, Item, Modifier, Technology, UnifiedItem, Unit } from "../types/data";
 import { CalculatedStats, Stat, StatPart, StatProperty } from "../types/stats";
 import { getItemTechnologies, mapCivsArgument, modifierMatches } from "./utils";
-import * as SDK from '@data/sdk';
+const SDK = import("@data/sdk");
 
-export function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
+export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
   type: T,
   unit: string | UnifiedItem<Unit | Building>,
   civ?: civAbbr | civConfig,
@@ -14,12 +14,12 @@ export function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
     variation?: Unit | Building,
     selectedTechnologies?: string[]
   }
-): ReturnType<typeof mergeVariationsToStats> {
+): Promise<ReturnType<typeof mergeVariationsToStats>> {
   const {variation, selectedTechnologies} = options || {};
   const forCiv = mapCivsArgument(civ);
-  const getStats = (unit: UnifiedItem<Unit | Building>) => {
+  const getStats = async (unit: UnifiedItem<Unit | Building>) => {
     const combatStats = mergeVariationsToStats(variation ? [variation] : unit.variations.filter((u) => u.civs.some((c) => forCiv.some((fc) => fc.abbr == c))));
-    let techs = getItemTechnologies(type, unit, civ);
+    let techs = await getItemTechnologies(type, unit, civ);
     if (selectedTechnologies) {
       techs = techs.filter((t) => selectedTechnologies.includes(t.id));
     }
@@ -57,8 +57,8 @@ export function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
     return combatStats;
   };
 
-  if (typeof unit == "string") return getStats(SDK[type].get(unit));
-  else return getStats(unit);
+  if (typeof unit == "string") return await getStats((await SDK)[type].get(unit));
+  else return await getStats(unit);
 }
 
 export function mergeVariationsToStats(variations: (Unit | Building)[]) {

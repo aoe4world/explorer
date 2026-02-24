@@ -13,6 +13,7 @@ import { civAbbr, Item, UnifiedItem } from "../../types/data";
 import { PatchLine, PatchSection, PatchSet } from "../../types/patches";
 import { tempHideNav } from "../../global";
 import { ItemGroup, ItemSlug } from "@data/sdk/utils";
+const SDK = import("@data/sdk");
 
 export const PatchDetailRoute = () => {
   tempHideNav();
@@ -20,8 +21,8 @@ export const PatchDetailRoute = () => {
   const [patch] = createResource(async () => (await import("../../data/patches/patch")).patches.find((patch) => patch.id === params.id));
   const [civ, setCiv] = createSignal<civAbbr>(CIVILIZATION_BY_SLUG[params.civ]?.abbr);
   const [items] = createResource(patch, async (patch) => {
-    const SDK = await import("@data/sdk/index");
-    const items = patch.sections.flatMap((s) => s.changes).flatMap((c) => c.items.map((ci) => [ci, SDK.Get(ci as ItemSlug)] as [string, ItemGroup<Item>]));
+    const sdk = await SDK;
+    const items = patch.sections.flatMap((s) => s.changes).flatMap((c) => c.items.map((ci) => [ci, sdk.Get(ci as ItemSlug)] as [string, ItemGroup<Item>]));
     const mapItems = getMapsAsItems();
     mapItems.forEach(mapItem => {
       items.push([`maps/${mapItem.id}`, mapItem]);

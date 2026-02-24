@@ -1,4 +1,4 @@
-import { Component, Show, createSignal, createMemo } from "solid-js";
+import { Component, Show, createSignal, createResource } from "solid-js";
 import { UnifiedItem, Unit } from "../../types/data";
 import { UnitCard } from "../UnitCard";
 import { CivConfig } from "@data/types/civs";
@@ -37,8 +37,18 @@ export const BattleReportView: Component<{ unit1: UnifiedItem<Unit>; unit2: Unif
   const [selectedTechs1, setSelectedTechs1] = createSignal<string[]>([]);
   const [selectedTechs2, setSelectedTechs2] = createSignal<string[]>([]);
 
-  const battleStats = createMemo(() =>
-    getBattleStats(props.variation1, props.variation2, props.age1, props.age2, props.unit1, props.unit2, selectedTechs1(), selectedTechs2())
+  const [battleStats] = createResource(
+    () => ({
+      v1: props.variation1,
+      v2: props.variation2,
+      a1: props.age1,
+      a2: props.age2,
+      u1: props.unit1,
+      u2: props.unit2,
+      t1: selectedTechs1(),
+      t2: selectedTechs2(),
+    }),
+    (p) => getBattleStats(p.v1, p.v2, p.a1, p.a2, p.u1, p.u2, p.t1, p.t2)
   );
 
   const stats1 = () => battleStats()?.stats1;

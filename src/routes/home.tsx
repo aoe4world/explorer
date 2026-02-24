@@ -6,6 +6,7 @@ import { For } from "solid-js";
 import { setActivePage } from "../App";
 import { CIVILIZATIONS } from "../config";
 import { mainIntroductionCSSClass, tooltipCSSClass } from "../styles";
+
 const buttonClass = `block font-bold px-7 py-2 rounded-full transition hover:opacity-70`;
 export const CivOverviewRoute = () => {
   setActivePage({ title: "Civilizations", description: "Overview of all civilizations", location: useLocation() });
@@ -63,20 +64,6 @@ export const CivOverviewRoute = () => {
             )}
           </For>
         </div>
-      </div>
-      <div
-        class="fixed top-0 w-screen h-screen opacity-20 saturate-0	-z-10 bg-right-top bg-contain bg-no-repeat"
-        style={{
-          "background-image": `url(https://www.ageofempires.com/wp-content/themes/ageOfEmpires/dist/images/defaults/default-news-section-bg-right-desk.png)`,
-        }}
-      >
-        <div class="bg-gradient-to-r from-gray-800 to-transparent w-full h-full"></div>
-      </div>
-      <div
-        class="fixed top-0 w-screen h-screen opacity-20 saturate-0	-z-10 bg-left-bottom bg-contain bg-no-repeat"
-        style={{ "background-image": `url(https://www.ageofempires.com/wp-content/themes/ageOfEmpires/dist/images/bgs/bg-insider-signup-desk.png)` }}
-      >
-        <div class="bg-gradient-to-r from-gray-800 to-transparent w-full h-full"></div>
       </div>
     </>
   );

@@ -14,7 +14,8 @@ import { RelatedContent } from "@components/RelatedContent";
 import { ItemList } from "@data/sdk/utils";
 import { Ability } from "@data/types/items";
 import { Abilities } from "@components/Abilities";
-const SDK = import("@data/sdk/index");
+const SDK = import("@data/sdk");
+
 export function UnitDetailRoute() {
   const itemType = ITEMS.UNITS;
   const params = useParams();

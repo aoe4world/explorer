@@ -27,7 +27,7 @@ function getResistanceStatProperty(weaponType: Weapon["type"]): StatProperty | n
   else throw new Error(`Unknown weapon type ${weaponType}`);
 }
 
-export function getBattleStats(
+export async function getBattleStats(
   unit1: Unit,
   unit2: Unit,
   unit1Age: number,
@@ -37,8 +37,8 @@ export function getBattleStats(
   unit1Technologies: string[],
   unit2Technologies: string[]
 ) {
-  const unit1StatsMap = unit1 && getUnitStats(ITEMS.UNITS, unifiedUnit1, unit1.civs[0], { variation: unit1, selectedTechnologies: unit1Technologies });
-  const unit2StatsMap = unit2 && getUnitStats(ITEMS.UNITS, unifiedUnit2, unit2.civs[0], { variation: unit2, selectedTechnologies: unit2Technologies });
+  const unit1StatsMap = unit1 && (await getUnitStats(ITEMS.UNITS, unifiedUnit1, unit1.civs[0], { variation: unit1, selectedTechnologies: unit1Technologies }));
+  const unit2StatsMap = unit2 && (await getUnitStats(ITEMS.UNITS, unifiedUnit2, unit2.civs[0], { variation: unit2, selectedTechnologies: unit2Technologies }));
 
   const calculateBattleSide = (attacker: Unit, target: Unit, attackerStatsMap, targetStatsMap, attackerAge, targetAge, unifiedAttacker, unifiedTarget) => {
 

@@ -5,13 +5,13 @@ import { UnitCard } from "@components/UnitCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass } from "../../styles";
+const SDK = import("@data/sdk");
 
 export const UnitOverviewRoute = () => {
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [units] = createResource(async () => {
-    const SDK = await import("@data/sdk");
-    return splitUnitsIntoGroups(SDK.units.where({ civilization: civ?.abbr }).order("hitpoints", "age"));
+    return splitUnitsIntoGroups((await SDK).units.where({ civilization: civ?.abbr }).order("hitpoints", "age"));
   });
 
   setActivePage({ title: `Units ${civ ? ` — ${civ?.name}` : ""}`, location: useLocation() });

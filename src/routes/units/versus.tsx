@@ -1,6 +1,5 @@
 import { Show, createResource, createEffect, createSignal, onCleanup } from "solid-js";
 import { BattleReportView } from "@components/quiz/BattleReportView";
-import * as SDK from "@data/sdk";
 import { CIVILIZATION_BY_SLUG, CivSlug } from "@data/types/civs";
 import { civConfig } from "../../types/data";
 import { UnifiedItem, Unit } from "@data/types/items";
@@ -9,6 +8,7 @@ import { useLocation, useSearchParams } from "@solidjs/router";
 import { setActivePage, } from "../../App";
 import { tempHideNav } from "../../global";
 import { UnitSelector } from "@components/UnitSelector";
+const SDK = import("@data/sdk");
 
 export const UnitVersusRoute = () => {
   const [searchParams, setSearchParams] = useSearchParams<{
@@ -31,14 +31,15 @@ export const UnitVersusRoute = () => {
       age1Str: searchParams.age1,
       age2Str: searchParams.age2
     }),
-    ({ unitId1, civSlug1, unitId2, civSlug2, age1Str, age2Str }) => {
-      const unit1 = SDK.units.get(unitId1);
+    async ({ unitId1, civSlug1, unitId2, civSlug2, age1Str, age2Str }) => {
+      const sdk = await SDK;
+      const unit1 = sdk.units.get(unitId1);
       const civ1 = CIVILIZATION_BY_SLUG[civSlug1].abbr;
       const age1 = age1Str ? parseInt(age1Str) : undefined;
       const variations1 = unit1?.variations.filter((v) => v.civs.includes(civ1) && (!age1 || v.age <= age1)).sort((a, b) => b.age - a.age);
       const variation1 = variations1?.[0];
 
-      const unit2 = SDK.units.get(unitId2);
+      const unit2 = sdk.units.get(unitId2);
       const civ2 = civSlug2 ? CIVILIZATION_BY_SLUG[civSlug2].abbr : undefined;
       const age2 = age2Str ? parseInt(age2Str) : undefined;
       const variations2 = unit2?.variations.filter((v) => v.civs.includes(civ2) && (!age2 || v.age <= age2)).sort((a, b) => b.age - a.age);

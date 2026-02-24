@@ -5,12 +5,13 @@ import { BuildingCard } from "@components/BuildingCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { splitBuildingsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass } from "../../styles";
+const SDK = import("@data/sdk");
 
 export const BuildingOverviewRoute = () => {
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [buildings] = createResource(async () =>
-    splitBuildingsIntoGroups((await import("@data/sdk")).buildings.where({ civilization: civ?.abbr }).order("age"))
+    splitBuildingsIntoGroups((await SDK).buildings.where({ civilization: civ?.abbr }).order("age"))
   );
 
   setActivePage({ title: `Buildings ${civ ? ` — ${civ?.name}` : ""}`, location: useLocation() });

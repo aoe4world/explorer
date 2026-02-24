@@ -1,12 +1,9 @@
-import { Component, createSignal, For, createMemo, Show } from "solid-js";
-import { useNavigate, useParams, useSearchParams } from "@solidjs/router";
-import * as SDK from "@data/sdk";
-import { ItemIcon } from "./ItemIcon";
-import { UnifiedItem, Unit } from "@data/types/items";
-import { Icon } from "./Icon";
 import { CivSlug } from "@data/types/civs";
-import { CIVILIZATIONS } from "@data/lib/config/civs";
+import { UnifiedItem, Unit } from "@data/types/items";
+import { Component, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { PRETTY_AGE_MAP_SHORT } from "../config";
+import { ItemIcon } from "./ItemIcon";
+const SDK = import("@data/sdk");
 
 interface UnitSelectorProps {
   unitId?: string;
@@ -19,13 +16,15 @@ interface UnitSelectorProps {
 
 export const UnitSelector: Component<UnitSelectorProps> = (props) => {
   const [searchTerm, setSearchTerm] = createSignal("");
+  const [units] = createResource(async () => (await SDK).units);
 
   const filteredUnits = createMemo(() => {
     const term = searchTerm().toLowerCase();
+    const u = units() || [];
     if (!term) {
-      return SDK.units;
+      return u;
     }
-    return SDK.units.filter(unit => unit.name.toLowerCase().includes(term));
+    return u.filter(unit => unit.name.toLowerCase().includes(term));
   });
 
   const handleSelectUnit = (unit: UnifiedItem<Unit>) => {

@@ -1,10 +1,10 @@
-import "./index.css";
+import { Route, Router } from "@solidjs/router";
+import { ParentComponent } from "solid-js";
 import { render } from "solid-js/web";
-import { Router, Route } from "@solidjs/router";
-
-import App, { routes } from "./App";
+import App from "./App";
 import { Nav } from "./components/Nav";
-import { For, ParentComponent } from "solid-js";
+import "./index.css";
+import { AppRoutes } from "./routes";
 
 const navItems: [href: string, label: string][] = [
   ["/civs", "Civs"],
@@ -23,7 +23,7 @@ const DevRoot: ParentComponent = (props) => (
 render(
   () => (
     <Router root={DevRoot}>
-      <For each={routes}>{(route) => <Route path={route.path} component={route.component} />}</For>
+      <AppRoutes />
     </Router>
   ),
   document.getElementById("root") as HTMLElement

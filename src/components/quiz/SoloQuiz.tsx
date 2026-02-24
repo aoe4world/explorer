@@ -1,6 +1,6 @@
 import { Component, createResource, createSignal, For, JSX, Show } from "solid-js";
 import { Icon } from "@components/Icon";
-import { formatAnswer, getRandomQuestion, loadCustomQuestions } from "./questions";
+import { FormatAnswer, getRandomQuestion, loadCustomQuestions } from "./questions";
 import { Random } from "./random";
 import { DLC_CIVS, indexToLetter, updateScore, useKeyHandler } from "./shared";
 
@@ -118,7 +118,7 @@ export const Quiz: Component<{ difficulty?: number; questionsUrl?: string; numQu
                   correct={quizState() === QuizState.ShowingResults ? (index() == question()?.correctAnswer ? true : index() == selectedChoice() ? false : null) : undefined}
                   onPick={() => pickChoice(index())}
                 >
-                  {formatAnswer(answer)}
+                  <FormatAnswer answer={answer} />
                 </MultipleChoiceOption>
               )}
             </For>

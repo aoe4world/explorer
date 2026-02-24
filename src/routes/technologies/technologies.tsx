@@ -6,7 +6,7 @@ import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
 import { splitTechnologiesIntroGroups } from "../../query/utils";
 import { itemGridCSSClass } from "../../styles";
 
-export const TechnologoiesOverviewRoute = () => {
+export const TechnologiesOverviewRoute = () => {
   const params = useParams();
   const civ = CIVILIZATION_BY_SLUG[params.slug];
   const [technologies] = createResource(async () =>

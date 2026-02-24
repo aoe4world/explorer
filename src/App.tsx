@@ -1,155 +1,14 @@
-import { Route, useLocation, useNavigate, useParams } from "@solidjs/router";
-import { Component, createEffect, createSignal, ErrorBoundary, lazy, on, Show } from "solid-js";
+import { useLocation, useNavigate } from "@solidjs/router";
+import { Component, createEffect, createSignal, ErrorBoundary, on, Show } from "solid-js";
 import { Toolbar } from "./components/Toolbar";
-import { Nav } from "./components/Nav";
-import { CivDetailRoute } from "./routes/civs/[slug]";
-import { UnitOverviewRoute } from "./routes/units/units";
-import { UnitDetailRoute } from "./routes/units/[id]";
-import { UnitVersusRoute } from "./routes/units/versus";
-import { CivOverviewRoute } from "./routes/home";
 import { Icon } from "./components/Icon";
-import { BuildingOverviewRoute } from "./routes/buildings/buildings";
-import { BuildingDetailRoute } from "./routes/buildings/[id]";
-import { AboutRoute } from "./routes/about";
-import { TechnologyDetailRoute } from "./routes/technologies/[id]";
-import { TechnologoiesOverviewRoute } from "./routes/technologies/technologies";
 import { civConfig, UnifiedItem } from "./types/data";
-import { ITEMS, SIMILAIR_ITEMS } from "./config";
+import { ITEMS } from "./config";
 import { getItemHref } from "./components/Cards";
-import { PatchDetailRoute } from "./routes/patches/[id]";
 import { findClosestMatch } from "./query/utils";
-import { SearchRoute } from "./routes/search";
-import { PatchListRoute } from "./routes/patches";
 import { SidebarNav } from "@components/SidebarNav";
 import { hideNav } from "./global";
-
-export const routes = [
-  {
-    path: "/",
-    component: () => CivOverviewRoute,
-  },
-  {
-    path: "/civs",
-    component: () => {
-      useNavigate()("/");
-      return null;
-    },
-  },
-  {
-    path: "/civs/:slug",
-    component: () => CivDetailRoute,
-  },
-  {
-    path: "/civs/:slug/units",
-    component: () => UnitOverviewRoute,
-  },
-  {
-    path: "/civs/:slug/units/:id",
-    component: () => UnitDetailRoute,
-  },
-  {
-    path: "/civs/:slug/units/:id/versus",
-    component: () => {
-      const params = useParams();
-      const navigate = useNavigate();
-      createEffect(() => {
-        navigate(`/versus?civ1=${params.slug}&unit1=${params.id}`, { replace: true });
-      });
-      return null;
-    },
-  },
-  {
-    path: "/civs/:slug/units/:id/versus/:civ2/units/:id2",
-    component: () => {
-      const params = useParams();
-      const navigate = useNavigate();
-      createEffect(() => {
-        navigate(`/versus?civ1=${params.slug}&unit1=${params.id}&civ2=${params.civ2}&unit2=${params.id2}`, { replace: true });
-      });
-      return null;
-    },
-  },
-  {
-    path: "/civs/:slug/buildings",
-    component: () => BuildingOverviewRoute,
-  },
-  {
-    path: "/civs/:slug/buildings/:id",
-    component: () => BuildingDetailRoute,
-  },
-  {
-    path: "/civs/:slug/technologies",
-    component: () => TechnologoiesOverviewRoute,
-  },
-  {
-    path: "/civs/:slug/technologies/:id",
-    component: () => TechnologyDetailRoute,
-  },
-  {
-    path: "/units",
-    component: () => UnitOverviewRoute,
-  },
-  {
-    path: "/units/:id",
-    component: () => UnitDetailRoute,
-  },
-  {
-    path: "/buildings",
-    component: () => BuildingOverviewRoute,
-  },
-  {
-    path: "/buildings/:id",
-    component: () => BuildingDetailRoute,
-  },
-  {
-    path: "/technologies",
-    component: () => TechnologoiesOverviewRoute,
-  },
-  {
-    path: "/technologies/:id",
-    component: () => TechnologyDetailRoute,
-  },
-  {
-    path: "/versus",
-    component: () => UnitVersusRoute,
-  },
-  {
-    path: "/about",
-    component: () => AboutRoute,
-  },
-  {
-    path: "/quiz",
-    component: lazy(() => import("./routes/quiz/quiz")),
-  },
-  {
-    path: "/quiz/twitch",
-    component: lazy(() => import("./routes/quiz/twitch")),
-  },
-  {
-    path: "/quiz/twitch/:channel",
-    component: lazy(() => import("./routes/quiz/twitch")),
-  },
-  {
-    path: "/patches/",
-    component: () => PatchListRoute,
-  },
-  {
-    path: "/patches/:id",
-    component: () => PatchDetailRoute,
-  },
-  {
-    path: "civs/:civ/patches/:id",
-    component: () => PatchDetailRoute,
-  },
-  {
-    path: "/search",
-    component: () => SearchRoute,
-  },
-  {
-    path: "/content",
-    component: lazy(() => import("./routes/content/content")),
-  },
-];
+import { BackdropWrapper } from "./components/Backdrop";
 
 export const [activePage, setActivePage] = createSignal<{ title?: string; description?: string; location: any }>();
 
@@ -231,16 +90,20 @@ const App: Component<{ children?: any }> = (props) => {
           );
         }}
       >
-        <div class="max-w-screen-2xl mx-auto flex">
-          <Show when={!["hidden", "hide-sidebar"].includes(hideNav())}>
-            <div class="w-full max-w-xs pl-8 hidden lg:block">
-              <div class="p-4 mx-auto gap-4 mb-4 mt-10 sticky bottom-0 top-16 max-h-[calc(100vh-80px)] overflow-y-auto scrollbar-hide">
-                <SidebarNav />
+        <BackdropWrapper>
+          <div class="max-w-screen-2xl mx-auto flex">
+            <Show when={!["hidden", "hide-sidebar"].includes(hideNav())}>
+              <div class="w-full max-w-xs pl-8 hidden lg:block">
+                <div class="p-4 mx-auto gap-4 mb-4 mt-10 sticky bottom-0 top-24 max-h-[calc(100vh-80px)] overflow-y-auto scrollbar-hide">
+                  <SidebarNav />
+                </div>
               </div>
+            </Show>
+            <div class="flex-auto">
+              {props.children}
             </div>
-          </Show>
-          <div class="flex-auto">{props.children}</div>
-        </div>
+          </div>
+        </BackdropWrapper>
       </ErrorBoundary>
     </>
   );

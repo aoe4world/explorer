@@ -1,7 +1,7 @@
 import { Component, createResource, createSignal, For, Show, onCleanup } from "solid-js";
 import { createStore, produce } from "solid-js/store";
 import { Icon } from "../Icon";
-import { formatAnswer, getRandomQuestion, loadCustomQuestions } from "./questions";
+import { FormatAnswer, getRandomQuestion, loadCustomQuestions } from "./questions";
 import { MultipleChoiceOption } from "./SoloQuiz";
 import { QuestionInspectPopup } from "./QuestionInspectPopup";
 import { ChatClient } from "@twurple/chat";
@@ -251,7 +251,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
                   correct={quizState() === TwitchQuizState.ShowingResults ? (index() == question().correctAnswer ? true : index() == selectedChoice() ? false : null) : undefined}
                   onPick={() => pickChoice(index)}
                 >
-                  {formatAnswer(answer)}
+                  <FormatAnswer answer={answer} />
                   <span class="ml-auto mr-2">
                     {pendingAnswers.host == index() && <Icon icon="video-camera" class="mr-2" />}
                     {props.hideVotes && quizState() !== TwitchQuizState.ShowingResults ? "" : pendingAnswers.total[index()]}
