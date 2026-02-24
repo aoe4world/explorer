@@ -19,40 +19,42 @@ const SDK = import("@data/sdk");
 export function UnitDetailRoute() {
   const itemType = ITEMS.UNITS;
   const params = useParams();
-  const civ = CIVILIZATION_BY_SLUG[params.slug];
+  const civ = () => CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
-  const [item] = createResource(params.id, async (id) => (await SDK).units.get(id));
-  const [abilities] = createResource(async () =>
-    !civ ? ([] as ItemList<Ability>) : (await SDK).abilities.where({ civilization: civ.abbr, affects: `units/${params.id}` }).order("age")
+  const [item] = createResource(() => params.id, async (id) => (await SDK).units.get(id));
+  const [abilities] = createResource(
+    () => ({ c: civ()?.abbr, id: params.id }),
+    async ({ c, id }) =>
+      !c ? ([] as ItemList<Ability>) : (await SDK).abilities.where({ civilization: c, affects: `units/${id}` }).order("age")
   );
 
   const [age, setAge] = createSignal(4);
-  const variation = createMemo(() => getMostAppropriateVariation<Unit>(item(), civ, age()));
+  const variation = createMemo(() => getMostAppropriateVariation<Unit>(item(), civ(), age()));
 
   createEffect(() => {
     if (!item()) return;
-    if (civ && !item()?.civs.includes(civ.abbr)) tryRedirectToClosestMatch(itemType, params.id, civ, () => setUnmatched(true));
-    setActivePageForItem(item(), civ);
+    if (civ() && !item()?.civs.includes(civ().abbr)) tryRedirectToClosestMatch(itemType, params.id, civ(), () => setUnmatched(true));
+    setActivePageForItem(item(), civ());
   });
 
   return (
-    <ItemPage.Wrapper civ={civ}>
+    <ItemPage.Wrapper civ={civ()}>
       <Show when={!unmatched() && item()} keyed>
         {(item) => (
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
-              <ItemPage.Header item={variation()} civ={civ} />
+              <ItemPage.Header item={variation()} civ={civ()} />
               <div class={mainIntroductionCSSClass}>{variation()?.description}</div>
 
-              <ItemPage.ExpansionInfo civ={civ} />
+              <ItemPage.ExpansionInfo civ={civ()} />
 
-              <Abilities abilities={abilities()} civ={civ} />
+              <Abilities abilities={abilities()} civ={civ()} />
 
-              <ItemPage.ProducedAt item={item} civ={civ} />
+              <ItemPage.ProducedAt item={item} civ={civ()} />
               {/* {item().name && <Fandom query={item().name} />} */}
-              {!civ && <ItemPage.CivPicker item={item} />}
+              {!civ() && <ItemPage.CivPicker item={item} />}
 
-              <PatchHistory item={item} civ={civ} />
+              <PatchHistory item={item} civ={civ()} />
 
               <RelatedContent item={item} title={`Recommended content`} />
 
@@ -60,12 +62,12 @@ export function UnitDetailRoute() {
                 <ReportButton />
               </div>
             </div>
-            <UnitSidebar item={item} civ={civ} age={age} setAge={setAge} />
+            <UnitSidebar item={item} civ={civ()} age={age} setAge={setAge} />
           </div>
         )}
       </Show>
-      {!unmatched() && <ItemPage.AvailableUpgrades item={item()} civ={civ} />}
-      {unmatched() && <ItemPage.UnavailableForCiv item={item()} civ={civ} />}
+      {!unmatched() && <ItemPage.AvailableUpgrades item={item()} civ={civ()} />}
+      {unmatched() && <ItemPage.UnavailableForCiv item={item()} civ={civ()} />}
       {item.error && <div class="text-red-600">Error!</div>}
     </ItemPage.Wrapper>
   );

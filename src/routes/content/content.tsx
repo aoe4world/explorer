@@ -1,18 +1,20 @@
-import { createResource, createSignal, For, onCleanup, Suspense } from "solid-js";
-import { setActivePage } from "../../App";
+import { useLocation, useParams } from "@solidjs/router";
+import { createEffect, createResource, createSignal, For, Suspense } from "solid-js";
+
 import { Icon } from "@components/Icon";
 import { ContentRow } from "@components/RelatedContent";
+import { setActivePage } from "../../App";
 import { CIVILIZATION_BY_SLUG } from "../../config";
+import { tempHideNav } from "../../global";
 import { ContentItem, getRelatedContent } from "../../query/content";
 import { mainIntroductionCSSClass, mainItemTitleCSSClass, secondaryButtonClass } from "../../styles";
-import { tempHideNav } from "../../global";
-import { useLocation, useParams } from "@solidjs/router";
 
 const defaultLimit = 12;
 export const ContentOverviewRoute = () => {
   const params = useParams();
-  const civ = CIVILIZATION_BY_SLUG[params.civ];
-  const [content] = createResource(() => ({ civilization: civ, featured: false }), getRelatedContent);
+  const location = useLocation();
+  const civ = () => CIVILIZATION_BY_SLUG[params.civ];
+  const [content] = createResource(() => ({ civilization: civ(), featured: false }), getRelatedContent);
   const [limit, setLimit] = createSignal(defaultLimit);
   const [showFilter, setShowFilter] = createSignal(false);
   const [filters, setFilters] = createSignal<{ [key: string]: string[] }>({});
@@ -34,7 +36,7 @@ export const ContentOverviewRoute = () => {
     return filterContent(content(), availableFilters(), filters());
   };
 
-  setActivePage({ title: `Curated Content ${civ ? ` — ${civ?.name}` : ""}`, location: useLocation() });
+  createEffect(() => setActivePage({ title: `Curated Content ${civ() ? ` — ${civ()?.name}` : ""}`, location }));
 
   return (
     <div class="max-w-screen-2xl mx-auto p-4 md:p-8">
@@ -100,7 +102,7 @@ export const ContentOverviewRoute = () => {
             </div>
             <Suspense>
               <div class="flex flex-col gap-8">
-                <For each={filtered()?.slice(0, limit())}>{(content) => <ContentRow content={content} civ={civ} />}</For>
+                <For each={filtered()?.slice(0, limit())}>{(content) => <ContentRow content={content} civ={civ()} />}</For>
                 {filtered()?.length > limit() && (
                   <button onClick={() => setLimit(limit() * 2)} class="text-gray-300 hover:text-gray-100 font-bold bg-gray-500 p-4 roudned-lg">
                     Load more

@@ -15,16 +15,19 @@ const SDK = import("@data/sdk");
 export const CivDetailRoute = () => {
   const pending = useIsRouting();
   const params = useParams();
-  const civConfig = CIVILIZATION_BY_SLUG[params.slug];
-  const [data] = createResource(async () => {
-    const civ = (await SDK).civilizations.Get(civConfig.abbr);
-    return {
-      civ,
-      units: splitUnitsIntoGroups(civ.units.order("hitpoints", "age")),
-      buildings: splitBuildingsIntoGroups(civ.buildings.order("hitpoints", "age")),
-      technologies: splitTechnologiesIntroGroups(civ.technologies.order("age")),
-    };
-  });
+  const civConfig = () => CIVILIZATION_BY_SLUG[params.slug];
+  const [data] = createResource(
+    () => civConfig()?.abbr,
+    async (abbr) => {
+      const civ = (await SDK).civilizations.Get(abbr);
+      return {
+        civ,
+        units: splitUnitsIntoGroups(civ.units.order("hitpoints", "age")),
+        buildings: splitBuildingsIntoGroups(civ.buildings.order("hitpoints", "age")),
+        technologies: splitTechnologiesIntroGroups(civ.technologies.order("age")),
+      };
+    }
+  );
 
   createEffect(
     on(data, () => !data.loading && setActivePage({ title: data()?.civ.info.name, description: data()?.civ.info.description, location: useLocation() }))
@@ -37,7 +40,7 @@ export const CivDetailRoute = () => {
           <div class="flex gap-4 items-center mb-3">
             <div class="flex-none self-start w-24 h-16  relative">
               <div class="ring-inset ring-2 ring-black/20 w-full h-full rounded-md absolute pointer-events-none"></div>
-              <CivFlag abbr={civConfig.abbr} class="w-full h-full rounded-md object-cover" />
+              <CivFlag abbr={civConfig().abbr} class="w-full h-full rounded-md object-cover" />
             </div>
             <div class="ml-2">
               <span class="text-white/50 ">Civilization</span>
@@ -106,7 +109,7 @@ export const CivDetailRoute = () => {
         <div class="my-12">
           <ReportButton />
         </div>
-        <RelatedContent civ={civConfig} title={`Learn about ${civConfig.name}`} />
+        <RelatedContent civ={civConfig()} title={`Learn about ${civConfig().name}`} />
       </div>
       <div class="max-w-screen-2xl mx-auto p-4 md:p-8">
         <Show
@@ -128,7 +131,7 @@ export const CivDetailRoute = () => {
                 <div>
                   <h2 class="text-2xl font-bold text-white mt-20 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
                   <div class={itemGridCSSClass + " xl:grid-cols-4"}>
-                    <For each={v}>{(unit) => <UnitCard unit={unit} civ={civConfig}></UnitCard>}</For>
+                    <For each={v}>{(unit) => <UnitCard unit={unit} civ={civConfig()}></UnitCard>}</For>
                   </div>
                 </div>
               ) : (
@@ -156,7 +159,7 @@ export const CivDetailRoute = () => {
                 <div>
                   <h2 class="text-2xl font-bold text-white mt-20 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
                   <div class={itemGridCSSClass + " xl:grid-cols-4"}>
-                    <For each={v}>{(item) => <BuildingCard item={item} civ={civConfig}></BuildingCard>}</For>
+                    <For each={v}>{(item) => <BuildingCard item={item} civ={civConfig()}></BuildingCard>}</For>
                   </div>
                 </div>
               ) : (

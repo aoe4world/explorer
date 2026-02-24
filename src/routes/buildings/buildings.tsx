@@ -1,5 +1,5 @@
 import { useLocation, useParams } from "@solidjs/router";
-import { createResource, For, Suspense } from "solid-js";
+import { createEffect, createResource, For, Suspense } from "solid-js";
 import { setActivePage } from "../../App";
 import { BuildingCard } from "@components/BuildingCard";
 import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
@@ -9,12 +9,14 @@ const SDK = import("@data/sdk");
 
 export const BuildingOverviewRoute = () => {
   const params = useParams();
-  const civ = CIVILIZATION_BY_SLUG[params.slug];
-  const [buildings] = createResource(async () =>
-    splitBuildingsIntoGroups((await SDK).buildings.where({ civilization: civ?.abbr }).order("age"))
+  const location = useLocation();
+  const civ = () => CIVILIZATION_BY_SLUG[params.slug];
+  const [buildings] = createResource(
+    () => civ()?.abbr,
+    async (abbr) => splitBuildingsIntoGroups((await SDK).buildings.where({ civilization: abbr }).order("age"))
   );
 
-  setActivePage({ title: `Buildings ${civ ? ` — ${civ?.name}` : ""}`, location: useLocation() });
+  createEffect(() => setActivePage({ title: `Buildings ${civ() ? ` — ${civ()?.name}` : ""}`, location }));
 
   return (
     <div class="max-w-screen-2xl mx-auto p-4 md:p-8">
@@ -34,7 +36,7 @@ export const BuildingOverviewRoute = () => {
               <div>
                 <h2 class="text-2xl font-bold text-white mt-16 mb-4 pl-2">{k[0].toUpperCase() + k.slice(1)}</h2>
                 <div class={itemGridCSSClass + " xl:grid-cols-4"}>
-                  <For each={v}>{(unit) => <BuildingCard item={unit} civ={civ}></BuildingCard>}</For>
+                  <For each={v}>{(unit) => <BuildingCard item={unit} civ={civ()}></BuildingCard>}</For>
                 </div>
               </div>
             ) : (

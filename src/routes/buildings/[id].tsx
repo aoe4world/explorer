@@ -24,38 +24,46 @@ const SDK = import("@data/sdk");
 export function BuildingDetailRoute() {
   const itemType = ITEMS.BUILDINGS;
   const params = useParams();
-  const civ: civConfig = CIVILIZATION_BY_SLUG[params.slug];
+  const civ = () => CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
-  const [item] = createResource(params.id, async (id) => (await SDK).buildings.get(id));
+  const [item] = createResource(() => params.id, async (id) => (await SDK).buildings.get(id));
   const [age, setAge] = createSignal(4);
-  const variation = createMemo(() => getMostAppropriateVariation<Building>(item(), civ, age()));
+  const variation = createMemo(() => getMostAppropriateVariation<Building>(item(), civ(), age()));
 
   createEffect(() => {
     if (!item()) return;
-    if (civ && !item()?.civs.includes(civ.abbr)) tryRedirectToClosestMatch(itemType, params.id, civ, () => setUnmatched(true));
-    setActivePageForItem(item(), civ);
+    if (civ() && !item()?.civs.includes(civ().abbr)) tryRedirectToClosestMatch(itemType, params.id, civ(), () => setUnmatched(true));
+    setActivePageForItem(item(), civ());
   });
 
-  const [units] = createResource(async () => (await SDK).units.where({ producedAt: params.id, civilization: civ?.abbr }));
-  const [research] = createResource(async () => (await SDK).technologies.where({ producedAt: params.id, civilization: civ?.abbr }).order("age"));
-  const [abilities] = createResource(async () =>
-    !civ ? ([] as ItemList<Ability>) : (await SDK).abilities.where({ civilization: civ.abbr, affects: `buildings/${params.id}` }).order("age")
+  const [units] = createResource(
+    () => ({ c: civ()?.abbr, id: params.id }),
+    async ({ c, id }) => (await SDK).units.where({ producedAt: id, civilization: c })
+  );
+  const [research] = createResource(
+    () => ({ c: civ()?.abbr, id: params.id }),
+    async ({ c, id }) => (await SDK).technologies.where({ producedAt: id, civilization: c }).order("age")
+  );
+  const [abilities] = createResource(
+    () => ({ c: civ()?.abbr, id: params.id }),
+    async ({ c, id }) =>
+      !c ? ([] as ItemList<Ability>) : (await SDK).abilities.where({ civilization: c, affects: `buildings/${id}` }).order("age")
   );
 
   return (
-    <ItemPage.Wrapper civ={civ}>
+    <ItemPage.Wrapper civ={civ()}>
       <Show when={!unmatched() && item()} keyed>
         {(item) => (
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
-              <ItemPage.Header item={variation()} civ={civ} />
+              <ItemPage.Header item={variation()} civ={civ()} />
               <div class={mainIntroductionCSSClass}>{variation()?.description}</div>
 
-              <ItemPage.ExpansionInfo civ={civ} />
+              <ItemPage.ExpansionInfo civ={civ()} />
 
-              {!civ && <ItemPage.CivPicker item={item} />}
+              {!civ() && <ItemPage.CivPicker item={item} />}
 
-              <Abilities abilities={abilities()} civ={civ} />
+              <Abilities abilities={abilities()} civ={civ()} />
 
               <div class="my-8">
                 <ReportButton />
@@ -68,12 +76,12 @@ export function BuildingDetailRoute() {
                     {(unit) => {
                       let el;
                       return (
-                        <A href={`${civ ? `/civs/${civ.slug}` : ""}/units/${unit.id}`} class="flex flex-row items-center mb-2 group " ref={el}>
+                        <A href={`${civ() ? `/civs/${civ().slug}` : ""}/units/${unit.id}`} class="flex flex-row items-center mb-2 group " ref={el}>
                           <ItemIcon item={unit} link={true} size={10} class="mr-2" />
                           <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
                           <Tooltip attachTo={el}>
                             <div class="max-w-md bg-gray-800 rounded-2xl border border-item-unit">
-                              <UnitCard unit={unit} civ={civ} />
+                              <UnitCard unit={unit} civ={civ()} />
                             </div>
                           </Tooltip>
                         </A>
@@ -90,7 +98,7 @@ export function BuildingDetailRoute() {
                     {(tech) => {
                       let el;
                       return (
-                        <A class="flex flex-row items-center mb-2 group " ref={el} href={getItemHref(tech, civ)}>
+                        <A class="flex flex-row items-center mb-2 group " ref={el} href={getItemHref(tech, civ())}>
                           <ItemIcon item={tech} link={true} size={10} class="mr-2" />
                           <span
                             class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100 whitespace-pre-wrap"
@@ -98,7 +106,7 @@ export function BuildingDetailRoute() {
                           />
                           <Tooltip attachTo={el}>
                             <div class="max-w-md bg-gray-800 rounded-2xl border border-item-technology">
-                              <TechnologyCard item={tech} civ={civ} />
+                              <TechnologyCard item={tech} civ={civ()} />
                             </div>
                           </Tooltip>
                         </A>
@@ -110,14 +118,14 @@ export function BuildingDetailRoute() {
 
               <RelatedContent item={item} title={`Recommended content`} />
 
-              <PatchHistory item={item} civ={civ} />
+              <PatchHistory item={item} civ={civ()} />
             </div>
-            <BuildingSidebar item={item} civ={civ} age={age} setAge={setAge} />
+            <BuildingSidebar item={item} civ={civ()} age={age} setAge={setAge} />
           </div>
         )}
       </Show>
-      {unmatched() && <ItemPage.UnavailableForCiv item={item()} civ={civ} />}
-      {!unmatched() && <ItemPage.AvailableUpgrades item={item()} civ={civ} />}
+      {unmatched() && <ItemPage.UnavailableForCiv item={item()} civ={civ()} />}
+      {!unmatched() && <ItemPage.AvailableUpgrades item={item()} civ={civ()} />}
       {item.error && <div class="text-red-600">Error!</div>}
     </ItemPage.Wrapper>
   );
