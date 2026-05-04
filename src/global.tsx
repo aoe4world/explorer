@@ -43,6 +43,6 @@ export async function getStructuredItems(civilization?: CivConfig) {
 
 export function parseCurrentLocation(pathname: string): { route?: string; civ?: CivSlug; subroute?: string; itemType?: ItemTypeKey; itemId?: string; } {
   const path = pathname?.toLowerCase() ?? "";
-  const [route, civ, subroute, itemType, itemId] = path.match(/(?:\/civs\/([a-z]+)\/)?(?:\/((units|buildings|technologies)(\/[\w/-]*)?))?/i) ?? [];
+  const [route, civ, subroute, itemType, itemId] = path.match(/(?:\/civs\/([a-z]+))?(?:\/((units|buildings|technologies)(\/[\w/-]*)?))?/i) ?? [];
   return { route, civ: civ as CivSlug | undefined, subroute, itemType: itemType as ItemTypeKey | undefined, itemId: itemId as string | undefined };
 }

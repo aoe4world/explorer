@@ -46,4 +46,15 @@ export const DLCS: DLC[] = [
       playstation: "https://store.playstation.com/en-us/product/UP6312-PPSA25366_00-0619978215161106",
     },
   },
+  {
+    id: "yue-feis-legacy",
+    name: "Yue Fei's Legacy",
+    flag: DLC_FLAGS["yue-feis-legacy"],
+    links: {
+      steam: "https://store.steampowered.com/app/3746540?utm_source=aoe4world",
+      xbox: "https://www.xbox.com/en-us/games/store/age-of-empires-iv-yue-feis-legacy/9pcrnw20sw1p",
+      msstore: "https://www.microsoft.com/store/productid/9n56pn5w9900",
+      playstation: "",
+    },
+  },
 ];
