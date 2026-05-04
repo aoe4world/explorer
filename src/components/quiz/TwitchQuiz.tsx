@@ -5,12 +5,12 @@ import { FormatAnswer, getRandomQuestion, loadCustomQuestions, Answer } from "./
 import { MultipleChoiceOption } from "./SoloQuiz";
 import { QuestionInspectPopup } from "./QuestionInspectPopup";
 import { ChatClient } from "@twurple/chat";
-import { indexToLetter, Score, updateScore, useKeyHandler } from "./shared";
+import { keysLetters as indexToLetter, Score, updateScore, useKeyHandler } from "./shared";
 import { TwitchGiveaway } from "./TwitchGiveaway";
 import { TWITCH } from "../../../assets";
 
-let secondsInterval;
-let actionTimer;
+let secondsInterval: number | undefined;
+let actionTimer: number | NodeJS.Timeout | undefined;
 
 enum TwitchQuizState {
   Asking,
@@ -19,12 +19,22 @@ enum TwitchQuizState {
   Finished,
 }
 
-export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; gracePeriod?: number; autoplaySpeed?: number; questionsUrl?: string; numQuestions?: number; hideVotes?: boolean; dev?: boolean; onRestart?: () => void }> = (props) => {
+export const TwitchQuiz: Component<{
+  difficulty?: number;
+  channel?: string;
+  gracePeriod?: number;
+  autoplaySpeed?: number;
+  questionsUrl?: string;
+  numQuestions?: number;
+  hideVotes?: boolean;
+  dev?: boolean;
+  onRestart?: () => void;
+}> = (props) => {
   const graceperiod = () => props.gracePeriod ?? 5000;
   const autoplaySpeed = () => props.autoplaySpeed ?? 15000;
   const autoplayNextSpeed = () => Math.min(10000, autoplaySpeed() * 0.5);
   const [quizState, setQuizState] = createSignal<TwitchQuizState>(TwitchQuizState.Asking);
-  const [selectedChoice, setSelectedChoice] = createSignal<number>(undefined);
+  const [selectedChoice, setSelectedChoice] = createSignal<number | undefined>(undefined);
   const [users, setUsers] = createStore<Record<string, TwitchUser>>({});
   const [pendingAnswers, setPendingAnswers] = createStore<PendingAnswers>({ total: {}, host: undefined, viewers: {} });
   const [scores, setScores] = createStore<Scores>({ host: { correct: 0, incorrect: 0, total: 0, streak: 0 }, viewers: [] });
@@ -35,20 +45,20 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
   const [customQuestions] = createResource(() => props.questionsUrl, loadCustomQuestions);
   const [showInspectPopup, setShowInspectPopup] = createSignal(false);
   const [question, { refetch }] = createResource(
-    () => ({ 
+    () => ({
       ready: !customQuestions.loading,
-      asked: askedQuestions.length, 
+      asked: askedQuestions.length,
       count: questionCount(),
-      diff: (props.difficulty ?? 0), 
-      dev: props.dev 
+      diff: props.difficulty ?? 0,
+      dev: props.dev,
     }),
-    async ({ready, asked, count, diff, dev}) => {
+    async ({ ready, asked, count, diff, dev }) => {
       if (!ready) return null;
       const q = await getRandomQuestion(count + diff);
       if (!q) finishQuiz();
       if (dev) setAskedQuestions(asked, { ...q, category: `difficulty-${diff}` });
       return q;
-    }
+    },
   );
   const [secondsLeft, setSecondsLeft] = createSignal(0);
   let progressBar: HTMLDivElement | undefined; // eslint-disable-line no-unassigned-vars
@@ -60,7 +70,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
     useIncomingTwitchMessages({ channel: channel }, ({ user, message }) => {
       const choice = parseChoice(message);
       if (choice == undefined) return;
-      const mainChannel = channel.split(',')[0];
+      const mainChannel = channel.split(",")[0];
       if (user.username === mainChannel) {
         registerHostChoice(choice);
       } else {
@@ -75,7 +85,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
     clearTimeout(actionTimer);
     setSecondsLeft(Math.ceil(time / 1000));
     secondsInterval = window.setInterval(() => setSecondsLeft((s) => Math.max(0, s - 1)), 1000);
-    progressBar.getAnimations().forEach((a) => a.cancel());
+    progressBar?.getAnimations()?.forEach((a) => a.cancel());
     progressBar?.animate([{ width: "100%" }, { width: "0%" }], { duration: time, easing: "linear" });
     actionTimer = setTimeout(() => {
       clearInterval(secondsInterval);
@@ -90,11 +100,11 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
     secondsInterval = undefined;
     actionTimer = undefined;
     setSecondsLeft(0);
-    progressBar.getAnimations().forEach((a) => a.cancel());
-    progressBar.style.width = "0%";
+    progressBar?.getAnimations()?.forEach((a) => a.cancel());
+    if (progressBar) progressBar.style.width = "0%";
   }
 
-  const pickChoice = (choice) => registerHostChoice(choice);
+  const pickChoice = (choice: number) => registerHostChoice(choice);
 
   useKeyHandler(pickChoice, () => quizState() === TwitchQuizState.Finished);
 
@@ -107,7 +117,11 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
 
   function registerViewerChoice(username: string, choice: number) {
     // Viewer submissions are accepted during the grace period to compensate for stream delay.
-    if ((quizState() !== TwitchQuizState.Asking && quizState() !== TwitchQuizState.SubmissionsClosedGracePeriod) || pendingAnswers.viewers[username] != undefined) return;
+    if (
+      (quizState() !== TwitchQuizState.Asking && quizState() !== TwitchQuizState.SubmissionsClosedGracePeriod) ||
+      pendingAnswers.viewers[username] != undefined
+    )
+      return;
     setPendingAnswers("viewers", (viewers) => ({ [username]: choice, ...viewers }));
     setPendingAnswers("total", choice, (t) => (t ? t + 1 : 1));
   }
@@ -133,14 +147,13 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
         const unwrapViewers = unwrap(pendingAnswers.viewers);
         scores.viewers = scores.viewers
           .reduce((viewers, viewer) => {
-            if (unwrapViewers[viewer.username] != undefined)
-              viewer = { ...viewer, ...updateScore(unwrapViewers[viewer.username], correctAnswer, viewer) };
+            if (unwrapViewers[viewer.username] != undefined) viewer = { ...viewer, ...updateScore(unwrapViewers[viewer.username], correctAnswer, viewer) };
             viewers.push(viewer);
             return viewers;
           }, newViewers)
           .sort((a, b) => b.total - a.total)
           .sort((a, b) => b.correct - a.correct);
-      })
+      }),
     );
 
     if (autoplay()) {
@@ -149,8 +162,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
   }
 
   function next(reroll?: boolean, rejected?: boolean) {
-    if (!reroll && !rejected)
-      setQuestionCount((q) => q + 1);
+    if (!reroll && !rejected) setQuestionCount((q) => q + 1);
     setSelectedChoice(undefined);
     setPendingAnswers({ total: {}, host: undefined, viewers: {} });
     if (props.numQuestions && questionCount() >= props.numQuestions) {
@@ -171,7 +183,10 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
 
   function rejectQuestion() {
     if (quizState() === TwitchQuizState.Finished) return; // Cannot reject if quiz is finished
-    setAskedQuestions(askedQuestions.length - 1, produce((q) => q.rejected = true));
+    setAskedQuestions(
+      askedQuestions.length - 1,
+      produce((q) => (q.rejected = true)),
+    );
     next(false, true);
   }
 
@@ -188,8 +203,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
   function pauseAutoplay() {
     if (!autoplay()) return;
     setAutoplay(false);
-    if (quizState() == TwitchQuizState.Asking || quizState() == TwitchQuizState.ShowingResults)
-      stopTimer();
+    if (quizState() == TwitchQuizState.Asking || quizState() == TwitchQuizState.ShowingResults) stopTimer();
   }
 
   function formatSeconds(s: number) {
@@ -205,15 +219,20 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
             <h3 class="font-bold text-white text-2xl my-3">Quiz Finished!</h3>
             <p class="text-gray-200 mt-1 ">The quiz has ended. Check out the final scores below.</p>
             <div class="flex gap-4 justify-center mt-6">
-              <button class="bg-gray-400 hover:bg-gray-300 text-sm p-4 rounded" onClick={() => props.onRestart ? props.onRestart() : window.location.reload()}>
+              <button
+                class="bg-gray-400 hover:bg-gray-300 text-sm p-4 rounded"
+                onClick={() => (props.onRestart ? props.onRestart() : window.location.reload())}
+              >
                 Play Again
               </button>
               <button class="bg-gray-700 hover:bg-gray-500 text-sm p-4 rounded" onClick={() => setShowGiveaway(true)}>
                 Start Giveaway
               </button>
-              {props.dev && <button class="bg-gray-700 hover:bg-gray-500 text-sm p-4 rounded" onClick={() => exportQuestions()}>
-                Export Questions
-              </button>}
+              {props.dev && (
+                <button class="bg-gray-700 hover:bg-gray-500 text-sm p-4 rounded" onClick={() => exportQuestions()}>
+                  Export Questions
+                </button>
+              )}
             </div>
           </div>
         }
@@ -242,11 +261,14 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
             </button>
           )}
         </div>
-        <Show when={!question.loading && question()} fallback={<div class="text-center p-8">{question.loading ? "Loading question..." : "Failed to load new question." }</div>}>
-          <h3 class="font-bold text-white text-2xl my-3">{question().question}</h3>
+        <Show
+          when={!question.loading && question()}
+          fallback={<div class="text-center p-8">{question.loading ? "Loading question..." : "Failed to load new question."}</div>}
+        >
+          <h3 class="font-bold text-white text-2xl my-3">{question()!.question}</h3>
           <p class="text-gray-200 mt-1 ">
-            {question().note}
-            <Show when={(props.dev || quizState() === TwitchQuizState.ShowingResults) && question().items?.length}>
+            {question()!.note}
+            <Show when={(props.dev || quizState() === TwitchQuizState.ShowingResults) && question()!.items?.length}>
               <button class="bg-gray-700 hover:bg-gray-500 text-sm p-2 rounded float-right" onClick={() => setShowInspectPopup(true)}>
                 Inspect
               </button>
@@ -254,14 +276,22 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
           </p>
 
           <div class="flex flex-col gap-4 mt-8">
-            <For each={question().answers}>
+            <For each={question()!.answers}>
               {(answer, index) => (
                 <MultipleChoiceOption
                   option={indexToLetter[index()]}
                   disabled={quizState() !== TwitchQuizState.Asking}
                   selected={pendingAnswers.host == index()}
-                  correct={quizState() === TwitchQuizState.ShowingResults ? (index() == question().correctAnswer ? true : index() == selectedChoice() ? false : null) : undefined}
-                  onPick={() => pickChoice(index)}
+                  correct={
+                    quizState() === TwitchQuizState.ShowingResults
+                      ? index() == question()!.correctAnswer
+                        ? true
+                        : index() == selectedChoice()
+                          ? false
+                          : null
+                      : undefined
+                  }
+                  onPick={() => pickChoice(index())}
                 >
                   <FormatAnswer answer={answer} />
                   <span class="ml-auto mr-2">
@@ -276,18 +306,22 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
 
         <div class="flex gap-4 my-4 items-center h-12">
           {quizState() === TwitchQuizState.SubmissionsClosedGracePeriod && <div>Submissions closed.</div>}
-          {quizState() === TwitchQuizState.ShowingResults && <div>Results are in! {secondsLeft() && <>Next question in {formatSeconds(secondsLeft())}.</>}</div>}
+          {quizState() === TwitchQuizState.ShowingResults && (
+            <div>Results are in! {secondsLeft() && <>Next question in {formatSeconds(secondsLeft())}.</>}</div>
+          )}
           {quizState() === TwitchQuizState.Asking && (
             <div>Send your answers in chat (i.e. 'A' or 'B'). {secondsLeft() && <>Round closes in {formatSeconds(secondsLeft())}.</>}</div>
           )}
           <div class="ml-auto">
-            {props.dev && <button
-              class="bg-red-500 hover:bg-red-400 text-white rounded py-2 px-6 mr-4 disabled:opacity-30 disabled:bg-gray-700"
-              onClick={() => rejectQuestion()}
-              disabled={quizState() === TwitchQuizState.Finished}
-            >
-              Reject
-            </button>}
+            {props.dev && (
+              <button
+                class="bg-red-500 hover:bg-red-400 text-white rounded py-2 px-6 mr-4 disabled:opacity-30 disabled:bg-gray-700"
+                onClick={() => rejectQuestion()}
+                disabled={quizState() === TwitchQuizState.Finished}
+              >
+                Reject
+              </button>
+            )}
             <Show
               when={quizState() === TwitchQuizState.ShowingResults}
               fallback={
@@ -302,48 +336,51 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
                 </Show>
               }
             >
-              {
-                !props.numQuestions && !autoplay() &&
-                  <button
-                    class="bg-gray-500 hover:bg-gray-300 text-white rounded py-2 px-6 mr-4 disabled:opacity-30 disabled:bg-gray-700"
-                    onClick={() => finishQuiz()}
-                    disabled={quizState() !== TwitchQuizState.ShowingResults}
-                  >
-                    Finish
-                  </button>
-              }
+              {!props.numQuestions && !autoplay() && (
+                <button
+                  class="bg-gray-500 hover:bg-gray-300 text-white rounded py-2 px-6 mr-4 disabled:opacity-30 disabled:bg-gray-700"
+                  onClick={() => finishQuiz()}
+                  disabled={quizState() !== TwitchQuizState.ShowingResults}
+                >
+                  Finish
+                </button>
+              )}
               <button
                 class="bg-gray-50 hover:bg-white text-black rounded py-2 px-6 disabled:opacity-30 disabled:bg-gray-700"
                 onClick={() => next()}
                 disabled={quizState() !== TwitchQuizState.ShowingResults || autoplay()}
               >
-                  {props.numQuestions && questionCount() + 1 >= props.numQuestions ? "Finish" : "Next"}
+                {props.numQuestions && questionCount() + 1 >= props.numQuestions ? "Finish" : "Next"}
               </button>
             </Show>
-            </div>
+          </div>
         </div>
       </Show>
       <div class="flex flex-row gap-5">
         <div class="basis-1/2">
-          {(quizState() !== TwitchQuizState.Finished &&
-          <>
-            <h5 class="font-bold text-gray-300 uppercase text-sm mb-1 mt-8">Answers ({Object.values(pendingAnswers.total).reduce((v, s) => s + v, 0)})</h5>
-            <div class="flex flex-col gap-1 mt-2">
-              {pendingAnswers.host != undefined && (
-                <div class={selectedChoice() ? (question().correctAnswer == pendingAnswers.host ? "text-green-500" : "opacity-30") : ""}>
-                  <strong class="font-bold">{props.channel}</strong> {indexToLetter[pendingAnswers.host]}
-                </div>
-              )}
-              <For each={Object.entries(pendingAnswers.viewers)}>
-                {([username, viewerChoice]) => (
-                  <div class={selectedChoice() ? (question().correctAnswer == viewerChoice ? "text-green-500" : "opacity-30") : ""}>
-                    <strong style={{ color: users[username]?.color }}>{users[username]?.display_name ?? username}</strong>{" "}
-                    {props.hideVotes && quizState() !== TwitchQuizState.ShowingResults ? <span class="opacity-50">(voted)</span> : indexToLetter[viewerChoice]}
+          {quizState() !== TwitchQuizState.Finished && (
+            <>
+              <h5 class="font-bold text-gray-300 uppercase text-sm mb-1 mt-8">Answers ({Object.values(pendingAnswers.total).reduce((v, s) => s + v, 0)})</h5>
+              <div class="flex flex-col gap-1 mt-2">
+                {pendingAnswers.host != undefined && (
+                  <div class={selectedChoice() !== undefined ? (question()!.correctAnswer == pendingAnswers.host ? "text-green-500" : "opacity-30") : ""}>
+                    <strong class="font-bold">{props.channel}</strong> {indexToLetter[pendingAnswers.host]}
                   </div>
                 )}
-              </For>
-            </div>
-          </>
+                <For each={Object.entries(pendingAnswers.viewers)}>
+                  {([username, viewerChoice]) => (
+                    <div class={selectedChoice() !== undefined ? (question()!.correctAnswer == viewerChoice ? "text-green-500" : "opacity-30") : ""}>
+                      <strong style={{ color: users[username]?.color }}>{users[username]?.display_name ?? username}</strong>{" "}
+                      {props.hideVotes && quizState() !== TwitchQuizState.ShowingResults ? (
+                        <span class="opacity-50">(voted)</span>
+                      ) : (
+                        indexToLetter[viewerChoice]
+                      )}
+                    </div>
+                  )}
+                </For>
+              </div>
+            </>
           )}
         </div>
         <div class="basis-1/2">
@@ -388,7 +425,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
                       <td class="flex items-center gap-2">
                         <span style={{ color: users[viewer.username]?.color }}>{users[viewer.username]?.display_name ?? viewer.username}</span>
                         {users[viewer.username]?.moderator && <img src={TWITCH.moderator} class="h-4 object-contain w-4" title="Moderator" />}
-                        {users[viewer.username]?.subscriber &&  <img src={TWITCH.subscriber} class="h-4 object-contain w-4" title="Subscriber" />}
+                        {users[viewer.username]?.subscriber && <img src={TWITCH.subscriber} class="h-4 object-contain w-4" title="Subscriber" />}
                       </td>
                       <td class="text-green-500 text-center">{viewer.correct}</td>
                       <td class="text-red-500 text-center">{viewer.incorrect}</td>
@@ -408,28 +445,25 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
         </div>
       </div>
       <Show when={showGiveaway()}>
-        <TwitchGiveaway scores={scores} users={users} channel={props.channel} onClose={() => setShowGiveaway(false)} />
+        <TwitchGiveaway scores={scores} users={users} channel={props.channel!} onClose={() => setShowGiveaway(false)} />
       </Show>
 
-      <Show when={showInspectPopup()}>
-        <QuestionInspectPopup
-          question={question()}
-          onClose={() => setShowInspectPopup(false)}
-        />
+      <Show when={showInspectPopup() && question()}>
+        <QuestionInspectPopup question={question()!} onClose={() => setShowInspectPopup(false)} />
       </Show>
     </div>
   );
 
   function exportQuestions() {
-    const approvedQuestions = {};
-    const rejectedQuestions = {};
+    const approvedQuestions: Record<string, { questions: any[] }> = {};
+    const rejectedQuestions: Record<string, { questions: any[] }> = {};
 
-    askedQuestions.forEach(q => {
+    askedQuestions.forEach((q) => {
       const questionData = {
         question: q.question,
-        note: q.note,
+        note: q.note ?? "",
         answers: q.answers,
-        correctAnswer: q.correctAnswer
+        correctAnswer: q.correctAnswer,
       };
 
       if (q.rejected) {
@@ -444,7 +478,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
     const exportData = {
       level_overrides: {}, // You might want to populate this based on your needs
       additional_questions: approvedQuestions,
-      rejected_questions: rejectedQuestions
+      rejected_questions: rejectedQuestions,
     };
 
     navigator.clipboard.writeText(JSON.stringify(exportData, null, 2));
@@ -452,21 +486,29 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
   }
 };
 
-
 function parseChoice(message: string) {
   const letters = ["a", "b", "c", "d", "e"];
   const choice = message.trim().toLowerCase();
   const char = choice.charAt(0);
-  if (choice.length > 1 && ![...choice].every((c) => c == char)) return undefined;
+  if (choice.length > 1 && choice.split("").every((c) => c == char) === false) return undefined;
   if (!isNaN(parseInt(char))) return parseInt(char);
   else if (letters.indexOf(char) > -1) return letters.indexOf(char);
   return undefined;
 }
 
 async function useIncomingTwitchMessages({ channel }: { channel: string }, callback: ({ user, message }: { user: TwitchUser; message: string }) => void) {
-  const chatClient = new ChatClient({ channels: channel.split(',') });
+  const chatClient = new ChatClient({ channels: channel.split(",") });
   const listener = chatClient.onMessage(async (channel: string, user: string, message: string, data) => {
-    callback({ user: { username: user, display_name: data.userInfo.displayName, color: data.userInfo.color ?? '#cfcfcf', subscriber: data.userInfo.isSubscriber, moderator: data.userInfo.isMod }, message })
+    callback({
+      user: {
+        username: user,
+        display_name: data.userInfo.displayName,
+        color: data.userInfo.color ?? "#cfcfcf",
+        subscriber: data.userInfo.isSubscriber,
+        moderator: data.userInfo.isMod,
+      },
+      message,
+    });
   });
 
   onCleanup(() => {
@@ -479,7 +521,6 @@ async function useIncomingTwitchMessages({ channel }: { channel: string }, callb
   console.log(`Start listening to twitch channel ${channel}`);
 }
 
-
 export type Scores = {
   host: Score;
   viewers: ({ username: string } & Score)[];
@@ -487,7 +528,7 @@ export type Scores = {
 
 type PendingAnswers = {
   total: Record<number, number>;
-  host: number;
+  host: number | undefined;
   viewers: { [username: string]: number };
 };
 
@@ -501,9 +542,9 @@ export type TwitchUser = {
 
 type AskedQuestion = {
   question: string;
-  note: string;
+  note?: string;
   answers: Answer[];
   correctAnswer: number;
   category: string;
   rejected?: boolean;
-}
+};
