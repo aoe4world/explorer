@@ -47,5 +47,6 @@ async function fetchContent(featured: boolean): Promise<ContentItem[]> {
     return items;
   } catch (e) {
     console.error(e);
+    return [];
   }
 }

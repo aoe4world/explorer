@@ -1,6 +1,6 @@
 import { PatchNotes } from "../../types/patches";
 
-export const patch100576: PatchNotes = {
+export const patch: PatchNotes = {
   id: "patch-10.0.576-season-seven",
   buildId: '10.0.576',
   name: "Season Seven Update",
@@ -124,7 +124,7 @@ Additionally, Nomad mode will share a leaderboard with Standard Mode. This means
 
 ## Quality of Life Improvements
 
-- Walls under construction can now be converted into gates via an ability on the placed blueprint. Conversion to a gate can happen at any time before the wall section is finished construction, after which it is no longer possible to convert directly, and a Villager must be used. The cost of the conversion is the difference between the cost of the wall and gate. 
+- Walls under construction can now be converted into gates via an ability on the placed blueprint. Conversion to a gate can happen at any time before the wall section is finished construction, after which it is no longer possible to convert directly, and a Villager must be used. The cost of the conversion is the difference between the cost of the wall and gate.
 - When ungarrisoning from a building, units will exit the building from the location closest to the rally point direction.
       `,
     },
@@ -204,7 +204,7 @@ Additionally, Nomad mode will share a leaderboard with Standard Mode. This means
       - Player stats can now be viewed on the Quick Match screen.
       - Fixed an issue that prevented players from scrolling the games list page under certain circumstances.
       - The Byzantine Selection Card background pattern is no longer missing.
-      - Fixed an issue where using Shift + clicking on the idle / working villager buttons would not select all idle villagers or villagers working on the specific resource. 
+      - Fixed an issue where using Shift + clicking on the idle / working villager buttons would not select all idle villagers or villagers working on the specific resource.
 
       ### Achievements, Challenges & Masteries
 

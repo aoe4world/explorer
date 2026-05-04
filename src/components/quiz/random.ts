@@ -6,7 +6,7 @@ export class Random {
     return options[Random.integer(options.length)];
   }
 
-  static key(obj: Record<string, any>) {
+  static key<T>(obj: Record<string, T>) {
     return Random.pick(Object.keys(obj));
   }
 

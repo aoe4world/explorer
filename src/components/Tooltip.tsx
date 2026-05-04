@@ -1,10 +1,10 @@
-import { computePosition, offset, flip, shift } from "@floating-ui/dom";
+import { computePosition, flip, shift } from "@floating-ui/dom";
 import { Component, createSignal, onMount, onCleanup, Show, JSX } from "solid-js";
 import { Portal } from "solid-js/web";
 
 export const Tooltip: Component<{ attachTo?: HTMLElement; children?: JSX.Element }> = (props) => {
-  let [hover, setHover] = createSignal(false);
-  let ref: HTMLDivElement | undefined;
+  const [hover, setHover] = createSignal(false);
+  let ref: HTMLDivElement | undefined; // eslint-disable-line no-unassigned-vars
   const delay = 50;
 
   const target = () => props.attachTo || ref?.parentElement;
@@ -29,6 +29,7 @@ export const Tooltip: Component<{ attachTo?: HTMLElement; children?: JSX.Element
 
     Object.assign(el.style, { position: "absolute" });
     function updatePosition() {
+      if (!anchor) return;
       computePosition(anchor, el, {
         placement: "bottom-start",
         strategy: "absolute",

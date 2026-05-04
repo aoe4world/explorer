@@ -1,13 +1,11 @@
-import { Show, createResource, createEffect, createSignal, onCleanup } from "solid-js";
 import { BattleReportView } from "@components/quiz/BattleReportView";
-import { CIVILIZATION_BY_SLUG, CivSlug } from "@data/types/civs";
-import { civConfig } from "../../types/data";
-import { UnifiedItem, Unit } from "@data/types/items";
-import { CIVILIZATIONS } from "@data/lib/config/civs";
-import { useLocation, useSearchParams } from "@solidjs/router";
-import { setActivePage, } from "../../App";
-import { tempHideNav } from "../../global";
 import { UnitSelector } from "@components/UnitSelector";
+import { useLocation, useSearchParams } from "@solidjs/router";
+import { Show, createEffect, createResource } from "solid-js";
+import { setActivePage, } from "../../App";
+import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, CivConfig, CivSlug, getAbbr } from "../../config";
+import { tempHideNav } from "../../global";
+import { UnifiedItem, Unit } from "../../types/data";
 const SDK = import("@data/sdk");
 
 export const UnitVersusRoute = () => {
@@ -34,15 +32,15 @@ export const UnitVersusRoute = () => {
     async ({ unitId1, civSlug1, unitId2, civSlug2, age1Str, age2Str }) => {
       const sdk = await SDK;
       const unit1 = sdk.units.get(unitId1);
-      const civ1 = CIVILIZATION_BY_SLUG[civSlug1].abbr;
+      const civ1 = getAbbr(civSlug1);
       const age1 = age1Str ? parseInt(age1Str) : undefined;
-      const variations1 = unit1?.variations.filter((v) => v.civs.includes(civ1) && (!age1 || v.age <= age1)).sort((a, b) => b.age - a.age);
+      const variations1 = unit1?.variations.filter((v) => (!civ1 || v.civs.includes(civ1)) && (!age1 || v.age <= age1)).sort((a, b) => b.age - a.age);
       const variation1 = variations1?.[0];
 
       const unit2 = sdk.units.get(unitId2);
-      const civ2 = civSlug2 ? CIVILIZATION_BY_SLUG[civSlug2].abbr : undefined;
+      const civ2 = getAbbr(civSlug2);
       const age2 = age2Str ? parseInt(age2Str) : undefined;
-      const variations2 = unit2?.variations.filter((v) => v.civs.includes(civ2) && (!age2 || v.age <= age2)).sort((a, b) => b.age - a.age);
+      const variations2 = unit2?.variations.filter((v) => (!civ2 || v.civs.includes(civ2)) && (!age2 || v.age <= age2)).sort((a, b) => b.age - a.age);
       const variation2 = variations2?.[0];
 
       return {
@@ -81,7 +79,7 @@ export const UnitVersusRoute = () => {
     }
   };
 
-  const handleCivSelect = (civ: civConfig, unitNumber: 1 | 2) => {
+  const handleCivSelect = (civ: CivConfig, unitNumber: 1 | 2) => {
     if (unitNumber === 1) {
       applyNewParams({ civ1: civ.slug });
     } else {

@@ -9,14 +9,14 @@ interface explorerOptions {
   /** The path at which the explorer is located */
   base?: string;
   /** Callback function to be used after each navigation */
-  onNavigate?: (page: { title?: string; description?: string; location: typeof useLocation }) => void;
+  onNavigate?: (page: { title?: string; description?: string; location: ReturnType<typeof useLocation> }) => void;
 }
 
 export function initializeExplorer(el: HTMLElement = document.getElementById("explorer"), options: explorerOptions = {}) {
-  let router: typeof Router;
+  let routerEl: typeof Router | undefined; // eslint-disable-line no-unassigned-vars
   render(
     () => (
-      <Router base={options.base} ref={router} root={App}>
+      <Router base={options.base} ref={routerEl} root={App}>
         <AppRoutes />
       </Router>
     ),

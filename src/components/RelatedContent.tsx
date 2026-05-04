@@ -6,8 +6,8 @@ import { civConfig, Item, UnifiedItem } from "../types/data";
 import { getItemHref } from "./Cards";
 import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
-import { Random } from "./quiz/random";
 import { formatSecondsToTime } from "./Stats";
+import { ItemSlug } from "../config";
 const SDK = import("@data/sdk");
 
 const defaultLimit = 3;
@@ -26,7 +26,7 @@ export const RelatedContent: Component<{ item?: Item | UnifiedItem; civ?: civCon
           </div>
         )}
         <For each={related()?.slice(0, limit())}>{(content) => <ContentRow content={content} item={props.item} civ={props.civ} />}</For>
-        {related()?.length > limit() && (
+        {(related()?.length ?? 0) > limit() && (
           <button onClick={() => setLimit(limit() + 10)} class="text-gray-300 hover:text-gray-100 font-bold inline-block">
             Show more
           </button>
@@ -79,10 +79,10 @@ export const ContentRow: Component<{ content: ContentItem; item?: Item | Unified
           <Suspense>
             <div class="flex gap-1">
               <For each={relatedItems()}>
-                {(item, i) => (
+                {(item) => (
                   <A href={getItemHref(item, props.civ)} class={`inline-flex min-w-0 items-center text-${getItemCssClass(item)}-light`}>
                     <ItemIcon item={item} size={5} />
-                    {relatedItems().length < 3 && <span class="truncate ml-1 max-w-[150px]">{item.name}</span>}
+                    {(relatedItems()?.length ?? 0) < 3 && <span class="truncate ml-1 max-w-[150px]">{item.name}</span>}
                   </A>
                 )}
               </For>
@@ -100,7 +100,7 @@ async function getRelatedItems(ids: string[]) {
   const items: UnifiedItem[] = [];
   for (const id of ids) {
     try {
-      const item = Get(id.split("/").slice(-2).join("/") as any);
+      const item = Get(id.split("/").slice(-2).join("/") as ItemSlug);
       if (item) items.push(item);
     } catch (e) {
       console.error(`Could not find related item with ${id}`, e);

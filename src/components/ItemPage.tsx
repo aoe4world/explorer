@@ -1,25 +1,24 @@
 import { A } from "@solidjs/router";
-import { Component, createResource, For, Match, ParentComponent, Show, Switch, useTransition } from "solid-js";
-import { getItemHref } from "./Cards";
-import { CivFlag } from "./CivFlag";
-import { TechnologyCard } from "./TechnologyCard";
-import { CIVILIZATIONS, ITEMS, PRETTY_AGE_MAP, PRETTY_AGE_MAP_SHORT } from "../config";
+import { Component, createResource, For, ParentComponent, Show } from "solid-js";
+
+import { CivAbbr, CivConfig, CIVILIZATIONS, PRETTY_AGE_MAP_SHORT } from "../config";
+import { DLCS } from "../data/dlcs";
 import { getItemTechnologies } from "../query/utils";
 import { getItemCssClass, itemGridCSSClass, mainIntroductionCSSClass, mainItemTitleCSSClass } from "../styles";
-import { civAbbr, civConfig, UnifiedItem, Item } from "../types/data";
+import { Item, ITEMS, UnifiedItem } from "../types/data";
+import { getItemHref } from "./Cards";
+import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
-import { CivConfig, CivInfo } from "@data/types/civs";
-import { DLCS } from "../data/dlcs";
+import { TechnologyCard } from "./TechnologyCard";
 const SDK = import("@data/sdk");
 
-const Header: Component<{ item: UnifiedItem | Item; civ?: civConfig }> = (props) => {
-  const itemCssClass = getItemCssClass(props.item);
+const Header: Component<{ item: UnifiedItem | Item; civ?: CivConfig }> = (props) => {
   return (
     <div class="flex gap-4 items-center mb-4">
       <ItemIcon item={props.item} size={24} />
       <div>
-        <span class={`text-${itemCssClass}-light`}>{props.item.displayClasses.join(", ")}</span>
+        <span class={`text-${getItemCssClass(props.item)}-light`}>{props.item.displayClasses.join(", ")}</span>
         <h2 class={mainItemTitleCSSClass}>{props.item.name}</h2>
         {props.civ && (
           <A href={`/civs/${props.civ.slug}`} class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80">
@@ -48,15 +47,15 @@ const CivPicker: Component<{ item: UnifiedItem }> = (props) => {
   );
 };
 
-const ProducedAt: Component<{ item: UnifiedItem; civ: civConfig; title?: string }> = (props) => {
+const ProducedAt: Component<{ item: UnifiedItem; civ: CivConfig; title?: string }> = (props) => {
   const [productionBuildings] = createResource(
     () => ({ item: props.item, civ: props.civ?.abbr }),
     async ({ item, civ }) => {
       const sdk = await SDK;
       const producedBy = [...new Set(item.variations.filter((v) => !civ || v.civs.includes(civ)).flatMap((v) => v.producedBy))];
-      const items = await Promise.all(producedBy.map(async (b) => sdk.buildings.get(b)));
+      const items = producedBy.map((b) => sdk.buildings.get(b));
       if (items.length != producedBy.length) console.warn("Some buildings were not found", producedBy, items);
-      return (civ ? items.filter((i) => !!i && i.civs.includes(civ)) : items).filter(Boolean).sort((a, b) => b.civs?.length - a.civs?.length);
+      return (civ ? items.filter((i) => !!i && i.civs.includes(civ)) : items).filter((i) => !!i).sort((a, b) => b.civs?.length - a.civs?.length);
     }
   );
 
@@ -81,7 +80,7 @@ function getItemType(item: UnifiedItem) {
   return item.type === "unit" ? ITEMS.UNITS : item.type === "building" ? ITEMS.BUILDINGS : ITEMS.TECHNOLOGIES;
 }
 
-const AvailableUpgrades: Component<{ item: UnifiedItem; civ: civConfig }> = (props) => {
+const AvailableUpgrades: Component<{ item: UnifiedItem; civ: CivConfig }> = (props) => {
   const [technologies] = createResource(
     () => ({ item: props.item, civ: props.civ }),
     async ({ item, civ }) => item && getItemTechnologies(getItemType(item), item, civ, true)
@@ -92,14 +91,13 @@ const AvailableUpgrades: Component<{ item: UnifiedItem; civ: civConfig }> = (pro
     <Show when={technologies()}>
       <h2 class="text-xl font-bold text-white mt-6 mb-4">Technology Upgrades</h2>
       <div class={itemGridCSSClass}>
-        <For each={technologies()}>{(tech) => <TechnologyCard item={tech} civ={props.civ}></TechnologyCard>}</For>
+        <For each={technologies()}>{(tech) => <TechnologyCard item={tech} civ={props.civ} />}</For>
       </div>
     </Show>
   );
 };
 
-const Wrapper: ParentComponent<{ civ?: civConfig }> = (props) => {
-  const [pending] = useTransition();
+const Wrapper: ParentComponent<{ civ?: CivConfig }> = (props) => {
   return (
     <div class="max-w-screen-lg p-4 mx-auto gap-4 mb-4 mt-8">
       {props.children}
@@ -107,19 +105,18 @@ const Wrapper: ParentComponent<{ civ?: civConfig }> = (props) => {
   );
 };
 
-const UnavailableForCiv: Component<{ item: UnifiedItem; civ: civConfig }> = (props) => {
-  const itemCssClass = getItemCssClass(props.item);
+const UnavailableForCiv: Component<{ item: UnifiedItem; civ: CivConfig }> = (props) => {
   return (
     <div>
       <div class="flex gap-4 items-center mb-4 mt-4">
         <ItemIcon item={props.item} size={24} />
         <div>
-          <span class={`text-${itemCssClass}-light`}>{props.item.displayClasses}</span>
+          <span class={`text-${getItemCssClass(props.item)}-light`}>{props.item.displayClasses}</span>
           <h2 class={mainItemTitleCSSClass}>{props.item.name}</h2>
           <div class="flex flex-wrap">
             <For each={props.item.civs}>
               {(civ) => (
-                <A href={getItemHref(props.item, CIVILIZATIONS[civ] as unknown as civConfig)} class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80 mr-3">
+                <A href={getItemHref(props.item, CIVILIZATIONS[civ])} class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80 mr-3">
                   <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {CIVILIZATIONS[civ].name}
                 </A>
               )}
@@ -145,14 +142,14 @@ const UnavailableForCiv: Component<{ item: UnifiedItem; civ: civConfig }> = (pro
   );
 };
 
-const CivOptionsForItem: ParentComponent<{ item: UnifiedItem; civs: civAbbr[]; prefix?: string }> = (props) => (
+const CivOptionsForItem: ParentComponent<{ item: UnifiedItem; civs: CivAbbr[]; prefix?: string }> = (props) => (
   <>
     <div class="md:grid-cols-2 grid gap-6 mb-4 mt-2">
       {props.children}
       <For each={props.civs}>
         {(civ) => (
           <A
-            href={getItemHref(props.item, CIVILIZATIONS[civ] as unknown as civConfig)}
+            href={getItemHref(props.item, CIVILIZATIONS[civ])}
             class="flex gap-2 items-center font-bold text-base  mr-3 bg-gray-900 p-2 rounded-md hover:text-white text-gray-100 hover:bg-black"
           >
             <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {props.prefix} {CIVILIZATIONS[civ].name}
@@ -184,7 +181,7 @@ const CivOptionsForItem: ParentComponent<{ item: UnifiedItem; civs: civAbbr[]; p
 
 const AgeTabs: Component<{ age: () => number; setAge: (age: number) => void; minAge?: number }> = (props) => (
   <div class="flex w-full gap-px rounded-t-2xl overflow-hidden">
-    {[1, 2, 3, 4].map((a) => (
+    <For each={[1, 2, 3, 4]}>{(a) => (
       <button
         onClick={() => props.setAge(a)}
         class={`basis-1/4 p-2  ${
@@ -194,11 +191,11 @@ const AgeTabs: Component<{ age: () => number; setAge: (age: number) => void; min
               : "bg-gray-400/30 hover:bg-gray-500/50 text-gray-100"
             : "bg-gray-400/30 text-gray-400"
         }`}
-        disabled={props.minAge && a < props.minAge}
+        disabled={!!props.minAge && a < props.minAge}
       >
         {PRETTY_AGE_MAP_SHORT[a]}
       </button>
-    ))}
+    )}</For>
   </div>
 );
 
@@ -216,42 +213,42 @@ const ExpansionInfo: Component<{ civ: CivConfig }> = (props) => (
               <span>Get it on</span>
               <Show when={dlc.links.steam}>
                 <A
-                  href={dlc.links.steam}
+                  href={dlc.links.steam!}
                   target="_blank"
                   data-anal-event="buy_dlc_steam"
                   class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
                 >
-                  <i class="fab fa-steam mx-1"></i> Steam
+                  <i class="fab fa-steam mx-1" /> Steam
                 </A>
               </Show>
               <Show when={dlc.links.xbox}>
-                <a
-                  href={dlc.links.xbox}
+                <A
+                  href={dlc.links.xbox!}
                   target="_blank"
                   data-anal-event="buy_dlc_xbox"
                   class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
                 >
-                  <i class="fab fa-xbox mx-1 "></i> Xbox
-                </a>
+                  <i class="fab fa-xbox mx-1 " /> Xbox
+                </A>
               </Show>
               <Show when={dlc.links.msstore}>
                 <A
-                  href={dlc.links.msstore}
+                  href={dlc.links.msstore!}
                   target="_blank"
                   data-anal-event="buy_dlc_ms"
                   class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
                 >
-                  <i class="fab fa-microsoft mx-1"></i> MS Store
+                  <i class="fab fa-microsoft mx-1" /> MS Store
                 </A>
               </Show>
               <Show when={dlc.links.playstation}>
                 <A
-                  href={dlc.links.playstation}
+                  href={dlc.links.playstation!}
                   target="_blank"
                   data-anal-event="buy_dlc_ps"
                   class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
                 >
-                  <i class="fab fa-playstation mx-1"></i> Playstation
+                  <i class="fab fa-playstation mx-1" /> Playstation
                 </A>
               </Show>
             </p>

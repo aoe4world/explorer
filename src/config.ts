@@ -1,8 +1,9 @@
-import { ModifyableProperty } from "@data/types/items";
-export { CIVILIZATIONS } from "@data/lib/config/civs";
-export { CIVILIZATION_BY_SLUG } from "@data/types/civs";
-export { ITEMS } from "@data/types/items";
-export type { Building, ModifyableProperty, Technology, Unit, Upgrade, ItemTypes } from "@data/types/items";
+// Notice, don't import @data/sdk or @data/sdk/data, those are async.
+import { ModifyableProperty } from "./types/data";
+export { CIVILIZATION_BY_SLUG, CIVILIZATIONS, type CivSlug } from "@data/lib/config/civs";
+export { getAbbr, getCivConfig, getSlug, type ItemGroup, type ItemSlug } from '@data/sdk/utils';
+export { ItemList } from '@data/sdk/utils';
+export type { Ability, Building, ItemTypes, ModifyableProperty, Technology, Unit, Upgrade, CivAbbr, CivConfig } from "./types/data";
 
 export const SUPPORTED_MODIFIER_PROPERTIES: ModifyableProperty[] = [
   "meleeArmor",

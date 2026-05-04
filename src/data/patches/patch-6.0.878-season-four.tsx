@@ -30,7 +30,7 @@ export const patch: PatchNotes = {
         title="Age of Empires IV Season Four: Enchanted Grove"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
-      ></iframe>
+       />
       <div class="my-5 rounded-lg p-4 bg-gray-500">
         This page foucuses on gameplay and balance changes (manually reviewed and clarified by AoE4 World) which are shown first. To learn more about Ranked
         Season Four Map pool and rewards, the new Minimap Zoom and other UI changes, scroll to the bottom or head over to the

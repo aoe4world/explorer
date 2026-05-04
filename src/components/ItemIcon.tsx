@@ -1,11 +1,11 @@
 import { Component, JSX, createMemo, splitProps } from "solid-js";
-import { UnifiedItem, Item } from "@data/types/items";
+import { UnifiedItem, Item } from "../types/data";
 import { getItemCssClass } from "../styles";
 
-export type ItemIconSize = 24 | 12 | 8 | number | 'inline' | null;
+export type ItemIconSize = 24 | 12 | 8 | number | 'inline' | undefined;
 
 function getIconSizeClasses(size: ItemIconSize) {
-  if (size === null) return "";
+  if (!size) return "";
   if (size === 'inline') return "inline-block rounded-sm w-[1.2em] h-[1.2em] p-0 align-text-bottom mx-[0.3em]"; // class="mb-[-0.2em]"  (was mb instead of align-text-bottom)
   let classes = `w-${size} h-${size}`;
   if (size >= 24) classes += ' p-2 rounded-md';
@@ -15,7 +15,7 @@ function getIconSizeClasses(size: ItemIconSize) {
   return classes;
 }
 
-export type ItemIconProps = JSX.ImgHTMLAttributes<any> & ({ url?: string; item?: UnifiedItem | Item; link?: boolean; size?: ItemIconSize; });
+export type ItemIconProps = JSX.ImgHTMLAttributes<HTMLImageElement> & ({ url?: string; item?: UnifiedItem | Item; link?: boolean; size?: ItemIconSize; });
 
 export const ItemIcon: Component<ItemIconProps> = (props) => {
   const [local, imgProps] = splitProps(props, ["url", "item", "link", "class", "size", "title"]);
@@ -24,8 +24,9 @@ export const ItemIcon: Component<ItemIconProps> = (props) => {
   const inRuby = !!import.meta.env.VITE_RUBY_SOURCE_CODE_DIR;
 
   const data = createMemo(() => {
-    let { url, title } = local;
-    let classes: string[] = [];
+    let url = local.url;
+    let title = local.title;
+    const classes: string[] = [];
 
     if (local.class) classes.push(local.class);
 

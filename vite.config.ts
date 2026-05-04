@@ -12,7 +12,7 @@ export default defineConfig({
           if (id.includes("src/routes/quiz") || id.includes("src/components/quiz")) {
             return "quiz";
           }
-          if (id.includes("data/src/sdk")) {
+          if (id.includes("data/src/sdk/data.ts") || id.includes("data/src/sdk/index.ts") || (id.includes("data/src/") && id.endsWith(".json"))) {
             return "data-sdk";
           }
         },

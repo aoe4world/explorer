@@ -1,16 +1,16 @@
 import { useLocation, useNavigate } from "@solidjs/router";
-import { Component, createEffect, createSignal, ErrorBoundary, on, Show } from "solid-js";
-import { Toolbar } from "./components/Toolbar";
-import { Icon } from "./components/Icon";
-import { civConfig, UnifiedItem } from "./types/data";
-import { ITEMS } from "./config";
-import { getItemHref } from "./components/Cards";
-import { findClosestMatch } from "./query/utils";
-import { SidebarNav } from "@components/SidebarNav";
-import { hideNav } from "./global";
-import { BackdropWrapper } from "./components/Backdrop";
+import { createEffect, createSignal, ErrorBoundary, on, ParentComponent, Show } from "solid-js";
 
-export const [activePage, setActivePage] = createSignal<{ title?: string; description?: string; location: any }>();
+import { SidebarNav } from "@components/SidebarNav";
+import { BackdropWrapper } from "./components/Backdrop";
+import { getItemHref } from "./components/Cards";
+import { Icon } from "./components/Icon";
+import { Toolbar } from "./components/Toolbar";
+import { hideNav } from "./global";
+import { findClosestMatch } from "./query/utils";
+import { civConfig, ITEMS, UnifiedItem } from "./types/data";
+
+export const [activePage, setActivePage] = createSignal<{ title?: string; description?: string; location: Partial<ReturnType<typeof useLocation>> }>();
 
 export const setActivePageForItem = (item: UnifiedItem, civ: civConfig) =>
   setActivePage({
@@ -19,47 +19,52 @@ export const setActivePageForItem = (item: UnifiedItem, civ: civConfig) =>
     location: { pathname: window.location.pathname },
   });
 
-export async function tryRedirectToClosestMatch(type: ITEMS, id: string, civ: civConfig, fallback?: Function) {
+export async function tryRedirectToClosestMatch(type: ITEMS, id: string, civ: civConfig, fallback?: () => void) {
   const navigate = useNavigate();
   const closestMatch = await findClosestMatch(type, id, civ);
   if (closestMatch) navigate(getItemHref(closestMatch, civ));
-  else fallback();
+  else if (fallback)
+    fallback();
 }
 
-let lastPathname: string;
+let lastPathname: string | undefined;
 createEffect(
-  on(activePage, () => {
-    if (lastPathname === activePage()?.location?.pathname) return;
-    lastPathname = activePage()?.location?.pathname;
-    document.title = activePage()?.title ? activePage().title + " – Explorer – AoE4 World" : "Explorer – AoE4 World";
+  on(activePage, (page) => {
+    if (lastPathname === page?.location?.pathname) return;
+    lastPathname = page?.location?.pathname;
+    document.title = page?.title ? page.title + " – Explorer – AoE4 World" : "Explorer – AoE4 World";
     if (!document.querySelector("meta[name=description]")) {
       const meta = document.createElement("meta");
       meta.name = "description";
-      meta.content = activePage()?.description ?? "";
+      meta.content = page?.description ?? "";
       document.head.appendChild(meta);
-    } else document.querySelector("meta[name=description]")?.setAttribute("content", activePage()?.description ?? "");
+    } else document.querySelector("meta[name=description]")?.setAttribute("content", page?.description ?? "");
   })
 );
-const App: Component<{ children?: any }> = (props) => {
+const App: ParentComponent = (props) => {
   const location = useLocation();
-  let resetFocusEl: HTMLDivElement;
+  let resetFocusEl: HTMLDivElement | undefined; // eslint-disable-line no-unassigned-vars
 
-  createEffect(() => {
-    location.pathname;
-    if (resetFocusEl) {
-      resetFocusEl.focus({ preventScroll: true });
-      if (resetFocusEl.getBoundingClientRect().top < 0) resetFocusEl.scrollIntoView();
-    }
-  });
+  createEffect(
+    on(
+      () => location.pathname,
+      () => {
+        if (resetFocusEl) {
+          resetFocusEl.focus({ preventScroll: true });
+          if (resetFocusEl.getBoundingClientRect().top < 0) resetFocusEl.scrollIntoView();
+        }
+      }
+    )
+  );
 
   return (
     <>
-      <div ref={resetFocusEl} class="outline-none" tabindex="-1"></div>
-      <Toolbar></Toolbar>
+      <div ref={resetFocusEl} class="outline-none" tabindex="-1" />
+      <Toolbar />
       <ErrorBoundary
         fallback={(err, retry) => {
           const location = useLocation();
-          let errPath = location.pathname;
+          const errPath = location.pathname;
           console.log(err);
           createEffect(() => {
             if (location.pathname != errPath) retry();

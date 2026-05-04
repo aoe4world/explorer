@@ -1,5 +1,5 @@
 import { A, SearchParams, useLocation, useParams, useSearchParams } from "@solidjs/router";
-import { Component, createSignal, onCleanup, Show, createEffect } from "solid-js";
+import { Component, createSignal, Show, createEffect } from "solid-js";
 import { Icon } from "@components/Icon";
 import { TwitchQuiz } from "@components/quiz/TwitchQuiz";
 import { ToggleSwitch } from "@components/common/ToggleSwitch";
@@ -19,6 +19,7 @@ export interface TwitchQuizParams extends SearchParams {
 }
 
 export const QuizRoute: Component = () => {
+  const params = useParams<{ channel?: string }>();
   const [query] = useSearchParams<TwitchQuizParams>();
   const [show, setShow] = createSignal(false);
 
@@ -31,13 +32,13 @@ export const QuizRoute: Component = () => {
   const [showAdvancedSettings, setShowAdvancedSettings] = createSignal(initialShowAdvancedSettings);
   const [difficulty, setDifficulty] = createSignal(parseInt(query.difficulty ?? "0"));
   const [customDifficulty, setCustomDifficulty] = createSignal(!["0", "80"].includes(query.difficulty ?? "0"));
-  const [channel, setChannel] = createSignal(useParams()?.channel ?? query.channel ?? "");
+  const [channel, setChannel] = createSignal(params.channel ?? query.channel ?? "");
   const [gracePeriod, setGracePeriod] = createSignal(parseInt(query.gracePeriod ?? "5"));
   const [autoplaySpeed, setAutoplaySpeed] = createSignal(parseInt(query.autoplaySpeed ?? "15"));
   const [shareUrl, setShareUrl] = createSignal("");
   const [numQuestions, setNumQuestions] = createSignal(parseInt(query.numQuestions ?? ""));
   const [hideVotes, setHideVotes] = createSignal(query.hideVotes === "true");
-  const [devMode, setDevMode] = createSignal(query.dev === "true");
+  const [devMode] = createSignal(query.dev === "true");
   const questionsUrl = query.questionsUrl;
 
   createEffect(() => {
@@ -54,11 +55,13 @@ export const QuizRoute: Component = () => {
   });
 
   tempHideNav();
-  setActivePage({
-    title: `Quiz ${useParams().channel ? `(${useParams().channel})` : ""}`,
-    description: "Test your game knowledge through randomly generated multiple questions.",
-    location: useLocation(),
-  });
+  createEffect(() =>
+    setActivePage({
+      title: `Quiz ${channel()}`,
+      description: "Test your game knowledge through randomly generated multiple questions.",
+      location: useLocation(),
+    })
+  );
 
   const startQuiz = () => {
     resetQuestionLimits();
@@ -120,7 +123,7 @@ export const QuizRoute: Component = () => {
                     <span class={`px-2 text-sm w-12 text-center ${difficulty() === 0 && !customDifficulty() ? "text-purple-400 font-bold" : "text-gray-300"}`}>Easy</span>
                     <ToggleSwitch
                       id="difficulty-toggle"
-                      checked={customDifficulty() ? null : difficulty() === 80}
+                      checked={customDifficulty() ? undefined : difficulty() === 80}
                       onChange={(checked) => {
                         setCustomDifficulty(false);
                         setDifficulty(checked ? 80 : 0);

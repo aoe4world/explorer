@@ -1,8 +1,8 @@
-import { Component, createResource, createSignal, For, JSX, Show } from "solid-js";
+import { Component, createResource, createSignal, For, ParentComponent, Show } from "solid-js";
 import { Icon } from "@components/Icon";
 import { FormatAnswer, getRandomQuestion, loadCustomQuestions } from "./questions";
 import { Random } from "./random";
-import { DLC_CIVS, indexToLetter, updateScore, useKeyHandler } from "./shared";
+import { DLC_CIVS, keysLetters, updateScore, useKeyHandler } from "./shared";
 
 enum QuizState {
   Asking,
@@ -14,11 +14,11 @@ export const Quiz: Component<{ difficulty?: number; questionsUrl?: string; numQu
   const [score, setScore] = createSignal({ correct: 0, incorrect: 0, total: 0, streak: 0 });
   const [questionCount, setQuestionCount] = createSignal(0);
   const [quizState, setQuizState] = createSignal<QuizState>(QuizState.Asking);
-  const [selectedChoice, setSelectedChoice] = createSignal<number>(undefined);
-  const [customQuestions] = createResource(props.questionsUrl, loadCustomQuestions);
+  const [selectedChoice, setSelectedChoice] = createSignal<number | undefined>(undefined);
+  const [customQuestions] = createResource(() => props.questionsUrl, loadCustomQuestions);
   const [question, { refetch }] = createResource(
-    () => !customQuestions.loading,
-    (ready) => ready && getRandomQuestion(score().correct - score().incorrect + (props.difficulty ?? 0), Random.pick(DLC_CIVS))
+    () => ({ ready: !customQuestions.loading, diff: score().correct - score().incorrect + (props.difficulty ?? 0) }),
+    ({ ready, diff }) => (ready ? getRandomQuestion(diff, Random.pick(DLC_CIVS)) : null)
   );
 
   let evaluationTimer = 0;
@@ -26,7 +26,7 @@ export const Quiz: Component<{ difficulty?: number; questionsUrl?: string; numQu
     if (quizState() !== QuizState.Asking) return;
     setQuizState(QuizState.ShowingResults);
     setSelectedChoice(number);
-    setScore(updateScore(number, question().correctAnswer, score()));
+    setScore(updateScore(number, question()!.correctAnswer, score()));
     clearTimeout(evaluationTimer);
     evaluationTimer = window.setTimeout(() => {
       next();
@@ -109,10 +109,10 @@ export const Quiz: Component<{ difficulty?: number; questionsUrl?: string; numQu
           <p class="text-gray-200 mt-1 ">{question()?.note}</p>
 
           <div class="flex flex-col gap-4 mt-8">
-            <For each={question().answers}>
+            <For each={question()?.answers}>
               {(answer, index) => (
                 <MultipleChoiceOption
-                  option={indexToLetter[index()]}
+                  option={keysLetters[index()]}
                   disabled={quizState() !== QuizState.Asking}
                   selected={index() == selectedChoice()}
                   correct={quizState() === QuizState.ShowingResults ? (index() == question()?.correctAnswer ? true : index() == selectedChoice() ? false : null) : undefined}
@@ -134,7 +134,7 @@ export const Quiz: Component<{ difficulty?: number; questionsUrl?: string; numQu
   );
 };
 
-export const MultipleChoiceOption: Component<{ option: "A" | "B" | "C" | "D"; correct?: boolean; selected?: boolean; disabled?: boolean; onPick: Function; class?: string, children: JSX.Element }> = (props) => {
+export const MultipleChoiceOption: ParentComponent<{ option: string; correct?: boolean | null; selected?: boolean; disabled?: boolean; onPick: () => void; class?: string }> = (props) => {
   return (
     <button
       class={`whitespace-nowrap inline-flex items-center gap-2 bg-gray-500 p-2

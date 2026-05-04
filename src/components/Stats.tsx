@@ -1,4 +1,4 @@
-import { Component, createEffect, createMemo, createSignal, Index, on, Show } from "solid-js";
+import { Component, createEffect, createMemo, createSignal, Index, on, Show, For } from "solid-js";
 import { RESOURCES } from "../../assets";
 import { CIVILIZATIONS, PRETTY_AGE_MAP } from "../config";
 import { calculateStatParts, roundToDecimals } from "../query/stats";
@@ -14,7 +14,7 @@ export const StatBar: Component<{
   icon?: string;
   unit?: string;
   item: UnifiedItem<Item>;
-  stat: Stat;
+  stat?: Stat;
   /** Event when the total value is zero, display the graph,
    * useful for i.e. armor or other properties that will always be present in a
    * later age or after upgrades */
@@ -23,7 +23,7 @@ export const StatBar: Component<{
   max: number;
   age?: () => number;
 }> = (props) => {
-  let totalEl;
+  let totalEl: HTMLElement | undefined; // eslint-disable-line no-unassigned-vars
 
   const [parts, setParts] = createSignal([] as StatPart<number>[]);
   const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
@@ -31,7 +31,7 @@ export const StatBar: Component<{
     on([globalAgeFilter, globalCivFilter, () => props.age?.(), () => props.stat], () => {
       const { parts, ...rest } = calculateStatParts(props.stat, props.age?.() ?? globalAgeFilter(), { item: props.item });
       setParts(parts.map((p) => ({ ...p, value: p.value * multiplier() })));
-      setValues(Object.fromEntries(Object.entries(rest).map(([k, v]) => [k, v * multiplier()])) as any);
+      setValues(Object.fromEntries(Object.entries(rest).map(([k, v]) => [k, v * multiplier()])) as typeof rest);
     })
   );
   const multiplier = createMemo(() => props.multiplier?.parts?.reduce((sum, p) => sum + p.value, 0) ?? 1);
@@ -137,32 +137,30 @@ export const StatBar: Component<{
         )}
         <div class="h-4 md:h-3 bg-gray-50/10 flex flex-row relative">
           {/* {formattedMultiplier()} */}
-          <Index each={parts()}>
+          <For each={parts()}>
             {(part, i) => {
-              const { value, id, age, variation, type, label } = part();
-
-              let partEl;
-              const isBase = ["unit", "building"].includes(variation.type) && i == 0;
-              let className = isBase
-                ? "bg-bar-base" + (value < props.max * 0.75 ? " shrink-0" : "")
-                : type == "bonus"
+              let partEl: HTMLDivElement | undefined; // eslint-disable-line no-unassigned-vars
+              const isBase = () => ["unit", "building"].includes(part.variation.type) && i() == 0;
+              const className = () => isBase()
+                ? "bg-bar-base" + (part.value < props.max * 0.75 ? " shrink-0" : "")
+                : part.type == "bonus"
                 ? "bg-white/20 !text-white shrink"
-                : type == "upgrade" && ["building"].includes(variation.type)
+                : part.type == "upgrade" && ["building"].includes(part.variation.type)
                 ? "bg-bar-building shrink"
-                : type == "upgrade" && ["unit"].includes(variation.type)
+                : part.type == "upgrade" && ["unit"].includes(part.variation.type)
                 ? "bg-bar-upgrade shrink-0"
-                : variation.unique
+                : part.variation.unique
                 ? "bg-bar-unique"
-                : type == "technology"
+                : part.type == "technology"
                 ? "bg-bar-technology"
                 : "bg-bar-base shrink-0";
-              const hide = () => part().value <= 0;
+              const hide = () => part.value <= 0;
               return (
                 <div
-                  class={`h-full hover:bg-white ${className}`}
+                  class={`h-full hover:bg-white ${className()}`}
                   ref={partEl}
                   style={{
-                    width: hide() ? "0" : `min(max(5px, calc(${(part().value / props.max) * 100}% - 2px)), 100%)`,
+                    width: hide() ? "0" : `min(max(5px, calc(${(part.value / props.max) * 100}% - 2px)), 100%)`,
                     "margin-right": hide() ? "0" : "2px",
                     opacity: hide() ? 0 : 1,
                     transition: "all 0.2s ease-in",
@@ -171,28 +169,28 @@ export const StatBar: Component<{
                   <Tooltip attachTo={partEl}>
                     <div class={tooltipCSSClass}>
                       <div class="text-lg mb-4">
-                        <span class={`text-white font-bold rounded-sm px-2 py-1 inline-flex flex-col items-center ${className}`}>
-                          <span class="text-xs uppercase ">{type}</span>
-                          {!isBase && "+"} {value ?? 0}
+                        <span class={`text-white font-bold rounded-sm px-2 py-1 inline-flex flex-col items-center ${className()}`}>
+                          <span class="text-xs uppercase ">{part.type}</span>
+                          {!isBase() && "+"} {part.value ?? 0}
                         </span>
-                        <span class="float-right ml-4 opacity-50">{PRETTY_AGE_MAP[age]}</span>
+                        <span class="float-right ml-4 opacity-50">{PRETTY_AGE_MAP[part.age]}</span>
                       </div>
-                      {type == "upgrade" && `${PRETTY_AGE_MAP[age]} upgrade for `}
-                      <strong>{variation.name}</strong>
-                      {label && <p class="mb-6">{label}</p>}
-                      {variation.unique && (
+                      {part.type == "upgrade" && `${PRETTY_AGE_MAP[part.age]} upgrade for `}
+                      <strong>{part.variation.name}</strong>
+                      {part.label && <p class="mb-6">{part.label}</p>}
+                      {part.variation.unique && (
                         <p class="text-bar-unique">
-                          <i class="fas fa-sparkles"></i> Unique to {CIVILIZATIONS[variation.civs[0]].name}
+                          <i class="fas fa-sparkles" /> Unique to {CIVILIZATIONS[part.variation.civs[0]].name}
                         </p>
                       )}
 
-                      {!["upgrade", "base"].includes(type) && <p class="my-2 whitespace-pre-wrap">{variation.description}</p>}
+                      {!["upgrade", "base"].includes(part.type) && <p class="my-2 whitespace-pre-wrap">{part.variation.description}</p>}
                     </div>
                   </Tooltip>
                 </div>
               );
             }}
-          </Index>
+          </For>
         </div>
       </div>
     </Show>
@@ -200,35 +198,40 @@ export const StatBar: Component<{
 };
 
 const Part: Component<{ part: StatPart<number> }> = (props) => {
-  const { value, maxValue, age, variation, type, label } = props.part;
+  const name = () => {
+    const type = props.part.type;
+    if (type === "base") 
+      return `Base (${PRETTY_AGE_MAP[props.part.age]})`;
+    if ((type === "upgrade" || type === "technology") && props.part.variation)
+      return `${props.part.variation.name} (${PRETTY_AGE_MAP[props.part.age]})`;
+    return props.part.label;
+  };
 
-  const name =
-    {
-      base: `Base (${PRETTY_AGE_MAP[age]})`,
-      upgrade: `${variation.name} (${PRETTY_AGE_MAP[age]})`,
-      technology: `${variation.name} (${PRETTY_AGE_MAP[age]})`,
-    }[type] ?? label;
+  const valueClass = () => {
+    const type = props.part.type;
+    if (type === "upgrade")
+      return "text-item-unit-light";
+    if (type === "technology")
+      return "text-item-tech-light";
+    return "text-white/80";
+  };
 
-  const valueClass =
-    {
-      upgrade: "text-item-unit-light",
-      technology: "text-item-tech-light",
-    }[type] ?? "text-white/80";
-
-  const Value = (props: { value: number }) => (
-    <div class={`text-right ${valueClass}`}>
-      {props.value > 0 && type != "base" ? "+ " : ""}
-      {props.value}
+  const Value = (valProps: { value: number }) => (
+    <div class={`text-right ${valueClass()}`}>
+      {valProps.value > 0 && props.part.type != "base" ? "+ " : ""}
+      {valProps.value}
     </div>
   );
 
-  return value || maxValue ? (
-    <>
-      <div class="text-left">{name}</div>
-      <Value value={value} />
-      {maxValue != null && <Value value={maxValue} />}
-    </>
-  ) : null;
+  return (
+    <Show when={props.part.value || props.part.maxValue}>
+      <div class="text-left">{name()}</div>
+      <Value value={props.part.value} />
+      <Show when={props.part.maxValue != null}>
+        <Value value={props.part.maxValue!} />
+      </Show>
+    </Show>
+  );
 };
 
 export const StatNumber: Component<{
@@ -237,7 +240,7 @@ export const StatNumber: Component<{
   helper?: string;
   unitLabel?: string;
   multiplier?: number;
-  stat: Stat;
+  stat?: Stat;
   age?: () => number;
 }> = (props) => {
   const [parts, setParts] = createSignal<StatPart<number>[]>([]);
@@ -250,15 +253,15 @@ export const StatNumber: Component<{
     })
   );
 
-  let el;
-  let helperEl;
+  let el: HTMLElement | undefined; // eslint-disable-line no-unassigned-vars
+  let helperEl: HTMLElement | undefined; // eslint-disable-line no-unassigned-vars
 
   return (
     <Show when={values().base || props.displayAlways}>
       <div class="flex flex-col">
         <span class={statLabelCSSClass}>
           {props.label}
-          <span ref={helperEl}>{props.helper && <Icon icon="circle-question" class="ml-2 text-white/40"></Icon>}</span>
+          <span ref={helperEl}>{props.helper && <Icon icon="circle-question" class="ml-2 text-white/40" />}</span>
         </span>
         {props.helper && (
           <Tooltip attachTo={helperEl}>
@@ -313,8 +316,8 @@ export const StatDps: Component<{
   label: string;
   displayAlways?: boolean;
   helper?: string;
-  speed: Stat;
-  attacks: Stat[];
+  speed?: Stat;
+  attacks: (Stat | undefined)[];
   age?: () => number;
 }> = (props) => {
   const [values, setValues] = createSignal({ base: 0, upgrades: 0, technologies: 0, bonus: 0, total: 0 });
@@ -326,15 +329,15 @@ export const StatDps: Component<{
     })
   );
 
-  let el;
-  let helperEl;
+  let el: HTMLElement | undefined; // eslint-disable-line no-unassigned-vars
+  let helperEl: HTMLElement | undefined; // eslint-disable-line no-unassigned-vars
 
   return (
     <Show when={values().base || props.displayAlways}>
       <div class="flex flex-col">
         <span class={statLabelCSSClass}>
           {props.label}
-          <span ref={helperEl}>{props.helper && <Icon icon="circle-question" class="ml-2"></Icon>}</span>
+          <span ref={helperEl}>{props.helper && <Icon icon="circle-question" class="ml-2" />}</span>
         </span>
         {props.helper && (
           <Tooltip attachTo={helperEl}>
@@ -400,15 +403,15 @@ export const StatCosts: Component<{ costs: Item["costs"] }> = (props) => (
   <div>
     <div class={statLabelCSSClass}>Costs</div>
     <div class="flex items-center gap-4 mt-1">
-      {["food", "wood", "gold", "stone", "oliveoil", "silver", "time", "popcap", "vizier"].map(
-        (type) =>
+      <For each={["food", "wood", "gold", "stone", "oliveoil", "silver", "time", "popcap", "vizier"]}>
+        {(type) =>
           (type == "popcap" ? props.costs[type] > 1 : props.costs[type] > 0) && (
             <div class="flex items-center gap-1">
               <div class="text-white">{type == "time" ? formatSecondsToTime(props.costs[type]) : formatCurreny(props.costs[type])}</div>
               <img src={RESOURCES[type]} class="h-4 object-contain w-5" />
             </div>
-          )
-      )}
+          )}
+      </For>
     </div>
   </div>
 );
@@ -417,8 +420,8 @@ export const StatLos: Component<{
   label: string;
   displayAlways?: boolean;
   helper?: string;
-  stat: Stat;
-  statMax: Stat;
+  stat?: Stat;
+  statMax?: Stat;
   age?: () => number;
 }> = (props) => {
   const [parts, setParts] = createSignal<StatPart<number>[]>([]);
@@ -447,8 +450,8 @@ export const StatLos: Component<{
     })
   );
 
-  let el;
-  let helperEl;
+  let el: HTMLElement | undefined; // eslint-disable-line no-unassigned-vars
+  let helperEl: HTMLElement | undefined; // eslint-disable-line no-unassigned-vars
   const showMax = createMemo(() => values().total !== maxValues().total);
 
   return (
@@ -456,7 +459,7 @@ export const StatLos: Component<{
       <div class="flex flex-col">
         <span class={statLabelCSSClass}>
           {props.label}
-          <span ref={helperEl}>{props.helper && <Icon icon="circle-question" class="ml-2"></Icon>}</span>
+          <span ref={helperEl}>{props.helper && <Icon icon="circle-question" class="ml-2" />}</span>
         </span>
         {props.helper && (
           <Tooltip attachTo={helperEl}>
@@ -494,7 +497,7 @@ export const StatLos: Component<{
           <div class={tooltipCSSClass}>
             <div class={`grid gap-x-4 ${showMax() ? "grid-cols-[1fr_auto_auto]" : "grid-cols-[1fr_auto]"}`}>
               <Show when={showMax()}>
-                <div class="text-md text-gray-300 mb-2"></div>
+                <div class="text-md text-gray-300 mb-2" />
                 <div class="text-md text-gray-300 mb-2 text-right">Base</div>
                 <div class="text-md text-gray-300 mb-2 text-right">Max</div>
               </Show>
@@ -519,16 +522,16 @@ export const StatLos: Component<{
 const ProjectileDamageHint: Component<{
   numProjectiles: number;
   baseDamage: number;
-}> = ({numProjectiles, baseDamage}) => {
+}> = (props) => {
   const exampleArmor = 2;
-  const projectileDamage = baseDamage / numProjectiles;
+  const projectileDamage = () => props.baseDamage / props.numProjectiles;
 
   return (
-    <Show when={numProjectiles > 1}>
+    <Show when={props.numProjectiles > 1}>
       <div class="bg-gray-500 rounded-sm p-2 flex gap-2 items-center mt-4">
-        <p class="text-xl px-2">{numProjectiles}×</p>
+        <p class="text-xl px-2">{props.numProjectiles}×</p>
         <div class="text-sm text-gray-200">
-          <p class="font-bold mb-1 text-xs">Every volley has {numProjectiles} projectiles</p>
+          <p class="font-bold mb-1 text-xs">Every volley has {props.numProjectiles} projectiles</p>
           <p class="text-xs text-gray-200">Target armor has effect on each individual projectile</p>
           <div class="uppercase text-gray-50 text-[10px] mt-2">Example</div>
           <div class="text-gray-200 text-[10px]">Assuming target has <span class="bg-pink-900/50 py-0.5 px-1 font-bold rounded text-pink-200">{exampleArmor}</span> ranged armor</div>
@@ -540,12 +543,12 @@ const ProjectileDamageHint: Component<{
             <span class="bg-blue-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-blue-200">total damage</span>
           </div>
           <div class="py-1">
-            (<span class="bg-lime-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-lime-200">{projectileDamage}</span>
+            (<span class="bg-lime-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-lime-200">{projectileDamage()}</span>
             {` - `}
             <span class="bg-pink-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-pink-200">{exampleArmor}</span>) ×{" "}
-            <span class="bg-teal-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-teal-200">{numProjectiles}</span> ={" "}
+            <span class="bg-teal-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-teal-200">{props.numProjectiles}</span> ={" "}
             <span class="bg-blue-900/50 uppercase py-0.5 px-1 text-[10px] font-bold rounded text-blue-200">
-              {(projectileDamage - exampleArmor) * numProjectiles}
+              {(projectileDamage() - exampleArmor) * props.numProjectiles}
             </span>
           </div>
         </div>
@@ -553,3 +556,4 @@ const ProjectileDamageHint: Component<{
     </Show>
   );
 };
+

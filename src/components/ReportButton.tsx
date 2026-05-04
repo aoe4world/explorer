@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "@solidjs/router";
+import { useLocation } from "@solidjs/router";
 import { Component, createSignal, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 import { tooltipCSSClass } from "../styles";
@@ -8,7 +8,7 @@ import { Tooltip } from "./Tooltip";
 export const ReportButton: Component = () => {
   const [showReport, setShowReport] = createSignal(false);
   const url = () => useLocation().pathname;
-  let el;
+  let el: HTMLButtonElement | undefined; // eslint-disable-line no-unassigned-vars
   return (
     <>
       <button
@@ -19,7 +19,7 @@ export const ReportButton: Component = () => {
         <Icon icon="message-exclamation" class="mr-1" /> Report incorrect info
       </button>
       <Tooltip attachTo={el}>
-        <div className={tooltipCSSClass}>
+        <div class={tooltipCSSClass}>
           Something missing or incorrect on this page? It can happen! We manage and collect all data manually, you can help us by reporting if something is
           incorrect.
         </div>

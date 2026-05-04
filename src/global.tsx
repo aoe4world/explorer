@@ -1,15 +1,21 @@
 import { createSignal, onCleanup } from "solid-js";
-
-import { civAbbr } from "./types/data";
-import { CivConfig, CivSlug } from "@data/types/civs";
+import { CivAbbr, CivSlug, CivConfig } from "./config";
 import { splitUnitsIntoGroups, splitBuildingsIntoGroups, splitTechnologiesIntroGroups } from "./query/utils";
 const SDK = import("@data/sdk");
+
+export type ItemTypeKey = 'units' | 'buildings' | 'technologies';
+
+export const ITEM_TYPE_LABELS: Record<ItemTypeKey, string> = {
+  units: "Units",
+  buildings: "Buildings",
+  technologies: "Technologies",
+};
 
 export type HideNav = 'visible' | 'hide-sidebar' | 'hidden';
 
 export const [hideNav, setHideNav] = createSignal('visible');
 export const [globalAgeFilter, setGlobalAgeFilter] = createSignal(4);
-export const [globalCivFilter, setGlobalCivsFilter] = createSignal<civAbbr>(null);
+export const [globalCivFilter, setGlobalCivsFilter] = createSignal<CivAbbr>();
 
 export const tempHideNav = (style?: HideNav) => {
   setHideNav(style ?? "hidden");
@@ -35,9 +41,8 @@ export async function getStructuredItems(civilization?: CivConfig) {
   };
 }
 
-export function parseCurrentLocation(pathname: string): { route?: string; civ?: CivSlug; subroute?: string; itemType?: string; } {
+export function parseCurrentLocation(pathname: string): { route?: string; civ?: CivSlug; subroute?: string; itemType?: ItemTypeKey; itemId?: string; } {
   const path = pathname?.toLowerCase() ?? "";
-  const [route, civ, subroute] = path.match(/\/civs\/([a-z]+)\/?([\w/-]*)/i) ?? [];
-  const itemType = subroute?.split("/")[0] || (civ?.length ? "" : path.match(/(units|buildings|technologies)/i)?.[0])?.toLowerCase();
-  return { route, civ: civ as CivSlug, subroute, itemType };
+  const [route, civ, subroute, itemType, itemId] = path.match(/(?:\/civs\/([a-z]+)\/)?(?:\/((units|buildings|technologies)(\/[\w/-]*)?))?/i) ?? [];
+  return { route, civ: civ as CivSlug | undefined, subroute, itemType: itemType as ItemTypeKey | undefined, itemId: itemId as string | undefined };
 }

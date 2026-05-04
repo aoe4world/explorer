@@ -12,13 +12,7 @@ export const DLC_CIVS = [
   CIVILIZATION_BY_SLUG.templar,
 ];
 
-export const indexToLetter = {
-  0: "A",
-  1: "B",
-  2: "C",
-  3: "D",
-  4: "E",
-};
+export const keysLetters = ["A", "B", "C", "D", "E"];
 
 export type Score = {
   correct: number;
@@ -38,7 +32,6 @@ export function updateScore(choice: number, correctAnswer: number, score: Score)
 }
 
 export function useKeyHandler(pickChoice: (choice: number) => void, finished: () => boolean) {
-  const keysLetters = Object.values(indexToLetter);
   const keysNumbers = keysLetters.map((v, i) => (i + 1).toString());
 
   function keyDownListener(e: KeyboardEvent) {

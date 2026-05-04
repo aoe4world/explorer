@@ -1,10 +1,10 @@
 import { Component, createMemo, createResource, Show } from "solid-js";
-import { LinkType } from "./common/Link";
-import { CIVILIZATION_BY_SLUG, ITEMS } from "../config";
+import { CIVILIZATION_BY_SLUG, getCivConfig } from "../config";
 import { getUnitStats } from "../query/stats";
 import { getMostAppropriateVariation } from "../query/utils";
-import { civConfig, UnifiedItem, Unit } from "../types/data";
+import { civConfig, ITEMS, UnifiedItem, Unit } from "../types/data";
 import { Card } from "./Cards";
+import { LinkType } from "./common/Link";
 import { StatBar, StatCosts, StatDps, StatNumber } from "./Stats";
 
 const increaseBarSizeForClass = ["siege", "war_elephant", "incendiary_ship"];
@@ -13,13 +13,13 @@ function getBarSize(unit: UnifiedItem<Unit>, baseSize: number, increasedSize: nu
 }
 
 export const UnitCard: Component<{ unit: UnifiedItem<Unit>; age?: number; variation?: Unit; civ?: civConfig, selectedTechnologies?: string[], linkType?: LinkType, onCivSelect?: (civ: civConfig) => void }> = (props) => {
-  const civ = createMemo(() => props.civ ?? (props.variation ? CIVILIZATION_BY_SLUG[props.variation.civs[0]] : null));
+  const civ = createMemo(() => props.civ ?? (props.variation ? getCivConfig(props.variation.civs[0]) : undefined));
   const age = createMemo(() => props.age ?? props.variation?.age);
   const variation = createMemo(() => props.variation ?? getMostAppropriateVariation<Unit>(props.unit, civ()));
 
   const [stats] = createResource(
-    () => ({selectedTechnologies: props.selectedTechnologies, variation: variation()}),
-    ({selectedTechnologies, variation}) => getUnitStats(ITEMS.UNITS, props.unit, civ(), { variation: variation, selectedTechnologies })
+    () => ({selectedTechnologies: props.selectedTechnologies, variation: variation(), civ: civ(), unit: props.unit}),
+    ({selectedTechnologies, variation, civ, unit}) => getUnitStats(ITEMS.UNITS, unit, civ, { variation: variation, selectedTechnologies })
   );
   const isSiege = () => props.unit.classes.includes("siege");
 
@@ -53,10 +53,10 @@ export const UnitCard: Component<{ unit: UnifiedItem<Unit>; age?: number; variat
           </div>
           <div class="flex flex-col gap-4 mt-auto">
             <div class="flex gap-4  flex-wrap">
-              <StatNumber label="Move Spd" stat={stats().moveSpeed} unitLabel="T/S"></StatNumber>
-              <StatNumber label="Atck Spd" stat={stats().attackSpeed} unitLabel="S"></StatNumber>
+              <StatNumber label="Move Spd" stat={stats().moveSpeed} unitLabel="T/S" />
+              <StatNumber label="Atck Spd" stat={stats().attackSpeed} unitLabel="S" />
             </div>
-            <StatDps label="Damage" speed={stats().attackSpeed} attacks={[stats().rangedAttack || stats().meleeAttack || stats().siegeAttack]}></StatDps>
+            <StatDps label="Damage" speed={stats().attackSpeed} attacks={[stats().rangedAttack || stats().meleeAttack || stats().siegeAttack]} />
             <StatCosts costs={variation().costs} />
           </div>
         </>

@@ -1,12 +1,11 @@
 import { Component, createResource, createSignal, For, Show, onCleanup } from "solid-js";
-import { createStore, produce } from "solid-js/store";
+import { createStore, produce, unwrap } from "solid-js/store";
 import { Icon } from "../Icon";
-import { FormatAnswer, getRandomQuestion, loadCustomQuestions } from "./questions";
+import { FormatAnswer, getRandomQuestion, loadCustomQuestions, Answer } from "./questions";
 import { MultipleChoiceOption } from "./SoloQuiz";
 import { QuestionInspectPopup } from "./QuestionInspectPopup";
 import { ChatClient } from "@twurple/chat";
-import { Random } from "./random";
-import { indexToLetter, DLC_CIVS, Score, updateScore, useKeyHandler } from "./shared";
+import { indexToLetter, Score, updateScore, useKeyHandler } from "./shared";
 import { TwitchGiveaway } from "./TwitchGiveaway";
 import { TWITCH } from "../../../assets";
 
@@ -20,10 +19,10 @@ enum TwitchQuizState {
   Finished,
 }
 
-export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; gracePeriod?: number; autoplaySpeed?: number; questionsUrl?: string; numQuestions?: number; hideVotes?: boolean; dev?: boolean; onRestart?: Function }> = (props) => {
-  const graceperiod = props.gracePeriod ?? 5000;
-  const autoplaySpeed = props.autoplaySpeed ?? 15000;
-  const autoplayNextSpeed = Math.min(10000, autoplaySpeed * 0.5);
+export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; gracePeriod?: number; autoplaySpeed?: number; questionsUrl?: string; numQuestions?: number; hideVotes?: boolean; dev?: boolean; onRestart?: () => void }> = (props) => {
+  const graceperiod = () => props.gracePeriod ?? 5000;
+  const autoplaySpeed = () => props.autoplaySpeed ?? 15000;
+  const autoplayNextSpeed = () => Math.min(10000, autoplaySpeed() * 0.5);
   const [quizState, setQuizState] = createSignal<TwitchQuizState>(TwitchQuizState.Asking);
   const [selectedChoice, setSelectedChoice] = createSignal<number>(undefined);
   const [users, setUsers] = createStore<Record<string, TwitchUser>>({});
@@ -33,34 +32,45 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
   const [showGiveaway, setShowGiveaway] = createSignal(false);
   const [questionCount, setQuestionCount] = createSignal(0);
   const [askedQuestions, setAskedQuestions] = createStore<AskedQuestion[]>([]);
-  const [customQuestions] = createResource(props.questionsUrl, loadCustomQuestions);
+  const [customQuestions] = createResource(() => props.questionsUrl, loadCustomQuestions);
   const [showInspectPopup, setShowInspectPopup] = createSignal(false);
   const [question, { refetch }] = createResource(
-    () => !customQuestions.loading,
-    async (ready) => {
+    () => ({ 
+      ready: !customQuestions.loading,
+      asked: askedQuestions.length, 
+      count: questionCount(),
+      diff: (props.difficulty ?? 0), 
+      dev: props.dev 
+    }),
+    async ({ready, asked, count, diff, dev}) => {
       if (!ready) return null;
-      const q = await getRandomQuestion(questionCount() + (props.difficulty ?? 0), Random.pick(DLC_CIVS));
+      const q = await getRandomQuestion(count + diff);
       if (!q) finishQuiz();
-      if (props.dev) setAskedQuestions(askedQuestions.length, { ...q, category: `difficulty-${props.difficulty ?? 0}` });
+      if (dev) setAskedQuestions(asked, { ...q, category: `difficulty-${diff}` });
       return q;
     }
   );
   const [secondsLeft, setSecondsLeft] = createSignal(0);
-  let progressBar: HTMLDivElement;
+  let progressBar: HTMLDivElement | undefined; // eslint-disable-line no-unassigned-vars
 
-  useIncomingTwitchMessages({ channel: props.channel }, ({ user, message }) => {
-    const choice = parseChoice(message);
-    if (choice == undefined) return;
-    const mainChannel = props.channel.split(',')[0];
-    if (user.username === mainChannel) {
-      registerHostChoice(choice);
-    } else {
-      if (!users[user.username]) setUsers(user.username, user);
-      registerViewerChoice(user.username, choice);
-    }
-  });
+  // eslint-disable-next-line solid/reactivity
+  const channel = props.channel;
 
-  function setTimer(cb: Function, time: number) {
+  if (channel) {
+    useIncomingTwitchMessages({ channel: channel }, ({ user, message }) => {
+      const choice = parseChoice(message);
+      if (choice == undefined) return;
+      const mainChannel = channel.split(',')[0];
+      if (user.username === mainChannel) {
+        registerHostChoice(choice);
+      } else {
+        if (!users[user.username]) setUsers(user.username, user);
+        registerViewerChoice(user.username, choice);
+      }
+    });
+  }
+
+  function setTimer(cb: () => void, time: number) {
     clearInterval(secondsInterval);
     clearTimeout(actionTimer);
     setSecondsLeft(Math.ceil(time / 1000));
@@ -104,25 +114,27 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
 
   function stopSubmissionsAndShowResults() {
     setQuizState(TwitchQuizState.SubmissionsClosedGracePeriod);
-    setTimer(showResults, graceperiod);
+    setTimer(showResults, graceperiod());
   }
 
   function showResults() {
     setQuizState(TwitchQuizState.ShowingResults);
-    setSelectedChoice(pendingAnswers.host ?? question().correctAnswer);
+    setSelectedChoice(pendingAnswers.host ?? question()!.correctAnswer);
 
+    const correctAnswer = question()!.correctAnswer;
     setScores(
       produce((scores) => {
-        if (pendingAnswers.host != undefined) scores.host = updateScore(pendingAnswers.host, question().correctAnswer, scores.host);
+        if (pendingAnswers.host != undefined) scores.host = updateScore(pendingAnswers.host, correctAnswer, scores.host);
 
         const newViewers = Object.entries(pendingAnswers.viewers)
           .filter(([username]) => !scores.viewers.find((v) => v.username === username))
-          .map(([username, choice]) => ({ username, ...updateScore(choice, question().correctAnswer, { correct: 0, incorrect: 0, total: 0, streak: 0 }) }));
+          .map(([username, choice]) => ({ username, ...updateScore(choice, correctAnswer, { correct: 0, incorrect: 0, total: 0, streak: 0 }) }));
 
+        const unwrapViewers = unwrap(pendingAnswers.viewers);
         scores.viewers = scores.viewers
           .reduce((viewers, viewer) => {
-            if (pendingAnswers.viewers[viewer.username] != undefined)
-              viewer = { ...viewer, ...updateScore(pendingAnswers.viewers[viewer.username], question().correctAnswer, viewer) };
+            if (unwrapViewers[viewer.username] != undefined)
+              viewer = { ...viewer, ...updateScore(unwrapViewers[viewer.username], correctAnswer, viewer) };
             viewers.push(viewer);
             return viewers;
           }, newViewers)
@@ -132,7 +144,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
     );
 
     if (autoplay()) {
-      setTimer(next, autoplayNextSpeed);
+      setTimer(next, autoplayNextSpeed());
     }
   }
 
@@ -148,7 +160,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
     refetch();
     setQuizState(TwitchQuizState.Asking);
     setShowInspectPopup(false);
-    if (autoplay()) setTimer(stopSubmissionsAndShowResults, autoplaySpeed);
+    if (autoplay()) setTimer(stopSubmissionsAndShowResults, autoplaySpeed());
   }
 
   function finishQuiz() {
@@ -167,9 +179,9 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
     if (autoplay()) return;
     setAutoplay(true);
     if (quizState() === TwitchQuizState.ShowingResults) {
-      setTimer(next, autoplayNextSpeed);
+      setTimer(next, autoplayNextSpeed());
     } else if (quizState() === TwitchQuizState.Asking) {
-      setTimer(stopSubmissionsAndShowResults, autoplaySpeed);
+      setTimer(stopSubmissionsAndShowResults, autoplaySpeed());
     }
   }
 
@@ -348,7 +360,7 @@ export const TwitchQuiz: Component<{ difficulty?: number; channel?: string; grac
                   <th>
                     <Icon icon="circle-xmark" class="text-red-500 mx-2" />
                   </th>
-                  <th></th>
+                  <th />
                 </tr>
               </thead>
               <tbody>
@@ -454,7 +466,7 @@ function parseChoice(message: string) {
 async function useIncomingTwitchMessages({ channel }: { channel: string }, callback: ({ user, message }: { user: TwitchUser; message: string }) => void) {
   const chatClient = new ChatClient({ channels: channel.split(',') });
   const listener = chatClient.onMessage(async (channel: string, user: string, message: string, data) => {
-    callback({ user: { username: user, display_name: data.userInfo.displayName, color: data.userInfo.color, subscriber: data.userInfo.isSubscriber, moderator: data.userInfo.isMod }, message })
+    callback({ user: { username: user, display_name: data.userInfo.displayName, color: data.userInfo.color ?? '#cfcfcf', subscriber: data.userInfo.isSubscriber, moderator: data.userInfo.isMod }, message })
   });
 
   onCleanup(() => {
@@ -490,7 +502,7 @@ export type TwitchUser = {
 type AskedQuestion = {
   question: string;
   note: string;
-  answers: any[];
+  answers: Answer[];
   correctAnswer: number;
   category: string;
   rejected?: boolean;

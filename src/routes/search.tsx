@@ -2,7 +2,7 @@ import { useNavigate } from "@solidjs/router";
 import { Component, createSignal } from "solid-js";
 import { getItemHref } from "@components/Cards";
 import { Icon } from "@components/Icon";
-import { search, Search } from "@components/Search";
+import { search } from "@components/Search";
 import { mainIntroductionCSSClass } from "../styles";
 
 export const SearchRoute: Component = () => {
@@ -21,7 +21,7 @@ export const SearchRoute: Component = () => {
   return (
     <div class="max-w-screen-lg p-4 mx-auto mb-4 mt-12">
       <h1 class="text-3xl font-bold text-white">
-        <Icon icon="magnifying-glass" class="mr-4"></Icon>
+        <Icon icon="magnifying-glass" class="mr-4" />
         Quick Search
       </h1>
       {noResult() && (
@@ -39,7 +39,7 @@ export const SearchRoute: Component = () => {
         value={searchUrl.toString() + `%s`}
         readonly
         class="w-full bg-white/10 text-white p-2 rounded-md outline-none focus:outline-none focus:bg-white/20"
-        onclick={(t) => (t.target as HTMLInputElement).select()}
+        onClick={(t) => (t.target as HTMLInputElement).select()}
       />
       <div class="flex gap-3 mt-6 text-size-l text-gray-100">
         <p>Learn how to add a site search short cut in</p>

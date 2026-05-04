@@ -1,4 +1,4 @@
-import { Route, Router } from "@solidjs/router";
+import { Router } from "@solidjs/router";
 import { ParentComponent } from "solid-js";
 import { render } from "solid-js/web";
 import App from "./App";
@@ -15,7 +15,7 @@ const navItems: [href: string, label: string][] = [
 ];
 const DevRoot: ParentComponent = (props) => (
   <>
-    <Nav items={navItems}></Nav>
+    <Nav items={navItems} />
     <App>{props.children}</App>
   </>
 );

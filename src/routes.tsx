@@ -18,7 +18,7 @@ import { ContentOverviewRoute } from "./routes/content/content";
 export const routes = [
   {
     path: "/",
-    component: () => CivOverviewRoute,
+    component: CivOverviewRoute,
   },
   {
     path: "/civs",

@@ -1,7 +1,7 @@
 import { A, useLocation, useMatch } from "@solidjs/router";
-import { Component, createEffect, For } from "solid-js";
+import { ParentComponent, createEffect, For, on } from "solid-js";
 
-const MenuLink: Component<{ href: string; children: any }> = (props) => {
+const MenuLink: ParentComponent<{ href: string; }> = (props) => {
   const isMatch = useMatch(() => props.href);
   return (
     <li>
@@ -18,12 +18,11 @@ const MenuLink: Component<{ href: string; children: any }> = (props) => {
 
 export function Nav(props: { items: [href: string, label: string][] }) {
   const location = useLocation();
-  let resetFocusEl: HTMLDivElement;
+  let resetFocusEl: HTMLDivElement | undefined; // eslint-disable-line no-unassigned-vars
 
-  createEffect(() => {
-    location.pathname;
-    resetFocusEl?.focus();
-  });
+  // Reset focus when path changes
+  createEffect(on(() => location.pathname, () => resetFocusEl?.focus()));
+
   return (
     <>
       <nav class="border-gray-500 border-b w-full sticky z-50 t-0">
@@ -35,14 +34,14 @@ export function Nav(props: { items: [href: string, label: string][] }) {
 
             <ul class="hidden md:flex items-center text-white space-x-2 gap-x-5">
               <For each={props.items}>{([href, label]) => <MenuLink href={href}>{label}</MenuLink>}</For>
-              <li class="bg-white/5 w-20 h-4 rounded-full"></li>
-              <li class="bg-white/5 w-20 h-4 rounded-full"></li>
+              <li class="bg-white/5 w-20 h-4 rounded-full" />
+              <li class="bg-white/5 w-20 h-4 rounded-full" />
             </ul>
-            <div></div>
+            <div />
           </div>
         </section>
       </nav>
-      <div ref={resetFocusEl} class="outline-none" tabindex="-1"></div>
+      <div ref={resetFocusEl} class="outline-none" tabindex="-1" />
     </>
   );
 }

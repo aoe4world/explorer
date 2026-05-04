@@ -5,6 +5,6 @@ import { civAbbr } from "../types/data";
 
 export const CivFlag: Component<ComponentProps<"img"> & { abbr: civAbbr }> = (props) => {
   const [civ, rest] = splitProps(props, ["abbr"]);
-  const slug = CIVILIZATIONS[civ.abbr].slug;
-  return <img src={FLAGS[slug]} {...rest} />;
+  const slug = () => CIVILIZATIONS[civ.abbr].slug;
+  return <img src={FLAGS[slug()]} {...rest} />;
 };

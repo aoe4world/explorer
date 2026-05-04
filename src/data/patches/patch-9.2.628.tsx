@@ -135,7 +135,7 @@ export const patch: PatchNotes = {
 
       ### General
 
-      - Fixed a crash that could happen on Xbox and Windows Store versions of _Age of Empires IV_ when playing multiplayer games with Voice Chat enabled.
+      - Fixed a crash that could happen on Xbox and Windows Store versions of _Age of Empires IV_ when playing multiplayer games with Voice Chat enabled.
       - Fixed a bug where the game could crash when starting a multiplayer game.
       - Units will no longer get stuck on generated wall blockers, this would previously happen most commonly when Villagers are chopping wood near wall ends.
       - Fixed an issue where the animation of the House of Wisdom Wings would be out of sync with the age up for Ayyubids.
@@ -178,9 +178,9 @@ export const patch: PatchNotes = {
 
       ### Localization
 
-      We have been tracking your feedback relating to localization quality in _The Sultans Ascend_ expansion and have made expansive changes to several languages, including Chinese, Korean, Japanese and Hungarian languages.
+      We have been tracking your feedback relating to localization quality in _The Sultans Ascend_ expansion and have made expansive changes to several languages, including Chinese, Korean, Japanese and Hungarian languages.
 
-      We are committed to continuing to track and evaluate improvements in this space. So, please let us know in [the forums](https://forums.ageofempires.com/t/incorrect-translations-for-age-of-empires-iv-the-sultans-ascend-dlc/243544) if you continue to see issues related to language quality.
+      We are committed to continuing to track and evaluate improvements in this space. So, please let us know in [the forums](https://forums.ageofempires.com/t/incorrect-translations-for-age-of-empires-iv-the-sultans-ascend-dlc/243544) if you continue to see issues related to language quality.
 `,
     },
     {
@@ -190,11 +190,11 @@ export const patch: PatchNotes = {
       md: `
       ## Map-Specific Changes
 
-### African Waters 
+### African Waters
 
 - Player’s starting gold will no longer spawn trapped inside the player’s starting forest.
 
-### Hill & Dale 
+### Hill & Dale
 
 - We’ve done a tuning pass on the distribution of Sacred Sites on Hill and Dale. We have more robust changes coming in a future update that should help ensure that sites are placed fairly with even higher consistency, but we felt like this interim tuning has resulted in less clumped spawns than before.
 
@@ -280,7 +280,7 @@ export const patch: PatchNotes = {
           //     - Now takes an additional 20% bonus damage from Melee attacks.
           //     - Attack-move with melee units now targets rams automatically.
 
-          // > **_Developer Note:_** _Following up from our previous Ram changes, we’re aiming to address the effective health of Rams and reduce the viability of Ram pushes without support units. With this change we’re making it so that melee units will not ignore Rams with attack move (but Ranged units will). Our goal is to tune the Ram so that fighting them with melee units has a worthwhile return on investment. Along with reducing the health and cost appropriately this should also help to reduce the population effectiveness of Rams while remaining at 1 population._
+          // > **_Developer Note:_** _Following up from our previous Ram changes, we’re aiming to address the effective health of Rams and reduce the viability of Ram pushes without support units. With this change we’re making it so that melee units will not ignore Rams with attack move (but Ranged units will). Our goal is to tune the Ram so that fighting them with melee units has a worthwhile return on investment. Along with reducing the health and cost appropriately this should also help to reduce the population effectiveness of Rams while remaining at 1 population._
           items: ["units/battering-ram"],
           civs: [],
           diff: [
@@ -300,7 +300,7 @@ export const patch: PatchNotes = {
         },
         {
           //     - Mongols Improved Tithe Barns changed to 60 Food, 60 Wood, 15 Stone.
-          // > **_Developer Note:_** _Late game Stone generation has proven too effective at creating massive amounts of defenses, which can make late games feel slower than intended. We want Stone to be a limited resource in the later stages of the game so defenses cannot be amassed too much over time._
+          // > **_Developer Note:_** _Late game Stone generation has proven too effective at creating massive amounts of defenses, which can make late games feel slower than intended. We want Stone to be a limited resource in the later stages of the game so defenses cannot be amassed too much over time._
           items: ["technologies/tithe-barns-improved"],
           civs: ["mo"],
           diff: [["buff", "Income changed to 60 Food, 60 Wood, 15 Stone."]],
@@ -315,7 +315,7 @@ export const patch: PatchNotes = {
         },
         {
           //     - Cupellation no longer increases gather rate, instead Villagers drop off 15% more Gold.
-          // > _**Developer Note:** We want to make the Imperial Age economy upgrades more appealing for their cost, as well as reducing the number of Villagers required to sustain a late-game economy. This should lead to larger army sizes for more fun!_
+          // > _**Developer Note:** We want to make the Imperial Age economy upgrades more appealing for their cost, as well as reducing the number of Villagers required to sustain a late-game economy. This should lead to larger army sizes for more fun!_
           items: ["technologies/cupellation"],
           civs: [],
           diff: [["buff", "Now increases Gold drop off by 15%."]],

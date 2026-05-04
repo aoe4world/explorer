@@ -1,84 +1,94 @@
 import { A, useParams } from "@solidjs/router";
-import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
+import { Component, createEffect, createMemo, createResource, createSignal, For, on, Show } from "solid-js";
+
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
+import { CIVILIZATION_BY_SLUG, CivSlug } from "../../config";
+import { getUnitStats } from "../../query/stats";
+import { getMostAppropriateVariation } from "../../query/utils";
+import { mainIntroductionCSSClass } from "../../styles";
+import { Building, civConfig, ITEMS, UnifiedItem } from "../../types/data";
+
+import { Abilities } from "@components/Abilities";
 import { getItemHref } from "@components/Cards";
 import { ItemIcon } from "@components/ItemIcon";
+import { ItemName } from "@components/ItemName";
 import { ItemPage } from "@components/ItemPage";
 import { PatchHistory } from "@components/PatchHistory";
 import { RelatedContent } from "@components/RelatedContent";
 import { ReportButton } from "@components/ReportButton";
-import { StatNumber, StatBar, StatDps, StatCosts, StatLos } from "@components/Stats";
+import { StatBar, StatCosts, StatDps, StatLos, StatNumber } from "@components/Stats";
 import { TechnologyCard } from "@components/TechnologyCard";
 import { Tooltip } from "@components/Tooltip";
 import { UnitCard } from "@components/UnitCard";
-import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
-import { getUnitStats } from "../../query/stats";
-import { getMostAppropriateVariation } from "../../query/utils";
-import { mainIntroductionCSSClass } from "../../styles";
-import { Building, civAbbr, civConfig, UnifiedItem } from "../../types/data";
-import { ItemList } from "@data/sdk/utils";
-import { Ability } from "@data/types/items";
-import { Abilities } from "@components/Abilities";
+
 const SDK = import("@data/sdk");
 
 export function BuildingDetailRoute() {
   const itemType = ITEMS.BUILDINGS;
-  const params = useParams();
+  const params = useParams<{ slug: CivSlug; id: string }>();
   const civ = () => CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
-  const [item] = createResource(() => params.id, async (id) => (await SDK).buildings.get(id));
   const [age, setAge] = createSignal(4);
-  const variation = createMemo(() => getMostAppropriateVariation<Building>(item(), civ(), age()));
+  const [data] = createResource(
+    () => ({ id: params.id, civ: civ(), age: age() }),
+    async ({ id, civ, age }) => {
+      const sdk = await SDK;
+      const item = await sdk.buildings.get(id);
+      if (!item) return undefined;
+      const c = civ?.abbr;
+      const [units, research, abilities] = await Promise.all([
+        sdk.units.where({ producedAt: id, civilization: c }),
+        sdk.technologies.where({ producedAt: id, civilization: c }).order("age"),
+        sdk.abilities.where({ civilization: c, affects: item }).order("age"),
+      ]);
+      return {
+        item,
+        variation: getMostAppropriateVariation<Building>(item, civ, age),
+        units,
+        research,
+        abilities,
+      };
+    }
+  );
 
-  createEffect(() => {
-    if (!item()) return;
-    if (civ() && !item()?.civs.includes(civ().abbr)) tryRedirectToClosestMatch(itemType, params.id, civ(), () => setUnmatched(true));
-    setActivePageForItem(item(), civ());
-  });
-
-  const [units] = createResource(
-    () => ({ c: civ()?.abbr, id: params.id }),
-    async ({ c, id }) => (await SDK).units.where({ producedAt: id, civilization: c })
-  );
-  const [research] = createResource(
-    () => ({ c: civ()?.abbr, id: params.id }),
-    async ({ c, id }) => (await SDK).technologies.where({ producedAt: id, civilization: c }).order("age")
-  );
-  const [abilities] = createResource(
-    () => ({ c: civ()?.abbr, id: params.id }),
-    async ({ c, id }) =>
-      !c ? ([] as ItemList<Ability>) : (await SDK).abilities.where({ civilization: c, affects: `buildings/${id}` }).order("age")
-  );
+  createEffect(on(
+    () => data()?.item,
+    (item) => {
+      if (!item) return;
+      if (civ() && !item.civs.includes(civ().abbr)) tryRedirectToClosestMatch(itemType, params.id, civ(), () => setUnmatched(true));
+      setActivePageForItem(item, civ());
+    }
+  ));
 
   return (
     <ItemPage.Wrapper civ={civ()}>
-      <Show when={!unmatched() && item()} keyed>
-        {(item) => (
+      <Show when={!unmatched() && data()} keyed>
+        {(data) => (
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
-              <ItemPage.Header item={variation()} civ={civ()} />
-              <div class={mainIntroductionCSSClass}>{variation()?.description}</div>
+              <ItemPage.Header item={data.variation} civ={civ()} />
+              <div class={mainIntroductionCSSClass}>{data.variation.description}</div>
 
               <ItemPage.ExpansionInfo civ={civ()} />
 
-              {!civ() && <ItemPage.CivPicker item={item} />}
+              {!civ() && <ItemPage.CivPicker item={data.item} />}
 
-              <Abilities abilities={abilities()} civ={civ()} />
+              <Abilities abilities={data.abilities} civ={civ()} />
 
               <div class="my-8">
                 <ReportButton />
               </div>
-              <Show when={units()?.length}>
+              <Show when={data.units?.length}>
                 <h2 class="text-lg text-white font-bold  mt-12 mb-3">Produces</h2>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-y-2 flex-wrap mb-2">
-                  <For each={units()}>
+                  <For each={data.units}>
                     {(unit) => {
-                      let el;
+                      let el: HTMLAnchorElement | undefined; // eslint-disable-line no-unassigned-vars
                       return (
                         <A href={`${civ() ? `/civs/${civ().slug}` : ""}/units/${unit.id}`} class="flex flex-row items-center mb-2 group " ref={el}>
                           <ItemIcon item={unit} link={true} size={10} class="mr-2" />
-                          <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
+                          <ItemName name={unit.name} class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100" />
                           <Tooltip attachTo={el}>
                             <div class="max-w-md bg-gray-800 rounded-2xl border border-item-unit">
                               <UnitCard unit={unit} civ={civ()} />
@@ -90,20 +100,17 @@ export function BuildingDetailRoute() {
                   </For>
                 </div>
               </Show>
-              <Show when={research()?.length}>
+              <Show when={data.research?.length}>
                 <h2 class="text-lg text-white font-bold mt-12 mb-3">Researches</h2>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-y-2 flex-wrap mb-2">
-                  <For each={research()}>
+                  <For each={data.research}>
                     {(tech) => {
-                      let el;
+                      let el: HTMLAnchorElement | undefined; // eslint-disable-line no-unassigned-vars
                       return (
                         <A class="flex flex-row items-center mb-2 group " ref={el} href={getItemHref(tech, civ())}>
                           <ItemIcon item={tech} link={true} size={10} class="mr-2" />
-                          <span
-                            class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100 whitespace-pre-wrap"
-                            innerHTML={tech.name.replace(/(.*?)\((.*?)\)/, '$1<span class="opacity-50">$2</span>')}
-                          />
+                          <ItemName name={tech.name} class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100 whitespace-pre-wrap" />
                           <Tooltip attachTo={el}>
                             <div class="max-w-md bg-gray-800 rounded-2xl border border-item-technology">
                               <TechnologyCard item={tech} civ={civ()} />
@@ -116,28 +123,32 @@ export function BuildingDetailRoute() {
                 </div>
               </Show>
 
-              <RelatedContent item={item} title={`Recommended content`} />
+              <RelatedContent item={data.item} title={`Recommended content`} />
 
-              <PatchHistory item={item} civ={civ()} />
+              <PatchHistory item={data.item} civ={civ()} />
             </div>
-            <BuildingSidebar item={item} civ={civ()} age={age} setAge={setAge} />
+            <BuildingSidebar item={data.item} variation={data.variation} civ={civ()} age={age} setAge={setAge} />
           </div>
         )}
       </Show>
-      {unmatched() && <ItemPage.UnavailableForCiv item={item()} civ={civ()} />}
-      {!unmatched() && <ItemPage.AvailableUpgrades item={item()} civ={civ()} />}
-      {item.error && <div class="text-red-600">Error!</div>}
+      <Show when={unmatched() && data()?.item} keyed>
+        {(item) => <ItemPage.UnavailableForCiv item={item} civ={civ()} />}
+      </Show>
+      <Show when={!unmatched() && data()?.item} keyed>
+        {(item) => <ItemPage.AvailableUpgrades item={item} civ={civ()} />}
+      </Show>
+      {data.error && <div class="text-red-600">Error!</div>}
     </ItemPage.Wrapper>
   );
 }
 
-const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig; age: () => number; setAge: (age: number) => void }> = (props) => {
+const BuildingSidebar: Component<{ item: UnifiedItem<Building>; variation: Building; civ: civConfig; age: () => number; setAge: (age: number) => void }> = (props) => {
   const [stats] = createResource(
     () => ({ unit: props.item, civ: props.civ }),
     (x) => getUnitStats(ITEMS.UNITS, x.unit, x.civ)
   );
 
-  const variation = createMemo(() => getMostAppropriateVariation<Building>(props.item, props.civ, props.age()));
+  const variation = createMemo(() => props.variation ?? getMostAppropriateVariation<Building>(props.item, props.civ, props.age()));
 
   const costs = () => variation()?.costs;
 
@@ -184,19 +195,19 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; civ: civConfig; 
                     speed={stats.attackSpeed}
                     attacks={[stats.rangedAttack || stats.meleeAttack || stats.siegeAttack]}
                     age={props.age}
-                  ></StatDps>
+                   />
                 </div>
               )}
-              <StatNumber label="Move Speed" stat={stats.moveSpeed} unitLabel="T/S" age={props.age}></StatNumber>
-              <StatNumber label="Attack Speed" stat={stats.attackSpeed} unitLabel="S" age={props.age}></StatNumber>
-              <StatNumber label="Min Range" stat={stats.minRange} unitLabel="TILES" age={props.age}></StatNumber>
-              <StatNumber label="Range" stat={stats.maxRange} unitLabel="TILES" age={props.age}></StatNumber>
+              <StatNumber label="Move Speed" stat={stats.moveSpeed} unitLabel="T/S" age={props.age} />
+              <StatNumber label="Attack Speed" stat={stats.attackSpeed} unitLabel="S" age={props.age} />
+              <StatNumber label="Min Range" stat={stats.minRange} unitLabel="TILES" age={props.age} />
+              <StatNumber label="Range" stat={stats.maxRange} unitLabel="TILES" age={props.age} />
               <StatLos
                 label="Line of Sight"
                 stat={stats.lineOfSight}
                 statMax={stats.maxLineOfSight}
                 age={props.age}
-              ></StatLos>
+               />
             </div>
           </>
         )}

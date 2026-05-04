@@ -90,8 +90,8 @@ export const Search: Component<{ class?: string }> = (props) => {
   onMount(() => window.addEventListener("keydown", globalKeyupListener));
   onCleanup(() => window.removeEventListener("keydown", globalKeyupListener));
 
-  let inputRef: HTMLInputElement;
-  let wrapper: HTMLDivElement;
+  let inputRef: HTMLInputElement | undefined; // eslint-disable-line no-unassigned-vars
+  let wrapper: HTMLDivElement | undefined; // eslint-disable-line no-unassigned-vars
 
   return (
     <div class={`relative group ${props.class}`}>
@@ -129,14 +129,13 @@ export const Search: Component<{ class?: string }> = (props) => {
             <div class="p-3 text-gray-200 text-sm">No results</div>
           </Show>
           <For each={results()}>
-            {({ score, item }, i) => (
+            {({ item }, i) => (
               <A
-                href={getItemHref(item)}
+                href={getItemHref(item) as string}
                 class={`flex items-center p-2 rounded hover:bg-gray-500/50 ${selected() == i() ? "!bg-gray-400/40 selected" : ""}`}
               >
                 <ItemIcon item={item} size={8} class="mr-2" />
                 <span class="font-bold text-sm">{item.name}</span>
-                {/* <span class="ml-2">{score}</span> */}
               </A>
             )}
           </For>

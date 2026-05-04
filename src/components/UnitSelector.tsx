@@ -1,7 +1,6 @@
-import { CivSlug } from "@data/types/civs";
-import { UnifiedItem, Unit } from "@data/types/items";
 import { Component, createMemo, createResource, createSignal, For, Show } from "solid-js";
-import { PRETTY_AGE_MAP_SHORT } from "../config";
+import { CivSlug, PRETTY_AGE_MAP_SHORT } from "../config";
+import { UnifiedItem, Unit } from "../types/data";
 import { ItemIcon } from "./ItemIcon";
 const SDK = import("@data/sdk");
 

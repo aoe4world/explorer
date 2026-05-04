@@ -1,7 +1,6 @@
 import { firstBy } from "thenby";
-import { ITEMS } from "@data/types/items";
 import { SUPPORTED_MODIFIER_PROPERTIES } from "../config";
-import { Building, civAbbr, civConfig, Item, Modifier, Technology, UnifiedItem, Unit } from "../types/data";
+import { Building, civAbbr, civConfig, Item, ITEMS, Modifier, UnifiedItem, Unit } from "../types/data";
 import { CalculatedStats, Stat, StatPart, StatProperty } from "../types/stats";
 import { getItemTechnologies, mapCivsArgument, modifierMatches } from "./utils";
 const SDK = import("@data/sdk");
@@ -25,13 +24,13 @@ export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
     }
 
     for (const tech of techs) {
-      let lazelyPickJustTheFirst = tech.variations.sort((a, b) => b.civs.length - a.civs.length)[0]; //tech.variations?.[0];
+      const lazelyPickJustTheFirst = tech.variations.sort((a, b) => b.civs.length - a.civs.length)[0]; //tech.variations?.[0];
+      if (!lazelyPickJustTheFirst?.effects) continue;
       for (const modifier of lazelyPickJustTheFirst.effects) {
-        if (!lazelyPickJustTheFirst) continue;
         if (tech.civs.length > 1) lazelyPickJustTheFirst.unique = false;
         // if (modifier.type == "influence") continue;
         if (!modifierMatches(modifier.select, unit).any) continue;
-        if (SUPPORTED_MODIFIER_PROPERTIES.includes(modifier.property as any)) {
+        if (SUPPORTED_MODIFIER_PROPERTIES.includes(modifier.property)) {
           const properties: StatProperty[] = [modifier.property as StatProperty];
           if (modifier.property === "lineOfSight") {
             properties.push("maxLineOfSight");
@@ -57,8 +56,13 @@ export async function getUnitStats<T extends ITEMS.BUILDINGS | ITEMS.UNITS>(
     return combatStats;
   };
 
-  if (typeof unit == "string") return await getStats((await SDK)[type].get(unit));
-  else return await getStats(unit);
+  if (typeof unit === "string") {
+    const item = (await SDK)[type].get(unit);
+    if (!item) throw new Error(`Could not find ${type} with id ${unit}`);
+    return await getStats(item);
+  } else {
+    return await getStats(unit);
+  }
 }
 
 export function mergeVariationsToStats(variations: (Unit | Building)[]) {
@@ -99,7 +103,7 @@ export function mergeVariationsToStats(variations: (Unit | Building)[]) {
 
         if (w.burst) stats.burst = w.burst.count;
 
-        if (w.type == "siege" || w.type == "ranged") {
+        if ((w.type == "siege" || w.type == "ranged") && w.range) {
           stats.maxRange = w.range.max;
           stats.minRange = w.range.min;
         }
@@ -124,12 +128,14 @@ export function mergeVariationsToStats(variations: (Unit | Building)[]) {
         }
       }
 
-      return [variation, stats, bonus] as [typeof variation, typeof stats, Modifier[]];
+      return { variation, stats, bonus };
     })
-    .reduce((total, [variation, stats, bonus], i, arr) => {
-      for (const [cat, value] of Object.entries(stats)) {
-        const previousAgeValue = arr[i - 1]?.[1][cat] ?? 0;
-        (total[cat as StatProperty] ??= { category: cat as StatProperty, parts: [], modifiers: [], bonus: [] }).parts.push({
+    .reduce((totals, { variation, stats, bonus }, i, arr) => {
+      const previous = arr[i - 1];
+      for (const [cat, value] of Object.entries(stats) as [StatProperty, number][]) {
+        const previousAgeValue = previous?.stats?.[cat] ?? 0;
+        const total = totals[cat] ??= { category: cat as StatProperty, parts: [], modifiers: [], bonus: [] };
+        total.parts.push({
           value: value - previousAgeValue,
           id: variation.id,
           age: variation.age,
@@ -139,14 +145,13 @@ export function mergeVariationsToStats(variations: (Unit | Building)[]) {
         if (bonus.length) {
           bonus.forEach((mod, mi) => {
             mod = { ...mod };
-            const previousModifierValue = arr[i - 1]?.[2][mi]?.value ?? 0;
-            if ((mod.effect as any) == "increase") mod.effect = "change";
+            const previousModifierValue = previous?.bonus?.[mi]?.value ?? 0;
             if (previousModifierValue) mod.value = mod.value - previousModifierValue;
-            total[cat as StatProperty].bonus.push({ value: mod, id: variation.id, age: variation.age, variation: variation, type: "bonus" });
+            total.bonus.push({ value: mod, id: variation.id, age: variation.age, variation: variation, type: "bonus" });
           });
         }
       }
-      return total;
+      return totals;
     }, {} as Partial<Record<StatProperty, Stat>>);
 }
 
@@ -160,13 +165,13 @@ export function roundToGameTicks(number: number) {
 }
 
 export function calculateStatParts(
-  stat: Stat,
+  stat: Stat | undefined,
   maxAge: number,
   { decimals, target, item }: { decimals?: number; target?: UnifiedItem | Item; item?: UnifiedItem | Item } = { decimals: 0 }
 ): CalculatedStats {
   if (!stat) return { total: 0, base: 0, upgrades: 0, technologies: 0, bonus: 0, parts: [], max: 0 };
   if (!decimals) decimals = 0;
-  const round = (val) => (stat.category === "attackSpeed" ? roundToGameTicks(val) : roundToDecimals(val, decimals));
+  const round = (val: number) => (stat.category === "attackSpeed" ? roundToGameTicks(val) : roundToDecimals(val, decimals!));
   const parts = stat.parts.sort((a, b) => a.age - b.age).map((p) => ({ ...p, value: p.age > maxAge ? 0 : round(p.value) }));
 
   let base = parts[0]?.value ?? 0;
@@ -199,16 +204,16 @@ export function calculateStatParts(
       }, [] as StatPart<number>[])
   );
 
-  let maxBonusInAge = {
+  const maxBonusInAge: Record<number, number> = {
     1: 0,
     2: 0,
     3: 0,
     4: 0,
   };
-  let bonus = 0;
+
   if (stat.bonus)
     parts.push(
-      ...stat.bonus?.reduce((parts, { value: modifier, id, age, variation }) => {
+      ...stat.bonus.reduce((parts, { value: modifier, id, age, variation }) => {
         if (modifier.property != stat.category) return parts;
         if (target && !modifierMatches(modifier.target, target).any) return parts;
         if (modifier.type == "ability" || modifier.type == "influence") return parts;
@@ -233,7 +238,7 @@ export function calculateStatParts(
       }, [] as StatPart<number>[])
     );
 
-  bonus = Object.values(maxBonusInAge).reduce((a, b) => a + b, 0);
+  let bonus = Object.values(maxBonusInAge).reduce((a, b) => a + b, 0);
   base = round(base);
   upgrades = round(upgrades);
   technologies = round(technologies);

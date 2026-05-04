@@ -1,7 +1,6 @@
-import { Ability, Building, Item, Modifier, PhysicalItem } from "@data/types/items";
-import { CIVILIZATIONS, ITEMS, SIMILAIR_ITEMS } from "../config";
+import { CIVILIZATIONS, SIMILAIR_ITEMS } from "../config";
 import { staticMaps } from "../data/maps";
-import { civAbbr, civConfig, GroupedBuildings, GroupedUnits, Technology, UnifiedItem, Unit } from "../types/data";
+import { Building, civAbbr, civConfig, GroupedBuildings, GroupedUnits, Item, ITEMS, Modifier, Technology, UnifiedItem, Unit } from "../types/data";
 import { PatchLine, PatchNotes } from "../types/patches";
 const SDK = import("@data/sdk");
 
@@ -26,7 +25,7 @@ export function filterItems<T extends UnifiedItem[]>(items: T, { civs, maxAge }:
     filteredVariations = filteredVariations.filter((v) => cs.some((c) => v.civs.includes(c.abbr)));
     if (maxAge) filteredVariations = filteredVariations.filter((v) => v.age <= maxAge);
 
-    let filteredCivs = x.civs.filter((c) => filteredVariations.some((v) => v.civs.includes(c)));
+    const filteredCivs = x.civs.filter((c) => filteredVariations.some((v) => v.civs.includes(c)));
     if (filteredVariations.length > 0) items.push({ ...x, civs: filteredCivs, variations: filteredVariations });
     return items;
   }, [] as typeof items);
@@ -69,8 +68,10 @@ export async function getItemTechnologies<T extends ITEMS>(
   }, [] as UnifiedItem<Technology>[]);
 }
 
-export function getMostAppropriateVariation<T extends Item = Item>(item: UnifiedItem<T>, civ: civConfig, age?: number): T {
-  if (!item) return null;
+export function getMostAppropriateVariation<T extends Item = Item>(item: UnifiedItem<T>, civ?: civConfig, age?: number): T;
+export function getMostAppropriateVariation<T extends Item = Item>(item?: UnifiedItem<T>, civ?: civConfig, age?: number): T | undefined;
+export function getMostAppropriateVariation<T extends Item = Item>(item?: UnifiedItem<T>, civ?: civConfig, age?: number): T | undefined {
+  if (!item) return undefined;
   const candidates = (civ ? item.variations.filter((v) => v.civs.includes(civ.abbr)) : item.variations)
       .filter((a) => !age || a.age <= age)
       .sort((a, b) => b.costs.total - a.costs.total)
@@ -181,29 +182,24 @@ export function canonicalItemName(item: Item | UnifiedItem) {
   return `${group}/${"baseId" in item ? item.baseId : item.id}`;
 }
 
-export async function getItemByCanonicalName(id: string) {
-  if (id.startsWith("maps/")) return getMapAsItem(id.split("/")[1]);
-  return (await SDK).Get(id as any);
-}
-
 export async function findClosestMatch<T extends ITEMS>(type: T, id: string, civ: civConfig) {
   const similair = SIMILAIR_ITEMS.find((units) => units.includes(id));
   const closestMatch = similair && (await SDK)[type].where({ civilization: civ.abbr }).find((i) => similair.includes(i.id));
   return closestMatch ?? null;
 }
 
-function getMapAsItem(id: string) {
-  const {name, imageUrl} = staticMaps[id] ?? {name: capitalize(id.replaceAll("-", " ")), imageUrl: ""};
-
-  return {
-    id,
-    name,
-    civs: [],
-    classes: ["Map"],
-    icon: imageUrl,
-    description: "",
-    type: "map",
-  } as unknown as UnifiedItem;
+export interface MapItem {
+  id: string;
+  name: string;
+  civs: civAbbr[];
+  unique: boolean;
+  variations: MapItem[];
+  type: 'map';
+  minAge: number;
+  classes: string[];
+  displayClasses: string[];
+  icon?: string;
+  description?: string;
 }
 
 export function getMapsAsItems() {
@@ -240,7 +236,7 @@ export async function getPatchHistory(item: UnifiedItem, civs?: civConfig[]) {
       if (!civOverlap(civAbbrs, section.civs)) continue;
       diff.push(
         ...section.changes.reduce(
-          (acc, c) => (c.items.includes(cid) && !c.uionly && civOverlap(civAbbrs, c.civs) ? [...acc, ...c.diff.filter(([t, l, lc]) => civOverlap(civAbbrs, lc)).map(([t, l, lc = []]) => [t, l, [...lc, ...section.civs]])] : acc),
+          (acc, c) => (c.items.includes(cid) && !c.uionly && civOverlap(civAbbrs, c.civs) ? [...acc, ...c.diff.filter(([_t, _l, lc]) => civOverlap(civAbbrs, lc)).map(([t, l, lc = []]) => [t, l, [...lc, ...section.civs]])] : acc),
           [] as PatchLine[]
         )
       );

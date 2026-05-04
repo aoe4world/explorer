@@ -1,9 +1,9 @@
 import { Component, createResource, createSignal, For } from "solid-js";
-import { UnifiedItem, Unit, Technology, civConfig } from "../../types/data";
-import { getItemTechnologies, getMostAppropriateVariation } from "../../query/utils";
+
+import { UnifiedItem, Unit, Technology, civConfig, ITEMS, ModifyableProperty } from "../../types/data";
+import { getItemTechnologies } from "../../query/utils";
 import { ItemIcon } from "../ItemIcon";
-import { ITEMS, ModifyableProperty } from "@data/types/items";
-import { getItemCssClass, tooltipCSSClass } from "../../styles";
+import { tooltipCSSClass } from "../../styles";
 import { Tooltip } from "../Tooltip";
 import { Icon } from "../Icon";
 
@@ -47,13 +47,13 @@ const IgnoredProperties: ModifyableProperty[] = [
 ];
 
 function getTechStatProperty(tech: UnifiedItem<Technology>) {
-  const effects = tech.variations.flatMap(v => v.effects);
+  const effects = tech.variations.flatMap(v => v.effects ?? []);
   const statProperties = [...new Set(effects.map(v => v.property))];
   return statProperties[0];
 }
 
-function sortBy<T>(a: T, b: T, ...compares: ((item: T) => any)[]) {
-  for (let func of compares) {
+function sortBy<T>(a: T, b: T, ...compares: ((item: T) => boolean | number | string)[]) {
+  for (const func of compares) {
     const va = func(a);
     const vb = func(b);
     if (va < vb) return -1;
@@ -68,21 +68,23 @@ export const TechnologySelector: Component<{
   age?: number;
   onChange: (selectedTechnologies: string[]) => void;
 }> = (props) => {
-  const [technologies] = createResource(() => ({age: props.age, civ: props.civ}), ({age, civ}) => {
-    let techs = getItemTechnologies(ITEMS.UNITS, props.item, props.civ);
-    techs = techs.filter(v => getTechStatProperty(v) !== "unknown");
+  const [technologies] = createResource(
+    () => ({age: props.age, item: props.item, civ: props.civ}), 
+    async ({age, item, civ}) => {
+      let techs = await getItemTechnologies(ITEMS.UNITS, item, civ);
+      techs = techs.filter(v => getTechStatProperty(v) !== "unknown");
 
-    let listedTechs = techs.map(tech => {
-      const variations = tech.variations.filter(v => !civ || v.civs.includes(civ.abbr));
-      const minAge = Math.min(...variations.map(v => v.age));
-      return {
-        tech: tech,
-        disabled: (age && minAge > age || IgnoredProperties.includes(getTechStatProperty(tech))),
-      };
+      const listedTechs = techs.map(tech => {
+        const variations = tech.variations.filter(v => !civ || v.civs.includes(civ.abbr));
+        const minAge = Math.min(...variations.map(v => v.age));
+        return {
+          tech: tech,
+          disabled: (age && minAge > age || IgnoredProperties.includes(getTechStatProperty(tech))),
+        };
+      });
+      listedTechs.sort((a, b) => sortBy(a, b, (v) => v.disabled, (v) => -RelevantProperties.includes(getTechStatProperty(v.tech)), (v) => getTechStatProperty(v.tech), (v) => v.tech.minAge));
+      return listedTechs;
     });
-    listedTechs.sort((a, b) => sortBy(a, b, (v) => v.disabled, (v) => -RelevantProperties.includes(getTechStatProperty(v.tech)), (v) => getTechStatProperty(v.tech), (v) => v.tech.minAge));
-    return listedTechs;
-  });
   const [selected, setSelected] = createSignal<string[]>([]);
 
   const toggleTechnology = (techId: string) => {
@@ -113,7 +115,7 @@ export const TechnologySelector: Component<{
       </div>
       <For each={technologies()}>
         {(tech) => {
-          let iconEl;
+          let iconEl: HTMLDivElement | undefined; // eslint-disable-line no-unassigned-vars
           return (
             <div
               ref={iconEl}

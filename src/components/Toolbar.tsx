@@ -1,24 +1,21 @@
 import { A, useIsRouting, useLocation } from "@solidjs/router";
-import { Component, createMemo, createSignal, For, Show } from "solid-js";
-import { CIVILIZATIONS, CIVILIZATION_BY_SLUG } from "../config";
+import { Component, createMemo, For, Show } from "solid-js";
+import { CIVILIZATIONS, getCivConfig } from "../config";
 import { tooltipCSSClass } from "../styles";
-import { civAbbr, civConfig } from "../types/data";
+import { civConfig } from "../types/data";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { Search } from "./Search";
 import { Tooltip } from "./Tooltip";
-import { globalAgeFilter, hideNav, setGlobalAgeFilter } from "../global";
+import { hideNav, parseCurrentLocation } from "../global";
 import { QuickNav } from "./QuickNav";
 
 export const Toolbar: Component = () => {
   const pending = useIsRouting();
-  let aboutEl: HTMLAnchorElement | undefined;
+  let aboutEl: HTMLAnchorElement | undefined; // eslint-disable-line no-unassigned-vars
 
   const location = useLocation();
-  const current = createMemo(() => {
-    const [route, civ, subroute] = location.pathname.match(/\/civs\/([a-z]+)\/?([\w/-]*)/i) ?? [];
-    return { route, civ, subroute };
-  });
+    const current = createMemo(() => parseCurrentLocation(location.pathname));
 
   const smartCivLink = (civ: civConfig) => {
     const subroute = [`/civs/${civ.slug}`, current().subroute].join("/");
@@ -58,7 +55,7 @@ export const Toolbar: Component = () => {
             </For>
           </div>
           <QuickNav />
-          <Show when={CIVILIZATION_BY_SLUG[current()?.civ]}>
+          <Show when={getCivConfig(current().civ)}>
             {(civ) => (
               <div class="flex-auto hidden lg:block xl:hidden">
                 <div class="group inline-block">
@@ -80,9 +77,9 @@ export const Toolbar: Component = () => {
               </div>
             )}
           </Show>
-
-          <A href={`/about`} ref={aboutEl} class={`${navButtonClass} ml-auto hidden sm:grid`} noScroll={true}>
-            <Icon icon="circle-question" class="place-self-center text-gray-300" />
+ 
+           <A href={`/about`} ref={aboutEl} class={`${navButtonClass} ml-auto hidden sm:grid`} noScroll={true}>
+             <Icon icon="circle-question" class="place-self-center text-gray-300" />
             <Tooltip attachTo={aboutEl}>
               <div class={tooltipCSSClass}>
                 <p class="font-bold">Learn more about the Explorer.</p>
@@ -99,7 +96,7 @@ export const Toolbar: Component = () => {
                 >
                   {([type, label]) => (
                     <div>
-                      <span class={`bg-bar-${type} inline-block w-3 h-3 rounded-full mr-1`}></span> {label}
+                      <span class={`bg-bar-${type} inline-block w-3 h-3 rounded-full mr-1`} /> {label}
                     </div>
                   )}
                 </For>

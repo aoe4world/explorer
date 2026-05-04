@@ -7,19 +7,24 @@ import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
 import { globalAgeFilter } from "../global";
 
-const typeToPathMap = {
+const typeToPathMap: Record<string, string> = {
   building: "buildings",
   unit: "units",
   technology: "technologies",
 };
 
 export function getItemHref(item: UnifiedItem, civ?: civConfig) {
-  if (item.civs.length == 1 && !civ) civ = CIVILIZATIONS[item.civs[0]] as unknown as civConfig;
-  return `${civ ? `/civs/${civ.slug}` : ""}/${typeToPathMap[item.type]}/${item.id}`;
+  if (item.civs.length == 1 && !civ) civ = CIVILIZATIONS[item.civs[0]];
+  const typePath = typeToPathMap[item.type];
+  if (!typePath) return '';
+  return `${civ ? `/civs/${civ.slug}` : ""}/${typePath}/${item.id}`;
 }
 
 export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig; age?: number, linkType?: LinkType, onCivSelect?: (civ: civConfig) => void }> = (props) => {
-  const minAge = createMemo(() => (props.age ?? (!props.civ ? props.item.minAge : props.item.variations.reduce((a, v) => (v.civs.includes(props.civ.abbr) ? Math.min(a, v.age) : a), 4))));
+  const minAge = createMemo(() => {
+    const civ = props.civ;
+    return props.age ?? (!civ ? props.item.minAge : props.item.variations.reduce((a, v) => (v.civs.includes(civ.abbr) ? Math.min(a, v.age) : a), 4));
+  });
 
   return (
     <div
@@ -44,7 +49,7 @@ export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig; age?: n
         <div class="flex h-auto mt-5  items-center gap-2 w-full flex-wrap">
           <For each={props.item.civs}>
             {(civ) => {
-              const civObj = CIVILIZATIONS[civ] as unknown as civConfig;
+              const civObj = CIVILIZATIONS[civ];
               return props.item.type != "technology" ? (
                 <Link
                   href={getItemHref(props.item, civObj)}
@@ -79,7 +84,7 @@ export const CardHeader: Component<{ item: UnifiedItem; civ?: civConfig; minAge:
       <div class="flex-auto">
         <div class="flex flex-row items-center">
           <h2 class="text-lg font-bold flex-auto leading-tight ">{props.item.name}</h2>
-          <span class={`text-sm uppercase whitespace-nowrap text-opacity-50text-item-${props.item.type}-light`}>{PRETTY_AGE_MAP[props.minAge]}</span>
+          <span class={`text-sm uppercase whitespace-nowrap text-opacity-50 text-item-${props.item.type}-light`}>{PRETTY_AGE_MAP[props.minAge]}</span>
         </div>
         <p class={`text-item-${props.item.type}-light text-sm leading-relaxed`}>{props.item.displayClasses.join(", ")}</p>
       </div>

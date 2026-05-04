@@ -15,7 +15,9 @@ import dlc_flag_1 from "./dlc-flag-sultans-ascend.png";
 import dlc_flag_2 from "./dlc-flag-knights-of-cross-and-rose.png";
 import dlc_flag_3 from "./dlc-flag-dynasties-of-the-east.png";
 
-export const FLAGS = Object.fromEntries(Object.entries(import.meta.glob("./flags/*.png", { eager: true, query: "?url", import: "default" })).map(([k, v]) => [k.match(/\.\/flags\/(.*)\.png/)![1], v]));
+export const FLAGS: Record<string, string> = Object.fromEntries(
+  Object.entries(import.meta.glob("./flags/*.png", { eager: true, query: "?url", import: "default" })).map(([k, v]) => [k.match(/\.\/flags\/(.*)\.png/)![1], v as string])
+);
 
 export const RESOURCES = { food, gold, stone, wood, time, popcap, oliveoil, silver, vizier };
 

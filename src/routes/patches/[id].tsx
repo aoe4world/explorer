@@ -1,23 +1,22 @@
 import { A, useLocation, useParams } from "@solidjs/router";
-import { Component, createMemo, onMount, createResource, createSignal, For, Index, Resource, createEffect, Show, onCleanup, JSX } from "solid-js";
+import { Component, createResource, createSignal, For, createEffect, Show } from "solid-js";
 import { setActivePage } from "../../App";
 import { getItemHref } from "@components/Cards";
 import { CivFlag } from "@components/CivFlag";
 import { Icon } from "@components/Icon";
 import { ItemIcon } from "@components/ItemIcon";
 import { scrollIntoViewIfNeeded, TableOfContents, useTableOfContents } from "@components/TableOfContents";
-import { CIVILIZATIONS, CIVILIZATION_BY_SLUG } from "../../config";
-import { capitalize, getMapsAsItems, sortPatchDiff } from "../../query/utils";
-import { getItemCssClass, mainIntroductionCSSClass } from "../../styles";
+import { CivSlug, CIVILIZATIONS, CIVILIZATION_BY_SLUG, ItemGroup, ItemSlug } from "../../config";
+import { capitalize, getMapsAsItems, MapItem, sortPatchDiff } from "../../query/utils";
+import { mainIntroductionCSSClass } from "../../styles";
 import { civAbbr, Item, UnifiedItem } from "../../types/data";
 import { PatchLine, PatchSection, PatchSet } from "../../types/patches";
 import { tempHideNav } from "../../global";
-import { ItemGroup, ItemSlug } from "@data/sdk/utils";
 const SDK = import("@data/sdk");
 
 export const PatchDetailRoute = () => {
   tempHideNav();
-  const params = useParams();
+  const params = useParams<{ civ: CivSlug; id: string }>();
   const [patch] = createResource(async () => (await import("../../data/patches/patch")).patches.find((patch) => patch.id === params.id));
   const [civ, setCiv] = createSignal<civAbbr>(CIVILIZATION_BY_SLUG[params.civ]?.abbr);
   const [items] = createResource(patch, async (patch) => {
@@ -36,20 +35,20 @@ export const PatchDetailRoute = () => {
       if (!patch || !items) return [];
       if (!civ) return patch?.sections;
 
-      let nexttitle = null;
+      let nexttitle: string | undefined;
       return patch?.sections?.reduce((sections, s) => {
         const changes = s.changes.reduce((chs, c) => {
           if (c.civs.length ? c.civs.includes(civ) : !c.items.length || c.items.some((i) => items.get(i)?.civs.includes(civ))) {
             const filterdChange: PatchSet = { ...c };
             filterdChange.items = c.items.filter((i) => !i || items.get(i)?.civs.includes(civ));
-            filterdChange.diff = filterdChange.diff.filter(([t, d, c]) => !c?.length || c.includes(civ));
+            filterdChange.diff = filterdChange.diff.filter(([_t, _d, c]) => !c?.length || c.includes(civ));
             chs.push(filterdChange);
           }
           return chs;
         }, [] as PatchSet[]);
         if ((!s.civs?.length || (s.civs && s.civs.includes(civ))) && changes.length) {
           sections.push({ ...s, title: s.title ?? nexttitle, changes });
-          nexttitle = null;
+          nexttitle = undefined;
         }
         else {
           if (s.title)
@@ -84,7 +83,7 @@ export const PatchDetailRoute = () => {
           <Show when={pagination()?.previous}>
             {(prev) => (
               <A href={`/patches/${prev().id}`} class="hover:text-white">
-                <Icon icon="arrow-left-long" class="mr-1"></Icon> {prev().name}
+                <Icon icon="arrow-left-long" class="mr-1" /> {prev().name}
               </A>
             )}
           </Show>
@@ -94,7 +93,7 @@ export const PatchDetailRoute = () => {
           <Show when={pagination()?.next}>
             {(next) => (
               <A href={`/patches/${next().id}`} class="hover:text-white">
-                {next().name} <Icon icon="arrow-right-long" class="ml-1"></Icon>
+                {next().name} <Icon icon="arrow-right-long" class="ml-1" />
               </A>
             )}
           </Show>
@@ -103,14 +102,18 @@ export const PatchDetailRoute = () => {
           {patch()?.name} {civ() && `– ${CIVILIZATIONS[civ()]?.name}`}
         </h1>
         <div class="text-gray-300 mt-1">
-          {patch()?.date.toLocaleDateString("en-US", { dateStyle: "full" })} {patch()?.buildId && <span class="ml-2">#{patch().buildId}</span>}
+          {patch()?.date.toLocaleDateString("en-US", { dateStyle: "full" })} {patch()?.buildId && <span class="ml-2">#{patch()?.buildId}</span>}
           <span class="ml-2">
             Season {patch()?.season} {patch()?.type}
           </span>
         </div>
-        <div class={mainIntroductionCSSClass}>
-          <DirtSimpleMd md={patch()?.introduction} />
-        </div>
+        <Show when={patch()?.introduction} keyed>
+          {(intro) => (
+            <div class={mainIntroductionCSSClass}>
+              <DirtSimpleMd md={intro} />
+            </div>
+          )}
+        </Show>
 
         {patch()?.officialUrl && (
           <a
@@ -174,17 +177,22 @@ export const PatchDetailRoute = () => {
   );
 };
 
-const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem>; civ: civAbbr }> = (props) => {
-  let subtitle: string | JSX.Element = props.section.subtitle;
-  if (subtitle) {
-    const civ = Object.values(CIVILIZATIONS).filter((civ) => civ.name == subtitle)[0];
-    if (civ) {
-      subtitle = (<div class="flex items-center gap-4 w-full justify-between">
-        <span>{civ.name}</span>
-        <CivFlag class="inline-block h-7 opacity-50" abbr={civ.abbr} />
-      </div>);
-    }
-  }
+const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem | MapItem>; civ: civAbbr }> = (props) => {
+
+    const subtitle = () => {
+      if (props.section.subtitle)
+      {
+        const civ = Object.values(CIVILIZATIONS).filter((civ) => civ.name === props.section.subtitle)[0];
+        if (civ) {
+          return <div class="flex items-center gap-4 w-full justify-between">
+            <span>{civ.name}</span>
+            <CivFlag class="inline-block h-7 opacity-50" abbr={civ.abbr} />
+          </div>;
+        }
+      } else {
+         return undefined; 
+      }
+    };
 
   return (
     <div class="mb-10 scroll-mt-24">
@@ -192,7 +200,7 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
       { props.section.subtitle && <TableOfContents.Anchor label={props.section.subtitle} level={2} /> }
 
       {props.section.title && <h2 class="text-4xl font-bold mb-4 mt-20  border-b pb-3 border-white/20">{props.section.title}</h2>}
-      {props.section.subtitle && <h3 class="text-2xl font-bold mb-4 border-b pb-3 border-white/20">{subtitle}</h3>}
+      {props.section.subtitle && <h3 class="text-2xl font-bold mb-4 border-b pb-3 border-white/20">{subtitle()}</h3>}
       {props.section.description && <p class="leading-6 text-white/80 my-8 max-w-prose whitespace-pre-wrap">{props.section.description}</p>}
       {props.section.md && <DirtSimpleMd md={props.section.md} />}
       <For each={props.section.changes}>
@@ -206,10 +214,9 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
                     const item = props.items?.get(ci);
                     if (item && props.civ && !item.civs.includes(props.civ)) return null;
                     if (item) {
-                      const itemCssClass = getItemCssClass(item);
                       return (
                         <A
-                          href={(item.type as any) == "map" ? `https://aoe4world.com/stats/maps/${item.name}` : getItemHref(item)}
+                          href={item.type == "map" ? `https://aoe4world.com/stats/maps/${item.name}` : getItemHref(item)}
                           class="inline-flex flex-row items-center"
                         >
                           <ItemIcon item={item} size={8} class="mr-2" />
@@ -235,12 +242,10 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
 
 const DevNote: Component<{ note: string }> = (props) => {
   return (
-    props.note && (
-      <div class="my-5 rounded-lg p-4 bg-gray-500">
+    <Show when={props.note}><div class="my-5 rounded-lg p-4 bg-gray-500">
         <h5 class="font-bold text-gray-300 uppercase text-sm mb-1">Developer note</h5>
         <p class="text-gray-100">"{props.note}"</p>
-      </div>
-    )
+      </div></Show>
   );
 };
 const DiffList: Component<{ diff: PatchLine[] }> = (props) => (
@@ -268,7 +273,7 @@ const Sidebar = () => {
     <div class="">
       <span class="font-semibold text-gray-400">Jump to</span>
       <For each={headings()}>
-        {(s, i) => (
+        {(s) => (
           <a
             href={`#${s.id}`}
             target="_self"
@@ -284,41 +289,46 @@ const Sidebar = () => {
 };
 
 const DirtSimpleMd: Component<{ md: string }> = (props) => {
+
+  const lines = () => (props.md ?? "").split("\n");
+
   return (
     <div class="mb-8">
-      {...(props.md ?? "").split("\n").map((line) => {
-        const l = line.trim();
-        if (l.startsWith("###")) return <h5 class="text-md font-bold mb-2 mt-4">{l.slice(3).trimStart()}</h5>;
-        if (l.startsWith("##")) return <h4 class="text-lg font-bold mb-2 mt-4">{l.slice(2).trimStart()}</h4>;
-        if (l.startsWith("#")) return <h3 class="text-xl text-white font-bold  mb-2 mt-4">{l.slice(1).trimStart()}</h3>;
-        if (l.startsWith("> ")) return <DevNote note={l.slice(2)} />;
-        if (l.startsWith("![") && l.endsWith(")")) {
-          const [_, alt, url] = l.match(/!\[(.*)\]\((.*)\)/);
-          return <img src={url} alt={alt} class="max-w-full my-8 rounded-md" />;
-        }
-        if (l.startsWith("[") && l.includes("](") && l.endsWith(")")) {
-          const [_, label, url] = l.match(/\[(.*)\]\((.*)\)/);
-          return (
-            <a href={url} class="bg-white my-2 inline-block font-bold text-black rounded-full px-4 py-2 hover:bg-white/70" target="_blank">
-              {label}
-            </a>
-          );
-        }
-        if (line.startsWith("    * ") || line.startsWith("    - "))
-          return (
-            <p class="text-gray-100 pl-12 mb-1 text-base before:content-['●'] before:text-gray-400 before:-ml-4 before:text-xs before:inline-block before:w-6 leading-normal ">
-              {line.slice(6)}
-            </p>
-          );
-        if (l.startsWith("* ") || l.startsWith("- "))
-          return (
-            <p class="text-gray-100 pl-8 mb-2 text-base before:content-['●'] before:text-gray-400 before:text-xs before:-ml-6 before:inline-block before:w-6 leading-normal">
-              {l.slice(2)}
-            </p>
-          );
+      <For each={lines()}>
+        {(line) => {
+          const l = line.trim();
+          if (l.startsWith("###")) return <h5 class="text-md font-bold mb-2 mt-4">{l.slice(3).trimStart()}</h5>;
+          if (l.startsWith("##")) return <h4 class="text-lg font-bold mb-2 mt-4">{l.slice(2).trimStart()}</h4>;
+          if (l.startsWith("#")) return <h3 class="text-xl text-white font-bold  mb-2 mt-4">{l.slice(1).trimStart()}</h3>;
+          if (l.startsWith("> ")) return <DevNote note={l.slice(2)} />;
+          if (l.startsWith("![") && l.endsWith(")")) {
+            const [, alt, url] = l.match(/!\[(.*)\]\((.*)\)/);
+            return <img src={url} alt={alt} class="max-w-full my-8 rounded-md" />;
+          }
+          if (l.startsWith("[") && l.includes("](") && l.endsWith(")")) {
+            const [, label, url] = l.match(/\[(.*)\]\((.*)\)/);
+            return (
+              <a href={url} class="bg-white my-2 inline-block font-bold text-black rounded-full px-4 py-2 hover:bg-white/70" target="_blank">
+                {label}
+              </a>
+            );
+          }
+          if (line.startsWith("    * ") || line.startsWith("    - "))
+            return (
+              <p class="text-gray-100 pl-12 mb-1 text-base before:content-['●'] before:text-gray-400 before:-ml-4 before:text-xs before:inline-block before:w-6 leading-normal ">
+                {line.slice(6)}
+              </p>
+            );
+          if (l.startsWith("* ") || l.startsWith("- "))
+            return (
+              <p class="text-gray-100 pl-8 mb-2 text-base before:content-['●'] before:text-gray-400 before:text-xs before:-ml-6 before:inline-block before:w-6 leading-normal">
+                {l.slice(2)}
+              </p>
+            );
 
-        return <p class="text-gray-100 text-base my-2">{l}</p>;
-      })}
+          return <p class="text-gray-100 text-base my-2">{l}</p>;
+        }}
+      </For>
     </div>
   );
 };

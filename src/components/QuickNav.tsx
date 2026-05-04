@@ -1,62 +1,60 @@
-import { ItemSlug } from "@data/sdk/utils";
-import { CivConfig, CivSlug } from "@data/types/civs";
 import { computePosition } from "@floating-ui/dom";
 import { A, useLocation } from "@solidjs/router";
-import { Component, For, createEffect, createMemo, createResource, createSignal, onCleanup } from "solid-js";
-import { Portal, Show } from "solid-js/web";
-import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, ITEMS } from "../config";
-import { getStructuredItems, parseCurrentLocation } from "../global";
+import { Component, For, createEffect, createMemo, createResource, createSignal, onCleanup, Show } from "solid-js";
+import { Portal } from "solid-js/web";
+import { CIVILIZATIONS, CivConfig, getCivConfig, ItemSlug } from "../config";
+import { getStructuredItems, parseCurrentLocation, ItemTypeKey, ITEM_TYPE_LABELS } from "../global";
 import { UnifiedItem } from "../types/data";
 import { getItemHref } from "./Cards";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
+import { ItemName } from "./ItemName";
 const SDK = import("@data/sdk");
  
-const itemTypeLabels = {
-  units: "Units",
-  buildings: "Buildings",
-  technologies: "Technologies",
-};
-
 export const QuickNav: Component = () => {
   const location = useLocation();
   const current = createMemo(() => parseCurrentLocation(location.pathname));
-  const currentCivilization = () => CIVILIZATION_BY_SLUG[current().civ as CivSlug] ?? undefined;
-  const [civilization, setCivilization] = createSignal<CivConfig>(currentCivilization());
+  const currentCivilization = () => getCivConfig(current().civ);
+  const [civilization, setCivilization] = createSignal<CivConfig | undefined>(currentCivilization());
   const [data] = createResource(civilization, getStructuredItems);
-  const [view, setView] = createSignal<"buildings" | "units" | "technologies" | string>(current().itemType);
+  const [view, setView] = createSignal<ItemTypeKey>(current().itemType ?? "units"); // eslint-disable-line solid/reactivity
   const [show, setShow] = createSignal(true);
 
   createEffect(() => {
-    setView(() => current().itemType || "units");
+    if (show())
+    {
+       document.body.classList.add("overflow-hidden");
+       setCivilization(() => currentCivilization());
+       setView(() => current().itemType ?? "units");
+    }
+    else
+    {
+      document.body.classList.remove("overflow-hidden");
+    }
   });
 
-  createEffect(() => {
-    show() ? document.body.classList.add("overflow-hidden") : document.body.classList.remove("overflow-hidden");
-    show() && setCivilization(() => currentCivilization());
-    show() && setView(() => current().itemType || "units");
-  });
-
-  createEffect(() => view() && list.scrollTo({ top: 0 }));
+  createEffect(() => view() && list?.scrollTo({ top: 0 }));
   createEffect(() => current() && setShow(false));
 
   const [currentItem] = createResource(
-    () => current().subroute,
-    async () => {
-      if (civilization()) return (await SDK).civilizations.Get(civilization()).Get(current().subroute as ItemSlug);
-      else return (await SDK).Get(current().subroute as ItemSlug);
+    () => ({ subroute: current().subroute, civ: civilization() }),
+    async ({subroute, civ}) => {
+      if (civ) return (await SDK).civilizations.Get(civ).Get(subroute as ItemSlug);
+      else if (subroute) return (await SDK).Get(subroute as ItemSlug);
+      else return undefined;
     }
   );
 
-  let attachTo: HTMLButtonElement;
-  let list: HTMLDivElement;
-  function positionPopup(el) {
+  let attachTo: HTMLButtonElement | undefined; // eslint-disable-line no-unassigned-vars
+  let list: HTMLDivElement | undefined; // eslint-disable-line no-unassigned-vars
+  function positionPopup(el: HTMLDivElement) {
     function updatePosition() {
+      if (!attachTo) return;
       computePosition(attachTo, el, {
         placement: "bottom",
         strategy: "fixed",
-      }).then(({ x, y }) =>
+      }).then(({ y }) =>
         Object.assign(el.style, {
           left: `0px`,
           top: `${y + 10}px`,
@@ -77,30 +75,32 @@ export const QuickNav: Component = () => {
   return (
     <div class="lg:hidden [-webkit-tap-highlight-color:transparent]">
       <button class="flex gap-3 py-1 items-center" onClick={() => setShow(!show())} ref={attachTo}>
-        {currentCivilization() ? (
-          <div class="flex items-center">
-            <CivFlag abbr={currentCivilization().abbr} class="w-10 h-6 mr-2 rounded" />
-            <span class="truncate">{currentCivilization().name}</span>
-          </div>
-        ) : (
+        <Show when={currentCivilization()} keyed fallback={
           <span>All</span>
-        )}
-        {current().itemType ? (
+        }>
+          {(currentCivilization) =>
+            <div class="flex items-center">
+              <CivFlag abbr={currentCivilization.abbr} class="w-10 h-6 mr-2 rounded" />
+              <span class="truncate">{currentCivilization.name}</span>
+            </div>
+          }
+        </Show>
+        <Show when={current().itemType} keyed>
+          {(itemType) =>
           <>
             <Icon icon="chevron-right" class="text-gray-400 hidden sm:block" />
-            <span class="hidden sm:block truncate">{itemTypeLabels[current().itemType]}</span>
+            <span class="hidden sm:block truncate">{ITEM_TYPE_LABELS[itemType]}</span>
           </>
-        ) : (
-          <></>
-        )}
-        {currentItem() ? (
-          <>
-            <Icon icon="chevron-right" class="text-gray-400" />
-            <span class="truncate">{currentItem().name}</span>
-          </>
-        ) : (
-          <></>
-        )}
+          }
+        </Show>
+        <Show when={currentItem()} keyed>
+          {(currentItem) =>
+            <>
+              <Icon icon="chevron-right" class="text-gray-400" />
+              <span class="truncate">{currentItem.name}</span>
+            </>
+          }
+        </Show>
       </button>
       <Portal>
         <Show when={show()}>
@@ -123,11 +123,11 @@ export const QuickNav: Component = () => {
                 </div>
               </div>
               <div class="flex mx-4 rounded-lg mb-4 bg-gray-500 h-10 flex-none">
-                {Object.entries(itemTypeLabels).map(([type, label]) => (
+                <For each={Object.entries(ITEM_TYPE_LABELS) as [ItemTypeKey, string][]}>{([type, label]) => (
                   <button class={`flex-auto p-2 first:rounded-l-lg last:rounded-r-lg ${view() == type ? "bg-gray-400" : ""}`} onClick={() => setView(type)}>
                     {label}
                   </button>
-                ))}
+                )}</For>
               </div>
               <div class="overflow-y-auto" ref={list}>
                 <For each={Object.entries(data()?.[view()] ?? {}) as [string, UnifiedItem[]][]}>
@@ -147,7 +147,7 @@ export const QuickNav: Component = () => {
                               end
                             >
                               <ItemIcon item={item} size={6} />
-                              <p class="whitespace-pre-wrap" innerHTML={item.name.replace(/(.*?)\((.*?)\)/, '$1<span class="opacity-50">$2</span>')}></p>
+                              <ItemName name={item.name} class="whitespace-pre-wrap" />
                             </A>
                           )}
                         </For>

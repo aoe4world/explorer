@@ -1,6 +1,6 @@
 import { PatchNotes } from "../../types/patches";
 
-export const patch10148: PatchNotes = {
+export const patch: PatchNotes = {
   id: "patch-10.1.48",
   buildId: "10.1.48",
   name: "Patch 10.1.48",

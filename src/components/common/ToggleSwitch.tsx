@@ -1,9 +1,9 @@
-import { Component, JSXElement, Show } from "solid-js";
+import { Component, Show } from "solid-js";
 import { Icon } from "../Icon";
 
 interface ToggleSwitchProps {
   id: string;
-  checked: boolean | null;
+  checked: boolean | undefined;
   onChange: (checked: boolean) => void;
   label?: string;
   tooltip?: string;
@@ -28,8 +28,7 @@ export const ToggleSwitch: Component<ToggleSwitchProps> = (props) => {
               ? "bg-yellow-500 after:left-1/2 after:-translate-x-1/2"
               : `bg-gray-400 peer-checked:bg-purple-600 after:left-[2px] ${props.size == 'small' ? 'peer-checked:after:translate-x-3' : 'peer-checked:after:translate-x-full'}`
             }`
-          }>
-      </div>
+          } />
       <Show when={props.label}>
         <span class="ml-3 text-sm font-medium text-gray-300 relative group">
           {props.label}

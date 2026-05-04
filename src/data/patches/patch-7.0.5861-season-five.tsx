@@ -28,11 +28,10 @@ export const patch: PatchNotes = {
         height="500"
         src="https://www.youtube.com/embed/GjDM0Ia7z1w"
         class="w-full aspect-video"
-        title="Age of Empires IV: Season Five - Map Monsters: Summer Party Edition Trailer
-        "
+        title="Age of Empires IV: Season Five - Map Monsters: Summer Party Edition Trailer"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
-      ></iframe>
+      />
       <div class="my-5 rounded-lg p-4 bg-gray-500">
         This page foucuses on gameplay and balance changes (manually reviewed and clarified by AoE4 World) which are shown first. To learn more about Ranked
         Season Five Map pool and rewards, and other changes, scroll to the bottom or head over to the
@@ -54,21 +53,21 @@ export const patch: PatchNotes = {
 
 ![Golden throne engraved with roman numerals "Age IV" and surrounded by wood, food, stone, gold, and sheep wearing blue scarves](https://www.ageofempires.com/wp-content/uploads/2023/06/Empire-Wars_tron_final_1920x1080-1080x608.png)
 
-Empire Wars is a new, quick-to-action game mode for *Age of Empires IV.* Players start their game with a burgeoning empire, ready to dive into combat or advance to the next Age! Available in custom and skirmish games, the player starts with a variety of buildings alongside a distribution of working villagers which creates a foothold on the map for players to expand from. Villagers will already be busy working farms, chopping trees, and mining gold and stone. 
+Empire Wars is a new, quick-to-action game mode for *Age of Empires IV.* Players start their game with a burgeoning empire, ready to dive into combat or advance to the next Age! Available in custom and skirmish games, the player starts with a variety of buildings alongside a distribution of working villagers which creates a foothold on the map for players to expand from. Villagers will already be busy working farms, chopping trees, and mining gold and stone. 
 
-Empire Wars has the same win conditions as Standard game mode and is available on all maps. No starting town is the same. Will your empire prevail? 
+Empire Wars has the same win conditions as Standard game mode and is available on all maps. No starting town is the same. Will your empire prevail? 
 
 ![Empire Wars image saying "Provides a faster start to the game, with Villagers already assigned to tasks, a Dark Age town in place, and elevated resources.](https://www.ageofempires.com/wp-content/uploads/2023/06/Empire-Wars-Match-Selection.png)
 
 #### Choosing the Mode
 
-Select Empire Wars among the game modes in any Custom or Skirmish game setup. 
+Select Empire Wars among the game modes in any Custom or Skirmish game setup. 
 
 ![](https://www.ageofempires.com/wp-content/uploads/2023/06/Enable-Empire-Wars.gif)
 
-#### Start Conditions 
+#### Start Conditions 
 
-In Empire Wars, the player's economy is balanced around expanding your empire quickly. Each player starts with a distinct town, made up of pre-built buildings that maximize their chosen civilization's strengths, as well as villagers and some special units already assigned to different tasks. Choose how you would like to use these resources to quickly gain an advantage. 
+In Empire Wars, the player's economy is balanced around expanding your empire quickly. Each player starts with a distinct town, made up of pre-built buildings that maximize their chosen civilization's strengths, as well as villagers and some special units already assigned to different tasks. Choose how you would like to use these resources to quickly gain an advantage. 
 
 ![Map showing the Malian's starting point in Empire Wars game mode.](https://www.ageofempires.com/wp-content/uploads/2023/06/EmpireWars_MalianStart_MigrationMap.png)
 
@@ -78,7 +77,7 @@ In Empire Wars, the player's economy is balanced around expanding your empire qu
 
 ### Golden Heights
 
-Opposing factions settle beneath a cliff shimmering in gold, and fertile pond beyond.    
+Opposing factions settle beneath a cliff shimmering in gold, and fertile pond beyond.    
 
 ![map showing three islands in migration](https://www.ageofempires.com/wp-content/uploads/2023/06/migration_icon.png)
 
@@ -90,62 +89,62 @@ While initially safe, players must soon migrate to more prosperous lands for bot
 
 ### Volcanic Island
 
-With stone scattered around in the shallows, the once fire-breathing mountain has since overgrown with lush vegetation and now awaits to be conquered. 
+With stone scattered around in the shallows, the once fire-breathing mountain has since overgrown with lush vegetation and now awaits to be conquered. 
 
-## New Feature: Team Voice Chat 
+## New Feature: Team Voice Chat 
 
-Voice chat is now available between team members during games. Use a standard headset or microphone setup on your PC to communicate and strategize with your teammates while you play. 
+Voice chat is now available between team members during games. Use a standard headset or microphone setup on your PC to communicate and strategize with your teammates while you play. 
 
-Voice chat is only available once the match starts. It is not available in lobbies or party windows in the front end. Text chat remains available in all these situations. 
+Voice chat is only available once the match starts. It is not available in lobbies or party windows in the front end. Text chat remains available in all these situations. 
 
 ![](https://www.ageofempires.com/wp-content/uploads/2023/06/Enable-Voice-Chat.gif)
 
-During play, you can mute players if needed. Volume settings are accessible from the game settings menu. 
+During play, you can mute players if needed. Volume settings are accessible from the game settings menu. 
 
-> Please see our FAQ for more information (https://support.ageofempires.com/hc/en-us/articles/16126586639380-Voice-Chat) on Voice Chat features including How to Report a Player (https://support.ageofempires.com/hc/en-us/articles/4408849382676-How-do-I-report-a-player-).
+> Please see our FAQ for more information (https://support.ageofempires.com/hc/en-us/articles/16126586639380-Voice-Chat) on Voice Chat features including How to Report a Player (https://support.ageofempires.com/hc/en-us/articles/4408849382676-How-do-I-report-a-player-).
 
 ## Performance Upgrades
 
-This build contains a number of visual upgrades, and performance-related improvements. These kinds of system-based changes, paired with new features, can result in edge case bugs -- please report any crashes by sending in a copy of your Warning Logs (https://support.ageofempires.com/hc/en-us/articles/4408793405460-How-to-find-information-for-troubleshooting-with-Support) before you restart the game. Thank you! 
+This build contains a number of visual upgrades, and performance-related improvements. These kinds of system-based changes, paired with new features, can result in edge case bugs -- please report any crashes by sending in a copy of your Warning Logs (https://support.ageofempires.com/hc/en-us/articles/4408793405460-How-to-find-information-for-troubleshooting-with-Support) before you restart the game. Thank you! 
 
-Significantly improved terrain rendering: 
-* We've built a brand-new terrain rendering system which greatly improves our effective terrain texture resolution. Terrain projection, layering and lighting are now done per-pixel, which solves many of the visual and performance issues of our old terrain approach. The new system has a more consistent per frame cost which reduces hitching when quickly panning the camera and during late game large scale battles.  
+Significantly improved terrain rendering: 
+* We've built a brand-new terrain rendering system which greatly improves our effective terrain texture resolution. Terrain projection, layering and lighting are now done per-pixel, which solves many of the visual and performance issues of our old terrain approach. The new system has a more consistent per frame cost which reduces hitching when quickly panning the camera and during late game large scale battles.  
 
-New ambient occlusion: 
-* The new ambient occlusion technique results in notably higher detailed indirect shadows. On High and Medium settings, we've enabled ambient occlusion on foliage which adds a lot of shape to forests and shrubs. 
+New ambient occlusion: 
+* The new ambient occlusion technique results in notably higher detailed indirect shadows. On High and Medium settings, we've enabled ambient occlusion on foliage which adds a lot of shape to forests and shrubs. 
 
 > The new technique has comparable computational cost as our prior solution.
 
-Improved directional light shadows: 
-* Shadows are now higher resolution, better filtered and more performant. The improvements allow for more shadow detail with less distracting flickering artifacts.  
+Improved directional light shadows: 
+* Shadows are now higher resolution, better filtered and more performant. The improvements allow for more shadow detail with less distracting flickering artifacts.  
 
-Improved material specular response: 
+Improved material specular response: 
 * Metals and other reflective surfaces now appear livelier and more lifelike.
 
 ![in-game view of the old graphics ](https://www.ageofempires.com/wp-content/uploads/2023/06/Rendering-Cliff-Old-1080x607.png)
 
 ![in-game view of the old graphics](https://www.ageofempires.com/wp-content/uploads/2023/06/Rendering-Cliff-New-1080x607.png)
 
-Comparison of the old visuals (left) and the new visuals (right). 
+Comparison of the old visuals (left) and the new visuals (right). 
 
 ## Trade Update
 
-Trade has always been a great source of gold in the late game. However, there are a number of civilization bonuses that make Trade more effective earlier on.  We've updated the formula to streamline the experience and improve overall balance.
+Trade has always been a great source of gold in the late game. However, there are a number of civilization bonuses that make Trade more effective earlier on.  We've updated the formula to streamline the experience and improve overall balance.
 
-Full details on the changes to trade can be found in the Balance & Bugfixes section below. 
+Full details on the changes to trade can be found in the Balance & Bugfixes section below. 
 
-## Unique Options for Every Civilization 
+## Unique Options for Every Civilization 
 
 Unique units and technologies are major factors that make civilizations feel different from each other, adding excitement and variety. We reviewed the overall enjoyment and effectiveness of every civilization-specific unit and technology for this update, which resulted in a variety of changes -- from minor tweaks to full redesigns! Below you'll find improvements to balance, general gameplay enhancements, as well as some exciting new tools.
 
 
 ## 4K HDR Video Pack
 
-Four of the 4K videos included in the optional free *Age of Empires IV: 4K HDR Video Pack* have been replaced with their 1080p counterparts due to photosensitivity concerns. All other videos in the pack remain the same. Impacted videos include: 
+Four of the 4K videos included in the optional free *Age of Empires IV: 4K HDR Video Pack* have been replaced with their 1080p counterparts due to photosensitivity concerns. All other videos in the pack remain the same. Impacted videos include: 
 
-* The Norman Legacy  
-* Legacy of the Mongols 
-* War's End 
+* The Norman Legacy  
+* Legacy of the Mongols 
+* War's End 
 * Swords & Sabers
 
 ## Platform Updates
@@ -1361,41 +1360,41 @@ The “Set a Home Market” button has been removed and replaced with a “Resta
 
 ### Ranked Play
 
-To arms! Ranked play kicks off Season Five on June 16th at 10:00 am PDT (17:00 UTC)! Age up through the ranks and earn your rewards before the season ends October 23rd at 11:59 pm PDT (Oct 24th at 06:59 UTC)! 
+To arms! Ranked play kicks off Season Five on June 16th at 10:00 am PDT (17:00 UTC)! Age up through the ranks and earn your rewards before the season ends October 23rd at 11:59 pm PDT (Oct 24th at 06:59 UTC)! 
 
 ![Rewards for ranked and multiplayer ranked play](https://www.ageofempires.com/wp-content/uploads/2023/06/S5_RankedRewards_Showcase_Template_1920X1020.jpg)
 
 ## Season Five Map Pools
 
 
-We're refreshing the ranked map pools once again with a new rotation including the first appearance of Marshland and bringing back some maps we haven't seen for a while such as The Pit. 
+We're refreshing the ranked map pools once again with a new rotation including the first appearance of Marshland and bringing back some maps we haven't seen for a while such as The Pit. 
 
-> Your feedback in action! We listened to lots of community feedback during our last Public Update Preview (PUP) and have implemented changes to our map rotation from what was previewed in the PUP. Notably, we heard you loved the new maps Golden Heights and Volcanic Island so much, we're bringing them directly into the pool! 
+> Your feedback in action! We listened to lots of community feedback during our last Public Update Preview (PUP) and have implemented changes to our map rotation from what was previewed in the PUP. Notably, we heard you loved the new maps Golden Heights and Volcanic Island so much, we're bringing them directly into the pool! 
 
-We're also trying something a little different this season. Now through July 20th, our two Map Monsters will be visible on select maps. For the first time, our Map Monsters will also be included on Ranked maps!  
+We're also trying something a little different this season. Now through July 20th, our two Map Monsters will be visible on select maps. For the first time, our Map Monsters will also be included on Ranked maps!  
 
-### 1v1 Ranked Map Pool for Season Five 
+### 1v1 Ranked Map Pool for Season Five 
 
-* Boulder Bay  (+ Map Monster) 
-* Dry Arabia 
-* Golden Heights (New Map) 
-* Hideout 
-* High View 
-* Hill & Dale 
-* Marshland  (+ Map Monster) 
-* The Pit  
-* Volcanic Island (New Map) 
+* Boulder Bay  (+ Map Monster) 
+* Dry Arabia 
+* Golden Heights (New Map) 
+* Hideout 
+* High View 
+* Hill & Dale 
+* Marshland  (+ Map Monster) 
+* The Pit  
+* Volcanic Island (New Map) 
 
 ### Team Ranked Map Pool for Season Five
 
-* Boulder Bay  (+ Map Monster) 
-* Danube River 
-* Dry Arabia 
-* French Pass 
-* High View  
-* Hill & Dale 
-* Lipany  
-* Marshland (+ Map Monster) 
+* Boulder Bay  (+ Map Monster) 
+* Danube River 
+* Dry Arabia 
+* French Pass 
+* High View  
+* Hill & Dale 
+* Lipany  
+* Marshland (+ Map Monster) 
 * Volcanic Island (New Map)
 `,
     },

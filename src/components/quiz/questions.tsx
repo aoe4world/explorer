@@ -1,12 +1,11 @@
-import { Component, createEffect, createResource, JSX, Match, Switch } from "solid-js";
+import { createResource, For, JSX, Match, Switch } from "solid-js";
 
 import { CivFlag } from "@components/CivFlag";
-import { Item, ItemClass, UnifiedItem } from "@data/types/items";
 import { RESOURCES } from "../../../assets";
-import { CIVILIZATION_BY_SLUG, CIVILIZATIONS, ITEMS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
+import { CIVILIZATION_BY_SLUG, CIVILIZATIONS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
 import { getBattleStats } from "../../query/battlereport";
 import { canonicalItemGroup, getMostAppropriateVariation } from "../../query/utils";
-import { civAbbr, civConfig, Unit } from "../../types/data";
+import { civAbbr, civConfig, Item, ItemClass, ITEMS, UnifiedItem, Unit } from "../../types/data";
 import { ItemIcon } from "../ItemIcon";
 import { formatSecondsToTime } from "../Stats";
 import { Random } from "./random";
@@ -36,7 +35,7 @@ export type AnswerDefinition = {
   costs?: ResourceCosts;
 };
 
-type Answer = AnswerDefinition | string;
+export type Answer = AnswerDefinition | string;
 
 type ResourceType = "food" | "wood" | "gold" | "stone" | "oliveoil" | "silver";
 
@@ -192,7 +191,7 @@ export async function getRandomQuestion(difficulty?: number, civ?: civConfig): P
  */
 async function getCivLandmarkQuestion(i?: number, civ?: civConfig): Promise<Question> {
   const sdk = await SDK;
-  civ ??= Random.pick(Object.values(CIVILIZATIONS).filter((c) => c.abbr !== "ab")) as unknown as civConfig;
+  civ ??= Random.pick(Object.values(CIVILIZATIONS).filter((c) => c.abbr !== "ab"));
   const historyId = `landmark-${civ.abbr}`;
   const history = randomPickedHistory.get(historyId) ?? randomPickedHistory.set(historyId, new Set()).get(historyId);
   const buildings = sdk.buildings.where({ civilization: civ?.abbr });
@@ -225,7 +224,7 @@ async function getCivLandmarkQuestion(i?: number, civ?: civConfig): Promise<Ques
 async function getCivBonusQuestion(i?: number, _?: civConfig): Promise<Question> {
   const sdk = await SDK;
   const history = getOrCreateHistory("civ-bonus");
-  const allCivs = Object.values(CIVILIZATIONS) as unknown as civConfig[];
+  const allCivs = Object.values(CIVILIZATIONS);
   if (history.size >= allCivs.length * 4) history.clear();
   const civs = Random.order(allCivs).slice(0, 3);
   const civ = Random.pick(civs);
@@ -294,7 +293,7 @@ async function getCivHasAccessQuestion(i?: number, civ?: civConfig): Promise<Que
   if (item.civs.length >= 7) return getCivHasAccessQuestion(i, civ);
 
   if (item.civs.length >= 4) {
-    const correctCiv = Random.pick(Object.values(CIVILIZATIONS).filter((c) => !item.civs.includes(c.abbr))) as unknown as civConfig;
+    const correctCiv = Random.pick(Object.values(CIVILIZATIONS).filter((c) => !item.civs.includes(c.abbr)));
     const incorrectCiv = Random.order(item.civs)
       .slice(0, 2)
       .map((c) => CIVILIZATIONS[c]);
@@ -308,7 +307,7 @@ async function getCivHasAccessQuestion(i?: number, civ?: civConfig): Promise<Que
     };
   } else {
     const correctCiv = CIVILIZATIONS[Random.pick(item.civs)];
-    const incorrectCiv = Random.order(Object.values(CIVILIZATIONS).filter((c) => !item.civs.includes(c.abbr))).slice(0, 2) as unknown as civConfig[];
+    const incorrectCiv = Random.order(Object.values(CIVILIZATIONS).filter((c) => !item.civs.includes(c.abbr))).slice(0, 2);
     const options = Random.order([correctCiv, ...incorrectCiv]);
     return {
       question: `Which civilization can ${itemProduceVerb[item.type]} ${item.name}?`,
@@ -336,6 +335,7 @@ async function getCostQuestion(difficulty?: number, civ?: civConfig): Promise<Qu
       : [ITEMS.UNITS, ITEMS.TECHNOLOGIES];
   const item = await getRandomItem("cost-question", types, civ, excludeIds, excludeClasses);
   const variation = getMostAppropriateVariation(item, civ);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { popcap, time, total, ...costs } = variation.costs;
   if (Object.values(costs).every((x) => x == 0)) {
     // Switch to time costs for delhi research
@@ -344,9 +344,9 @@ async function getCostQuestion(difficulty?: number, civ?: civConfig): Promise<Qu
   }
 
   const correctAnswer = costs;
-  let question = variation.type == "technology" ? `What does it cost to research ${variation.name}` : `What is the cost of a ${variation.name}?`,
-    note = `Standard cost, without any civ or landmark discounts. "${variation.description}"`,
-    answers = [costs as ResourceCosts];
+  const question = variation.type == "technology" ? `What does it cost to research ${variation.name}` : `What is the cost of a ${variation.name}?`;
+  const note = `Standard cost, without any civ or landmark discounts. "${variation.description}"`;
+  let answers = [costs as ResourceCosts];
 
   // Add incorrect answers until there are 3, and ensure there are no duplicates
   let attempts = 0;
@@ -396,9 +396,9 @@ async function getTimeQuestion(difficulty?: number, civ?: civConfig, item?: Unif
   const time = variation.costs.time;
 
   const correctAnswer = time;
-  let question = `How long does it take to ${itemProduceVerb[variation.type]} ${variation.name}`,
-    note = `Standard duration, without any civ or landmark discounts. "${variation.description}"`,
-    answers = [time];
+  const question = `How long does it take to ${itemProduceVerb[variation.type]} ${variation.name}`;
+  const note = `Standard duration, without any civ or landmark discounts. "${variation.description}"`;
+  let answers = [time];
 
   answers.push(
     ...Random.order(
@@ -526,7 +526,7 @@ export const FormatAnswer = (props: { answer: Answer }): JSX.Element => {
   );
 
   return (
-    <Switch fallback={<>{(props.answer as any).id}</>}>
+    <Switch fallback={<>{(props.answer as AnswerDefinition).id}</>}>
       <Match when={typeof props.answer === "string"}>{props.answer as string}</Match>
       <Match when={typeof props.answer === "object" && props.answer.type === "civ" ? props.answer : false}>
         {(answer) => {
@@ -571,19 +571,21 @@ export const FormatAnswer = (props: { answer: Answer }): JSX.Element => {
 
 const formatCosts = (costs: ResourceCosts) => (
   <div class="flex items-center">
-    {Object.entries(costs).map(([key, value]) =>
-      value ? (
-        <span class="flex items-center gap-1 mr-2">
-          <img src={/*@once*/ RESOURCES[key]} class="h-6 object-contain w-7" /> {/*@once*/ value}
-        </span>
-      ) : undefined
-    )}
+    <For each={Object.entries(costs)}>
+      {([key, value]) =>
+          value ? (
+            <span class="flex items-center gap-1 mr-2">
+              <img src={/*@once*/ RESOURCES[key]} class="h-6 object-contain w-7" /> {/*@once*/ value}
+            </span>
+        ) : undefined
+      }
+    </For>
   </div>
 );
 
 // Todo: This should return two answers generated with the same logic to make it less easy to deduce the correct answer
 const getIncorrectCosts = (correct: ResourceCosts) => {
-  const costs = Object.fromEntries(Object.entries(correct).filter(([k, v]) => v > 0)) as ResourceCosts;
+  const costs = Object.fromEntries(Object.entries(correct).filter(([_k, v]) => v > 0)) as ResourceCosts;
   const { gold, food, wood, stone } = costs;
 
   const resourcesWithValues = (["gold", "food", "wood", "stone", "oliveoil", "silver"] as ResourceType[]).filter((r) => (costs[r] ?? 0) > 0);

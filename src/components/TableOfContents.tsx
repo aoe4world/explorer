@@ -1,4 +1,4 @@
-import { Accessor, Component, createContext, createSignal, onCleanup, onMount, useContext, JSX } from "solid-js";
+import { Accessor, Component, createContext, createEffect, createSignal, onCleanup, onMount, useContext, JSX } from "solid-js";
 
 type Heading = { label: string; id: string; level: number };
 type TocContext = {
@@ -30,7 +30,8 @@ export const TableOfContentsProvider: Component<{ children?: JSX.Element; }> = (
   onMount(() => {
     const id = window.location.hash?.replace("#", "");
     if (!id) return;
-    headings()?.find((h) => h.id === id) && requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+    if (headings()?.find((h) => h.id === id)) 
+      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
   });
 
   return <TableOfContentsContext.Provider value={value}>{props.children}</TableOfContentsContext.Provider>;
@@ -38,9 +39,15 @@ export const TableOfContentsProvider: Component<{ children?: JSX.Element; }> = (
 
 export const TableOfContentsAnchor: Component<{ label: string; level?: number }> = (props) => {
   const { add: createHeadingId, remove: removeHeading } = useContext(TableOfContentsContext);
-  const id = createHeadingId(props.label, props.level);
-  onCleanup(() => removeHeading(id));
-  return <a id={id}></a>;
+  const [id, setId] = createSignal("");
+
+  createEffect(() => {
+    const newId = createHeadingId(props.label, props.level);
+    setId(newId);
+    onCleanup(() => removeHeading(newId));
+  });
+
+  return <a id={id()} />;
 };
 
 export function useTableOfContents() {

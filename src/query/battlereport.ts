@@ -1,7 +1,6 @@
-import { UnifiedItem, Unit } from "../types/data";
-import { ITEMS, Weapon } from "../../data/src/types/items";
-import { calculateStatParts, getUnitStats, mergeVariationsToStats } from "./stats";
-import { StatProperty } from "../types/stats";
+import { UnifiedItem, Unit, ITEMS, Weapon } from "../types/data";
+import { calculateStatParts, getUnitStats } from "./stats";
+import { StatProperty, Stat } from "../types/stats";
 
 function getAttackStatProperty(weaponType: Weapon["type"]): StatProperty {
   if (weaponType === "melee") return "meleeAttack";
@@ -27,6 +26,24 @@ function getResistanceStatProperty(weaponType: Weapon["type"]): StatProperty | n
   else throw new Error(`Unknown weapon type ${weaponType}`);
 }
 
+export type BattleStats =  {
+  timeRequired: number;
+  attacksRequired: number;
+  targetArmorType: string | undefined;
+  targetArmor: number | undefined;
+  targetResistance: number | undefined;
+  damageType: string | undefined;
+  damage: number;
+  projectileCount: number;
+  projectileDamage: number;
+  projectileNetDamage: number;
+  attackSpeed: number | undefined;
+  isExplosive: boolean;
+  finalWeaponAttack: number | undefined;
+  targetHitpoints: number;
+  hitpointRemaining: number | undefined;
+};
+
 export async function getBattleStats(
   unit1: Unit,
   unit2: Unit,
@@ -40,18 +57,18 @@ export async function getBattleStats(
   const unit1StatsMap = unit1 && (await getUnitStats(ITEMS.UNITS, unifiedUnit1, unit1.civs[0], { variation: unit1, selectedTechnologies: unit1Technologies }));
   const unit2StatsMap = unit2 && (await getUnitStats(ITEMS.UNITS, unifiedUnit2, unit2.civs[0], { variation: unit2, selectedTechnologies: unit2Technologies }));
 
-  const calculateBattleSide = (attacker: Unit, target: Unit, attackerStatsMap, targetStatsMap, attackerAge, targetAge, unifiedAttacker, unifiedTarget) => {
+  const calculateBattleSide = (attacker: Unit, target: Unit, attackerStatsMap: Partial<Record<StatProperty, Stat>>, targetStatsMap: Partial<Record<StatProperty, Stat>>, attackerAge: number, targetAge: number, unifiedAttacker: UnifiedItem<Unit>, unifiedTarget: UnifiedItem<Unit>): BattleStats => {
 
     attackerStatsMap ??= {};
     targetStatsMap ??= {};
     const targetHitpointsStat = targetStatsMap?.hitpoints;
     const calculatedTargetHitpoints = targetHitpointsStat && calculateStatParts(targetHitpointsStat, targetAge, { item: unifiedTarget });
-    const hp = calculatedTargetHitpoints?.total;
+    const hp = calculatedTargetHitpoints?.total ?? Infinity;
 
     const weapon = attacker?.weapons.filter((w) => w.type != "fire")[0];
 
     if (!weapon) {
-      return  {
+      return {
         timeRequired: Infinity,
         attacksRequired: Infinity,
         targetArmorType: undefined,
@@ -62,6 +79,9 @@ export async function getBattleStats(
         projectileCount: 0,
         projectileDamage: 0,
         projectileNetDamage: 0,
+        attackSpeed: undefined,
+        isExplosive: false,
+        finalWeaponAttack: undefined,
         targetHitpoints: hp,
         hitpointRemaining: undefined,
       };
@@ -75,26 +95,26 @@ export async function getBattleStats(
     const projectileDamage = calculatedAttackerDamage?.max ?? 0;
 
     const targetArmorStatProperty = weaponType && getArmorStatProperty(weaponType);
-    const targetArmorStat = targetStatsMap[targetArmorStatProperty];
+    const targetArmorStat = targetArmorStatProperty ? targetStatsMap[targetArmorStatProperty] : undefined;
     const targetArmorCalculatedStat = targetArmorStat && calculateStatParts(targetArmorStat, targetAge, { item: unifiedTarget });
-    const targetArmor = targetArmorStat ? targetArmorCalculatedStat.total : 0;
+    const targetArmor = targetArmorCalculatedStat ? targetArmorCalculatedStat.total : 0;
 
     const targetResistanceStatProperty = weaponType && getResistanceStatProperty(weaponType);
-    const targetResistanceStat = targetStatsMap[targetResistanceStatProperty];
+    const targetResistanceStat = targetResistanceStatProperty ? targetStatsMap[targetResistanceStatProperty] : undefined;
     const targetResistanceCalculatedStat = targetResistanceStat && calculateStatParts(targetResistanceStat, targetAge, { item: unifiedTarget });
-    const targetResistance = targetResistanceStat ? targetResistanceCalculatedStat.total : 0;
+    const targetResistance = targetResistanceCalculatedStat ? targetResistanceCalculatedStat.total : 0;
 
     const projectileCount = weapon?.burst?.count ?? 1;
     const projectileNetDamage = Math.max(1, (projectileDamage - targetArmor) * (1 - targetResistance / 100));
     const netDamage = projectileNetDamage * projectileCount;
-    const attacksRequired = Math.ceil(hp / netDamage);
+    const attacksRequired = hp !== undefined && netDamage > 0 ? Math.ceil(hp / netDamage) : Infinity;
 
     const weaponSpeedStat = attackerStatsMap["attackSpeed"];
-    const weaponSpeedCalculatedStat = calculateStatParts(weaponSpeedStat, attackerAge, { item: unifiedAttacker });
-    const weaponSpeed = weaponSpeedCalculatedStat?.total;
-    const weaponSpeedFactor = weaponSpeed / (weapon?.speed || 0);
+    const weaponSpeedCalculatedStat = weaponSpeedStat && calculateStatParts(weaponSpeedStat, attackerAge, { item: unifiedAttacker });
+    const weaponSpeed = weaponSpeedCalculatedStat?.total ?? 0.125;
+    const weaponSpeedFactor = weaponSpeed / (weapon?.speed ?? 0.125);
 
-    const finalWeaponCooldown = weapon ? weaponSpeed - (["aim", "windup", "attack"].reduce((a, b) => a + weapon.durations[b], 0) * weaponSpeedFactor) : 0;
+    const finalWeaponCooldown = weapon ? weaponSpeed - (["aim", "windup", "attack"].reduce((a, kind) => a + (weapon.durations?.[kind] ?? 0), 0) * weaponSpeedFactor) : 0;
     let timeRequired = attacksRequired * weaponSpeed - finalWeaponCooldown;
 
     const isExplosive = attacker.classes.includes("incendiary_ship");
@@ -117,20 +137,20 @@ export async function getBattleStats(
       isExplosive,
       finalWeaponAttack: weaponSpeed - finalWeaponCooldown,
       targetHitpoints: hp,
-      hitpointRemaining: undefined,
+      hitpointRemaining: undefined as number | undefined,
     };
   };
 
   const stats1 = calculateBattleSide(unit1, unit2, unit1StatsMap, unit2StatsMap, unit1Age, unit2Age, unifiedUnit1, unifiedUnit2);
   const stats2 = calculateBattleSide(unit2, unit1, unit2StatsMap, unit1StatsMap, unit2Age, unit1Age, unifiedUnit2, unifiedUnit1);
 
-  let timeRequired = Math.min(stats1.timeRequired ?? Infinity, stats2.timeRequired ?? Infinity);
+  const timeRequired = Math.min(stats1.timeRequired ?? Infinity, stats2.timeRequired ?? Infinity);
 
   if (timeRequired !== Infinity) {
     const maxAttacks1 = stats1.isExplosive ? 1 : stats1.attacksRequired;
     const maxAttacks2 = stats2.isExplosive ? 1 : stats2.attacksRequired;
-    stats1.hitpointRemaining = Math.max(0, stats2.targetHitpoints - stats2.damage * Math.min(maxAttacks2, Math.ceil(timeRequired / stats2.attackSpeed)));
-    stats2.hitpointRemaining = Math.max(0, stats1.targetHitpoints - stats1.damage * Math.min(maxAttacks1, Math.ceil(timeRequired / stats1.attackSpeed)));
+    stats1.hitpointRemaining = Math.max(0, stats2.targetHitpoints - stats2.damage * Math.min(maxAttacks2, Math.ceil(timeRequired / (stats2.attackSpeed ?? 1))));
+    stats2.hitpointRemaining = Math.max(0, stats1.targetHitpoints - stats1.damage * Math.min(maxAttacks1, Math.ceil(timeRequired / (stats1.attackSpeed ?? 1))));
   }
 
   if (stats1.isExplosive) {

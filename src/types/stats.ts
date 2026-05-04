@@ -34,7 +34,7 @@ export type StatPart<T extends number | Modifier> = {
   maxValue?: T;
   id: string;
   age: number;
-  variation?: Item;
+  variation: Item;
   type?: "base" | "upgrade" | "technology" | "bonus";
   label?: string;
 };

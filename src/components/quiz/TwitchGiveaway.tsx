@@ -39,7 +39,7 @@ export const TwitchGiveaway: Component<TwitchGiveawayProps> = (props) => {
 
     const topScore = eligible[0].correct;
 
-    let result = [];
+    const result = [];
     let included = 0;
 
     prefilteredCandidates().forEach(candidate => {
@@ -86,7 +86,7 @@ export const TwitchGiveaway: Component<TwitchGiveawayProps> = (props) => {
       <div class="bg-gray-700 rounded-lg p-6 w-full max-w-2xl text-white flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-bold">Giveaway</h2>
-          <button onClick={props.onClose}><Icon icon="xmark" /></button>
+          <button onClick={() => props.onClose()}><Icon icon="xmark" /></button>
         </div>
 
         <Show when={winner()} fallback={
@@ -135,7 +135,7 @@ export const TwitchGiveaway: Component<TwitchGiveawayProps> = (props) => {
             <p>Congratulations!</p>
             <div class="flex gap-4 justify-center mt-8">
               <button onClick={reset} class="bg-gray-500 p-2 rounded">Draw Again</button>
-              <button onClick={props.onClose} class="bg-purple-500 p-2 rounded">Close</button>
+              <button onClick={() => props.onClose()} class="bg-purple-500 p-2 rounded">Close</button>
             </div>
           </div>
         </Show>

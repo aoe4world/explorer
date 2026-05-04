@@ -1,74 +1,89 @@
-import { A, useParams } from "@solidjs/router";
-import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
+import { useParams } from "@solidjs/router";
+
+import { Component, createEffect, createMemo, createResource, createSignal, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
-import { ReportButton } from "@components/ReportButton";
-import { StatNumber, StatBar, StatDps, StatCosts, StatLos } from "@components/Stats";
-import { CIVILIZATION_BY_SLUG, ITEMS } from "../../config";
+import { CIVILIZATION_BY_SLUG, CivSlug, ItemList } from "../../config";
 import { getUnitStats } from "../../query/stats";
+import { getMostAppropriateVariation } from "../../query/utils";
 import { mainIntroductionCSSClass } from "../../styles";
-import { Building, civConfig, UnifiedItem, Unit } from "../../types/data";
+import { Ability, civConfig, ITEMS, UnifiedItem, Unit } from "../../types/data";
+
+import { Abilities } from "@components/Abilities";
 import { ItemPage } from "@components/ItemPage";
 import { PatchHistory } from "@components/PatchHistory";
-import { getMostAppropriateVariation } from "../../query/utils";
 import { RelatedContent } from "@components/RelatedContent";
-import { ItemList } from "@data/sdk/utils";
-import { Ability } from "@data/types/items";
-import { Abilities } from "@components/Abilities";
+import { ReportButton } from "@components/ReportButton";
+import { StatBar, StatCosts, StatDps, StatLos, StatNumber } from "@components/Stats";
+
 const SDK = import("@data/sdk");
 
 export function UnitDetailRoute() {
   const itemType = ITEMS.UNITS;
-  const params = useParams();
+  const params = useParams<{ slug: CivSlug; id: string }>();
   const civ = () => CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
-  const [item] = createResource(() => params.id, async (id) => (await SDK).units.get(id));
-  const [abilities] = createResource(
-    () => ({ c: civ()?.abbr, id: params.id }),
-    async ({ c, id }) =>
-      !c ? ([] as ItemList<Ability>) : (await SDK).abilities.where({ civilization: c, affects: `units/${id}` }).order("age")
-  );
-
   const [age, setAge] = createSignal(4);
-  const variation = createMemo(() => getMostAppropriateVariation<Unit>(item(), civ(), age()));
+  const [data] = createResource(
+    () => ({ id: params.id, civ: civ(), age: age() }),
+    async ({ id, civ, age }) => {
+      const sdk = await SDK;
+      const item = await sdk.units.get(id);
+      if (!item) return undefined;
+      const c = civ?.abbr;
+      const abilities = await sdk.abilities.where({ civilization: c, affects: item }).order("age");
+      
+      return {
+        item,
+        variation: getMostAppropriateVariation<Unit>(item, civ, age),
+        abilities,
+      };
+    }
+  );
+  const item = () => data()?.item;
 
   createEffect(() => {
-    if (!item()) return;
-    if (civ() && !item()?.civs.includes(civ().abbr)) tryRedirectToClosestMatch(itemType, params.id, civ(), () => setUnmatched(true));
-    setActivePageForItem(item(), civ());
+    const i = item();
+    if (!i) return;
+    if (civ() && !i.civs.includes(civ().abbr)) tryRedirectToClosestMatch(itemType, params.id, civ(), () => setUnmatched(true));
+    setActivePageForItem(i, civ());
   });
 
   return (
     <ItemPage.Wrapper civ={civ()}>
-      <Show when={!unmatched() && item()} keyed>
-        {(item) => (
+      <Show when={!unmatched() && data()} keyed>
+        {(data) => (
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
-              <ItemPage.Header item={variation()} civ={civ()} />
-              <div class={mainIntroductionCSSClass}>{variation()?.description}</div>
+              <ItemPage.Header item={data.variation} civ={civ()} />
+              <div class={mainIntroductionCSSClass}>{data.variation.description}</div>
 
               <ItemPage.ExpansionInfo civ={civ()} />
 
-              <Abilities abilities={abilities()} civ={civ()} />
+              <Abilities abilities={data.abilities} civ={civ()} />
 
-              <ItemPage.ProducedAt item={item} civ={civ()} />
+              <ItemPage.ProducedAt item={data.item} civ={civ()} />
               {/* {item().name && <Fandom query={item().name} />} */}
-              {!civ() && <ItemPage.CivPicker item={item} />}
+              {!civ() && <ItemPage.CivPicker item={data.item} />}
 
-              <PatchHistory item={item} civ={civ()} />
+              <PatchHistory item={data.item} civ={civ()} />
 
-              <RelatedContent item={item} title={`Recommended content`} />
+              <RelatedContent item={data.item} title={`Recommended content`} />
 
               <div class="my-8">
                 <ReportButton />
               </div>
             </div>
-            <UnitSidebar item={item} civ={civ()} age={age} setAge={setAge} />
+            <UnitSidebar item={data.item} civ={civ()} age={age} setAge={setAge} />
           </div>
         )}
       </Show>
-      {!unmatched() && <ItemPage.AvailableUpgrades item={item()} civ={civ()} />}
-      {unmatched() && <ItemPage.UnavailableForCiv item={item()} civ={civ()} />}
-      {item.error && <div class="text-red-600">Error!</div>}
+      <Show when={!unmatched() && item()} keyed>
+        {(item) => <ItemPage.AvailableUpgrades item={item} civ={civ()} />}
+      </Show>
+      <Show when={unmatched() && item()} keyed>
+        {(item) => <ItemPage.UnavailableForCiv item={item} civ={civ()} />}
+      </Show>
+      {data.error && <div class="text-red-600">Error!</div>}
     </ItemPage.Wrapper>
   );
 }
@@ -117,19 +132,19 @@ const UnitSidebar: Component<{ item?: UnifiedItem<Unit>; civ: civConfig; age: ()
                     speed={stats.attackSpeed}
                     attacks={[stats.rangedAttack || stats.meleeAttack || stats.siegeAttack]}
                     age={props.age}
-                  ></StatDps>
+                   />
                 </div>
               )}
-              <StatNumber label="Move Speed" stat={stats.moveSpeed} unitLabel="T/S" age={props.age}></StatNumber>
-              <StatNumber label="Attack Speed" stat={stats.attackSpeed} unitLabel="S" age={props.age}></StatNumber>
-              <StatNumber label="Min Range" stat={stats.minRange} unitLabel="TILES" age={props.age}></StatNumber>
-              <StatNumber label="Range" stat={stats.maxRange} unitLabel="TILES" age={props.age}></StatNumber>
+              <StatNumber label="Move Speed" stat={stats.moveSpeed} unitLabel="T/S" age={props.age} />
+              <StatNumber label="Attack Speed" stat={stats.attackSpeed} unitLabel="S" age={props.age} />
+              <StatNumber label="Min Range" stat={stats.minRange} unitLabel="TILES" age={props.age} />
+              <StatNumber label="Range" stat={stats.maxRange} unitLabel="TILES" age={props.age} />
               <StatLos
                 label="Line of Sight"
                 stat={stats.lineOfSight}
                 statMax={stats.maxLineOfSight}
                 age={props.age}
-              ></StatLos>
+               />
             </div>
           </>
         )}

@@ -1,5 +1,5 @@
 import { useLocation } from "@solidjs/router";
-import { createSignal, For } from "solid-js";
+import { For } from "solid-js";
 import { setActivePage } from "../App";
 import { CivFlag } from "@components/CivFlag";
 import { Icon } from "@components/Icon";
@@ -8,7 +8,6 @@ import { mainIntroductionCSSClass } from "../styles";
 
 export const AboutRoute = () => {
   setActivePage({ title: "About", description: "About the AoE4 Explorer", location: useLocation() });
-  const [x] = createSignal(true);
   return (
     <div class="max-w-screen-lg p-4 mx-auto mb-4 mt-12">
       <div class="mx-2 sm:mx-6">
@@ -52,11 +51,11 @@ export const AboutRoute = () => {
                 <span class="text-white/50 uppercase text-xs font-bold tracking-widest">Melee Attack</span>
               </div>
               <div class="h-4 md:h-3 bg-gray-50/10 flex flex-row relative">
-                <div class="h-full bg-bar-base" style="width: 30%; margin-right: 2px; "></div>
-                <div class="h-full bg-bar-upgrade" style="width: 15%; margin-right: 2px; "></div>
-                <div class="h-full bg-bar-technology" style="width: 10%; margin-right: 2px; "></div>
-                <div class="h-full bg-bar-unique" style="width: 15%; margin-right: 2px; "></div>
-                <div class="h-full bg-white/20 " style="width: 20%; margin-right: 2px; "></div>
+                <div class="h-full bg-bar-base" style="width: 30%; margin-right: 2px; " />
+                <div class="h-full bg-bar-upgrade" style="width: 15%; margin-right: 2px; " />
+                <div class="h-full bg-bar-technology" style="width: 10%; margin-right: 2px; " />
+                <div class="h-full bg-bar-unique" style="width: 15%; margin-right: 2px; " />
+                <div class="h-full bg-white/20 " style="width: 20%; margin-right: 2px; " />
               </div>
             </div>
           </div>
@@ -98,7 +97,7 @@ export const AboutRoute = () => {
           >
             {([type, label]) => (
               <div>
-                <span class={`bg-bar-${type} inline-block w-3 h-3 rounded-full mr-1`}></span> {label}
+                <span class={`bg-bar-${type} inline-block w-3 h-3 rounded-full mr-1`} /> {label}
               </div>
             )}
           </For>

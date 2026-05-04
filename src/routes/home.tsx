@@ -10,7 +10,7 @@ import { mainIntroductionCSSClass, tooltipCSSClass } from "../styles";
 const buttonClass = `block font-bold px-7 py-2 rounded-full transition hover:opacity-70`;
 export const CivOverviewRoute = () => {
   setActivePage({ title: "Civilizations", description: "Overview of all civilizations", location: useLocation() });
-  let el;
+  let el: HTMLAnchorElement | undefined; // eslint-disable-line no-unassigned-vars
   return (
     <>
       <div class="max-w-screen-lg p-4 mx-auto mb-4 mt-12">
@@ -22,7 +22,7 @@ export const CivOverviewRoute = () => {
               class="text-xs px-3 uppercase font-bold py-1 rounded-full text-gray-100 bg-black border border-gray-300"
               ref={el}
             >
-              <i class="fas fa-asterisk mr-1"></i> Patch 15.3.8338
+              <i class="fas fa-asterisk mr-1" /> Patch 15.3.8338
             </A>
             <Tooltip attachTo={el}>
               <div class={tooltipCSSClass}>The Explorer includes all changes introduced with Patch 15.3.8338</div>

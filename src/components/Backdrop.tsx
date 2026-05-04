@@ -2,7 +2,7 @@ import { useLocation } from "@solidjs/router";
 import { createMemo, createContext, useContext, ParentComponent, Show } from "solid-js";
 import { parseCurrentLocation } from "../global";
 import { BACKDROPS } from "../../assets";
-import { CivSlug } from "@data/types/civs";
+import { CivSlug } from "../config";
 
 const overviewRightStyle = {
   "--backdrop-mobile": `url(${BACKDROPS["overview-right-desktop"]})`,
@@ -15,12 +15,12 @@ const overviewLeftStyle = {
   "--backdrop-desktop": `url(${BACKDROPS["overview-left-desktop"]})`,
 };
 
-const BackdropContext = createContext<{ civilization: () => CivSlug }>();
+const BackdropContext = createContext<{ civilization: () => CivSlug | undefined }>({ civilization: () => undefined });
 
 const LEFT_ALIGNED_CIVS: CivSlug[] = ['goldenhorde', 'tughlaq', 'macedonian', 'sengoku'];
 
-function isLeftAlignedCiv(civ: CivSlug) {
-  return LEFT_ALIGNED_CIVS.includes(civ);
+function isLeftAlignedCiv(civ?: CivSlug) {
+  return civ && LEFT_ALIGNED_CIVS.includes(civ);
 }
 
 export const BackdropWrapper: ParentComponent = (props) => {
@@ -30,7 +30,7 @@ export const BackdropWrapper: ParentComponent = (props) => {
 
   const backdropStyle = createMemo(() => {
     const civSlug = civilization();
-    if (!civSlug) return null;
+    if (!civSlug) return undefined;
     const desktop = BACKDROPS[`${civSlug}-desktop`];
     const mobile = BACKDROPS[`${civSlug}-mobile`] || desktop;
     return {
@@ -55,18 +55,18 @@ export const BackdropWrapper: ParentComponent = (props) => {
 export const Backdrop = (props: {cover?: boolean; }) => {
   const context = useContext(BackdropContext);
 
-  const position = props.cover ? "absolute" : "fixed";
+  const position = () => props.cover ? "absolute" : "fixed";
   return (
     <Show
       when={context.civilization()}
       fallback={
         <>
-          <div class={`${position} bg-backdrop bg-contain bg-right-top`} style={overviewRightStyle} />
-          <div class={`${position} bg-backdrop bg-contain bg-left-bottom`} style={overviewLeftStyle} />
+          <div class={`${position()} bg-backdrop bg-contain bg-right-top`} style={overviewRightStyle} />
+          <div class={`${position()} bg-backdrop bg-contain bg-left-bottom`} style={overviewLeftStyle} />
         </>
       }
     >
-      <div class={`${position} bg-backdrop bg-cover ${isLeftAlignedCiv(context.civilization()) ?  'bg-left-top' : 'bg-right-top'}`} />
+      <div class={`${position()} bg-backdrop bg-cover ${isLeftAlignedCiv(context.civilization()) ?  'bg-left-top' : 'bg-right-top'}`} />
     </Show>
   );
 };

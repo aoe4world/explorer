@@ -4,14 +4,14 @@ import { createEffect, createResource, createSignal, For, Suspense } from "solid
 import { Icon } from "@components/Icon";
 import { ContentRow } from "@components/RelatedContent";
 import { setActivePage } from "../../App";
-import { CIVILIZATION_BY_SLUG } from "../../config";
+import { CivSlug, CIVILIZATION_BY_SLUG } from "../../config";
 import { tempHideNav } from "../../global";
 import { ContentItem, getRelatedContent } from "../../query/content";
 import { mainIntroductionCSSClass, mainItemTitleCSSClass, secondaryButtonClass } from "../../styles";
 
 const defaultLimit = 12;
 export const ContentOverviewRoute = () => {
-  const params = useParams();
+  const params = useParams<{ civ: CivSlug }>();
   const location = useLocation();
   const civ = () => CIVILIZATION_BY_SLUG[params.civ];
   const [content] = createResource(() => ({ civilization: civ(), featured: false }), getRelatedContent);
@@ -29,12 +29,8 @@ export const ContentOverviewRoute = () => {
     }
   };
   const availableFilters = () => getFilterableProperties(content());
+  const filtered = () => filterContent(content(), availableFilters(), filters());
   const possibleFilters = () => getFilterableProperties(filtered());
-
-  const filtered = () => {
-    if (!content()) return undefined;
-    return filterContent(content(), availableFilters(), filters());
-  };
 
   createEffect(() => setActivePage({ title: `Curated Content ${civ() ? ` — ${civ()?.name}` : ""}`, location }));
 
@@ -102,8 +98,8 @@ export const ContentOverviewRoute = () => {
             </div>
             <Suspense>
               <div class="flex flex-col gap-8">
-                <For each={filtered()?.slice(0, limit())}>{(content) => <ContentRow content={content} civ={civ()} />}</For>
-                {filtered()?.length > limit() && (
+                <For each={filtered().slice(0, limit())}>{(content) => <ContentRow content={content} civ={civ()} />}</For>
+                {filtered().length > limit() && (
                   <button onClick={() => setLimit(limit() * 2)} class="text-gray-300 hover:text-gray-100 font-bold bg-gray-500 p-4 roudned-lg">
                     Load more
                   </button>
@@ -124,7 +120,7 @@ interface ContentFilter {
   values: Record<string, number>;
 }
 
-function getFilterableProperties(content: ContentItem[]): ContentFilter[] {
+function getFilterableProperties(content: ContentItem[] | undefined): ContentFilter[] {
   if (!content) return [];
   const creators = new Map<string, number>();
   const tags = new Map<string, number>();
@@ -142,10 +138,6 @@ function getFilterableProperties(content: ContentItem[]): ContentFilter[] {
     increaseCount(types, content.type);
     increaseCount(creators, content.creator);
   });
-
-  function getAvailableContentCount(key: keyof ContentItem, value: string) {
-    return content.filter((c) => c[key] === value).length;
-  }
 
   // Sort all sets by count and turn them into an object
   function getValues(map: Map<string, number>) {
@@ -180,7 +172,7 @@ function getFilterableProperties(content: ContentItem[]): ContentFilter[] {
   ];
 }
 
-function filterContent(content: ContentItem[], filters: ContentFilter[], activeFilters: { [key: string]: string[] }): ContentItem[] {
+function filterContent(content: ContentItem[] | undefined, filters: ContentFilter[], activeFilters: { [key: string]: string[] }): ContentItem[] {
   if (!content) return [];
   return content.filter((item) => {
     return filters.every((filter) => {

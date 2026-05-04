@@ -1,5 +1,4 @@
-import { CivSlug } from "@data/sdk/utils";
-import { A, useLocation, useParams } from "@solidjs/router";
+import { A, useLocation } from "@solidjs/router";
 import {
   Component,
   For,
@@ -14,8 +13,8 @@ import {
   createUniqueId,
   useContext,
 } from "solid-js";
-import { CIVILIZATION_BY_SLUG } from "../config";
-import { getStructuredItems, parseCurrentLocation } from "../global";
+import { CivSlug, getCivConfig } from "../config";
+import { getStructuredItems, parseCurrentLocation, ITEM_TYPE_LABELS, ItemTypeKey } from "../global";
 import { getItemCssClass } from "../styles";
 import { UnifiedItem } from "../types/data";
 import { BackdropCover } from "./Backdrop";
@@ -23,11 +22,12 @@ import { getItemHref } from "./Cards";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
+import { ItemName } from "./ItemName";
 
-export const SidebarNav: Component = (props) => {
+export const SidebarNav: Component = () => {
   const location = useLocation();
   const current = createMemo(() => parseCurrentLocation(location.pathname));
-  const civilization = () => CIVILIZATION_BY_SLUG[current().civ as CivSlug] ?? undefined;
+  const civilization = () => getCivConfig(current().civ);
   const [data] = createResource(civilization, getStructuredItems);
   const [allData] = createResource(() => getStructuredItems());
   const currentItemType = () => current().itemType || "units";
@@ -36,24 +36,26 @@ export const SidebarNav: Component = (props) => {
       <Show when={civilization() ? data() : allData()} keyed>
         {(data) => (
           <nav>
-            {civilization() ? (
-              <A href={`/civs/${civilization().slug}/`} class="text-xl font-bold white mb-2 flex items-center">
-                {civilization() && <CivFlag abbr={civilization().abbr} class="w-auto h-6 mr-2 inline-block rounded" />}
+            <Show when={civilization()} keyed fallback={
+              <p>All Civilizations</p>
+            }>
+             {(civ) =>
+              <A href={`/civs/${civ.slug}/`} class="text-xl font-bold white mb-2 flex items-center">
+                <CivFlag abbr={civ.abbr} class="w-auto h-6 mr-2 inline-block rounded" />
                 <span>{data.civ?.info.name}</span>
               </A>
-            ) : (
-              <p>All Civilizations</p>
-            )}
+             }
+            </Show>
 
             <TreeMenu>
-              <For each={Object.entries({ units: "Units", buildings: "Buildings", technologies: "Technologies" })}>
+              <For each={Object.entries(ITEM_TYPE_LABELS) as [ItemTypeKey, string][]}>
                 {([type, label]) => (
                   <TreeItem>
                     <TreeGroup label={type} isOpen={currentItemType() == type}>
                       <div class="flex items-center py-2 sticky -top-6 z-10">
                         <TreeGroupToggle class="text-sm w-4 outline-none group" toggleClass="block w-3 mr-1" />
                         <A
-                          href={civilization() ? `/civs/${civilization().slug}/${type}` : `/${type}`}
+                          href={civilization() ? `/civs/${civilization()!.slug}/${type}` : `/${type}`}
                           class="font-bold my-1 rounded text-lg outline-none focus:underline hover:underline"
                         >
                           {label}
@@ -85,10 +87,7 @@ export const SidebarNav: Component = (props) => {
                                             end
                                           >
                                             <ItemIcon item={item} size={6} />
-                                            <p
-                                              class="whitespace-pre-wrap"
-                                              innerHTML={item.name.replace(/(.*?)\((.*?)\)/, '$1<span class="opacity-50">$2</span>')}
-                                            ></p>
+                                            <ItemName name={item.name} class="whitespace-pre-wrap" />
                                           </A>
                                         </TreeItem>
                                       )}
@@ -116,21 +115,27 @@ export const SidebarNav: Component = (props) => {
 
 const TreeMenu: ParentComponent = (props) => <ul role="tree">{props.children}</ul>;
 
-const TreeMenuContext = createContext<{ isOpen: () => boolean; toggle: () => boolean; id: string; label: string }>();
+type TreeMenuContextProps = { isOpen: () => boolean; toggle: () => boolean; id: string; label: () => string; };
+const TreeMenuContext = createContext<TreeMenuContextProps>({
+  isOpen: () => false,
+  toggle: () => false,
+  id: "",
+  label: () => ""
+});
 
 const TreeGroup: ParentComponent<{ label: string; isOpen: boolean }> = (props) => {
-  const [isOpen, setIsOpen] = createSignal(props.isOpen);
+  const [isOpen, setIsOpen] = createSignal(props.isOpen); // eslint-disable-line solid/reactivity
   const id = createUniqueId();
   createEffect(() => setIsOpen(props.isOpen));
-  return <TreeMenuContext.Provider value={{ isOpen, toggle: () => setIsOpen((x) => !x), id, label: props.label }}>{props.children}</TreeMenuContext.Provider>;
+  return <TreeMenuContext.Provider value={{ isOpen, toggle: () => setIsOpen((x) => !x), id, label: () => props.label }}>{props.children}</TreeMenuContext.Provider>;
 };
 
 const TreeGroupItems: ParentComponent<JSX.HTMLAttributes<HTMLUListElement>> = (props) => {
   const { isOpen, label, id } = useContext(TreeMenuContext);
-
+  
   return (
     <Show when={isOpen()}>
-      <ul role="group" aria-label={label} id={id} {...props}>
+      <ul role="group" aria-label={label()} id={id} {...props}>
         {props.children}
       </ul>
     </Show>
@@ -157,7 +162,7 @@ const TreeGroupToggle: ParentComponent<JSX.HTMLAttributes<HTMLButtonElement> & {
   );
 };
 const focusableElements = "button, [href]";
-const TreeItem: ParentComponent<{}> = (props) => {
+const TreeItem: ParentComponent = (props) => {
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.key == "ArrowDown") {
       focusOnElement(focusableElements, "next");
@@ -175,15 +180,21 @@ const TreeItem: ParentComponent<{}> = (props) => {
   );
 };
 
-function focusOnElement(selector, direction) {
-  const elements = Array.from(document.querySelectorAll(selector));
+function focusOnElement(selector: string, direction: 'next' | 'previous') {
+  const elements = Array.from(document.querySelectorAll(selector)) as HTMLElement[];
+  if (!elements.length) return;
+
   const currentlyFocusedIndex = elements.findIndex((element) => element === document.activeElement);
   let nextIndex;
+  
   if (direction === "next") {
     nextIndex = (currentlyFocusedIndex + 1) % elements.length;
   } else if (direction === "previous") {
-    nextIndex = (currentlyFocusedIndex - 1 + elements.length) % elements.length;
+    nextIndex = currentlyFocusedIndex === -1 ? elements.length - 1 : (currentlyFocusedIndex - 1 + elements.length) % elements.length;
+  } else {
+    return;
   }
+  
   const nextElement = elements[nextIndex];
   nextElement.focus();
 }
