@@ -70,4 +70,8 @@ export const staticMaps: Record<string, { name: string; imageUrl: string; }> = {
   "ocean-gateway":       { name: "Ocean Gateway",       imageUrl: "https://static.aoe4world.com/assets/maps/base/ocean_gateway.png"       },
   "dungeon":             { name: "Dungeon",             imageUrl: "https://static.aoe4world.com/assets/maps/base/dungeon.png"             },
   "nomadic-ridges":      { name: "Nomadic Ridges",      imageUrl: "https://static.aoe4world.com/assets/maps/base/nomadic_ridges.png"      },
+  "snake-river":         { name: "Snake River",         imageUrl: "https://static.aoe4world.com/assets/maps/base/snake_river.png"         },
+  "fangs":               { name: "Fangs",               imageUrl: "https://static.aoe4world.com/assets/maps/base/fangs.png"               },
+  "ascension":           { name: "Ascension",           imageUrl: "https://static.aoe4world.com/assets/maps/base/ascension.png"           },
+  "west-lake":           { name: "West Lake",           imageUrl: "https://static.aoe4world.com/assets/maps/base/west_lake.png"           },
 };
