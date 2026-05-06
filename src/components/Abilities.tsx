@@ -74,7 +74,7 @@ export const Abilities: Component<{ abilities: ItemList<Ability>; civ: CivConfig
 const InlineItemLink: Component<{ itemId: ItemSlug; civ: CivConfig }> = (props) => {
   const [item] = createResource(
     () => props.itemId && { itemId: props.itemId, civ: props.civ },
-    async ({ itemId, civ }) => (await SDK).civilizations.Get(civ).Get(itemId)
+    async ({ itemId, civ }) => civ ? (await SDK).civilizations.Get(civ).Get(itemId) : (await SDK).Get(itemId)
   );
 
   return (

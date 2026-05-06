@@ -40,9 +40,9 @@ export const QuickNav: Component = () => {
   const [currentItem] = createResource(
     () => ({ subroute: current().subroute, civ: civilization() }),
     async ({subroute, civ}) => {
+      if (!subroute) return undefined;
       if (civ) return (await SDK).civilizations.Get(civ).Get(subroute as ItemSlug);
-      else if (subroute) return (await SDK).Get(subroute as ItemSlug);
-      else return undefined;
+      else return (await SDK).Get(subroute as ItemSlug);
     }
   );
 
