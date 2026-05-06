@@ -19,7 +19,7 @@ Thanks again to our amazing community members, all of whom have helped to make A
 
 —The Age of Empires Team
   `,
-  date: new Date("2026-04-30T19:04:10Z"),
+  date: new Date("2026-05-07T19:00:00Z"),
   sections: [
     {
       title: "Gameplay",
