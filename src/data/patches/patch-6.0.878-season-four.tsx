@@ -7,7 +7,7 @@ export const patch: PatchNotes = {
   season: 4,
   type: "update",
   officialUrl: "https://www.ageofempires.com/news/ageiv_seasonfour_update_60878/",
-  summary: "Major changes to Landmarks for most civs, introducing Militia, Wynguard units, English King. Nerfs to deap sea fish, trade and walls. Siege cost decrease, addition of lightweight beams and rams from Siege Workshop.",
+  summary: "Major changes to Landmarks for most civs, introducing Militia, Wynguard units, English King. Nerfs to deep sea fish, trade and walls. Siege cost decrease, addition of lightweight beams and rams from Siege Workshop.",
   introduction: `"Join us in the Enchanted Grove for Season Four, starting on February 16th! In this update, you can optimize your strategy on three new maps, start from scratch with only a few villagers and no starting Town Center in the new Nomad game mode, build new or improved Landmarks, and more! You’ll also get to explore the new Enchanted Grove Biome as we round out this update with a new season of events, rewards and ranked, as well as quality-of-life updates."
 
 * New Event and Biome: Enchanted Grove
