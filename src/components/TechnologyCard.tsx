@@ -1,4 +1,5 @@
 import { Component, createMemo } from "solid-js";
+import { getItemDescription } from "../global";
 import { getMostAppropriateVariation } from "../query/utils";
 import { UnifiedItem, Technology, civConfig } from "../types/data";
 import { Card } from "./Cards";
@@ -12,7 +13,7 @@ export const TechnologyCard: Component<{ item: UnifiedItem<Technology>; civ?: ci
   return (
     <Card item={props.item} civ={props.civ}>
       <div class="flex flex-col flex-auto">
-        <p class="mb-5 grow">{variation()?.description}</p>
+        <p class="mb-5 grow">{getItemDescription(variation() ?? props.item)}</p>
         <StatCosts costs={costs()} />
       </div>
     </Card>

@@ -2,6 +2,7 @@ import { A, useLocation, useNavigate } from "@solidjs/router";
 import { Component, createEffect, createResource, createSignal, For, onCleanup, onMount, Show } from "solid-js";
 
 import { SIMILAIR_ITEMS } from "../config";
+import { currentLocale, ensureLocaleBundle, getItemName, getItemDisplayClasses } from "../global";
 import { UnifiedItem } from "../types/data";
 import { getItemHref } from "./Cards";
 import { Icon } from "./Icon";
@@ -15,21 +16,29 @@ async function getEverything() {
   return [sdk.buildings, sdk.technologies, sdk.units].flat();
 }
 
-function mergeSearchableData(item: UnifiedItem) {
+function mergeSearchableData(item: UnifiedItem, locale = "en") {
+  const name = getItemName(item, locale).toLowerCase();
+  const displayClasses = getItemDisplayClasses(item, locale).join(" ").toLowerCase();
   const keywords = [
-    item.name.toLowerCase(),
-    item.displayClasses.join(" ").toLowerCase(),
+    name,
+    displayClasses,
     SIMILAIR_ITEMS.filter((x) => x.includes(item.id)).flatMap((x) => x.join(" ").replace("-", " ")),
   ];
   return [keywords.join(" "), keywords] as [string, string[]];
 }
 
+let cachedLocale: string | undefined;
 let allItems: [match: string, keywords: string[], item: UnifiedItem][];
-export async function search(q: string = "") {
+export async function search(q: string = "", locale = "en") {
   q = q.trim().toLowerCase();
   if (!q.length) return [];
 
-  allItems ??= (await getEverything()).map((x) => [...mergeSearchableData(x), x] as [string, string[], UnifiedItem]);
+  if (cachedLocale !== locale || !allItems) {
+    await ensureLocaleBundle(locale);
+    cachedLocale = locale;
+    const rawItems = await getEverything();
+    allItems = rawItems.map((x) => [...mergeSearchableData(x, locale), x] as [string, string[], UnifiedItem]);
+  }
 
   return allItems
     .filter(([m]) => m.includes(q))
@@ -62,7 +71,10 @@ function scrollSelectedIntoView(wrapper: HTMLElement) {
 
 export const Search: Component<{ class?: string }> = (props) => {
   const [query, setQuery] = createSignal("");
-  const [results] = createResource(query, search);
+  const [results] = createResource(
+    () => ({ q: query(), locale: currentLocale() }),
+    ({ q, locale }) => search(q, locale)
+  );
   const [selected, setSelected] = createSignal(0);
   const navigate = useNavigate();
   const location = useLocation();
@@ -135,7 +147,7 @@ export const Search: Component<{ class?: string }> = (props) => {
                 class={`flex items-center p-2 rounded hover:bg-gray-500/50 ${selected() == i() ? "!bg-gray-400/40 selected" : ""}`}
               >
                 <ItemIcon item={item} size={8} class="mr-2" />
-                <span class="font-bold text-sm">{item.name}</span>
+                <span class="font-bold text-sm">{getItemName(item)}</span>
               </A>
             )}
           </For>

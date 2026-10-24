@@ -4,7 +4,7 @@ import { useLocation, useSearchParams } from "@solidjs/router";
 import { Show, createEffect, createResource } from "solid-js";
 import { setActivePage, } from "../../App";
 import { CIVILIZATIONS, CIVILIZATION_BY_SLUG, CivConfig, CivSlug, getAbbr } from "../../config";
-import { tempHideNav } from "../../global";
+import { currentLocale, getItemName, tempHideNav } from "../../global";
 import { UnifiedItem, Unit } from "../../types/data";
 const SDK = import("@data/sdk");
 
@@ -27,7 +27,7 @@ export const UnitVersusRoute = () => {
       unitId2: searchParams.unit2,
       civSlug2: searchParams.civ2,
       age1Str: searchParams.age1,
-      age2Str: searchParams.age2
+      age2Str: searchParams.age2,
     }),
     async ({ unitId1, civSlug1, unitId2, civSlug2, age1Str, age2Str }) => {
       const sdk = await SDK;
@@ -55,7 +55,7 @@ export const UnitVersusRoute = () => {
 
   createEffect(() => {
     const { unit1, unit2 } = data() || {};
-    setActivePage({ title: "Battle Report", description: `Battle Report - ${unit1?.name} vs ${unit2?.name}`, location: useLocation() });
+    setActivePage({ title: "Battle Report", description: `Battle Report - ${getItemName(unit1)} vs ${getItemName(unit2)}`, location: useLocation() });
   });
 
   const applyNewParams = (newParams: { civ1?: CivSlug, unit1?: string, civ2?: CivSlug, unit2?: string, age1?: number, age2?: number }) => {

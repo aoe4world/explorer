@@ -3,7 +3,8 @@ import { createEffect, createResource, For, Suspense } from "solid-js";
 
 import { UnitCard } from "@components/UnitCard";
 import { setActivePage } from "../../App";
-import { CIVILIZATION_BY_SLUG, CivSlug } from "../../config";
+import { CIVILIZATION_BY_SLUG, CivSlug, getCivConfig } from "../../config";
+import { currentLocale, ensureLocaleBundle } from "../../global";
 import { splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass } from "../../styles";
 const SDK = import("@data/sdk");
@@ -11,10 +12,14 @@ const SDK = import("@data/sdk");
 export const UnitOverviewRoute = () => {
   const params = useParams<{ slug: CivSlug }>();
   const location = useLocation();
-  const civ = () => CIVILIZATION_BY_SLUG[params.slug];
+  const civ = () => (params.slug ? getCivConfig(params.slug, currentLocale()) ?? CIVILIZATION_BY_SLUG[params.slug] : undefined);
   const [units] = createResource(
-    () => [civ()?.abbr],
-    async ([abbr]) => splitUnitsIntoGroups((await SDK).units.where({ civilization: abbr }).order("hitpoints", "age"))
+    () => ({ abbr: civ()?.abbr, locale: currentLocale() }),
+    async ({ abbr, locale }) => {
+      await ensureLocaleBundle(locale);
+      const sdk = await SDK;
+      return splitUnitsIntoGroups(sdk.units.where({ civilization: abbr }).order("hitpoints", "age"));
+    }
   );
 
   createEffect(() => setActivePage({ title: `Units ${civ() ? ` — ${civ()?.name}` : ""}`, location }));

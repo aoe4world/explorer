@@ -2,7 +2,8 @@ import { createResource, For, JSX, Match, Switch } from "solid-js";
 
 import { CivFlag } from "@components/CivFlag";
 import { RESOURCES } from "../../../assets";
-import { CIVILIZATION_BY_SLUG, CIVILIZATIONS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG } from "../../config";
+import { CIVILIZATION_BY_SLUG, CIVILIZATIONS, ItemTypes, PRETTY_AGE_MAP, PRETTY_AGE_MAP_LONG, localizeCiv } from "../../config";
+import { currentLocale } from "../../global";
 import { getBattleStats } from "../../query/battlereport";
 import { canonicalItemGroup, getMostAppropriateVariation } from "../../query/utils";
 import { civAbbr, civConfig, Item, ItemClass, ITEMS, UnifiedItem, Unit } from "../../types/data";
@@ -275,7 +276,7 @@ async function getAgeRequirementQuestion(i?: number, civ?: civConfig): Promise<Q
     civ
   );
   return {
-    question: `From which age on can ${item.unique ? "the " + CIVILIZATIONS[item.civs[0]].name : "most civs"} ${itemProduceVerb[item.type]} ${
+    question: `From which age on can ${item.unique ? "the " + localizeCiv(CIVILIZATIONS[item.civs[0]], currentLocale()).name : "most civs"} ${itemProduceVerb[item.type]} ${
       item.type == "technology" ? item.name : plural(item.name)
     }?`,
     answers: [PRETTY_AGE_MAP_LONG[1], PRETTY_AGE_MAP_LONG[2], PRETTY_AGE_MAP_LONG[3], PRETTY_AGE_MAP_LONG[4]],

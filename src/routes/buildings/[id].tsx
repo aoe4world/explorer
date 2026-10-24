@@ -2,7 +2,8 @@ import { A, useParams } from "@solidjs/router";
 import { Component, createEffect, createMemo, createResource, createSignal, For, on, Show } from "solid-js";
 
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
-import { CIVILIZATION_BY_SLUG, CivSlug } from "../../config";
+import { CIVILIZATION_BY_SLUG, CivSlug, getCivConfig } from "../../config";
+import { currentLocale, ensureLocaleBundle, getItemDescription, getItemInfluences } from "../../global";
 import { getUnitStats } from "../../query/stats";
 import { getMostAppropriateVariation } from "../../query/utils";
 import { mainIntroductionCSSClass } from "../../styles";
@@ -26,24 +27,25 @@ const SDK = import("@data/sdk");
 export function BuildingDetailRoute() {
   const itemType = ITEMS.BUILDINGS;
   const params = useParams<{ slug: CivSlug; id: string }>();
-  const civ = () => CIVILIZATION_BY_SLUG[params.slug];
+  const civ = () => getCivConfig(params.slug, currentLocale()) ?? CIVILIZATION_BY_SLUG[params.slug];
   const [unmatched, setUnmatched] = createSignal(false);
   const [age, setAge] = createSignal(4);
   const [data] = createResource(
-    () => ({ id: params.id, civ: civ(), age: age() }),
-    async ({ id, civ, age }) => {
+    () => ({ id: params.id, civ: civ(), age: age(), locale: currentLocale() }),
+    async ({ id, civ, age, locale }) => {
+      await ensureLocaleBundle(locale);
       const sdk = await SDK;
-      const item = await sdk.buildings.get(id);
-      if (!item) return undefined;
+      const rawItem = await sdk.buildings.get(id);
+      if (!rawItem) return undefined;
       const c = civ?.abbr;
       const [units, research, abilities] = await Promise.all([
         sdk.units.where({ producedAt: id, civilization: c }),
         sdk.technologies.where({ producedAt: id, civilization: c }).order("age"),
-        sdk.abilities.where({ civilization: c, affects: item }).order("age"),
+        sdk.abilities.where({ civilization: c, affects: rawItem }).order("age"),
       ]);
       return {
-        item,
-        variation: getMostAppropriateVariation<Building>(item, civ, age),
+        item: rawItem,
+        variation: getMostAppropriateVariation<Building>(rawItem, civ, age),
         units,
         research,
         abilities,
@@ -67,13 +69,22 @@ export function BuildingDetailRoute() {
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
               <ItemPage.Header item={data.variation} civ={civ()} />
-              <div class={mainIntroductionCSSClass}>{data.variation.description}</div>
+              <div class={mainIntroductionCSSClass}>{getItemDescription(data.variation)}</div>
 
               <ItemPage.ExpansionInfo civ={civ()} />
 
+              <Show when={getItemInfluences(data.variation).length}>
+                <div class="my-4 p-4 rounded-xl bg-black/40 border border-white/10">
+                  <h3 class="text-sm font-bold text-white/90 mb-2">Influence</h3>
+                  <For each={getItemInfluences(data.variation)}>
+                    {(inf) => <p class="text-sm text-white/80 whitespace-pre-wrap mb-2">{inf}</p>}
+                  </For>
+                </div>
+              </Show>
+
               {!civ() && <ItemPage.CivPicker item={data.item} />}
 
-              <Abilities abilities={data.abilities} civ={civ()} />
+              <Abilities abilities={data.abilities} civ={civ()} item={data.item} />
 
               <div class="my-8">
                 <ReportButton />
@@ -88,7 +99,7 @@ export function BuildingDetailRoute() {
                       return (
                         <A href={`${civ() ? `/civs/${civ().slug}` : ""}/units/${unit.id}`} class="flex flex-row items-center mb-2 group " ref={el}>
                           <ItemIcon item={unit} link={true} size={10} class="mr-2" />
-                          <ItemName name={unit.name} class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100" />
+                          <ItemName item={unit} class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100" />
                           <Tooltip attachTo={el}>
                             <div class="max-w-md bg-gray-800 rounded-2xl border border-item-unit">
                               <UnitCard unit={unit} civ={civ()} />
@@ -110,7 +121,7 @@ export function BuildingDetailRoute() {
                       return (
                         <A class="flex flex-row items-center mb-2 group " ref={el} href={getItemHref(tech, civ())}>
                           <ItemIcon item={tech} link={true} size={10} class="mr-2" />
-                          <ItemName name={tech.name} class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100 whitespace-pre-wrap" />
+                          <ItemName item={tech} class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100 whitespace-pre-wrap" />
                           <Tooltip attachTo={el}>
                             <div class="max-w-md bg-gray-800 rounded-2xl border border-item-technology">
                               <TechnologyCard item={tech} civ={civ()} />

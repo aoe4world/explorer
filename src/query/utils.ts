@@ -95,11 +95,12 @@ export function splitUnitsIntoGroups(units: UnifiedItem<Unit>[]) {
       else if (unit.classes.some((c) => c === "camel")) acc.cavalry.push(unit);
       else if (unit.classes.some((c) => c === "siege")) acc.siege.push(unit);
       else if (unit.displayClasses.some((c) => c.match(/Mixed/))) acc.misc.push(unit); // We don't have a class for this
-      else acc.workers.push(unit);
+      else if (unit.classes.some((c) => ["worker", "monk", "trader", "worker_elephant", "emissary", "yatai", "volur_vik"].includes(c))) acc.workers.push(unit);
+      else acc.unknown.push(unit);
 
       return acc;
     },
-    { hero: [], workers: [], infantry: [], cavalry: [], siege: [], ships: [], misc: [], mercenaries: [] } as GroupedUnits
+    { unknown: [], hero: [], workers: [], infantry: [], cavalry: [], siege: [], ships: [], misc: [], mercenaries: [] } as GroupedUnits
   );
   grouped.mercenaries.sort((b, a) => b.variations[0].costs.total - a.variations[0].costs.total);
   return grouped;
@@ -109,59 +110,43 @@ export function splitBuildingsIntoGroups(buildings: UnifiedItem<Building>[]) {
   const grouped = buildings?.reduce(
     (acc, unit) => {
       if (unit.classes.some((c) => c === "landmark")) acc.landmarks.push(unit);
-      else if (unit.classes.some((c) => c === "wonder")) acc.wonders.push(unit);
-      else if (unit.classes.some((c) => c === "defensive")) acc.defensive.push(unit);
-      else if (unit.classes.some((c) => c === "technology")) acc.technology.push(unit);
-      else if (unit.classes.some((c) => c === "religious")) acc.religious.push(unit);
-      else if (unit.classes.some((c) => c === "military")) acc.military.push(unit);
-      else acc.economy.push(unit);
+      else if (unit.classes.some((c) => ["wonder"].includes(c))) acc.wonders.push(unit);
+      else if (unit.classes.some((c) => ["defensive", "defensive_structure"].includes(c))) acc.defensive.push(unit);
+      else if (unit.classes.some((c) => ["technology", "research_building", "cistern", "aqueduct"].includes(c))) acc.technology.push(unit);
+      else if (unit.classes.some((c) => ["religious", "monastery", "sacred_grove_vik", "pagoda_chi"].includes(c)) || unit.id == "saga-pillars") acc.religious.push(unit);
+      else if (unit.classes.some((c) => ["military", "military_production_building", "military_only_production", "runestone"].includes(c))) acc.military.push(unit);
+      else if (unit.classes.some((c) => ["economy_building", "town_center_non_capital", "farm", "house", "pit_mine", "ranch", "grassland"].includes(c))) acc.economy.push(unit);
+      else acc.unknown.push(unit);
 
       return acc;
     },
-    { landmarks: [], economy: [], military: [], defensive: [], religious: [], technology: [], wonders: [] } as GroupedBuildings
+    { unknown: [], landmarks: [], economy: [], military: [], defensive: [], religious: [], technology: [], wonders: [] } as GroupedBuildings
   );
   grouped.landmarks.sort((b, a) => b.variations[0].costs.total - a.variations[0].costs.total);
   return grouped;
 }
 
-export function splitTechnologiesIntroGroups(buildings: UnifiedItem<Technology>[]) {
+export function splitTechnologiesIntoGroups(buildings: UnifiedItem<Technology>[]) {
   return buildings?.reduce(
     (acc, tech) => {
       if (tech.classes.some((c) => ["age_up_upgrade"].includes(c)) && ["ab", "ay"].includes(tech.civs[0])) acc.wings.push(tech);
-      else if (tech.classes.some((c) => ["age_up_upgrade"].includes(c)) && tech.civs[0] == "kt") acc.commanderies.push(tech);
-      else if (tech.classes.some((c) => c === "level-up-choice") && tech.civs[0] == "je") acc.leveling.push(tech);
-      else if (tech.classes.some((c) => ["ship", "naval", "warship"].includes(c))) acc.naval.push(tech);
-      else if (
-        tech.classes.some((c) =>
-          [
-            "mining",
-            "gathering",
-            "woodcutting",
-            "farm",
-            "hunting",
-            "villager",
-            "fishing",
-            "construction",
-            "official",
-            "population",
-            "trade",
-            "economic",
-            "research",
-            "raiding",
-            "packing",
-          ].includes(c)
-        )
-      )
-        acc.economy.push(tech);
-      else if (tech.classes.some((c) => ["defensive", "emplacement", "building", "outpost", "keep"].includes(c))) acc.defensive.push(tech);
+      else if (tech.classes.some((c) => ["age_up_upgrade"].includes(c)) && ["kt"].includes(tech.civs[0])) acc.commanderies.push(tech);
+      else if (tech.classes.some((c) => ["age_up_upgrade"].includes(c))) acc.ageup.push(tech);
+      else if (tech.classes.some((c) => ["level-up-choice"].includes(c)) && tech.civs[0] == "je") acc.leveling.push(tech);
+      else if (tech.classes.some((c) => ["saga"].includes(c)) && tech.civs[0] == "vik") acc.sagas.push(tech);
+      else if (tech.classes.some((c) => ["scar_naval_upgrade"].includes(c))) acc.naval.push(tech);
+      else if (tech.classes.some((c) => ["economic_upgrade", "scar_economic_upgrade"].includes(c))) acc.economy.push(tech);
+      else if (["ovoo-tithe", "unlock-stockyard-edict", "daimyo-manor", "daimyo-palace", "shogunate-castle", "barmkins", "fortified-tower-houses", "bee-skeps", "farmstead"].includes(tech.id)) acc.economy.push(tech);
+      else if (tech.classes.some((c) => ["defensive", "emplacement", "building", "outpost", "keep"].includes(c)) || tech.displayClasses.some((c) => c.includes("Defensive")) || ["reinforced-foundations", "slow-burning-defenses", "village-fortresses", "earthen-core-walls"].includes(tech.id)) acc.defensive.push(tech);
       else if (tech.classes.some((c) => ["religious", "healing"].includes(c))) acc.religious.push(tech);
-      else if (tech.classes.some((c) => ["Production", "siege", "melee", "cavalry", "infantry", "ranged", "production", "gunpowder"].includes(c)))
-        acc.military.push(tech);
-      else acc.units.push(tech);
+      else if (tech.classes.some((c) => ["military_upgrade", "scar_military_upgrade"].includes(c)) || tech.displayClasses.some((c) => c.includes("Mercenary"))) acc.military.push(tech);
+      else if (["efficient-production", "armored-beasts", "beachhead", "glorious-charge", "padded-armor", "stables-reinforcements", "triple-shot", "battlefield-salvage", "barracks-reinforcements", "archery-range-reinforcements", "khan-debuff-arrow", "increased-supplies", "unlock-kharash-edict", "reinforced-arm-ballista", "forge-welding", "heavy-tunics", "pasture-and-loom", "smithy", "bone-ash-steel", "mail-shirts", "crucible-steel", "lamellar-plating"].includes(tech.id)) acc.military.push(tech);
+      else if (tech.classes.some((c) => ["a"].includes(c))) acc.units.push(tech);
+      else acc.unknown.push(tech);
 
       return acc;
     },
-    { wings: [], commanderies: [], leveling: [], economy: [], naval: [], defensive: [], religious: [], military: [], units: [] } as Record<string, UnifiedItem<Technology>[]>
+    { unknown: [], sagas: [], wings: [], commanderies: [], ageup: [], leveling: [], economy: [], naval: [], defensive: [], religious: [], military: [], units: [] } as Record<string, UnifiedItem<Technology>[]>
   );
 }
 

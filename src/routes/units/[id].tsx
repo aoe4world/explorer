@@ -2,7 +2,8 @@ import { useParams } from "@solidjs/router";
 
 import { Component, createEffect, createMemo, createResource, createSignal, Show } from "solid-js";
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
-import { CIVILIZATION_BY_SLUG, CivSlug, ItemList } from "../../config";
+import { CIVILIZATION_BY_SLUG, CivSlug, ItemList, getCivConfig } from "../../config";
+import { currentLocale, ensureLocaleBundle, getItemDescription } from "../../global";
 import { getUnitStats } from "../../query/stats";
 import { getMostAppropriateVariation } from "../../query/utils";
 import { mainIntroductionCSSClass } from "../../styles";
@@ -20,21 +21,22 @@ const SDK = import("@data/sdk");
 export function UnitDetailRoute() {
   const itemType = ITEMS.UNITS;
   const params = useParams<{ slug: CivSlug; id: string }>();
-  const civ = () => CIVILIZATION_BY_SLUG[params.slug];
+  const civ = () => (params.slug ? getCivConfig(params.slug, currentLocale()) ?? CIVILIZATION_BY_SLUG[params.slug] : undefined);
   const [unmatched, setUnmatched] = createSignal(false);
   const [age, setAge] = createSignal(4);
   const [data] = createResource(
-    () => ({ id: params.id, civ: civ(), age: age() }),
-    async ({ id, civ, age }) => {
+    () => ({ id: params.id, civ: civ(), age: age(), locale: currentLocale() }),
+    async ({ id, civ, age, locale }) => {
+      await ensureLocaleBundle(locale);
       const sdk = await SDK;
-      const item = await sdk.units.get(id);
-      if (!item) return undefined;
+      const rawItem = await sdk.units.get(id);
+      if (!rawItem) return undefined;
       const c = civ?.abbr;
-      const abilities = await sdk.abilities.where({ civilization: c, affects: item }).order("age");
+      const abilities = await sdk.abilities.where({ civilization: c, affects: rawItem }).order("age");
       
       return {
-        item,
-        variation: getMostAppropriateVariation<Unit>(item, civ, age),
+        item: rawItem,
+        variation: getMostAppropriateVariation<Unit>(rawItem, civ, age),
         abilities,
       };
     }
@@ -55,11 +57,11 @@ export function UnitDetailRoute() {
           <div class="flex flex-col md:flex-row gap-4">
             <div class="basis-2/3 py-4 shrink-0">
               <ItemPage.Header item={data.variation} civ={civ()} />
-              <div class={mainIntroductionCSSClass}>{data.variation.description}</div>
+              <div class={mainIntroductionCSSClass}>{getItemDescription(data.variation)}</div>
 
               <ItemPage.ExpansionInfo civ={civ()} />
 
-              <Abilities abilities={data.abilities} civ={civ()} />
+              <Abilities abilities={data.abilities} civ={civ()} item={data.item} />
 
               <ItemPage.ProducedAt item={data.item} civ={civ()} />
               {/* {item().name && <Fandom query={item().name} />} */}

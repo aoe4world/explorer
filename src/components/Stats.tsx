@@ -1,12 +1,12 @@
 import { Component, createEffect, createMemo, createSignal, Index, on, Show, For } from "solid-js";
 import { RESOURCES } from "../../assets";
-import { CIVILIZATIONS, PRETTY_AGE_MAP } from "../config";
+import { CIVILIZATIONS, PRETTY_AGE_MAP, getCivName, localizeCiv } from "../config";
 import { calculateStatParts, roundToDecimals } from "../query/stats";
 import { statLabelCSSClass, tooltipCSSClass } from "../styles";
 import { Item, UnifiedItem } from "../types/data";
 import { CalculatedStats, Stat, StatPart } from "../types/stats";
 import { Icon } from "./Icon";
-import { globalAgeFilter, globalCivFilter } from "../global";
+import { currentLocale, globalAgeFilter, globalCivFilter, getItemName, getItemDescription } from "../global";
 import { Tooltip } from "./Tooltip";
 
 export const StatBar: Component<{
@@ -176,15 +176,15 @@ export const StatBar: Component<{
                         <span class="float-right ml-4 opacity-50">{PRETTY_AGE_MAP[part.age]}</span>
                       </div>
                       {part.type == "upgrade" && `${PRETTY_AGE_MAP[part.age]} upgrade for `}
-                      <strong>{part.variation.name}</strong>
+                      <strong>{getItemName(part.variation)}</strong>
                       {part.label && <p class="mb-6">{part.label}</p>}
-                      {part.variation.unique && (
+                      {part.variation.unique && part.variation.civs?.[0] && (
                         <p class="text-bar-unique">
-                          <i class="fas fa-sparkles" /> Unique to {CIVILIZATIONS[part.variation.civs[0]].name}
+                          <i class="fas fa-sparkles" /> Unique to {getCivName(part.variation.civs[0])}
                         </p>
                       )}
 
-                      {!["upgrade", "base"].includes(part.type) && <p class="my-2 whitespace-pre-wrap">{part.variation.description}</p>}
+                      {!["upgrade", "base"].includes(part.type) && <p class="my-2 whitespace-pre-wrap">{getItemDescription(part.variation)}</p>}
                     </div>
                   </Tooltip>
                 </div>
@@ -203,7 +203,7 @@ const Part: Component<{ part: StatPart<number> }> = (props) => {
     if (type === "base") 
       return `Base (${PRETTY_AGE_MAP[props.part.age]})`;
     if ((type === "upgrade" || type === "technology") && props.part.variation)
-      return `${props.part.variation.name} (${PRETTY_AGE_MAP[props.part.age]})`;
+      return `${getItemName(props.part.variation)} (${PRETTY_AGE_MAP[props.part.age]})`;
     return props.part.label;
   };
 

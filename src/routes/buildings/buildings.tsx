@@ -3,7 +3,8 @@ import { createEffect, createResource, For, Suspense } from "solid-js";
 
 import { BuildingCard } from "@components/BuildingCard";
 import { setActivePage } from "../../App";
-import { CIVILIZATION_BY_SLUG, CivSlug } from "../../config";
+import { CIVILIZATION_BY_SLUG, CivSlug, getCivConfig } from "../../config";
+import { currentLocale, ensureLocaleBundle } from "../../global";
 import { splitBuildingsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass } from "../../styles";
 const SDK = import("@data/sdk");
@@ -11,10 +12,14 @@ const SDK = import("@data/sdk");
 export const BuildingOverviewRoute = () => {
   const params = useParams<{ slug?: CivSlug }>();
   const location = useLocation();
-  const civ = () => params.slug ? CIVILIZATION_BY_SLUG[params.slug] : undefined;
+  const civ = () => (params.slug ? getCivConfig(params.slug, currentLocale()) ?? CIVILIZATION_BY_SLUG[params.slug] : undefined);
   const [buildings] = createResource(
-    () => [civ()?.abbr],
-    async ([abbr]) => splitBuildingsIntoGroups((await SDK).buildings.where({ civilization: abbr }).order("age"))
+    () => ({ abbr: civ()?.abbr, locale: currentLocale() }),
+    async ({ abbr, locale }) => {
+      await ensureLocaleBundle(locale);
+      const sdk = await SDK;
+      return splitBuildingsIntoGroups(sdk.buildings.where({ civilization: abbr }).order("age"));
+    }
   );
 
   createEffect(() => setActivePage({ title: `Buildings ${civ() ? ` — ${civ()?.name}` : ""}`, location }));

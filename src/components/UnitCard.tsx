@@ -1,5 +1,6 @@
 import { Component, createMemo, createResource, Show } from "solid-js";
-import { CIVILIZATION_BY_SLUG, getCivConfig } from "../config";
+import { CIVILIZATION_BY_SLUG, getCivConfig, localizeCiv } from "../config";
+import { currentLocale } from "../global";
 import { getUnitStats } from "../query/stats";
 import { getMostAppropriateVariation } from "../query/utils";
 import { civConfig, ITEMS, UnifiedItem, Unit } from "../types/data";
@@ -13,7 +14,7 @@ function getBarSize(unit: UnifiedItem<Unit>, baseSize: number, increasedSize: nu
 }
 
 export const UnitCard: Component<{ unit: UnifiedItem<Unit>; age?: number; variation?: Unit; civ?: civConfig, selectedTechnologies?: string[], linkType?: LinkType, onCivSelect?: (civ: civConfig) => void }> = (props) => {
-  const civ = createMemo(() => props.civ ?? (props.variation ? getCivConfig(props.variation.civs[0]) : undefined));
+  const civ = createMemo(() => props.civ ? localizeCiv(props.civ, currentLocale()) : (props.variation ? getCivConfig(props.variation.civs[0], currentLocale()) : undefined));
   const age = createMemo(() => props.age ?? props.variation?.age);
   const variation = createMemo(() => props.variation ?? getMostAppropriateVariation<Unit>(props.unit, civ()));
 

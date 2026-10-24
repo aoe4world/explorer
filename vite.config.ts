@@ -15,6 +15,12 @@ export default defineConfig({
           if (id.includes("data/src/sdk/data.ts") || id.includes("data/src/sdk/index.ts") || (id.includes("data/src/") && id.endsWith(".json"))) {
             return "data-sdk";
           }
+          if (id.includes("data/locales/")) {
+            const match = id.match(/locales[\\/]([^\\/]+)\.json/);
+            if (match && match[1] !== "locale-index") {
+              return `locale-${match[1]}`;
+            }
+          }
         },
       },
     },

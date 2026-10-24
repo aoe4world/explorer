@@ -1,6 +1,7 @@
 import { Component, JSX, createMemo, splitProps } from "solid-js";
 import { UnifiedItem, Item } from "../types/data";
 import { getItemCssClass } from "../styles";
+import { getItemName } from "../global";
 
 export type ItemIconSize = 24 | 12 | 8 | number | 'inline' | undefined;
 
@@ -35,7 +36,7 @@ export const ItemIcon: Component<ItemIconProps> = (props) => {
       classes.push(local.link ? `bg-${itemClass}/80 group-hover:bg-${itemClass}/100 transition` : `bg-${itemClass}`);
       if (itemClass === 'item-commanderie') classes.push("!p-0"); // commanderies have no borders, so nuke any padding
       url ??= local.item.icon;
-      title ??= local.item.name;
+      title ??= getItemName(local.item);
     }
 
     return {

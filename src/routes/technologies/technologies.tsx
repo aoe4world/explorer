@@ -3,18 +3,23 @@ import { createEffect, createResource, For, Suspense } from "solid-js";
 
 import { TechnologyCard } from "@components/TechnologyCard";
 import { setActivePage } from "../../App";
-import { CIVILIZATION_BY_SLUG, CivSlug } from "../../config";
-import { splitTechnologiesIntroGroups } from "../../query/utils";
+import { CIVILIZATION_BY_SLUG, CivSlug, getCivConfig } from "../../config";
+import { currentLocale, ensureLocaleBundle } from "../../global";
+import { splitTechnologiesIntoGroups } from "../../query/utils";
 import { itemGridCSSClass } from "../../styles";
 const SDK = import("@data/sdk");
 
 export const TechnologiesOverviewRoute = () => {
   const params = useParams<{ slug: CivSlug }>();
   const location = useLocation();
-  const civ = () => CIVILIZATION_BY_SLUG[params.slug];
+  const civ = () => (params.slug ? getCivConfig(params.slug, currentLocale()) ?? CIVILIZATION_BY_SLUG[params.slug] : undefined);
   const [technologies] = createResource(
-    () => [civ()?.abbr],
-    async ([abbr]) => splitTechnologiesIntroGroups((await SDK).technologies.where({ civilization: abbr }).order("age"))
+    () => ({ abbr: civ()?.abbr, locale: currentLocale() }),
+    async ({ abbr, locale }) => {
+      await ensureLocaleBundle(locale);
+      const sdk = await SDK;
+      return splitTechnologiesIntoGroups(sdk.technologies.where({ civilization: abbr }).order("age"));
+    }
   );
 
   createEffect(() => setActivePage({ title: `Technologies ${civ() ? ` — ${civ()?.name}` : ""}`, location }));

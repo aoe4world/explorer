@@ -1,11 +1,11 @@
 import { Component, For, ParentComponent, createMemo } from "solid-js";
 import { Link, LinkType } from "./common/Link";
-import { CIVILIZATIONS, PRETTY_AGE_MAP } from "../config";
+import { CIVILIZATIONS, PRETTY_AGE_MAP, localizeCiv } from "../config";
 import { civConfig, UnifiedItem } from "../types/data";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
-import { globalAgeFilter } from "../global";
+import { currentLocale, globalAgeFilter, getItemName, getItemDisplayClasses } from "../global";
 
 const typeToPathMap: Record<string, string> = {
   building: "buildings",
@@ -41,7 +41,7 @@ export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig; age?: n
         props.item.civs.length == 1 && (
           <div class="flex h-6 mt-2 items-center gap-2">
             <span class="text-unique text-sm font-semibold">
-              <Icon icon="star-sharp" /> Unique to {props.civ.name}
+              <Icon icon="star-sharp" /> Unique to {localizeCiv(props.civ, currentLocale())?.name}
             </span>
           </div>
         )
@@ -59,10 +59,10 @@ export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig; age?: n
                     e.preventDefault();
                   }}
                 >
-                  <CivFlag abbr={civ} class={`h-3.5 w-5 object-cover rounded-sm transition-opacity ${props.civ?.abbr === civ ? "opacity-60 outline outline-2 outline-white" : !props.civ ? "opacity-30 group-hover:opacity-80" : "opacity-30"} hover:!opacity-100`} />
+                  <CivFlag abbr={civ} title={localizeCiv(CIVILIZATIONS[civ], currentLocale())?.name} class={`h-3.5 w-5 object-cover rounded-sm transition-opacity ${props.civ?.abbr === civ ? "opacity-60 outline outline-2 outline-white" : !props.civ ? "opacity-30 group-hover:opacity-80" : "opacity-30"} hover:!opacity-100`} />
                 </Link>
               ) : (
-                <CivFlag abbr={civ} class={`h-3.5 w-5 object-cover rounded-sm transition-opacity ${props.civ?.abbr === civ ? "opacity-60 outline outline-2 outline-white group-hover:opacity-100" : !props.civ ? "opacity-30 group-hover:opacity-100" : "opacity-30"} hover:!opacity-100`} />
+                <CivFlag abbr={civ} title={localizeCiv(CIVILIZATIONS[civ], currentLocale())?.name} class={`h-3.5 w-5 object-cover rounded-sm transition-opacity ${props.civ?.abbr === civ ? "opacity-60 outline outline-2 outline-white group-hover:opacity-100" : !props.civ ? "opacity-30 group-hover:opacity-100" : "opacity-30"} hover:!opacity-100`} />
               );
             }}
           </For>
@@ -83,10 +83,10 @@ export const CardHeader: Component<{ item: UnifiedItem; civ?: civConfig; minAge:
       <ItemIcon item={props.item} size={16} />
       <div class="flex-auto">
         <div class="flex flex-row items-center">
-          <h2 class="text-lg font-bold flex-auto leading-tight ">{props.item.name}</h2>
+          <h2 class="text-lg font-bold flex-auto leading-tight ">{getItemName(props.item)}</h2>
           <span class={`text-sm uppercase whitespace-nowrap text-opacity-50 text-item-${props.item.type}-light`}>{PRETTY_AGE_MAP[props.minAge]}</span>
         </div>
-        <p class={`text-item-${props.item.type}-light text-sm leading-relaxed`}>{props.item.displayClasses.join(", ")}</p>
+        <p class={`text-item-${props.item.type}-light text-sm leading-relaxed`}>{getItemDisplayClasses(props.item).join(", ")}</p>
       </div>
     </div>
   );

@@ -1,9 +1,27 @@
 // Notice, don't import @data/sdk or @data/sdk/data, those are async.
 import { ModifyableProperty } from "./types/data";
 export { CIVILIZATION_BY_SLUG, CIVILIZATIONS, type CivSlug } from "@data/lib/config/civs";
-export { getAbbr, getCivConfig, getSlug, type ItemGroup, type ItemSlug } from '@data/sdk/utils';
+export { SUPPORTED_LOCALES, LOCALES, type LocaleConfig } from "@data/lib/config/locales";
+export { default as localeIndex } from "../data/locales/locale-index.json";
+export {
+  getAbbr,
+  getCivConfig,
+  getSlug,
+  getCivName,
+  localizeCiv,
+  localizeCivInfo,
+  loadLocaleBundle,
+  getItemTranslation,
+  getItemName,
+  getItemDescription,
+  getItemDisplayClasses,
+  getItemInfluences,
+  getWeaponName,
+  type ItemGroup,
+  type ItemSlug,
+} from '@data/sdk/utils';
 export { ItemList } from '@data/sdk/utils';
-export type { Ability, Building, ItemTypes, ModifyableProperty, Technology, Unit, Upgrade, CivAbbr, CivConfig } from "./types/data";
+export type { Ability, Building, ItemTypes, ModifyableProperty, Technology, Unit, Upgrade, CivAbbr, CivConfig, CivTranslation } from "./types/data";
 
 export const SUPPORTED_MODIFIER_PROPERTIES: ModifyableProperty[] = [
   "meleeArmor",

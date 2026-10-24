@@ -1,5 +1,6 @@
 import { Component, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { CivSlug, PRETTY_AGE_MAP_SHORT } from "../config";
+import { getItemName } from "../global";
 import { UnifiedItem, Unit } from "../types/data";
 import { ItemIcon } from "./ItemIcon";
 const SDK = import("@data/sdk");
@@ -23,7 +24,7 @@ export const UnitSelector: Component<UnitSelectorProps> = (props) => {
     if (!term) {
       return u;
     }
-    return u.filter(unit => unit.name.toLowerCase().includes(term));
+    return u.filter(unit => getItemName(unit).toLowerCase().includes(term));
   });
 
   const handleSelectUnit = (unit: UnifiedItem<Unit>) => {
@@ -58,7 +59,7 @@ export const UnitSelector: Component<UnitSelectorProps> = (props) => {
                 onClick={() => handleSelectUnit(unit)}
               >
                 <ItemIcon item={unit} size={6} class="mr-2" />
-                <span>{unit.name}</span>
+                <span>{getItemName(unit)}</span>
               </div>
             )}
           </For>

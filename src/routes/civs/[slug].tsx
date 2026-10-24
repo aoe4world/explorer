@@ -7,24 +7,27 @@ import { ItemIcon } from "@components/ItemIcon";
 import { RelatedContent } from "@components/RelatedContent";
 import { ReportButton } from "@components/ReportButton";
 import { UnitCard } from "@components/UnitCard";
-import { CivSlug, CIVILIZATION_BY_SLUG } from "../../config";
-import { splitBuildingsIntoGroups, splitTechnologiesIntroGroups, splitUnitsIntoGroups } from "../../query/utils";
+import { CivSlug, CIVILIZATION_BY_SLUG, getCivConfig } from "../../config";
+import { currentLocale, ensureLocaleBundle, getItemName } from "../../global";
+import { splitBuildingsIntoGroups, splitTechnologiesIntoGroups, splitUnitsIntoGroups } from "../../query/utils";
 import { itemGridCSSClass, mainIntroductionCSSClass } from "../../styles";
 const SDK = import("@data/sdk");
 
 export const CivDetailRoute = () => {
   const pending = useIsRouting();
   const params = useParams<{ slug: CivSlug }>();
-  const civConfig = () => CIVILIZATION_BY_SLUG[params.slug];
+  const civConfig = () => (params.slug ? getCivConfig(params.slug, currentLocale()) ?? CIVILIZATION_BY_SLUG[params.slug] : undefined);
   const [data] = createResource(
-    () => civConfig()?.abbr,
-    async (abbr) => {
-      const civ = (await SDK).civilizations.Get(abbr);
+    () => ({ abbr: civConfig()?.abbr, locale: currentLocale() }),
+    async ({ abbr, locale }) => {
+      await ensureLocaleBundle(locale);
+      const sdk = await SDK;
+      const civ = sdk.civilizations.Get(abbr, locale);
       return {
         civ,
         units: splitUnitsIntoGroups(civ.units.order("hitpoints", "age")),
         buildings: splitBuildingsIntoGroups(civ.buildings.order("hitpoints", "age")),
-        technologies: splitTechnologiesIntroGroups(civ.technologies.order("age")),
+        technologies: splitTechnologiesIntoGroups(civ.technologies.order("age")),
       };
     }
   );
@@ -44,7 +47,7 @@ export const CivDetailRoute = () => {
             </div>
             <div class="ml-2">
               <span class="text-white/50 ">Civilization</span>
-              <h1 class="text-3xl font-bold ">{data()?.civ.info.name}</h1>
+              <h1 class="text-3xl font-bold ">{data()?.civ.info.name ?? civConfig().name}</h1>
             </div>
           </div>
           <p class={mainIntroductionCSSClass}>{data()?.civ.info.description}</p>
@@ -58,7 +61,7 @@ export const CivDetailRoute = () => {
                 unit.unique && (
                   <A href={`./units/${unit.id}`} class="flex flex-row items-center mb-2 group">
                     <ItemIcon item={unit} link={true} size={10} class="mr-2" />
-                    <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{unit.name}</span>
+                    <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{getItemName(unit)}</span>
                   </A>
                 )
               }
@@ -70,7 +73,7 @@ export const CivDetailRoute = () => {
                 building.unique && (
                   <A href={`./buildings/${building.id}`} class="flex flex-row items-center mb-2 group">
                     <ItemIcon item={building} link={true} size={10} class="mr-2" />
-                    <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{building.name}</span>
+                    <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{getItemName(building)}</span>
                   </A>
                 )
               }
@@ -82,7 +85,7 @@ export const CivDetailRoute = () => {
                 tech.unique && (
                   <A href={`./technologies/${tech.id}`} class="flex flex-row items-center mb-2 group">
                     <ItemIcon item={tech} link={true} size={10} class="mr-2" />
-                    <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{tech.name}</span>
+                    <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{getItemName(tech)}</span>
                   </A>
                 )
               }

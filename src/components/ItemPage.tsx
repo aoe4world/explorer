@@ -1,7 +1,8 @@
 import { A } from "@solidjs/router";
 import { Component, createResource, For, ParentComponent, Show } from "solid-js";
 
-import { CivAbbr, CivConfig, CIVILIZATIONS, PRETTY_AGE_MAP_SHORT } from "../config";
+import { CivAbbr, CivConfig, CIVILIZATIONS, PRETTY_AGE_MAP_SHORT, getCivName } from "../config";
+import { currentLocale, ensureLocaleBundle, getItemName, getItemDescription, getItemDisplayClasses } from "../global";
 import { DLCS } from "../data/dlcs";
 import { getItemTechnologies } from "../query/utils";
 import { getItemCssClass, itemGridCSSClass, mainIntroductionCSSClass, mainItemTitleCSSClass } from "../styles";
@@ -18,12 +19,12 @@ const Header: Component<{ item: UnifiedItem | Item; civ?: CivConfig }> = (props)
     <div class="flex gap-4 items-center mb-4">
       <ItemIcon item={props.item} size={24} />
       <div>
-        <span class={`text-${getItemCssClass(props.item)}-light`}>{props.item.displayClasses.join(", ")}</span>
-        <h2 class={mainItemTitleCSSClass}>{props.item.name}</h2>
+        <span class={`text-${getItemCssClass(props.item)}-light`}>{getItemDisplayClasses(props.item).join(", ")}</span>
+        <h2 class={mainItemTitleCSSClass}>{getItemName(props.item)}</h2>
         {props.civ && (
           <A href={`/civs/${props.civ.slug}`} class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80">
             <CivFlag abbr={props.civ.abbr} class="h-3 w-4.5 rounded-sm  " />
-            {props.civ?.name}
+            {getCivName(props.civ, currentLocale())}
           </A>
         )}
       </div>
@@ -49,13 +50,14 @@ const CivPicker: Component<{ item: UnifiedItem }> = (props) => {
 
 const ProducedAt: Component<{ item: UnifiedItem; civ: CivConfig; title?: string }> = (props) => {
   const [productionBuildings] = createResource(
-    () => ({ item: props.item, civ: props.civ?.abbr }),
-    async ({ item, civ }) => {
+    () => ({ item: props.item, civ: props.civ?.abbr, locale: currentLocale() }),
+    async ({ item, civ, locale }) => {
+      await ensureLocaleBundle(locale);
       const sdk = await SDK;
       const producedBy = [...new Set(item.variations.filter((v) => !civ || v.civs.includes(civ)).flatMap((v) => v.producedBy))];
       const items = producedBy.map((b) => sdk.buildings.get(b));
       if (items.length != producedBy.length) console.warn("Some buildings were not found", producedBy, items);
-      return (civ ? items.filter((i) => !!i && i.civs.includes(civ)) : items).filter((i) => !!i).sort((a, b) => b.civs?.length - a.civs?.length);
+      return (civ ? items.filter((i) => !!i && i.civs.includes(civ)) : items).filter((i) => !!i).sort((a, b) => (b?.civs?.length ?? 0) - (a?.civs?.length ?? 0));
     }
   );
 
@@ -67,7 +69,7 @@ const ProducedAt: Component<{ item: UnifiedItem; civ: CivConfig; title?: string 
           {(building) => (
             <A href={`${props.civ ? `/civs/${props.civ.slug}` : ""}/buildings/${building.id}`} class="flex flex-row items-center mb-2 group">
               <ItemIcon item={building} link={true} size={10} class="mr-2" />
-              <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{building.name}</span>
+              <span class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100">{getItemName(building)}</span>
             </A>
           )}
         </For>
@@ -82,10 +84,12 @@ function getItemType(item: UnifiedItem) {
 
 const AvailableUpgrades: Component<{ item: UnifiedItem; civ: CivConfig }> = (props) => {
   const [technologies] = createResource(
-    () => ({ item: props.item, civ: props.civ }),
-    async ({ item, civ }) => item && getItemTechnologies(getItemType(item), item, civ, true)
-    //.flatMap((x) => x.variations)
-    // We're not really picking up the variations right now
+    () => ({ item: props.item, civ: props.civ, locale: currentLocale() }),
+    async ({ item, civ, locale }) => {
+      if (!item) return;
+      await ensureLocaleBundle(locale);
+      return getItemTechnologies(getItemType(item), item, civ, true);
+    }
   );
   return (
     <Show when={technologies()}>
@@ -111,13 +115,13 @@ const UnavailableForCiv: Component<{ item: UnifiedItem; civ: CivConfig }> = (pro
       <div class="flex gap-4 items-center mb-4 mt-4">
         <ItemIcon item={props.item} size={24} />
         <div>
-          <span class={`text-${getItemCssClass(props.item)}-light`}>{props.item.displayClasses}</span>
-          <h2 class={mainItemTitleCSSClass}>{props.item.name}</h2>
+          <span class={`text-${getItemCssClass(props.item)}-light`}>{getItemDisplayClasses(props.item).join(", ")}</span>
+          <h2 class={mainItemTitleCSSClass}>{getItemName(props.item)}</h2>
           <div class="flex flex-wrap">
             <For each={props.item.civs}>
               {(civ) => (
                 <A href={getItemHref(props.item, CIVILIZATIONS[civ])} class="flex gap-2 mt-2 items-center font-bold text-sm text-white/80 mr-3">
-                  <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {CIVILIZATIONS[civ].name}
+                  <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {getCivName(CIVILIZATIONS[civ], currentLocale())}
                 </A>
               )}
             </For>
@@ -125,7 +129,7 @@ const UnavailableForCiv: Component<{ item: UnifiedItem; civ: CivConfig }> = (pro
         </div>
       </div>
       <p class={mainIntroductionCSSClass}>
-        The {props.item.name} is unique, and not available for <strong>{props.civ.name}</strong>.
+        The {getItemName(props.item)} is unique, and not available for <strong>{getCivName(props.civ, currentLocale())}</strong>.
       </p>
 
       <CivOptionsForItem item={props.item} civs={props.item.civs} prefix="Show for">
@@ -134,7 +138,7 @@ const UnavailableForCiv: Component<{ item: UnifiedItem; civ: CivConfig }> = (pro
           class="flex gap-2 items-center font-bold text-base  mr-3 bg-gray-900 p-2 rounded-md hover:text-white text-gray-100 hover:bg-black"
         >
           <CivFlag abbr={props.civ.abbr} class="h-3 w-4.5 rounded-sm " />
-          {props.civ.name}'s {getItemType(props.item)}
+          {getCivName(props.civ, currentLocale())}'s {getItemType(props.item)}
           <Icon icon="arrow-right" class="ml-auto mr-2" />
         </A>
       </CivOptionsForItem>
@@ -152,7 +156,7 @@ const CivOptionsForItem: ParentComponent<{ item: UnifiedItem; civs: CivAbbr[]; p
             href={getItemHref(props.item, CIVILIZATIONS[civ])}
             class="flex gap-2 items-center font-bold text-base  mr-3 bg-gray-900 p-2 rounded-md hover:text-white text-gray-100 hover:bg-black"
           >
-            <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {props.prefix} {CIVILIZATIONS[civ].name}
+            <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {props.prefix} {getCivName(civ)}
             <Icon icon="arrow-right" class="ml-auto mr-2" />
           </A>
         )}

@@ -4,7 +4,8 @@ import { Tooltip } from "@components/Tooltip";
 import { A, useLocation } from "@solidjs/router";
 import { For } from "solid-js";
 import { setActivePage } from "../App";
-import { CIVILIZATIONS } from "../config";
+import { CIVILIZATIONS, localizeCiv } from "../config";
+import { currentLocale } from "../global";
 import { mainIntroductionCSSClass, tooltipCSSClass } from "../styles";
 
 const buttonClass = `block font-bold px-7 py-2 rounded-full transition hover:opacity-70`;
@@ -18,14 +19,14 @@ export const CivOverviewRoute = () => {
           <div class="flex flex-wrap items-center">
             <h1 class="text-3xl font-bold mr-6">AoE4 Explorer</h1>
             <A
-              href="/patches/patch-16-1-9737-season-13"
+              href="/patches/patch-17-0-12097-rotn-dlc"
               class="text-xs px-3 uppercase font-bold py-1 rounded-full text-gray-100 bg-black border border-gray-300"
               ref={el}
             >
-              <i class="fas fa-asterisk mr-1" /> Patch 16.1.9737
+              <i class="fas fa-asterisk mr-1" /> Update 17.0.12097
             </A>
             <Tooltip attachTo={el}>
-              <div class={tooltipCSSClass}>The Explorer includes all changes introduced with Patch 16.1.9737</div>
+              <div class={tooltipCSSClass}>The Explorer includes all changes introduced with Update 17.0.12097</div>
             </Tooltip>
           </div>
           <p class="text-2xl mt-2 text-gray-200">Discover all units, buildings and technologies in the game.</p>
@@ -58,7 +59,7 @@ export const CivOverviewRoute = () => {
             {(civ) => (
               <A href={`/civs/${civ.slug}`} class="flex items-center bg-gray-900 p-2 rounded-md hover:white text-gray-100 hover:bg-black ">
                 <CivFlag abbr={civ.abbr} class="flex-none self-start w-18 h-12 rounded m-2" />
-                <h1 class=" md:text-xl font-bold ml-3">{civ.name}</h1>
+                <h1 class=" md:text-xl font-bold ml-3">{localizeCiv(civ, currentLocale()).name}</h1>
                 <Icon icon="chevron-right" class="ml-auto mr-6" />
               </A>
             )}

@@ -8,6 +8,7 @@ import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
 import { formatSecondsToTime } from "./Stats";
 import { ItemSlug } from "../config";
+import { currentLocale, getItemName } from "../global";
 const SDK = import("@data/sdk");
 
 const defaultLimit = 3;
@@ -37,7 +38,10 @@ export const RelatedContent: Component<{ item?: Item | UnifiedItem; civ?: civCon
 };
 
 export const ContentRow: Component<{ content: ContentItem; item?: Item | UnifiedItem; civ?: civConfig }> = (props) => {
-  const [relatedItems] = createResource(() => props.content.relatedItems?.filter((x) => !props.item || !x.endsWith(props.item?.id)), getRelatedItems);
+  const [relatedItems] = createResource(
+    () => ({ ids: props.content.relatedItems?.filter((x) => !props.item || !x.endsWith(props.item?.id)), locale: currentLocale() }),
+    ({ ids, locale }) => getRelatedItems(ids, locale)
+  );
   return (
     <div class="flex gap-8 items-center">
       <a
@@ -82,7 +86,7 @@ export const ContentRow: Component<{ content: ContentItem; item?: Item | Unified
                 {(item) => (
                   <A href={getItemHref(item, props.civ)} class={`inline-flex min-w-0 items-center text-${getItemCssClass(item)}-light`}>
                     <ItemIcon item={item} size={5} />
-                    {(relatedItems()?.length ?? 0) < 3 && <span class="truncate ml-1 max-w-[150px]">{item.name}</span>}
+                    {(relatedItems()?.length ?? 0) < 3 && <span class="truncate ml-1 max-w-[150px]">{getItemName(item)}</span>}
                   </A>
                 )}
               </For>
@@ -94,7 +98,8 @@ export const ContentRow: Component<{ content: ContentItem; item?: Item | Unified
   );
 };
 
-async function getRelatedItems(ids: string[]) {
+async function getRelatedItems(ids: string[] | undefined, locale: string) {
+  if (!ids) return [];
   const Get = (await SDK).Get;
 
   const items: UnifiedItem[] = [];

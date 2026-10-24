@@ -1,6 +1,7 @@
 import { Component, createResource, createSignal, For } from "solid-js";
 
 import { UnifiedItem, Unit, Technology, civConfig, ITEMS, ModifyableProperty } from "../../types/data";
+import { getItemName, getItemDescription } from "../../global";
 import { getItemTechnologies } from "../../query/utils";
 import { ItemIcon } from "../ItemIcon";
 import { tooltipCSSClass } from "../../styles";
@@ -69,8 +70,8 @@ export const TechnologySelector: Component<{
   onChange: (selectedTechnologies: string[]) => void;
 }> = (props) => {
   const [technologies] = createResource(
-    () => ({age: props.age, item: props.item, civ: props.civ}), 
-    async ({age, item, civ}) => {
+    () => ({ age: props.age, item: props.item, civ: props.civ }), 
+    async ({ age, item, civ }) => {
       let techs = await getItemTechnologies(ITEMS.UNITS, item, civ);
       techs = techs.filter(v => getTechStatProperty(v) !== "unknown");
 
@@ -126,9 +127,9 @@ export const TechnologySelector: Component<{
               <Tooltip attachTo={iconEl}>
                 <div class={tooltipCSSClass}>
                   <div class="text-lg mb-4">
-                    <strong>{tech.tech.name}</strong>
+                    <strong>{getItemName(tech.tech)}</strong>
                   </div>
-                  <p class="my-2 whitespace-pre-wrap">{tech.tech.description}</p>
+                  <p class="my-2 whitespace-pre-wrap">{getItemDescription(tech.tech)}</p>
                 </div>
               </Tooltip>
             </div>

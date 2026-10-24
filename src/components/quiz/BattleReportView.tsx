@@ -1,7 +1,8 @@
 import { Component, Show, createSignal, createResource } from "solid-js";
 import { UnifiedItem, Unit } from "../../types/data";
 import { UnitCard } from "../UnitCard";
-import { CIVILIZATIONS, CivConfig } from "../../config";
+import { CIVILIZATIONS, CivConfig, getCivConfig } from "../../config";
+import { currentLocale } from "../../global";
 import { TechnologySelector } from "./TechnologySelector";
 import { getItemHref } from "@components/Cards";
 import { A } from "@solidjs/router";
@@ -81,12 +82,12 @@ export const BattleReportView: Component<{ unit1: UnifiedItem<Unit>; unit2: Unif
     </>;
   };
 
-  const battleReportHref = () => props.variation1 && props.variation2 && getItemHref(props.unit1, CIVILIZATIONS[props.variation1.civs[0]]) + "/versus/" + CIVILIZATIONS[props.variation2.civs[0]].slug + "/units/" + props.unit2!.id + `?age=${props.variation1.age}&targetAge=${props.variation2.age}`;
+  const battleReportHref = () => props.variation1 && props.variation2 && getItemHref(props.unit1, getCivConfig(props.variation1.civs[0], currentLocale())) + "/versus/" + CIVILIZATIONS[props.variation2.civs[0]].slug + "/units/" + props.unit2!.id + `?age=${props.variation1.age}&targetAge=${props.variation2.age}`;
 
   return (
     <div class="flex flex-col gap-4">
       <div class="grid grid-cols-[3fr_2fr_3fr] gap-4">
-        <UnitCard unit={props.unit1} age={props.age1} variation={props.variation1} civ={CIVILIZATIONS[props.variation1.civs[0]]} selectedTechnologies={selectedTechs1()} linkType="blank" onCivSelect={(civ) => props.onCivSelect?.(civ, 1)} />
+        <UnitCard unit={props.unit1} age={props.age1} variation={props.variation1} civ={getCivConfig(props.variation1.civs[0], currentLocale())} selectedTechnologies={selectedTechs1()} linkType="blank" onCivSelect={(civ) => props.onCivSelect?.(civ, 1)} />
 
         <div class="grid grid-cols-[auto_1fr_auto] text-md mb-auto">
           <h4 class="col-span-3 font-bold text-white text-xl text-center pb-10">
@@ -135,15 +136,15 @@ export const BattleReportView: Component<{ unit1: UnifiedItem<Unit>; unit2: Unif
         </div>
 
         <Show when={props.unit2 && props.variation2} fallback={<div class="bg-item-unit rounded-2xl bg-opacity-10 hover:bg-opacity-20"/>}>
-          <UnitCard unit={props.unit2!} age={props.age2} variation={props.variation2} civ={CIVILIZATIONS[props.variation2!.civs[0]]} selectedTechnologies={selectedTechs2()} linkType="blank" onCivSelect={(civ) => props.onCivSelect?.(civ, 2)} />
+          <UnitCard unit={props.unit2!} age={props.age2} variation={props.variation2} civ={getCivConfig(props.variation2!.civs[0], currentLocale())} selectedTechnologies={selectedTechs2()} linkType="blank" onCivSelect={(civ) => props.onCivSelect?.(civ, 2)} />
         </Show>
 
         <div>
-          <TechnologySelector item={props.unit1} civ={CIVILIZATIONS[props.variation1.civs[0]]} age={props.age1} onChange={setSelectedTechs1} />
+          <TechnologySelector item={props.unit1} civ={getCivConfig(props.variation1.civs[0], currentLocale())} age={props.age1} onChange={setSelectedTechs1} />
         </div>
         <div class="col-start-3">
           <Show when={props.unit2 && props.variation2}>
-            <TechnologySelector item={props.unit2!} civ={CIVILIZATIONS[props.variation2!.civs[0]]} age={props.age2} onChange={setSelectedTechs2} />
+            <TechnologySelector item={props.unit2!} civ={getCivConfig(props.variation2!.civs[0], currentLocale())} age={props.age2} onChange={setSelectedTechs2} />
           </Show>
         </div>
       </div>

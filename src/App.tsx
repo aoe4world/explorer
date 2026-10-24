@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "@solidjs/router";
+import { useLocation, useNavigate, useSearchParams } from "@solidjs/router";
 import { createEffect, createSignal, ErrorBoundary, on, ParentComponent, Show } from "solid-js";
 
 import { SidebarNav } from "@components/SidebarNav";
@@ -6,7 +6,8 @@ import { BackdropWrapper } from "./components/Backdrop";
 import { getItemHref } from "./components/Cards";
 import { Icon } from "./components/Icon";
 import { Toolbar } from "./components/Toolbar";
-import { hideNav } from "./global";
+import { getCivName } from "./config";
+import { hideNav, currentLocale, setLocale, getItemName, getItemDescription } from "./global";
 import { findClosestMatch } from "./query/utils";
 import { civConfig, ITEMS, UnifiedItem } from "./types/data";
 
@@ -14,8 +15,8 @@ export const [activePage, setActivePage] = createSignal<{ title?: string; descri
 
 export const setActivePageForItem = (item: UnifiedItem, civ: civConfig) =>
   setActivePage({
-    title: item.name + (civ?.name ? ` — ${civ?.name}` : ""),
-    description: item.description,
+    title: getItemName(item) + (civ ? ` — ${getCivName(civ, currentLocale())}` : ""),
+    description: getItemDescription(item),
     location: { pathname: window.location.pathname },
   });
 
@@ -43,17 +44,34 @@ createEffect(
 );
 const App: ParentComponent = (props) => {
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams<{ lang?: string }>();
   let resetFocusEl: HTMLDivElement | undefined; // eslint-disable-line no-unassigned-vars
+
+  createEffect(
+    on(
+      () => searchParams.lang,
+      (lang) => {
+        if (lang && lang !== currentLocale()) {
+          setLocale(lang);
+        }
+      },
+      { defer: true }
+    )
+  );
 
   createEffect(
     on(
       () => location.pathname,
       () => {
+        if (currentLocale() !== "en" && !searchParams.lang) {
+          setSearchParams({ lang: currentLocale() }, { replace: true, scroll: false });
+        }
         if (resetFocusEl) {
           resetFocusEl.focus({ preventScroll: true });
           if (resetFocusEl.getBoundingClientRect().top < 0) resetFocusEl.scrollIntoView();
         }
-      }
+      },
+      { defer: true }
     )
   );
 

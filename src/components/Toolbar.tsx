@@ -1,14 +1,15 @@
 import { A, useIsRouting, useLocation } from "@solidjs/router";
 import { Component, createMemo, For, Show } from "solid-js";
-import { CIVILIZATIONS, getCivConfig } from "../config";
+import { CIVILIZATIONS, getCivConfig, getCivName } from "../config";
 import { tooltipCSSClass } from "../styles";
 import { civConfig } from "../types/data";
 import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { Search } from "./Search";
 import { Tooltip } from "./Tooltip";
-import { hideNav, parseCurrentLocation } from "../global";
+import { currentLocale, hideNav, parseCurrentLocation } from "../global";
 import { QuickNav } from "./QuickNav";
+import { LanguageSelector } from "./LanguageSelector";
 
 export const Toolbar: Component = () => {
   const pending = useIsRouting();
@@ -30,15 +31,18 @@ export const Toolbar: Component = () => {
     <Show when={hideNav() !== "hidden"}>
       <div class="bg-gray-700 z-10 border-bottom border border-gray-500 sticky mt-25 top-0" classList={{ "opacity-20": pending() }}>
         <div class="max-w-screen-2xl py-2 px-4 lg:px-8 h-auto text-base lg:p-3 mx-auto flex flex-row items-center flex-wrap sm:flex-nowrap gap-2 lg:gap-5">
-          {current().subroute ? (
-            <A href={`/civs/${current().civ}/`} class={navButtonClass} noScroll={true}>
-              <Icon icon="grid-horizontal" class="place-self-center" />
-            </A>
-          ) : (
-            <A href={`/`} class={navButtonClass} noScroll={true}>
-              <Icon icon="home" class="place-self-center" />
-            </A>
-          )}
+          <div class="flex flex-col gap-2 items-center flex-none">
+            {current().subroute ? (
+              <A href={`/civs/${current().civ}/`} class={navButtonClass} noScroll={true} title="Civilization Overview">
+                <Icon icon="grid-horizontal" class="place-self-center" />
+              </A>
+            ) : (
+              <A href={`/`} class={navButtonClass} noScroll={true} title="Home">
+                <Icon icon="home" class="place-self-center" />
+              </A>
+            )}
+            <LanguageSelector />
+          </div>
           <div class="hidden lg:flex flex-row flex-wrap gap-2 h-auto items-center">
             <For each={Object.values(CIVILIZATIONS)}>
               {(civ) => (
@@ -46,7 +50,7 @@ export const Toolbar: Component = () => {
                   href={smartCivLink(civ)}
                   class="relative w-12 h-7 rounded-md overflow-hidden border-2 shadow-inner opacity-50 hover:opacity-100  border-transparent hidden xl:block transition"
                   activeClass="opacity-90 border-white"
-                  aria-label={civ.name}
+                  aria-label={getCivName(civ, currentLocale())}
                   noScroll={true}
                 >
                   <CivFlag abbr={civ.abbr} class="h-full w-full object-cover" />
@@ -55,20 +59,20 @@ export const Toolbar: Component = () => {
             </For>
           </div>
           <QuickNav />
-          <Show when={getCivConfig(current().civ)}>
+          <Show when={getCivConfig(current().civ, currentLocale())}>
             {(civ) => (
               <div class="flex-auto hidden lg:block xl:hidden">
                 <div class="group inline-block">
                   <button class="flex items-center gap-2 bg-gray-900 h-8 px-1 rounded-md">
                     <CivFlag abbr={civ().abbr} class="h-6 w-10 rounded object-cover" />
-                    <span class="truncate hidden sm:inline">{civ().name}</span>
+                    <span class="truncate hidden sm:inline">{getCivName(civ(), currentLocale())}</span>
                     <Icon icon="caret-down" class=" ml-4 mr-2" />
                   </button>
                   <div class="hidden max-h-[80vh] overflow-y-auto group-hover:block group-focus-within:block z-10 rounded-md absolute bg-gray-900 w-60 mt-0 ">
                     <For each={Object.values(CIVILIZATIONS)}>
                       {(civ) => (
                         <A href={[`/civs/${civ.slug}`, current().subroute].join("/")} noScroll={true} class="flex p-3 hover:bg-gray-700">
-                          <CivFlag abbr={civ.abbr} class="h-6 w-10 mr-3 rounded object-cover" /> {civ.name}
+                          <CivFlag abbr={civ.abbr} class="h-6 w-10 mr-3 rounded object-cover" /> {getCivName(civ, currentLocale())}
                         </A>
                       )}
                     </For>

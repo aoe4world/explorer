@@ -13,8 +13,8 @@ import {
   createUniqueId,
   useContext,
 } from "solid-js";
-import { CivSlug, getCivConfig } from "../config";
-import { getStructuredItems, parseCurrentLocation, ITEM_TYPE_LABELS, ItemTypeKey } from "../global";
+import { CivSlug, getCivConfig, getCivName } from "../config";
+import { getStructuredItems, parseCurrentLocation, ITEM_TYPE_LABELS, ItemTypeKey, currentLocale } from "../global";
 import { getItemCssClass } from "../styles";
 import { UnifiedItem } from "../types/data";
 import { BackdropCover } from "./Backdrop";
@@ -27,9 +27,15 @@ import { ItemName } from "./ItemName";
 export const SidebarNav: Component = () => {
   const location = useLocation();
   const current = createMemo(() => parseCurrentLocation(location.pathname));
-  const civilization = () => getCivConfig(current().civ);
-  const [data] = createResource(civilization, getStructuredItems);
-  const [allData] = createResource(() => getStructuredItems());
+  const civilization = () => getCivConfig(current().civ, currentLocale());
+  const [data] = createResource(
+    () => ({ civ: civilization(), locale: currentLocale() }),
+    ({ civ, locale }) => getStructuredItems(civ, locale)
+  );
+  const [allData] = createResource(
+    () => currentLocale(),
+    (locale) => getStructuredItems(undefined, locale)
+  );
   const currentItemType = () => current().itemType || "units";
   return (
     <div>
@@ -42,7 +48,7 @@ export const SidebarNav: Component = () => {
              {(civ) =>
               <A href={`/civs/${civ.slug}/`} class="text-xl font-bold white mb-2 flex items-center">
                 <CivFlag abbr={civ.abbr} class="w-auto h-6 mr-2 inline-block rounded" />
-                <span>{data.civ?.info.name}</span>
+                <span>{getCivName(civ, currentLocale()) || data.civ?.info.name || civ.name}</span>
               </A>
              }
             </Show>
@@ -87,7 +93,7 @@ export const SidebarNav: Component = () => {
                                             end
                                           >
                                             <ItemIcon item={item} size={6} />
-                                            <ItemName name={item.name} class="whitespace-pre-wrap" />
+                                            <ItemName item={item} civ={civilization()} class="whitespace-pre-wrap" />
                                           </A>
                                         </TreeItem>
                                       )}

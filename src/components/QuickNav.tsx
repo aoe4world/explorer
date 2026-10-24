@@ -1,9 +1,9 @@
-import { computePosition } from "@floating-ui/dom";
 import { A, useLocation } from "@solidjs/router";
-import { Component, For, createEffect, createMemo, createResource, createSignal, onCleanup, Show } from "solid-js";
+import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { Portal } from "solid-js/web";
-import { CIVILIZATIONS, CivConfig, getCivConfig, ItemSlug } from "../config";
-import { getStructuredItems, parseCurrentLocation, ItemTypeKey, ITEM_TYPE_LABELS } from "../global";
+import { computePosition, offset, shift } from "@floating-ui/dom";
+import { CivConfig, CIVILIZATIONS, getCivConfig, getCivName, ItemSlug } from "../config";
+import { getStructuredItems, parseCurrentLocation, ItemTypeKey, ITEM_TYPE_LABELS, currentLocale, ensureLocaleBundle, getItemName } from "../global";
 import { UnifiedItem } from "../types/data";
 import { getItemHref } from "./Cards";
 import { CivFlag } from "./CivFlag";
@@ -15,9 +15,12 @@ const SDK = import("@data/sdk");
 export const QuickNav: Component = () => {
   const location = useLocation();
   const current = createMemo(() => parseCurrentLocation(location.pathname));
-  const currentCivilization = () => getCivConfig(current().civ);
+  const currentCivilization = () => getCivConfig(current().civ, currentLocale());
   const [civilization, setCivilization] = createSignal<CivConfig | undefined>(currentCivilization());
-  const [data] = createResource(civilization, getStructuredItems);
+  const [data] = createResource(
+    () => ({ civ: civilization(), locale: currentLocale() }),
+    ({ civ, locale }) => getStructuredItems(civ, locale)
+  );
   const [view, setView] = createSignal<ItemTypeKey>(current().itemType ?? "units"); // eslint-disable-line solid/reactivity
   const [show, setShow] = createSignal(true);
 
@@ -38,11 +41,14 @@ export const QuickNav: Component = () => {
   createEffect(() => current() && setShow(false));
 
   const [currentItem] = createResource(
-    () => ({ subroute: current().subroute, civ: civilization() }),
-    async ({subroute, civ}) => {
+    () => ({ subroute: current().subroute, civ: civilization(), locale: currentLocale() }),
+    async ({ subroute, civ, locale }) => {
       if (!subroute) return undefined;
-      if (civ) return (await SDK).civilizations.Get(civ).Get(subroute as ItemSlug);
-      else return (await SDK).Get(subroute as ItemSlug);
+      await ensureLocaleBundle(locale);
+      const sdk = await SDK;
+      if (civ) return sdk.civilizations.Get(civ, locale).Get(subroute as ItemSlug);
+      else if (subroute) return sdk.Get(subroute as ItemSlug);
+      else return undefined;
     }
   );
 
@@ -81,7 +87,7 @@ export const QuickNav: Component = () => {
           {(currentCivilization) =>
             <div class="flex items-center">
               <CivFlag abbr={currentCivilization.abbr} class="w-10 h-6 mr-2 rounded" />
-              <span class="truncate">{currentCivilization.name}</span>
+              <span class="truncate">{getCivName(currentCivilization, currentLocale())}</span>
             </div>
           }
         </Show>
@@ -97,7 +103,7 @@ export const QuickNav: Component = () => {
           {(currentItem) =>
             <>
               <Icon icon="chevron-right" class="text-gray-400" />
-              <span class="truncate">{currentItem.name}</span>
+              <span class="truncate">{getItemName(currentItem)}</span>
             </>
           }
         </Show>
@@ -110,7 +116,7 @@ export const QuickNav: Component = () => {
                 <div class="whitespace-nowrap space-x-2">
                   <For each={Object.values(CIVILIZATIONS)}>
                     {(civ) => (
-                      <button onClick={() => setCivilization(civ)} class="last:!mr-4">
+                      <button onClick={() => setCivilization(civ)} class="last:!mr-4" aria-label={getCivName(civ, currentLocale())} title={getCivName(civ, currentLocale())}>
                         <CivFlag
                           abbr={civ.abbr}
                           class={`h-8 w-14 rounded object-cover inline-block border-2 ${
@@ -147,7 +153,7 @@ export const QuickNav: Component = () => {
                               end
                             >
                               <ItemIcon item={item} size={6} />
-                              <ItemName name={item.name} class="whitespace-pre-wrap" />
+                              <ItemName item={item} class="whitespace-pre-wrap" />
                             </A>
                           )}
                         </For>

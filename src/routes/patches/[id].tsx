@@ -1,17 +1,51 @@
 import { A, useLocation, useParams } from "@solidjs/router";
-import { Component, createResource, createSignal, For, createEffect, Show } from "solid-js";
+import { Component, createResource, createSignal, For, createEffect, Show, createMemo } from "solid-js";
 import { setActivePage } from "../../App";
 import { getItemHref } from "@components/Cards";
 import { CivFlag } from "@components/CivFlag";
 import { Icon } from "@components/Icon";
 import { ItemIcon } from "@components/ItemIcon";
+import { Tooltip } from "@components/Tooltip";
 import { scrollIntoViewIfNeeded, TableOfContents, useTableOfContents } from "@components/TableOfContents";
-import { CivSlug, CIVILIZATIONS, CIVILIZATION_BY_SLUG, ItemGroup, ItemSlug } from "../../config";
+import { CivSlug, CIVILIZATIONS, CIVILIZATION_BY_SLUG, ItemGroup, ItemSlug, localizeCiv } from "../../config";
 import { capitalize, getMapsAsItems, MapItem, sortPatchDiff } from "../../query/utils";
-import { mainIntroductionCSSClass } from "../../styles";
+import { mainIntroductionCSSClass, tooltipCSSClass } from "../../styles";
 import { civAbbr, Item, UnifiedItem } from "../../types/data";
-import { PatchLine, PatchSection, PatchSet } from "../../types/patches";
-import { tempHideNav } from "../../global";
+import { PatchLine, PatchNotes, PatchSection, PatchSet } from "../../types/patches";
+import { currentLocale, getItemName, tempHideNav } from "../../global";
+import patchHistoryData from "../../../data/overview/patch-history.json";
+
+interface PatchHistoryEntry {
+  id: string;
+  name: string;
+  type: string;
+  civs: civAbbr[];
+  action: "deleted" | "renamed" | "reworked";
+  replacedBy?: string;
+  replacedByName?: string;
+  icon: string;
+  description?: string;
+}
+
+type PatchHistoryData = Record<string, PatchHistoryEntry[]>;
+
+function parseVersion(v?: string): number[] {
+  if (!v) return [];
+  const m = v.match(/\d+(\.\d+)*/);
+  return m ? m[0].split(".").map(Number) : [];
+}
+
+function compareVersions(v1?: string, v2?: string): number {
+  const p1 = parseVersion(v1);
+  const p2 = parseVersion(v2);
+  for (let i = 0; i < Math.max(p1.length, p2.length); i++) {
+    const n1 = p1[i] ?? 0;
+    const n2 = p2[i] ?? 0;
+    if (n1 !== n2) return n1 - n2;
+  }
+  return 0;
+}
+
 const SDK = import("@data/sdk");
 
 export const PatchDetailRoute = () => {
@@ -20,12 +54,36 @@ export const PatchDetailRoute = () => {
   const [patch] = createResource(async () => (await import("../../data/patches/patch")).patches.find((patch) => patch.id === params.id));
   const [civ, setCiv] = createSignal<civAbbr>(CIVILIZATION_BY_SLUG[params.civ]?.abbr);
   const [items] = createResource(patch, async (patch) => {
+    if (!patch) return undefined;
     const sdk = await SDK;
-    const items = patch.sections.flatMap((s) => s.changes).flatMap((c) => c.items.map((ci) => [ci, sdk.Get(ci as ItemSlug)] as [string, ItemGroup<Item>]));
+    const items = patch.sections.flatMap((s) => s.changes).flatMap((c) =>
+      c.items.map((ci) => [ci, sdk.Get(ci as ItemSlug)] as [string, ItemGroup<Item>])
+    );
     const mapItems = getMapsAsItems();
-    mapItems.forEach(mapItem => {
+    mapItems.forEach((mapItem) => {
       items.push([`maps/${mapItem.id}`, mapItem]);
     });
+    for (const [patchVersion, entries] of Object.entries(patchHistoryData as PatchHistoryData)) {
+      for (const entry of entries) {
+        if (!items.some(([id, val]) => id === entry.id && val)) {
+          items.push([entry.id, {
+            id: entry.id,
+            baseId: entry.id,
+            name: entry.name,
+            type: entry.type as any,
+            civs: entry.civs ?? [],
+            classes: [],
+            icon: entry.icon,
+            isHistorical: true,
+            patchVersion,
+            action: entry.action,
+            replacedBy: entry.replacedBy,
+            replacedByName: entry.replacedByName,
+            description: entry.description,
+          } as any]);
+        }
+      }
+    }
     return new Map(items);
   });
 
@@ -70,7 +128,7 @@ export const PatchDetailRoute = () => {
     () =>
       patch() &&
       setActivePage({
-        title: `${patch()?.name} ${civ() ? `– ${CIVILIZATIONS[civ()]?.name}` : ""}`,
+        title: `${patch()?.name} ${civ() ? `– ${localizeCiv(CIVILIZATIONS[civ()], currentLocale())?.name}` : ""}`,
         description: patch()?.introduction,
         location: useLocation(),
       })
@@ -99,7 +157,7 @@ export const PatchDetailRoute = () => {
           </Show>
         </div>
         <h1 class="text-3xl font-bold">
-          {patch()?.name} {civ() && `– ${CIVILIZATIONS[civ()]?.name}`}
+          {patch()?.name} {civ() && `– ${localizeCiv(CIVILIZATIONS[civ()], currentLocale())?.name}`}
         </h1>
         <div class="text-gray-300 mt-1">
           {patch()?.date.toLocaleDateString("en-US", { dateStyle: "full" })} {patch()?.buildId && <span class="ml-2">#{patch()?.buildId}</span>}
@@ -152,13 +210,13 @@ export const PatchDetailRoute = () => {
             <div class="text-sm text-gray-200 my-4">Click on different units or technologies to learn more about them.</div>
           </div>
 
-          <For each={filteredPatchNotes()}>{(section) => <Section section={section} items={items()} civ={civ()} />}</For>
+          <For each={filteredPatchNotes()}>{(section) => <Section section={section} items={items()} civ={civ()} patch={patch()} />}</For>
         </div>
         <div class="hidden lg:block sticky basis-72 min-w-[12rem] -order-1 top-24 max-h-screen overflow-y-auto pb-24 self-start align-self-start bottom-48">
           {civ() && (
             <div class="my-5 rounded-lg p-4 bg-gray-500 gap-2">
               <p class="text-gray-100 text-sm">
-                Showing notes for the <CivFlag abbr={civ()} class="w-7 h-4 ml-1 inline-block" /> {CIVILIZATIONS[civ()]?.name}. Other patch notes are hidden.
+                Showing notes for the <CivFlag abbr={civ()} class="w-7 h-4 ml-1 inline-block" /> {localizeCiv(CIVILIZATIONS[civ()], currentLocale())?.name}. Other patch notes are hidden.
               </p>
               <A
                 href={`/patches/${params.id}`}
@@ -177,7 +235,88 @@ export const PatchDetailRoute = () => {
   );
 };
 
-const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem | MapItem>; civ: civAbbr }> = (props) => {
+const HistoricalItem: Component<{ item: any; patch?: PatchNotes }> = (props) => {
+  let el: HTMLElement | undefined; // eslint-disable-line no-unassigned-vars
+  const hist = () => props.item;
+  const patchVer = () => hist().patchVersion;
+  const currentVer = () => props.patch?.buildId;
+
+  const isThisPatch = createMemo(() => {
+    const cmp = compareVersions(currentVer(), patchVer());
+    return cmp === 0 || (
+      props.patch?.id === hist().patchVersion ||
+      Boolean(props.patch?.id && props.patch.id.includes(hist().patchVersion.replace(/\./g, "-")))
+    );
+  });
+
+  const isPreceding = createMemo(() => {
+    const cmp = compareVersions(currentVer(), patchVer());
+    return cmp < 0 && !isThisPatch();
+  });
+
+  const isDeletedInThisPatch = createMemo(() => hist().action === "deleted" && isThisPatch());
+
+  const tooltipText = createMemo(() => {
+    const repName = hist().replacedByName || (hist().replacedBy ? capitalize(hist().replacedBy.split("/")[1]?.replace(/-/g, " ")) : "");
+    if (isThisPatch()) {
+      if (hist().action === "deleted") {
+        return `Removed from the game in this patch (Patch\u00A0${patchVer()})`;
+      }
+      if (hist().action === "renamed" || hist().action === "reworked") {
+        return repName
+          ? `Reworked / renamed into ${repName} in this patch (Patch\u00A0${patchVer()})`
+          : `Reworked / renamed in this patch (Patch\u00A0${patchVer()})`;
+      }
+    } else if (isPreceding()) {
+      if (hist().action === "deleted") {
+        return `This item was removed from the game in later Patch\u00A0${patchVer()}`;
+      }
+      if (hist().action === "renamed" || hist().action === "reworked") {
+        return repName
+          ? `This item was renamed / reworked into ${repName} in later Patch\u00A0${patchVer()}`
+          : `This item was renamed / reworked in later Patch\u00A0${patchVer()}`;
+      }
+    }
+    return hist().description ?? "";
+  });
+
+  return (
+    <span
+      ref={el}
+      class="inline-flex flex-row items-center cursor-default group"
+    >
+      <div class="relative mr-2 flex-none">
+        <ItemIcon item={props.item} size={8} />
+      </div>
+      <span class={`font-bold ${isDeletedInThisPatch() ? "line-through text-red-300" : ""}`}>
+        {getItemName(props.item)}
+      </span>
+      {isDeletedInThisPatch() && (
+        <span class="ml-1.5 text-red-500 font-bold">
+          <i class="fas fa-times text-xs" />
+        </span>
+      )}
+      {isPreceding() && (
+        <span class="ml-1.5 text-amber-400/80 text-xs inline-flex items-center">
+          <i class="fas fa-info-circle" />
+        </span>
+      )}
+      <Tooltip attachTo={el}>
+        <div class={`${tooltipCSSClass} text-xs text-gray-200 leading-relaxed shadow-xl`}>
+          <div class="whitespace-nowrap mb-1">
+            <ItemIcon item={props.item} size={'inline'} class="!ml-0" />
+            <span class="font-bold text-white">{props.item.name}</span>
+          </div>
+          <div class={isDeletedInThisPatch() ? "text-red-300" : isPreceding() ? "text-amber-200" : "text-gray-300"}>
+            {tooltipText()}
+          </div>
+        </div>
+      </Tooltip>
+    </span>
+  );
+};
+
+const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem | MapItem>; civ: civAbbr; patch?: PatchNotes }> = (props) => {
 
     const subtitle = () => {
       if (props.section.subtitle)
@@ -214,13 +353,16 @@ const Section: Component<{ section: PatchSection; items: Map<string, UnifiedItem
                     const item = props.items?.get(ci);
                     if (item && props.civ && !item.civs.includes(props.civ)) return null;
                     if (item) {
+                      if ((item as any).isHistorical) {
+                        return <HistoricalItem item={item} patch={props.patch} />;
+                      }
                       return (
                         <A
                           href={item.type == "map" ? `https://aoe4world.com/stats/maps/${item.name}` : getItemHref(item)}
                           class="inline-flex flex-row items-center"
                         >
                           <ItemIcon item={item} size={8} class="mr-2" />
-                          <span class="font-bold">{item.name}</span>
+                          <span class="font-bold">{getItemName(item)}</span>
                         </A>
                       );
                     }

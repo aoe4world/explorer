@@ -54,6 +54,17 @@ export const DLCS: DLC[] = [
       steam: "https://store.steampowered.com/app/3746540?utm_source=aoe4world",
       xbox: "https://www.xbox.com/en-us/games/store/age-of-empires-iv-yue-feis-legacy/9pcrnw20sw1p",
       msstore: "https://www.microsoft.com/store/productid/9n56pn5w9900",
+      playstation: "https://store.playstation.com/en-us/product/UP6312-PPSA25366_00-0986414446778868",
+    },
+  },
+  {
+    id: "raiders-of-the-north",
+    name: "Raiders of the North",
+    flag: DLC_FLAGS["raiders-of-the-north"],
+    links: {
+      steam: "https://store.steampowered.com/app/4336170?utm_source=aoe4world",
+      xbox: "https://www.xbox.com/en-us/games/store/age-of-empires-iv-raiders-of-the-north/9mzxplnlct5f",
+      msstore: "https://www.microsoft.com/store/productid/9n5gz5d6mznk",
       playstation: "",
     },
   },
