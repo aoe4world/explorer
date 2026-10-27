@@ -1,5 +1,5 @@
 import { useParams } from "@solidjs/router";
-import { createEffect, createMemo, createResource, createSignal, Show } from "solid-js";
+import { createEffect, createResource, createSignal, Show } from "solid-js";
 
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { CIVILIZATION_BY_SLUG, CivSlug, PRETTY_AGE_MAP_LONG, getCivConfig } from "../../config";
@@ -12,7 +12,8 @@ import { ItemPage } from "@components/ItemPage";
 import { PatchHistory } from "@components/PatchHistory";
 import { RelatedContent } from "@components/RelatedContent";
 import { ReportButton } from "@components/ReportButton";
-import { StatCosts } from "@components/Stats";
+import { ProductionCosts } from "@components/Stats";
+import { Recruits } from "@components/Recruits";
 
 const SDK = import("@data/sdk");
 
@@ -62,6 +63,8 @@ export function TechnologyDetailRoute() {
               <div class={mainIntroductionCSSClass}>{getItemDescription(data.variation)}</div>
               {data.variation.age > 0 ? <div class={mainIntroductionCSSClass}>Available in the {PRETTY_AGE_MAP_LONG[data.variation.age]}</div> : <></>}
 
+              <Recruits recruits={data.variation.recruits} civ={civ()} mode="detail" />
+
               <ItemPage.ExpansionInfo civ={civ()} />
 
               <ItemPage.ProducedAt item={data.item} civ={civ()} title="Researched at" />
@@ -80,7 +83,7 @@ export function TechnologyDetailRoute() {
               <div class="bg-black/70 rounded-2xl">
                 <ItemPage.AgeTabs age={age} setAge={setAge} minAge={data.item.minAge} />
                 <div class="p-6">
-                  <StatCosts costs={data.variation.costs} />
+                  <ProductionCosts item={data.variation} civ={civ()} />
                 </div>
               </div>
             </div>

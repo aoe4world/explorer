@@ -7,6 +7,7 @@ import popcap from "./resources/popcap.png";
 import oliveoil from "./resources/oliveoil.png";
 import silver from "./resources/silver.png";
 import vizier from "./resources/vizierpoints.png";
+import muster_charge from "./resources/muster_charge.png";
 
 import twitch_moderator from "./twitch-moderator.png";
 import twitch_subscriber from "./twitch-subscriber.png";
@@ -21,7 +22,7 @@ export const FLAGS: Record<string, string> = Object.fromEntries(
   Object.entries(import.meta.glob("./flags/*.png", { eager: true, query: "?url", import: "default" })).map(([k, v]) => [k.match(/\.\/flags\/(.*)\.png/)![1], v as string])
 );
 
-export const RESOURCES = { food, gold, stone, wood, time, popcap, oliveoil, silver, vizier };
+export const RESOURCES = { food, gold, stone, wood, time, popcap, oliveoil, silver, vizier, muster_charge };
 
 export const TWITCH = { moderator: twitch_moderator, subscriber: twitch_subscriber };
 

@@ -95,7 +95,7 @@ export const Abilities: Component<{ abilities: Ability[]; civ?: CivConfig; item?
   );
 };
 
-const InlineItemLink: Component<{ itemId: ItemSlug; civ?: CivConfig }> = (props) => {
+export const InlineItemLink: Component<{ itemId: ItemSlug; civ?: CivConfig }> = (props) => {
   const [item] = createResource(
     () => props.itemId && { itemId: props.itemId, civ: props.civ, locale: currentLocale() },
     async ({ itemId, civ, locale }) => {

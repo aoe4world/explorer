@@ -17,7 +17,7 @@ import { ItemPage } from "@components/ItemPage";
 import { PatchHistory } from "@components/PatchHistory";
 import { RelatedContent } from "@components/RelatedContent";
 import { ReportButton } from "@components/ReportButton";
-import { StatBar, StatCosts, StatDps, StatLos, StatNumber } from "@components/Stats";
+import { ProductionCosts, StatBar, StatDps, StatLos, StatNumber } from "@components/Stats";
 import { TechnologyCard } from "@components/TechnologyCard";
 import { Tooltip } from "@components/Tooltip";
 import { UnitCard } from "@components/UnitCard";
@@ -102,7 +102,7 @@ export function BuildingDetailRoute() {
                           <ItemName item={unit} class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100" />
                           <Tooltip attachTo={el}>
                             <div class="max-w-md bg-gray-800 rounded-2xl border border-item-unit">
-                              <UnitCard unit={unit} civ={civ()} />
+                              <UnitCard unit={unit} civ={civ()} venue={params.id} />
                             </div>
                           </Tooltip>
                         </A>
@@ -124,7 +124,7 @@ export function BuildingDetailRoute() {
                           <ItemName item={tech} class="text-xs text-ellipsis font-bold break-words w-full text-left opacity-80 group-hover:opacity-100 whitespace-pre-wrap" />
                           <Tooltip attachTo={el}>
                             <div class="max-w-md bg-gray-800 rounded-2xl border border-item-technology">
-                              <TechnologyCard item={tech} civ={civ()} />
+                              <TechnologyCard item={tech} civ={civ()} venue={params.id} />
                             </div>
                           </Tooltip>
                         </A>
@@ -153,7 +153,7 @@ export function BuildingDetailRoute() {
   );
 }
 
-const BuildingSidebar: Component<{ item: UnifiedItem<Building>; variation: Building; civ: civConfig; age: () => number; setAge: (age: number) => void }> = (props) => {
+const BuildingSidebar: Component<{ item: UnifiedItem<Building>; variation: Building; civ?: civConfig; age: () => number; setAge: (age: number) => void }> = (props) => {
   const [stats] = createResource(
     () => ({ unit: props.item, civ: props.civ }),
     (x) => getUnitStats(ITEMS.UNITS, x.unit, x.civ)
@@ -161,12 +161,10 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; variation: Build
 
   const variation = createMemo(() => props.variation ?? getMostAppropriateVariation<Building>(props.item, props.civ, props.age()));
 
-  const costs = () => variation()?.costs;
-
   return (
     <div class="flex-auto flex flex-col gap-8">
       <div class=" bg-black/70 rounded-2xl p-6 ">
-        <StatCosts costs={costs()} />
+        <ProductionCosts item={variation()} civ={props.civ} />
         <Show when={variation().popcapIncrease} keyed>
           {(amount) => (
             <div class="mt-4">

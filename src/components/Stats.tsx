@@ -1,13 +1,14 @@
 import { Component, createEffect, createMemo, createSignal, Index, on, Show, For } from "solid-js";
 import { RESOURCES } from "../../assets";
-import { CIVILIZATIONS, PRETTY_AGE_MAP, getCivName, localizeCiv } from "../config";
+import { CivConfig, PRETTY_AGE_MAP, getCivName } from "../config";
 import { calculateStatParts, roundToDecimals } from "../query/stats";
 import { statLabelCSSClass, tooltipCSSClass } from "../styles";
 import { Item, UnifiedItem } from "../types/data";
 import { CalculatedStats, Stat, StatPart } from "../types/stats";
 import { Icon } from "./Icon";
-import { currentLocale, globalAgeFilter, globalCivFilter, getItemName, getItemDescription } from "../global";
+import { globalAgeFilter, globalCivFilter, getItemName, getItemDescription } from "../global";
 import { Tooltip } from "./Tooltip";
+import { InlineItemLink } from "./Abilities";
 
 export const StatBar: Component<{
   label: string;
@@ -399,11 +400,13 @@ function formatCurreny(number: number) {
   return number > 2500 ? `${number / 1000}k` : number;
 }
 
-export const StatCosts: Component<{ costs: Item["costs"] }> = (props) => (
+export const StatCosts: Component<{ costs: Item["costs"]; label?: string }> = (props) => (
   <div>
-    <div class={statLabelCSSClass}>Costs</div>
+    <Show when={props.label !== ""}>
+      <div class={statLabelCSSClass}>{props.label ?? "Costs"}</div>
+    </Show>
     <div class="flex items-center gap-4 mt-1">
-      <For each={["food", "wood", "gold", "stone", "oliveoil", "silver", "time", "popcap", "vizier"]}>
+      <For each={["food", "wood", "gold", "stone", "oliveoil", "silver", "muster_charge", "time", "popcap", "vizier"]}>
         {(type) =>
           (type == "popcap" ? props.costs[type] > 1 : props.costs[type] > 0) && (
             <div class="flex items-center gap-1">
@@ -415,6 +418,34 @@ export const StatCosts: Component<{ costs: Item["costs"] }> = (props) => (
     </div>
   </div>
 );
+
+export const ProductionCosts: Component<{ item: Item | UnifiedItem; civ?: CivConfig }> = (props) => {
+  const variations = () => props.item.productionVariations ?? [];
+  // Disabled coz the base costs show the value of the unit
+  // const producedBy = () => props.item.producedBy ?? [];
+  // const allVenuesHaveCustomCosts = () =>
+  //   producedBy().length > 0 &&
+  //   variations().length > 0 &&
+  //   producedBy().every((b) => variations().some((v) => v.venue === b || v.venue.endsWith("/" + b)));
+
+  return (
+    <div class="flex flex-col gap-4">
+      <StatCosts costs={props.item.costs} />
+
+      <For each={variations()}>
+        {(pv) => (
+          <div>
+            <div class={`${statLabelCSSClass} flex items-center gap-2 mb-1`}>
+              <span>Costs</span>
+              <InlineItemLink itemId={`buildings/${pv.venue.split("/").pop()}`} civ={props.civ} />
+            </div>
+            <StatCosts costs={pv.costs} label="" />
+          </div>
+        )}
+      </For>
+    </div>
+  );
+};
 
 export const StatLos: Component<{
   label: string;
