@@ -1,8 +1,8 @@
 import { PatchNotes } from "../../types/patches";
 
 export const patch: PatchNotes = {
-  id: "patch-17-0-12097-rotn-dlc",
-  buildId: "17.0.12097",
+  id: "patch-17-0-12182-rotn-dlc",
+  buildId: "17.0.12182",
   name: "Raiders of the North Update",
   season: 13,
   type: "update",

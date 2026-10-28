@@ -139,7 +139,7 @@ export function splitTechnologiesIntoGroups(buildings: UnifiedItem<Technology>[]
       else if (["ovoo-tithe", "unlock-stockyard-edict", "daimyo-manor", "daimyo-palace", "shogunate-castle", "barmkins", "fortified-tower-houses", "bee-skeps", "farmstead"].includes(tech.id)) acc.economy.push(tech);
       else if (tech.classes.some((c) => ["defensive", "emplacement", "building", "outpost", "keep"].includes(c)) || tech.displayClasses.some((c) => c.includes("Defensive")) || ["reinforced-foundations", "slow-burning-defenses", "village-fortresses", "earthen-core-walls"].includes(tech.id)) acc.defensive.push(tech);
       else if (tech.classes.some((c) => ["religious", "healing"].includes(c))) acc.religious.push(tech);
-      else if (tech.classes.some((c) => ["military_upgrade", "scar_military_upgrade"].includes(c)) || tech.displayClasses.some((c) => c.includes("Mercenary"))) acc.military.push(tech);
+      else if (tech.classes.some((c) => ["military_upgrade", "scar_military_upgrade", "summon"].includes(c)) || tech.displayClasses.some((c) => c.includes("Mercenary"))) acc.military.push(tech);
       else if (["efficient-production", "armored-beasts", "beachhead", "glorious-charge", "padded-armor", "stables-reinforcements", "triple-shot", "battlefield-salvage", "barracks-reinforcements", "archery-range-reinforcements", "khan-debuff-arrow", "increased-supplies", "unlock-kharash-edict", "reinforced-arm-ballista", "forge-welding", "heavy-tunics", "pasture-and-loom", "smithy", "bone-ash-steel", "mail-shirts", "crucible-steel", "lamellar-plating"].includes(tech.id)) acc.military.push(tech);
       else if (tech.classes.some((c) => ["a"].includes(c))) acc.units.push(tech);
       else acc.unknown.push(tech);
