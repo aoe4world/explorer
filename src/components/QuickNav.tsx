@@ -1,5 +1,5 @@
 import { A, useLocation } from "@solidjs/router";
-import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
+import { Component, createEffect, createMemo, createResource, createSignal, For, Show, onCleanup } from "solid-js";
 import { Portal } from "solid-js/web";
 import { computePosition, offset, shift } from "@floating-ui/dom";
 import { CivConfig, CIVILIZATIONS, getCivConfig, getCivName, ItemSlug } from "../config";
