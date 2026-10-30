@@ -65,7 +65,7 @@ export const DLCS: DLC[] = [
       steam: "https://store.steampowered.com/app/4336170?utm_source=aoe4world",
       xbox: "https://www.xbox.com/en-us/games/store/age-of-empires-iv-raiders-of-the-north/9mzxplnlct5f",
       msstore: "https://www.microsoft.com/store/productid/9n5gz5d6mznk",
-      playstation: "",
+      playstation: "https://store.playstation.com/en-ca/product/UP6312-PPSA25366_00-0128065664283498",
     },
   },
 ];

@@ -1,5 +1,5 @@
 import { A, useParams } from "@solidjs/router";
-import { Component, createEffect, createMemo, createResource, createSignal, For, on, Show } from "solid-js";
+import { Component, createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js";
 
 import { setActivePageForItem, tryRedirectToClosestMatch } from "../../App";
 import { CIVILIZATION_BY_SLUG, CivSlug, getCivConfig } from "../../config";
@@ -53,14 +53,21 @@ export function BuildingDetailRoute() {
     }
   );
 
-  createEffect(on(
-    () => data()?.item,
-    (item) => {
-      if (!item) return;
-      if (civ() && !item.civs.includes(civ().abbr)) tryRedirectToClosestMatch(itemType, params.id, civ(), () => setUnmatched(true));
-      setActivePageForItem(item, civ());
+  const item = () => data()?.item;
+
+  createEffect(() => {
+    const i = item();
+    if (!i) return;
+    if (civ() && !i.civs.includes(civ().abbr)) {
+      const c = civ();
+      tryRedirectToClosestMatch(itemType, params.id, c, () => {
+        if (civ()?.abbr === c.abbr) setUnmatched(true);
+      });
+    } else {
+      setUnmatched(false);
     }
-  ));
+    setActivePageForItem(i, civ());
+  });
 
   return (
     <ItemPage.Wrapper civ={civ()}>
@@ -142,10 +149,10 @@ export function BuildingDetailRoute() {
           </div>
         )}
       </Show>
-      <Show when={unmatched() && data()?.item} keyed>
+      <Show when={unmatched() && item()} keyed>
         {(item) => <ItemPage.UnavailableForCiv item={item} civ={civ()} />}
       </Show>
-      <Show when={!unmatched() && data()?.item} keyed>
+      <Show when={!unmatched() && item()} keyed>
         {(item) => <ItemPage.AvailableUpgrades item={item} civ={civ()} />}
       </Show>
       {data.error && <div class="text-red-600">Error!</div>}

@@ -34,7 +34,7 @@ export function UnitDetailRoute() {
       if (!rawItem) return undefined;
       const c = civ?.abbr;
       const abilities = await sdk.abilities.where({ civilization: c, affects: rawItem }).order("age");
-      
+
       return {
         item: rawItem,
         variation: getMostAppropriateVariation<Unit>(rawItem, civ, age),
@@ -47,7 +47,14 @@ export function UnitDetailRoute() {
   createEffect(() => {
     const i = item();
     if (!i) return;
-    if (civ() && !i.civs.includes(civ().abbr)) tryRedirectToClosestMatch(itemType, params.id, civ(), () => setUnmatched(true));
+    if (civ() && !i.civs.includes(civ().abbr)) {
+      const c = civ();
+      tryRedirectToClosestMatch(itemType, params.id, c, () => {
+        if (civ()?.abbr === c.abbr) setUnmatched(true);
+      });
+    } else {
+      setUnmatched(false);
+    }
     setActivePageForItem(i, civ());
   });
 
