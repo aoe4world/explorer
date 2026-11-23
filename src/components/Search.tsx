@@ -7,6 +7,7 @@ import { UnifiedItem } from "../types/data";
 import { getItemHref } from "./Cards";
 import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
+import * as icons from "@components/icons";
 const SDK = import("@data/sdk");
 
 const isMac = /mac/i.test(navigator.userAgent);
@@ -107,10 +108,9 @@ export const Search: Component<{ class?: string }> = (props) => {
 
   return (
     <div class={`relative group ${props.class}`}>
-      <Icon
-        icon="search"
-        class="grid place-content-center absolute inset-0 w-10 pointer-events-none text-sm text-white/50 transition group-focus-within:text-black"
-      />
+      <span class="grid place-content-center absolute inset-0 w-10 pointer-events-none text-sm text-white/50 transition group-focus-within:text-black">
+        <Icon icon={icons.Search} />
+      </span>
       <div class="hidden lg:grid place-content-center absolute top-0 bottom-0 right-0 w-20 pointer-events-none">
         <div class="bg-gray-600 group-focus-within:bg-gray-100 text-gray-200 group-focus-within:text-gray-400 px-2 py-0.5 text-xs rounded uppercase transition">
           {query() ? `↓↑  ↵` : `${isMac ? "⌘" : "ctrl"} + k`}

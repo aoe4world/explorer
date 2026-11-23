@@ -5,6 +5,7 @@ import { Icon } from "../Icon";
 import { Scores, TwitchUser } from "./TwitchQuiz";
 import { ToggleSwitch } from "@components/common/ToggleSwitch";
 import { Random } from "./random";
+import * as icons from "@components/icons";
 
 interface TwitchGiveawayProps {
   scores: Scores;
@@ -86,7 +87,7 @@ export const TwitchGiveaway: Component<TwitchGiveawayProps> = (props) => {
       <div class="bg-gray-700 rounded-lg p-6 w-full max-w-2xl text-white flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-bold">Giveaway</h2>
-          <button onClick={() => props.onClose()}><Icon icon="xmark" /></button>
+          <button onClick={() => props.onClose()}><Icon icon={icons.Xmark} /></button>
         </div>
 
         <Show when={winner()} fallback={

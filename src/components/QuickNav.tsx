@@ -10,6 +10,7 @@ import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
 import { ItemName } from "./ItemName";
+import * as icons from "@components/icons";
 const SDK = import("@data/sdk");
  
 export const QuickNav: Component = () => {
@@ -94,7 +95,7 @@ export const QuickNav: Component = () => {
         <Show when={current().itemType} keyed>
           {(itemType) =>
           <>
-            <Icon icon="chevron-right" class="text-gray-400 hidden sm:block" />
+            <Icon icon={icons.ChevronRight} class="text-gray-400 hidden sm:block" />
             <span class="hidden sm:block truncate">{ITEM_TYPE_LABELS[itemType]}</span>
           </>
           }
@@ -102,7 +103,7 @@ export const QuickNav: Component = () => {
         <Show when={currentItem()} keyed>
           {(currentItem) =>
             <>
-              <Icon icon="chevron-right" class="text-gray-400" />
+              <Icon icon={icons.ChevronRight} class="text-gray-400" />
               <span class="truncate">{getItemName(currentItem)}</span>
             </>
           }

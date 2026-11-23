@@ -6,6 +6,7 @@ import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
 import { currentLocale, globalAgeFilter, getItemName, getItemDisplayClasses } from "../global";
+import * as icons from "@components/icons";
 
 const typeToPathMap: Record<string, string> = {
   building: "buildings",
@@ -41,7 +42,7 @@ export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig; age?: n
         props.item.civs.length == 1 && (
           <div class="flex h-6 mt-2 items-center gap-2">
             <span class="text-unique text-sm font-semibold">
-              <Icon icon="star-sharp" /> Unique to {localizeCiv(props.civ, currentLocale())?.name}
+              <Icon icon={icons.StarSharp} /> Unique to {localizeCiv(props.civ, currentLocale())?.name}
             </span>
           </div>
         )
@@ -68,7 +69,7 @@ export const Card: ParentComponent<{ item: UnifiedItem; civ?: civConfig; age?: n
           </For>
           {props.item.civs.length == 1 && (
             <span class="text-unique text-sm font-semibold ml-auto">
-              <Icon icon="star-sharp" /> Unique
+              <Icon icon={icons.StarSharp} /> Unique
             </span>
           )}
         </div>
@@ -123,12 +124,12 @@ export const CardHeader: Component<{ item: UnifiedItem; civ?: civConfig; minAge:
 //       <Show when={stats()}>
 //         <>
 //           <div class="flex flex-col gap-4 mb-8">
-//             <StatBar label="Hitpoints" icon="heart" stat={stats().hitpoints} max={8000} />
-//             <StatBar label="Siege Attack" icon="meteor" stat={stats().siegeAttack} max={500} />
-//             {/* <StatBar label="Melee Attack" icon="swords" stat={stats().meleeAttack} max={getBarSize(props.unit, 50, 100)} /> */}
-//             <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats().rangedAttack} max={100} />
-//             {/* <StatBar label="Melee Armor" icon="shield-blank" stat={stats().meleeArmor} max={20} displayAlways={true} /> */}
-//             <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats().rangedArmor} max={50} displayAlways={true} />
+//             <StatBar label="Hitpoints" icon={icons.Heart} stat={stats().hitpoints} max={8000} />
+//             <StatBar label="Siege Attack" icon={icons.Meteor} stat={stats().siegeAttack} max={500} />
+//             {/* <StatBar label="Melee Attack" icon={icons.Swords} stat={stats().meleeAttack} max={getBarSize(props.unit, 50, 100)} /> */}
+//             <StatBar label="Ranged Attack" icon={icons.BowArrow} stat={stats().rangedAttack} max={100} />
+//             {/* <StatBar label="Melee Armor" icon={icons.ShieldBlank} stat={stats().meleeArmor} max={20} displayAlways={true} /> */}
+//             <StatBar label="Ranged Armor" icon={icons.BullseyeArrow} stat={stats().rangedArmor} max={50} displayAlways={true} />
 //           </div>
 //           <div class="flex flex-col gap-4 mt-auto">
 //             <div class="flex gap-4  flex-wrap">

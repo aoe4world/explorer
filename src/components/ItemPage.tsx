@@ -12,6 +12,7 @@ import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
 import { TechnologyCard } from "./TechnologyCard";
+import * as icons from "@components/icons";
 const SDK = import("@data/sdk");
 
 const Header: Component<{ item: UnifiedItem | Item; civ?: CivConfig }> = (props) => {
@@ -139,7 +140,7 @@ const UnavailableForCiv: Component<{ item: UnifiedItem; civ: CivConfig }> = (pro
         >
           <CivFlag abbr={props.civ.abbr} class="h-3 w-4.5 rounded-sm " />
           {getCivName(props.civ, currentLocale())}'s {getItemType(props.item)}
-          <Icon icon="arrow-right" class="ml-auto mr-2" />
+          <Icon icon={icons.ArrowRight} class="ml-auto mr-2" />
         </A>
       </CivOptionsForItem>
     </div>
@@ -157,7 +158,7 @@ const CivOptionsForItem: ParentComponent<{ item: UnifiedItem; civs: CivAbbr[]; p
             class="flex gap-2 items-center font-bold text-base  mr-3 bg-gray-900 p-2 rounded-md hover:text-white text-gray-100 hover:bg-black"
           >
             <CivFlag abbr={civ} class="h-3 w-4.5 rounded-sm " /> {props.prefix} {getCivName(civ)}
-            <Icon icon="arrow-right" class="ml-auto mr-2" />
+            <Icon icon={icons.ArrowRight} class="ml-auto mr-2" />
           </A>
         )}
       </For>
@@ -222,7 +223,7 @@ const ExpansionInfo: Component<{ civ: CivConfig }> = (props) => (
                   data-anal-event="buy_dlc_steam"
                   class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
                 >
-                  <i class="fab fa-steam mx-1" /> Steam
+                  <Icon icon={icons.Steam} class="mx-1" /> Steam
                 </A>
               </Show>
               <Show when={dlc.links.xbox}>
@@ -232,7 +233,7 @@ const ExpansionInfo: Component<{ civ: CivConfig }> = (props) => (
                   data-anal-event="buy_dlc_xbox"
                   class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
                 >
-                  <i class="fab fa-xbox mx-1 " /> Xbox
+                  <Icon icon={icons.Xbox} class="mx-1" /> Xbox
                 </A>
               </Show>
               <Show when={dlc.links.msstore}>
@@ -242,7 +243,7 @@ const ExpansionInfo: Component<{ civ: CivConfig }> = (props) => (
                   data-anal-event="buy_dlc_ms"
                   class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
                 >
-                  <i class="fab fa-microsoft mx-1" /> MS Store
+                  <Icon icon={icons.Microsoft} class="mx-1" /> MS Store
                 </A>
               </Show>
               <Show when={dlc.links.playstation}>
@@ -252,7 +253,7 @@ const ExpansionInfo: Component<{ civ: CivConfig }> = (props) => (
                   data-anal-event="buy_dlc_ps"
                   class="whitespace-nowrap font-bold inline-flex items-center mx-1 hover:underline"
                 >
-                  <i class="fab fa-playstation mx-1" /> Playstation
+                  <Icon icon={icons.Playstation} class="mx-1" /> Playstation
                 </A>
               </Show>
             </p>

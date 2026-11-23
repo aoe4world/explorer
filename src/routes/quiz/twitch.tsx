@@ -6,6 +6,7 @@ import { ToggleSwitch } from "@components/common/ToggleSwitch";
 import { tempHideNav } from "../../global";
 import { setActivePage } from "../../App";
 import { resetQuestionLimits } from "@components/quiz/questions";
+import * as icons from "@components/icons";
 
 export interface TwitchQuizParams extends SearchParams {
   numQuestions?: string;
@@ -76,7 +77,7 @@ export const QuizRoute: Component = () => {
           <div class="my-5 rounded-lg p-6 bg-gray-600 ">
             <div class="max-w-lg mx-auto leading-relaxed">
               <h1 class="font-bold text-white text-2xl my-3">
-                <Icon icon="twitch" class="fab mr-4 text-purple-600" />
+                <Icon icon={icons.Twitch} class="mr-4 text-purple-600" />
                 Test your viewers' game knowledge
               </h1>
               <p class="text-gray-200 my-4 font-bold max-w-prose ">
@@ -135,7 +136,7 @@ export const QuizRoute: Component = () => {
                 <div class="col-span-4 flex justify-end items-start">
                   <button onClick={() => setShowAdvancedSettings(!showAdvancedSettings())} class="text-gray-300 text-sm flex items-center gap-1">
                     Advanced
-                    <Icon icon={showAdvancedSettings() ? "chevron-up" : "chevron-down"} class="ml-1" />
+                    <Icon icon={showAdvancedSettings() ? icons.ChevronUp : icons.ChevronDown} class="ml-1" />
                   </button>
                 </div>
               </div>
@@ -184,7 +185,7 @@ export const QuizRoute: Component = () => {
                     <div class="col-span-1">
                       <label for="graceperiod" class="text-sm text-gray-300 mb-1 block relative group">
                         Grace Period (s)
-                        <Icon icon="info-circle" class="ml-1 text-gray-400" />
+                        <Icon icon={icons.InfoCircle} class="ml-1 text-gray-400" />
                         <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max p-2 bg-gray-800 text-white text-xs rounded-md hidden group-hover:block z-10">
                           Accounts for stream delay, giving viewers extra time after the timer expires.
                         </span>
@@ -220,7 +221,7 @@ export const QuizRoute: Component = () => {
                   </a>
                   .
                   <button onClick={() => navigator.clipboard.writeText(shareUrl())} class="ml-2 p-1 rounded-md bg-gray-500 text-white">
-                    <Icon icon="copy" />
+                    <Icon icon={icons.Copy} />
                   </button>
                 </div>
               )}

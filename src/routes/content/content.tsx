@@ -8,6 +8,7 @@ import { CivSlug, CIVILIZATION_BY_SLUG } from "../../config";
 import { tempHideNav } from "../../global";
 import { ContentItem, getRelatedContent } from "../../query/content";
 import { mainIntroductionCSSClass, mainItemTitleCSSClass, secondaryButtonClass } from "../../styles";
+import * as icons from "@components/icons";
 
 const defaultLimit = 12;
 export const ContentOverviewRoute = () => {
@@ -41,7 +42,7 @@ export const ContentOverviewRoute = () => {
           <div class={`basis-1/3 grow-0 flex-col gap-8 ${showFilter() ? "flex" : "hidden lg:flex"} `}>
             <div class=" bg-gray-700 rounded-2xl p-6">
               <h3 class="mb-4 font-bold">
-                <Icon icon="filter" class="mx-2" />
+                <Icon icon={icons.Filter} class="mx-2" />
                 Filter
               </h3>
               <div class="flex flex-col gap-4">
@@ -61,7 +62,7 @@ export const ContentOverviewRoute = () => {
                                 onClick={() => toggleFilter(filter.key, value)}
                               >
                                 {value}
-                                {active ? <Icon icon="xmark" /> : <span class="text-gray-300 text-xs">{count}</span>}
+                                {active ? <Icon icon={icons.Xmark} /> : <span class="text-gray-300 text-xs">{count}</span>}
                               </button>
                             );
                           }}
@@ -89,10 +90,10 @@ export const ContentOverviewRoute = () => {
               </p>
               <div class="flex flex-row gap-4">
                 <button class={secondaryButtonClass + (showFilter() ? " hidden" : " lg:hidden")} onClick={() => setShowFilter(true)}>
-                  <Icon icon="filter" /> Filter...
+                  <Icon icon={icons.Filter} /> Filter...
                 </button>
                 <a href="https://airtable.com/shraFjFgC03xmCgZj" target="_blank" class={secondaryButtonClass}>
-                  <Icon icon="plus" /> Suggest content
+                  <Icon icon={icons.Plus} /> Suggest content
                 </a>
               </div>
             </div>

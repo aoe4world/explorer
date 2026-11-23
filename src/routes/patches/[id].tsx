@@ -14,6 +14,7 @@ import { civAbbr, Item, UnifiedItem } from "../../types/data";
 import { PatchLine, PatchNotes, PatchSection, PatchSet } from "../../types/patches";
 import { currentLocale, getItemName, tempHideNav } from "../../global";
 import patchHistoryData from "../../../data/overview/patch-history.json";
+import * as icons from "@components/icons";
 
 interface PatchHistoryEntry {
   id: string;
@@ -141,7 +142,7 @@ export const PatchDetailRoute = () => {
           <Show when={pagination()?.previous}>
             {(prev) => (
               <A href={`/patches/${prev().id}`} class="hover:text-white">
-                <Icon icon="arrow-left-long" class="mr-1" /> {prev().name}
+                <Icon icon={icons.ArrowLeftLong} class="mr-1" /> {prev().name}
               </A>
             )}
           </Show>
@@ -151,7 +152,7 @@ export const PatchDetailRoute = () => {
           <Show when={pagination()?.next}>
             {(next) => (
               <A href={`/patches/${next().id}`} class="hover:text-white">
-                {next().name} <Icon icon="arrow-right-long" class="ml-1" />
+                {next().name} <Icon icon={icons.ArrowRightLong} class="ml-1" />
               </A>
             )}
           </Show>
@@ -180,7 +181,7 @@ export const PatchDetailRoute = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Read full release notes <Icon icon="external-link-alt" class="ml-1" />
+            Read full release notes <Icon icon={icons.ExternalLinkAlt} class="ml-1" />
           </a>
         )}
         {patch()?.html}
@@ -293,12 +294,12 @@ const HistoricalItem: Component<{ item: any; patch?: PatchNotes }> = (props) => 
       </span>
       {isDeletedInThisPatch() && (
         <span class="ml-1.5 text-red-500 font-bold">
-          <i class="fas fa-times text-xs" />
+          <Icon icon={icons.Times} class="text-xs" />
         </span>
       )}
       {isPreceding() && (
         <span class="ml-1.5 text-amber-400/80 text-xs inline-flex items-center">
-          <i class="fas fa-info-circle" />
+          <Icon icon={icons.InfoCircle} />
         </span>
       )}
       <Tooltip attachTo={el}>
@@ -396,10 +397,10 @@ const DiffList: Component<{ diff: PatchLine[] }> = (props) => (
       {([type, change]) => (
         <li class="flex py-1 ml-2">
           <div class="text-xs mr-3 mt-1 ">
-            {type == "buff" && <Icon icon="circle-plus" class="text-green-700" />}
-            {type == "nerf" && <Icon icon="circle-minus" class="text-red-700" />}
-            {type == "fix" && <Icon icon="circle-check" class="text-gray-300" />}
-            {type == "change" && <Icon icon="circle-arrow-right" class="text-gray-300" />}
+            {type == "buff" && <Icon icon={icons.CirclePlus} class="text-green-700" />}
+            {type == "nerf" && <Icon icon={icons.CircleMinus} class="text-red-700" />}
+            {type == "fix" && <Icon icon={icons.CircleCheck} class="text-gray-300" />}
+            {type == "change" && <Icon icon={icons.CircleArrowRight} class="text-gray-300" />}
           </div>
           <p class="text-gray-100 text-base">{change}</p>
         </li>

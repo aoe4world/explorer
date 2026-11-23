@@ -4,6 +4,7 @@ import { setActivePage } from "../../App";
 import { Icon } from "@components/Icon";
 import { Quiz } from "@components/quiz/SoloQuiz";
 import { tempHideNav } from "../../global";
+import * as icons from "@components/icons";
 
 export interface QuizParams extends SearchParams {
   questionsUrl?: string;
@@ -60,14 +61,16 @@ export const QuizRoute: Component = () => {
             </div>
 
             <div class="my-5 rounded-lg p-6 bg-purple-600/20 flex items-center">
-              <Icon icon="twitch" class="fab text-white mr-4 bg-purple-700 p-3 rounded-md" />
+              <span class="text-white mr-4 bg-purple-700 p-3 rounded-md leading-none">
+                <Icon icon={icons.Twitch} />
+              </span>
               <div>
                 <strong class="font-bold">Play this quiz with your Twitch viewers</strong>
                 <p class="text-sm opacity-70">Viewers can submit answers via chat and compete with each other</p>
               </div>
               <A href="/quiz/twitch" class="ml-auto bg-white text-purple-900 font-bold px-6 py-2 rounded-full hover:bg-purple-200 active:text-black">
                 Play
-                <Icon icon="arrow-right" class=" ml-2" />
+                <Icon icon={icons.ArrowRight} class=" ml-2" />
               </A>
             </div>
           </>

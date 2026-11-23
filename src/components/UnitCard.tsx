@@ -8,6 +8,8 @@ import { Card } from "./Cards";
 import { LinkType } from "./common/Link";
 import { StatBar, StatCosts, StatDps, StatNumber } from "./Stats";
 import { Recruits } from "./Recruits";
+import { Icon } from "@components/Icon";
+import * as icons from "@components/icons";
 
 const increaseBarSizeForClass = ["siege", "war_elephant", "incendiary_ship"];
 function getBarSize(unit: UnifiedItem<Unit>, baseSize: number, increasedSize: number) {
@@ -42,12 +44,12 @@ export const UnitCard: Component<{ unit: UnifiedItem<Unit>; age?: number; variat
         <>
           <Show when={!hasRecruits()}>
             <div class="flex flex-col gap-4 mb-8">
-              <StatBar label="Hitpoints" icon="heart" stat={stats().hitpoints} max={getBarSize(props.unit, 500, 1000)} item={props.unit} />
-              <StatBar label="Siege Attack" icon="meteor" stat={stats().siegeAttack} max={500} multiplier={stats().burst} item={props.unit} />
-              <StatBar label="Melee Attack" icon="swords" stat={stats().meleeAttack} max={getBarSize(props.unit, 50, 100)} item={props.unit} />
+              <StatBar label="Hitpoints" icon={icons.Heart} stat={stats().hitpoints} max={getBarSize(props.unit, 500, 1000)} item={props.unit} />
+              <StatBar label="Siege Attack" icon={icons.Meteor} stat={stats().siegeAttack} max={500} multiplier={stats().burst} item={props.unit} />
+              <StatBar label="Melee Attack" icon={icons.Swords} stat={stats().meleeAttack} max={getBarSize(props.unit, 50, 100)} item={props.unit} />
               <StatBar
                 label="Ranged Attack"
-                icon="bow-arrow"
+                icon={icons.BowArrow}
                 stat={stats().rangedAttack}
                 max={getBarSize(props.unit, 50, 300)}
                 multiplier={stats().burst}
@@ -55,15 +57,15 @@ export const UnitCard: Component<{ unit: UnifiedItem<Unit>; age?: number; variat
               />
               <StatBar
                 label={props.unit.classes.includes("incendiary_ship") ? "Fire Attack" : "Torch Attack"}
-                icon="fire"
+                icon={icons.Fire}
                 stat={stats().fireAttack}
                 max={getBarSize(props.unit, 50, 300)}
                 item={props.unit}
               />
-              <StatBar label="Melee Armor" icon="shield-blank" stat={stats().meleeArmor} max={20} displayAlways={true} item={props.unit} />
-              <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats().rangedArmor} max={20} displayAlways={!isSiege()} item={props.unit} />
-              <StatBar label="Ranged Resistance" icon="bullseye-arrow" stat={stats().rangedResistance} max={100} displayAlways={isSiege()} item={props.unit} unit="%" />
-              <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats().fireArmor} max={20} item={props.unit} />
+              <StatBar label="Melee Armor" icon={icons.ShieldBlank} stat={stats().meleeArmor} max={20} displayAlways={true} item={props.unit} />
+              <StatBar label="Ranged Armor" icon={icons.BullseyeArrow} stat={stats().rangedArmor} max={20} displayAlways={!isSiege()} item={props.unit} />
+              <StatBar label="Ranged Resistance" icon={icons.BullseyeArrow} stat={stats().rangedResistance} max={100} displayAlways={isSiege()} item={props.unit} unit="%" />
+              <StatBar label="Fire Armor" icon={icons.BlockBrickFire} stat={stats().fireArmor} max={20} item={props.unit} />
             </div>
           </Show>
           <div class="flex flex-col gap-4 mt-auto">

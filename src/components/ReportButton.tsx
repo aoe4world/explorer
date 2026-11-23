@@ -4,6 +4,7 @@ import { Portal } from "solid-js/web";
 import { tooltipCSSClass } from "../styles";
 import { Icon } from "./Icon";
 import { Tooltip } from "./Tooltip";
+import * as icons from "@components/icons";
 
 export const ReportButton: Component = () => {
   const [showReport, setShowReport] = createSignal(false);
@@ -16,7 +17,7 @@ export const ReportButton: Component = () => {
         ref={el}
         class="text-gray-300 font-bold text-sm bg-gray-600 rounded px-3 py-2 hover:bg-gray-500 hover:text-gray-50 transition"
       >
-        <Icon icon="message-exclamation" class="mr-1" /> Report incorrect info
+        <Icon icon={icons.MessageExclamation} class="mr-1" /> Report incorrect info
       </button>
       <Tooltip attachTo={el}>
         <div class={tooltipCSSClass}>
@@ -33,7 +34,7 @@ export const ReportButton: Component = () => {
                   class="bg-white text-black p-3 rounded m-5 ml-8 flex gap-3 items-center font-bold hover:opacity-70"
                   onClick={() => setShowReport(false)}
                 >
-                  <Icon icon="angle-left" /> Back
+                  <Icon icon={icons.AngleLeft} /> Back
                 </button>
               </div>
 

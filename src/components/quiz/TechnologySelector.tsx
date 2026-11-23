@@ -7,6 +7,7 @@ import { ItemIcon } from "../ItemIcon";
 import { tooltipCSSClass } from "../../styles";
 import { Tooltip } from "../Tooltip";
 import { Icon } from "../Icon";
+import * as icons from "@components/icons";
 
 const RelevantProperties: ModifyableProperty[] = [
   "burst",
@@ -112,7 +113,7 @@ export const TechnologySelector: Component<{
         class={`border-2 rounded-md m-1 w-5 h-5 flex items-center justify-center text-xs font-bold bg-gray-500 hover:opacity-90 cursor-pointer`}
         classList={{ "border-green-500": technologies()?.every(t => selected().includes(t.tech.id) || t.disabled), "border-transparent opacity-70": !technologies()?.every(t => selected().includes(t.tech.id) || t.disabled) }}
       >
-        <Icon icon={technologies()?.every(t => selected().includes(t.tech.id) || t.disabled) ? "minus" : "plus"} />
+        <Icon icon={technologies()?.every(t => selected().includes(t.tech.id) || t.disabled) ? icons.Minus : icons.Plus} />
       </div>
       <For each={technologies()}>
         {(tech) => {

@@ -10,6 +10,7 @@ import { getCivName } from "./config";
 import { hideNav, currentLocale, setLocale, getItemName, getItemDescription } from "./global";
 import { findClosestMatch } from "./query/utils";
 import { civConfig, ITEMS, UnifiedItem } from "./types/data";
+import * as icons from "@components/icons";
 
 export const [activePage, setActivePage] = createSignal<{ title?: string; description?: string; location: Partial<ReturnType<typeof useLocation>> }>();
 
@@ -91,7 +92,7 @@ const App: ParentComponent = (props) => {
             <div class="max-w-screen-lg p-4 mx-auto">
               <div class="bg-red-900 text-white p-4 rounded-2xl my-10">
                 <h1 class="text-2xl font-bold">
-                  <Icon icon="hexagon-exclamation" class="mr-3 mb-3" />
+                  <Icon icon={icons.HexagonExclamation} class="mr-3 mb-3" />
                   Problem while loading page
                 </h1>
                 <p class="max-w-prose my-5">
@@ -100,13 +101,13 @@ const App: ParentComponent = (props) => {
                 </p>
                 <pre class="font-code font-sm text-white/70 my-5">{err.toString()}</pre>
                 <button onClick={() => retry()} class="bg-white text-red-900 py-2 px-4 font-bold rounded-lg">
-                  <Icon icon="refresh" class="mr-m" /> Retry
+                  <Icon icon={icons.Refresh} class="mr-m" /> Retry
                 </button>
                 <a
                   href="https://github.com/aoe4world/explorer/discussions/new?category=bugs-problems"
                   class="inline-block  ml-3 bg-white text-red-900 py-2 px-4 font-bold rounded-lg"
                 >
-                  <Icon icon="bug" class="mr-m" /> Report bug
+                  <Icon icon={icons.Bug} class="mr-m" /> Report bug
                 </a>
               </div>
             </div>

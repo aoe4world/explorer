@@ -3,6 +3,7 @@ import { Icon } from "@components/Icon";
 import { FormatAnswer, getRandomQuestion, loadCustomQuestions } from "./questions";
 import { Random } from "./random";
 import { DLC_CIVS, keysLetters, updateScore, useKeyHandler } from "./shared";
+import * as icons from "@components/icons";
 
 enum QuizState {
   Asking,
@@ -73,21 +74,21 @@ export const Quiz: Component<{ difficulty?: number; questionsUrl?: string; numQu
                 next(true);
               }}
             >
-              <Icon icon="dice" />
+              <Icon icon={icons.Dice} />
             </button>
           </h5>
           {score().total && (
             <div class="flex gap-4">
               {score().streak > 2 && (
                 <span class="text-orange-300">
-                  <Icon icon="fire" /> {score().streak} streak
+                  <Icon icon={icons.Fire} /> {score().streak} streak
                 </span>
               )}
               <span class="text-green-500">
-                <Icon icon="circle-check" /> {score().correct}
+                <Icon icon={icons.CircleCheck} /> {score().correct}
               </span>
               <span class="text-red-500">
-                <Icon icon="circle-xmark" /> {score().incorrect}
+                <Icon icon={icons.CircleXmark} /> {score().incorrect}
               </span>
             </div>
           )}

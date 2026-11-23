@@ -8,6 +8,7 @@ import { ChatClient } from "@twurple/chat";
 import { keysLetters as indexToLetter, Score, updateScore, useKeyHandler } from "./shared";
 import { TwitchGiveaway } from "./TwitchGiveaway";
 import { TWITCH } from "../../../assets";
+import * as icons from "@components/icons";
 
 let secondsInterval: number | undefined;
 let actionTimer: number | NodeJS.Timeout | undefined;
@@ -247,17 +248,17 @@ export const TwitchQuiz: Component<{
               }}
               disabled={quizState() !== TwitchQuizState.Asking}
             >
-              <Icon icon="dice" />
+              <Icon icon={icons.Dice} />
             </button>
           </h5>
           {autoplay() && (
             <button onClick={() => pauseAutoplay()}>
-              <Icon icon="pause" class="text-gray-300" />
+              <Icon icon={icons.Pause} class="text-gray-300" />
             </button>
           )}
           {!autoplay() && (
             <button onClick={() => startAutoplay()} class="text-gray-300 font-bold">
-              <Icon icon="play" /> Autoplay
+              <Icon icon={icons.Play} /> Autoplay
             </button>
           )}
         </div>
@@ -295,7 +296,7 @@ export const TwitchQuiz: Component<{
                 >
                   <FormatAnswer answer={answer} />
                   <span class="ml-auto mr-2">
-                    {pendingAnswers.host == index() && <Icon icon="video-camera" class="mr-2" />}
+                    {pendingAnswers.host == index() && <Icon icon={icons.VideoCamera} class="mr-2" />}
                     {props.hideVotes && quizState() !== TwitchQuizState.ShowingResults ? "" : pendingAnswers.total[index()]}
                   </span>
                 </MultipleChoiceOption>
@@ -392,10 +393,10 @@ export const TwitchQuiz: Component<{
                     <h5 class="font-bold text-gray-300 uppercase text-sm mb-1 ">Scores</h5>
                   </th>
                   <th>
-                    <Icon icon="circle-check" class="text-green-500 mx-2" />
+                    <Icon icon={icons.CircleCheck} class="text-green-500 mx-2" />
                   </th>
                   <th>
-                    <Icon icon="circle-xmark" class="text-red-500 mx-2" />
+                    <Icon icon={icons.CircleXmark} class="text-red-500 mx-2" />
                   </th>
                   <th />
                 </tr>
@@ -404,7 +405,7 @@ export const TwitchQuiz: Component<{
                 {scores.host.total && (
                   <tr>
                     <td>
-                      <Icon icon="video-camera" class="mr-2" />
+                      <Icon icon={icons.VideoCamera} class="mr-2" />
                     </td>
                     <td>{props.channel}</td>
                     <td class="text-green-500 text-center">{scores.host.correct}</td>
@@ -412,7 +413,7 @@ export const TwitchQuiz: Component<{
                     <td>
                       {scores.host?.streak > 2 && (
                         <span class="text-orange-300">
-                          <Icon icon="fire" /> {scores.host.streak} streak
+                          <Icon icon={icons.Fire} /> {scores.host.streak} streak
                         </span>
                       )}
                     </td>
@@ -432,7 +433,7 @@ export const TwitchQuiz: Component<{
                       <td>
                         {viewer.streak > 2 && (
                           <span class="text-orange-300">
-                            <Icon icon="fire" /> {viewer.streak} streak
+                            <Icon icon={icons.Fire} /> {viewer.streak} streak
                           </span>
                         )}
                       </td>

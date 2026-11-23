@@ -4,6 +4,7 @@ import { getPatchHistory } from "../query/utils";
 import { UnifiedItem, civConfig } from "../types/data";
 import { Icon } from "./Icon";
 import { CivFlag } from "./CivFlag";
+import * as icons from "@components/icons";
 
 export const PatchHistory: Component<{ item: UnifiedItem; civ?: civConfig }> = (props) => {
   const [patchHistory] = createResource(() => getPatchHistory(props.item, props.civ ? [props.civ] : undefined), { initialValue: [] });
@@ -26,7 +27,7 @@ export const PatchHistory: Component<{ item: UnifiedItem; civ?: civConfig }> = (
                   </A>
                   {history.patch.date.valueOf() > Date.now() && (
                     <p class="my-3 text-gray-200 items-center  flex">
-                      <Icon icon="calendar-clock" class="text-gray-300 mr-4" />
+                      <Icon icon={icons.CalendarClock} class="text-gray-300 mr-4" />
                       <span class="text-[12px] uppercase">
                         To be released on {history.patch.date.toLocaleDateString("en-US", { dateStyle: "long" })}. This page will be updated when the patch is
                         released.
@@ -37,10 +38,10 @@ export const PatchHistory: Component<{ item: UnifiedItem; civ?: civConfig }> = (
                     {([type, change, civs]) => (
                       <div class="flex  py-0.5">
                         <div class="text-xs mr-3 mt-1 ">
-                          {type == "buff" && <Icon icon="circle-plus" class="text-green-700" />}
-                          {type == "nerf" && <Icon icon="circle-minus" class="text-red-700" />}
-                          {type == "fix" && <Icon icon="circle-check" class="text-gray-300" />}
-                          {type == "change" && <Icon icon="circle-arrow-right" class="text-gray-300" />}
+                          {type == "buff" && <Icon icon={icons.CirclePlus} class="text-green-700" />}
+                          {type == "nerf" && <Icon icon={icons.CircleMinus} class="text-red-700" />}
+                          {type == "fix" && <Icon icon={icons.CircleCheck} class="text-gray-300" />}
+                          {type == "change" && <Icon icon={icons.CircleArrowRight} class="text-gray-300" />}
                         </div>
                         <p class="text-gray-100 text-base max-w-prose white">
                           {!props.civ && (civs || []).map((c) => <CivFlag abbr={c} class="h-3 rounded-sm mr-1.5 mb-0.5 inline" />)}

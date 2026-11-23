@@ -7,6 +7,7 @@ import { setActivePage } from "../App";
 import { CIVILIZATIONS, localizeCiv } from "../config";
 import { currentLocale } from "../global";
 import { mainIntroductionCSSClass, tooltipCSSClass } from "../styles";
+import * as icons from "@components/icons";
 
 const buttonClass = `block font-bold px-7 py-2 rounded-full transition hover:opacity-70`;
 export const CivOverviewRoute = () => {
@@ -23,7 +24,7 @@ export const CivOverviewRoute = () => {
               class="text-xs px-3 uppercase font-bold py-1 rounded-full text-gray-100 bg-black border border-gray-300"
               ref={el}
             >
-              <i class="fas fa-asterisk mr-1" /> Update 17.0.12182
+              <Icon icon={icons.Asterisk} class="mr-1" /> Update 17.0.12182
             </A>
             <Tooltip attachTo={el}>
               <div class={tooltipCSSClass}>The Explorer includes all changes introduced with Update 17.0.12182</div>
@@ -42,14 +43,14 @@ export const CivOverviewRoute = () => {
           <div class="flex flex-wrap gap-5 mt-12 mb-16">
             <A href="/about" class={buttonClass + " bg-white text-black hover:bg-gray-100 "}>
               Learn more
-              <Icon icon="arrow-right" class="ml-3" />
+              <Icon icon={icons.ArrowRight} class="ml-3" />
             </A>
             <A href="/units" class={buttonClass + " outline outline-white "}>
-              <Icon icon="sword" class="mr-3" />
+              <Icon icon={icons.Sword} class="mr-3" />
               Explore All Units
             </A>
             <A href="/buildings" class={buttonClass + " outline outline-white "}>
-              <Icon icon="landmark" class="mr-3" />
+              <Icon icon={icons.Landmark} class="mr-3" />
               Explore All Buildings
             </A>
           </div>
@@ -60,7 +61,7 @@ export const CivOverviewRoute = () => {
               <A href={`/civs/${civ.slug}`} class="flex items-center bg-gray-900 p-2 rounded-md hover:white text-gray-100 hover:bg-black ">
                 <CivFlag abbr={civ.abbr} class="flex-none self-start w-18 h-12 rounded m-2" />
                 <h1 class=" md:text-xl font-bold ml-3">{localizeCiv(civ, currentLocale()).name}</h1>
-                <Icon icon="chevron-right" class="ml-auto mr-6" />
+                <Icon icon={icons.ChevronRight} class="ml-auto mr-6" />
               </A>
             )}
           </For>
