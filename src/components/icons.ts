@@ -1,13 +1,12 @@
 // Icons used across the explorer. Most come from Remix Icon (https://remixicon.com, Apache-2.0).
-// A few AoE-specific icons have no Remix equivalent and are drawn by hand below.
+// A few AoE-specific icons have no Remix equivalent, and the circle icons are redrawn with bolder
+// inner shapes than Remix's. These are drawn by hand below.
 
-import addCircleFill from "remixicon/icons/System/add-circle-fill.svg?raw";
 import addFill from "remixicon/icons/System/add-fill.svg?raw";
 import arrowDownSFill from "remixicon/icons/Arrows/arrow-down-s-fill.svg?raw";
 import arrowDownSLine from "remixicon/icons/Arrows/arrow-down-s-line.svg?raw";
 import arrowLeftLongLine from "remixicon/icons/Arrows/arrow-left-long-line.svg?raw";
 import arrowLeftSLine from "remixicon/icons/Arrows/arrow-left-s-line.svg?raw";
-import arrowRightCircleFill from "remixicon/icons/Arrows/arrow-right-circle-fill.svg?raw";
 import arrowRightLine from "remixicon/icons/Arrows/arrow-right-line.svg?raw";
 import arrowRightLongLine from "remixicon/icons/Arrows/arrow-right-long-line.svg?raw";
 import arrowRightSFill from "remixicon/icons/Arrows/arrow-right-s-fill.svg?raw";
@@ -19,9 +18,7 @@ import bankFill from "remixicon/icons/Buildings/bank-fill.svg?raw";
 import bugFill from "remixicon/icons/Development/bug-fill.svg?raw";
 import calendarScheduleFill from "remixicon/icons/Business/calendar-schedule-fill.svg?raw";
 import checkFill from "remixicon/icons/System/check-fill.svg?raw";
-import checkboxCircleFill from "remixicon/icons/System/checkbox-circle-fill.svg?raw";
 import chromeFill from "remixicon/icons/Logos/chrome-fill.svg?raw";
-import closeCircleFill from "remixicon/icons/System/close-circle-fill.svg?raw";
 import closeFill from "remixicon/icons/System/close-fill.svg?raw";
 import diceFill from "remixicon/icons/Game & Sports/dice-fill.svg?raw";
 import externalLinkFill from "remixicon/icons/System/external-link-fill.svg?raw";
@@ -33,7 +30,6 @@ import firefoxFill from "remixicon/icons/Logos/firefox-fill.svg?raw";
 import flashlightFill from "remixicon/icons/Weather/flashlight-fill.svg?raw";
 import heartFill from "remixicon/icons/Health & Medical/heart-fill.svg?raw";
 import homeFill from "remixicon/icons/Buildings/home-fill.svg?raw";
-import indeterminateCircleFill from "remixicon/icons/System/indeterminate-circle-fill.svg?raw";
 import informationFill from "remixicon/icons/System/information-fill.svg?raw";
 import layoutGridFill from "remixicon/icons/Design/layout-grid-fill.svg?raw";
 import meteorFill from "remixicon/icons/Weather/meteor-fill.svg?raw";
@@ -55,6 +51,9 @@ import twitchFill from "remixicon/icons/Logos/twitch-fill.svg?raw";
 import vidiconFill from "remixicon/icons/Media/vidicon-fill.svg?raw";
 import xboxFill from "remixicon/icons/Logos/xbox-fill.svg?raw";
 
+/** Crops an icon's viewBox so a glyph that only fills part of Remix's 24px grid renders larger. */
+const zoom = (svg: string, viewBox: string) => svg.replace(/viewBox="[^"]*"/, `viewBox="${viewBox}"`);
+
 export const AngleLeft = arrowLeftSLine;
 export const AngleRight = arrowRightSLine;
 export const ArrowLeftLong = arrowLeftLongLine;
@@ -69,19 +68,19 @@ export const BowArrow = `<svg viewBox="0 0 24 24"><path d="M5.42 6.42A8.6 8.6 0 
 export const Bug = bugFill;
 export const BullseyeArrow = `<svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10 4.5a8.5 8.5 0 1 1 0 17a8.5 8.5 0 1 1 0-17ZM10 7.1a5.9 5.9 0 1 1 0 11.8a5.9 5.9 0 1 1 0-11.8ZM10 9.7a3.3 3.3 0 1 1 0 6.6a3.3 3.3 0 1 1 0-6.6Z"/><path d="M10 13L18.2 4.8" stroke="currentColor" fill="none" stroke-width="2.2"/><path d="M16.72 3.32L19.69 6.29L22.09 3.89L19.61 3.39L19.12 0.92Z" stroke="currentColor" stroke-linejoin="round" stroke-width="1.2"/></svg>`;
 export const CalendarClock = calendarScheduleFill;
-export const CaretDown = arrowDownSFill;
-export const CaretRight = arrowRightSFill;
+export const CaretDown = zoom(arrowDownSFill, "4 4 16 16");
+export const CaretRight = zoom(arrowRightSFill, "4 4 16 16");
 export const Check = checkFill;
 export const ChevronDown = arrowDownSLine;
 export const ChevronRight = arrowRightSLine;
 export const ChevronUp = arrowUpSLine;
 export const Chrome = chromeFill;
-export const CircleArrowRight = arrowRightCircleFill;
-export const CircleCheck = checkboxCircleFill;
-export const CircleMinus = indeterminateCircleFill;
-export const CirclePlus = addCircleFill;
+export const CircleArrowRight = `<svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2a10 10 0 1 1 0 20a10 10 0 1 1 0-20ZM6.4 10.5H11.6V7.2L17.6 12L11.6 16.8V13.5H6.4Z"/></svg>`;
+export const CircleCheck = `<svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2a10 10 0 1 1 0 20a10 10 0 1 1 0-20ZM5.8 13.3L10.4 17.89L18.2 10.1L16 7.9L10.4 13.51L8 11.1Z"/></svg>`;
+export const CircleMinus = `<svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2a10 10 0 1 1 0 20a10 10 0 1 1 0-20ZM6.6 10.4L17.4 10.4L17.4 13.6L6.6 13.6Z"/></svg>`;
+export const CirclePlus = `<svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2a10 10 0 1 1 0 20a10 10 0 1 1 0-20ZM10.4 6.6L13.6 6.6L13.6 10.4L17.4 10.4L17.4 13.6L13.6 13.6L13.6 17.4L10.4 17.4L10.4 13.6L6.6 13.6L6.6 10.4L10.4 10.4Z"/></svg>`;
 export const CircleQuestion = questionFill;
-export const CircleXmark = closeCircleFill;
+export const CircleXmark = `<svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2a10 10 0 1 1 0 20a10 10 0 1 1 0-20ZM14.69 7.05L16.95 9.31L14.26 12L16.95 14.69L14.69 16.95L12 14.26L9.31 16.95L7.05 14.69L9.74 12L7.05 9.31L9.31 7.05L12 9.74Z"/></svg>`;
 export const Copy = fileCopyFill;
 export const Dice = diceFill;
 export const ExternalLinkAlt = externalLinkFill;
