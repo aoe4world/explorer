@@ -3,6 +3,7 @@ import { useSearchParams } from "@solidjs/router";
 import { SUPPORTED_LOCALES } from "../config";
 import { currentLocale, setLocale } from "../global";
 import { Icon } from "./Icon";
+import * as icons from "@components/icons";
 
 export const LanguageSelector: Component = () => {
   const [, setSearchParams] = useSearchParams<{ lang?: string }>();
@@ -119,7 +120,7 @@ export const LanguageSelector: Component = () => {
                   <div class="flex items-center gap-1.5 ml-2 flex-none">
                     <span class="text-[10px] uppercase text-white/40 font-mono">{loc.code}</span>
                     <Show when={currentLocale() === loc.code}>
-                      <Icon icon="check" class="text-blue-400 text-xs" />
+                      <Icon icon={icons.Check} class="text-blue-400 text-xs" />
                     </Show>
                   </div>
                 </button>

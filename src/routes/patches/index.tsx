@@ -6,6 +6,7 @@ import { PatchNotes } from "../../types/patches";
 import { CivAbbr } from "../../config";
 import { mainIntroductionCSSClass } from "../../styles";
 import { tempHideNav } from "../../global";
+import * as icons from "@components/icons";
 
 export const PatchListRoute = () => {
   tempHideNav();
@@ -22,16 +23,16 @@ export const PatchListRoute = () => {
 
       <div class="flex flex-wrap text-sm gap-2 my-2 text-gray-300">
         <p>
-          <Icon icon="circle-plus" class="text-green-500" /> buffs
+          <Icon icon={icons.CirclePlus} class="text-green-500" /> buffs
         </p>
         <p>
-          <Icon icon="circle-minus" class="text-red-500" /> nerfs
+          <Icon icon={icons.CircleMinus} class="text-red-500" /> nerfs
         </p>
         <p>
-          <Icon icon="circle-arrow-right" class="text-gray-200" /> changes
+          <Icon icon={icons.CircleArrowRight} class="text-gray-200" /> changes
         </p>
         <p>
-          <Icon icon="circle-check" class="text-gray-300" /> fixes
+          <Icon icon={icons.CircleCheck} class="text-gray-300" /> fixes
         </p>
       </div>
 
@@ -73,17 +74,17 @@ export const PatchListRoute = () => {
                 <div class="flex flex-wrap gap-2 text-sm">
                   {patch.buffed > 0 && (
                     <p>
-                      <Icon icon="circle-plus" class="text-green-500" /> {patch.buffed} buffs
+                      <Icon icon={icons.CirclePlus} class="text-green-500" /> {patch.buffed} buffs
                     </p>
                   )}
                   {patch.nerfed > 0 && (
                     <p>
-                      <Icon icon="circle-minus" class="text-red-500" /> {patch.nerfed} nerfs
+                      <Icon icon={icons.CircleMinus} class="text-red-500" /> {patch.nerfed} nerfs
                     </p>
                   )}
                   {patch.fixed > 0 && (
                     <p>
-                      <Icon icon="circle-check" class="text-gray-300" /> {patch.fixed} fixes
+                      <Icon icon={icons.CircleCheck} class="text-gray-300" /> {patch.fixed} fixes
                     </p>
                   )}
                 </div>

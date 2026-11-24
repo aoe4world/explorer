@@ -9,6 +9,7 @@ import { ItemIcon } from "./ItemIcon";
 import { formatSecondsToTime } from "./Stats";
 import { ItemSlug } from "../config";
 import { currentLocale, getItemName } from "../global";
+import * as icons from "@components/icons";
 const SDK = import("@data/sdk");
 
 const defaultLimit = 3;
@@ -22,7 +23,7 @@ export const RelatedContent: Component<{ item?: Item | UnifiedItem; civ?: civCon
           <div class="flex">
             <h3 class="text-xl font-bold flex-auto">{props.title}</h3>
             <a href="https://airtable.com/shraFjFgC03xmCgZj" target="_blank" class="text-gray-400 hover:text-gray-300 text-sm">
-              <Icon icon="plus" /> Suggest
+              <Icon icon={icons.Plus} /> Suggest
             </a>
           </div>
         )}
@@ -56,7 +57,7 @@ export const ContentRow: Component<{ content: ContentItem; item?: Item | Unified
           </>
         ) : (
           <div class="from-black to-transparent absolute inset-0 bg-gradient-to-t opacity-90 grid place-content-center">
-            <Icon icon="arrow-up-right-from-square" class=" text-white/50 text-2xl" />
+            <Icon icon={icons.ArrowUpRightFromSquare} class=" text-white/50 text-2xl" />
           </div>
         )}
       </a>

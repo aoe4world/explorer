@@ -9,6 +9,7 @@ import { Icon } from "./Icon";
 import { globalAgeFilter, globalCivFilter, getItemName, getItemDescription } from "../global";
 import { Tooltip } from "./Tooltip";
 import { InlineItemLink } from "./Abilities";
+import * as icons from "@components/icons";
 
 export const StatBar: Component<{
   label: string;
@@ -48,14 +49,14 @@ export const StatBar: Component<{
             {props.multiplier && <>*</>}
             {values().total > values().base && (
               <span class="text-white/60 ml-3">
-                <Icon icon="arrow-up-right" class="text-xs mr-0.5" />
+                <Icon icon={icons.ArrowUpRight} class="text-xs mr-0.5" />
                 {values().total}
               </span>
             )}
             {values().bonus && (
               <span class="text-white/40 ml-2">
                 {" "}
-                <Icon icon="plus" class="text-xs" />
+                <Icon icon={icons.Plus} class="text-xs" />
                 {values().bonus}
               </span>
             )}
@@ -85,7 +86,7 @@ export const StatBar: Component<{
               <br />
               {values().upgrades && (
                 <>
-                  <Icon icon="arrow-up-right" class="text-sm mr-1" />
+                  <Icon icon={icons.ArrowUpRight} class="text-sm mr-1" />
                   Upgrades
                   <span class="text-item-unit-light float-right ml-4">
                     {props.multiplier && (
@@ -101,7 +102,7 @@ export const StatBar: Component<{
               )}
               {values().technologies && (
                 <>
-                  <Icon icon="arrow-up-right" class="text-sm mr-1" />
+                  <Icon icon={icons.ArrowUpRight} class="text-sm mr-1" />
                   Technologies
                   <span class="text-item-tech-light float-right ml-4">
                     {props.multiplier && (
@@ -119,7 +120,7 @@ export const StatBar: Component<{
               Total <span class="float-right ml-4">{values().total}</span>
               {values().bonus && (
                 <div class="opacity-50">
-                  <Icon icon="plus" class="text-xs mr-1" />
+                  <Icon icon={icons.Plus} class="text-xs mr-1" />
                   Bonus{" "}
                   <span class="float-right ml-4">
                     {props.multiplier && (
@@ -181,7 +182,7 @@ export const StatBar: Component<{
                       {part.label && <p class="mb-6">{part.label}</p>}
                       {part.variation.unique && part.variation.civs?.[0] && (
                         <p class="text-bar-unique">
-                          <i class="fas fa-sparkles" /> Unique to {getCivName(part.variation.civs[0])}
+                          <Icon icon={icons.Sparkles} /> Unique to {getCivName(part.variation.civs[0])}
                         </p>
                       )}
 
@@ -262,7 +263,7 @@ export const StatNumber: Component<{
       <div class="flex flex-col">
         <span class={statLabelCSSClass}>
           {props.label}
-          <span ref={helperEl}>{props.helper && <Icon icon="circle-question" class="ml-2 text-white/40" />}</span>
+          <span ref={helperEl}>{props.helper && <Icon icon={icons.CircleQuestion} class="ml-2 text-white/40" />}</span>
         </span>
         {props.helper && (
           <Tooltip attachTo={helperEl}>
@@ -276,7 +277,7 @@ export const StatNumber: Component<{
           {values().base}
           {values().total != values().base && (
             <span class="text-white/60">
-              <Icon icon="arrow-up-right" class="text-sm ml-1" /> {values().total}
+              <Icon icon={icons.ArrowUpRight} class="text-sm ml-1" /> {values().total}
             </span>
           )}
           {props.unitLabel && <span class="text-white/60 text-sm ml-1">{props.unitLabel}</span>}
@@ -338,7 +339,7 @@ export const StatDps: Component<{
       <div class="flex flex-col">
         <span class={statLabelCSSClass}>
           {props.label}
-          <span ref={helperEl}>{props.helper && <Icon icon="circle-question" class="ml-2" />}</span>
+          <span ref={helperEl}>{props.helper && <Icon icon={icons.CircleQuestion} class="ml-2" />}</span>
         </span>
         {props.helper && (
           <Tooltip attachTo={helperEl}>
@@ -353,13 +354,13 @@ export const StatDps: Component<{
           {<span class="text-white/60 text-sm ml-1">DPS</span>}
           {values().total != values().base && (
             <span class="text-white/40 text-sm ml-2">
-              <Icon icon="arrow-up-right" class="text-xs" /> {values().total}
+              <Icon icon={icons.ArrowUpRight} class="text-xs" /> {values().total}
             </span>
           )}
           {values().bonus && (
             <span class="text-white/40  text-sm ml-1">
               {" "}
-              <Icon icon="plus" class="text-xs" /> {values().bonus}
+              <Icon icon={icons.Plus} class="text-xs" /> {values().bonus}
             </span>
           )}
         </span>
@@ -490,7 +491,7 @@ export const StatLos: Component<{
       <div class="flex flex-col">
         <span class={statLabelCSSClass}>
           {props.label}
-          <span ref={helperEl}>{props.helper && <Icon icon="circle-question" class="ml-2" />}</span>
+          <span ref={helperEl}>{props.helper && <Icon icon={icons.CircleQuestion} class="ml-2" />}</span>
         </span>
         {props.helper && (
           <Tooltip attachTo={helperEl}>
@@ -505,20 +506,20 @@ export const StatLos: Component<{
           {<span class="text-white/60 text-sm ml-1">TILES</span>}
           {values().total != values().base && (
             <span class="text-white/40 text-sm ml-2">
-              <Icon icon="arrow-up-right" class="text-xs" /> {values().total}
+              <Icon icon={icons.ArrowUpRight} class="text-xs" /> {values().total}
             </span>
           )}
           {values().bonus && (
             <span class="text-white/40  text-sm ml-1">
               {" "}
-              <Icon icon="plus" class="text-xs" /> {values().bonus}
+              <Icon icon={icons.Plus} class="text-xs" /> {values().bonus}
             </span>
           )}
           <Show when={showMax()}>
             {maxValues().total && (
               <span class="text-white/40  text-sm ml-1">
                 {" "}
-                <Icon icon="bolt" class="text-xs" /> {maxValues().total}
+                <Icon icon={icons.Bolt} class="text-xs" /> {maxValues().total}
                 {" MAX"}
               </span>
             )}

@@ -23,6 +23,7 @@ import { CivFlag } from "./CivFlag";
 import { Icon } from "./Icon";
 import { ItemIcon } from "./ItemIcon";
 import { ItemName } from "./ItemName";
+import * as icons from "@components/icons";
 
 export const SidebarNav: Component = () => {
   const location = useLocation();
@@ -162,7 +163,7 @@ const TreeGroupToggle: ParentComponent<JSX.HTMLAttributes<HTMLButtonElement> & {
   };
   return (
     <button role="treeitem" aria-expanded={isOpen()} aria-owns={id} onClick={toggle} tabIndex={0} {...props} onKeyDown={onKeyDown}>
-      <span class={props.toggleClass}>{isOpen() ? <Icon icon="caret-down" /> : <Icon icon="caret-right" />}</span>
+      <span class={props.toggleClass}>{isOpen() ? <Icon icon={icons.CaretDown} /> : <Icon icon={icons.CaretRight} />}</span>
       {props.children}
     </button>
   );

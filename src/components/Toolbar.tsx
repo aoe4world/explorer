@@ -10,6 +10,7 @@ import { Tooltip } from "./Tooltip";
 import { currentLocale, hideNav, parseCurrentLocation } from "../global";
 import { QuickNav } from "./QuickNav";
 import { LanguageSelector } from "./LanguageSelector";
+import * as icons from "@components/icons";
 
 export const Toolbar: Component = () => {
   const pending = useIsRouting();
@@ -34,11 +35,11 @@ export const Toolbar: Component = () => {
           <div class="flex flex-col gap-2 items-center flex-none">
             {current().subroute ? (
               <A href={`/civs/${current().civ}/`} class={navButtonClass} noScroll={true} title="Civilization Overview">
-                <Icon icon="grid-horizontal" class="place-self-center" />
+                <Icon icon={icons.GridHorizontal} class="place-self-center" />
               </A>
             ) : (
               <A href={`/`} class={navButtonClass} noScroll={true} title="Home">
-                <Icon icon="home" class="place-self-center" />
+                <Icon icon={icons.Home} class="place-self-center" />
               </A>
             )}
             <LanguageSelector />
@@ -66,7 +67,7 @@ export const Toolbar: Component = () => {
                   <button class="flex items-center gap-2 bg-gray-900 h-8 px-1 rounded-md">
                     <CivFlag abbr={civ().abbr} class="h-6 w-10 rounded object-cover" />
                     <span class="truncate hidden sm:inline">{getCivName(civ(), currentLocale())}</span>
-                    <Icon icon="caret-down" class=" ml-4 mr-2" />
+                    <Icon icon={icons.CaretDown} class=" ml-4 mr-2" />
                   </button>
                   <div class="hidden max-h-[80vh] overflow-y-auto group-hover:block group-focus-within:block z-10 rounded-md absolute bg-gray-900 w-60 mt-0 ">
                     <For each={Object.values(CIVILIZATIONS)}>
@@ -83,7 +84,7 @@ export const Toolbar: Component = () => {
           </Show>
  
            <A href={`/about`} ref={aboutEl} class={`${navButtonClass} ml-auto hidden sm:grid`} noScroll={true}>
-             <Icon icon="circle-question" class="place-self-center text-gray-300" />
+             <Icon icon={icons.CircleQuestion} class="place-self-center text-gray-300" />
             <Tooltip attachTo={aboutEl}>
               <div class={tooltipCSSClass}>
                 <p class="font-bold">Learn more about the Explorer.</p>

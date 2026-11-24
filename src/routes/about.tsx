@@ -5,6 +5,7 @@ import { CivFlag } from "@components/CivFlag";
 import { Icon } from "@components/Icon";
 import { ReportButton } from "@components/ReportButton";
 import { mainIntroductionCSSClass } from "../styles";
+import * as icons from "@components/icons";
 
 export const AboutRoute = () => {
   setActivePage({ title: "About", description: "About the AoE4 Explorer", location: useLocation() });
@@ -25,9 +26,9 @@ export const AboutRoute = () => {
         <div class="bg-gray-900 rounded-md p-6">
           <div class="h-32 grid place-content-center -mt-6">
             <div class="flex items-center justify-around bg-gray-600 pointer-events-none h-10 rounded-md w-36">
-              <Icon icon="angle-left" />
+              <Icon icon={icons.AngleLeft} />
               <span class="hidden md:inline">Age IV</span>
-              <Icon icon="angle-right" />
+              <Icon icon={icons.AngleRight} />
             </div>
           </div>
           <h2 class="text-lg text-gray-200 font-bold mb-2">Filter by age</h2>
@@ -42,10 +43,10 @@ export const AboutRoute = () => {
             <div class="w-64">
               <div class="mb-2 flex flex-row items-center">
                 <span class="text-white text-[14px] flex-auto flex items-center">
-                  <Icon icon="swords" class="text-[xs] mr-0.5" />
+                  <Icon icon={icons.Swords} class="text-[xs] mr-0.5" />
                   19
                   <span class="text-white/60 ml-3">
-                    <Icon icon="arrow-up-right" class="text-xs mr-0.5" /> 38
+                    <Icon icon={icons.ArrowUpRight} class="text-xs mr-0.5" /> 38
                   </span>
                 </span>
                 <span class="text-white/50 uppercase text-xs font-bold tracking-widest">Melee Attack</span>

@@ -21,6 +21,8 @@ import { ProductionCosts, StatBar, StatDps, StatLos, StatNumber } from "@compone
 import { TechnologyCard } from "@components/TechnologyCard";
 import { Tooltip } from "@components/Tooltip";
 import { UnitCard } from "@components/UnitCard";
+import { Icon } from "@components/Icon";
+import * as icons from "@components/icons";
 
 const SDK = import("@data/sdk");
 
@@ -195,12 +197,12 @@ const BuildingSidebar: Component<{ item: UnifiedItem<Building>; variation: Build
             <div class=" bg-black/70 rounded-2xl">
               <ItemPage.AgeTabs age={props.age} setAge={props.setAge} minAge={props.item.minAge} />
               <div class="flex flex-col gap-5 p-6">
-                <StatBar label="Hitpoints" icon="heart" stat={stats.hitpoints} max={10000} item={props.item} age={props.age} />
-                <StatBar label="Siege Attack" icon="meteor" stat={stats.siegeAttack} max={500} multiplier={stats.burst} item={props.item} age={props.age} />
-                <StatBar label="Melee Attack" icon="swords" stat={stats.meleeAttack} max={50} item={props.item} age={props.age} />
-                <StatBar label="Ranged Attack" icon="bow-arrow" stat={stats.rangedAttack} max={50} multiplier={stats.burst} item={props.item} age={props.age} />
-                <StatBar label="Fire Armor" icon="block-brick-fire" stat={stats.fireArmor} max={20} displayAlways={true} item={props.item} age={props.age} />
-                <StatBar label="Ranged Armor" icon="bullseye-arrow" stat={stats.rangedArmor} max={60} displayAlways={true} item={props.item} age={props.age} />
+                <StatBar label="Hitpoints" icon={icons.Heart} stat={stats.hitpoints} max={10000} item={props.item} age={props.age} />
+                <StatBar label="Siege Attack" icon={icons.Meteor} stat={stats.siegeAttack} max={500} multiplier={stats.burst} item={props.item} age={props.age} />
+                <StatBar label="Melee Attack" icon={icons.Swords} stat={stats.meleeAttack} max={50} item={props.item} age={props.age} />
+                <StatBar label="Ranged Attack" icon={icons.BowArrow} stat={stats.rangedAttack} max={50} multiplier={stats.burst} item={props.item} age={props.age} />
+                <StatBar label="Fire Armor" icon={icons.BlockBrickFire} stat={stats.fireArmor} max={20} displayAlways={true} item={props.item} age={props.age} />
+                <StatBar label="Ranged Armor" icon={icons.BullseyeArrow} stat={stats.rangedArmor} max={60} displayAlways={true} item={props.item} age={props.age} />
               </div>
             </div>
             <div class="flex gap-5 flex-wrap bg-black/70 rounded-2xl p-6 ">

@@ -1,5 +1,6 @@
 import { Component, Show } from "solid-js";
 import { Icon } from "../Icon";
+import * as icons from "@components/icons";
 
 interface ToggleSwitchProps {
   id: string;
@@ -34,7 +35,7 @@ export const ToggleSwitch: Component<ToggleSwitchProps> = (props) => {
           {props.label}
           {props.tooltip && (
             <>
-              <Icon icon="info-circle" class="ml-1 text-gray-400" />
+              <Icon icon={icons.InfoCircle} class="ml-1 text-gray-400" />
               <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max p-2 bg-gray-800 text-white text-xs rounded-md hidden group-hover:block z-10">
                 {props.tooltip}
               </span>
