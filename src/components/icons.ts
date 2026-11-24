@@ -1,4 +1,4 @@
-// Icons used across the explorer. Most come from Remix Icon (https://remixicon.com, Apache-2.0).
+// Icons used across the explorer. Most come from Remix Icon (https://remixicon.com), under the Remix Icon License v1.0.
 // A few AoE-specific icons have no Remix equivalent, and the circle icons are redrawn with bolder
 // inner shapes than Remix's. These are drawn by hand below.
 
